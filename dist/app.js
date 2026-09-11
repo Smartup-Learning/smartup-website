@@ -21,22 +21,23 @@ const centres={kadavanthra:['Kadavanthra','9207076473','dHgturY8vL8KXyhM9'],chul
 document.querySelector('#centre-select')?.addEventListener('change',event=>{const [name,phone,map]=centres[event.target.value];document.querySelector('#centre-name').textContent=`Smartup, ${name}`;const call=document.querySelector('#centre-call');call.href=`tel:+91${phone||'8891910919'}`;call.textContent=phone?'Call the centre ↗':'Call our main team ↗';const link=document.querySelector('#centre-map');link.hidden=!map;if(map)link.href=`https://maps.app.goo.gl/${map}`;else link.removeAttribute('href');document.querySelector('#centre-help').textContent=map?'Speak to the team for current batch timings.':'Call the centre for directions and current batch timings.';});
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
 
-// Board-specific programmes stay readable together if JavaScript is unavailable.
-document.querySelectorAll('.board-tabs').forEach(tablist=>{
- const section=tablist.closest('.online');
+// Tabbed content stays readable together if JavaScript is unavailable.
+document.querySelectorAll('.board-tabs,.team-tabs').forEach(tablist=>{
+ const section=tablist.closest('.online,.faculty');
  const tabs=[...tablist.querySelectorAll('[role="tab"]')];
- function selectBoard(selected){
+ function selectTab(selected){
   tabs.forEach(tab=>{
    const active=tab===selected;
    tab.setAttribute('aria-selected',String(active));
    tab.tabIndex=active?0:-1;
    document.getElementById(tab.getAttribute('aria-controls')).hidden=!active;
   });
-  section.dataset.board=selected.id==='board-state'?'state':'cbse';
-  section.dispatchEvent(new Event('boardchange'));
+  section.dataset.tabsReady='true';
+  if(tablist.classList.contains('board-tabs'))section.dataset.board=selected.id==='board-state'?'state':'cbse';
+  section.dispatchEvent(new Event('tabchange'));
  }
  tabs.forEach((tab,index)=>{
-  tab.addEventListener('click',()=>selectBoard(tab));
+  tab.addEventListener('click',()=>selectTab(tab));
   tab.addEventListener('keydown',event=>{
    let next;
    if(event.key==='ArrowRight')next=(index+1)%tabs.length;
@@ -44,10 +45,10 @@ document.querySelectorAll('.board-tabs').forEach(tablist=>{
    if(event.key==='Home')next=0;
    if(event.key==='End')next=tabs.length-1;
    if(next===undefined)return;
-   event.preventDefault();selectBoard(tabs[next]);tabs[next].focus();
+   event.preventDefault();selectTab(tabs[next]);tabs[next].focus();
   });
  });
- selectBoard(tabs[0]);tablist.hidden=false;
+ selectTab(tabs[0]);tablist.hidden=false;
 });
 
 // Click-to-load players keep video embeds out of the initial page request.
@@ -105,6 +106,6 @@ document.querySelectorAll('[data-carousel]').forEach(section=>{
  }));
  tracks.forEach(rail=>rail.addEventListener('scroll',()=>{if(!queued){queued=true;requestAnimationFrame(update);}},{passive:true}));
  if('ResizeObserver' in window){const observer=new ResizeObserver(update);tracks.forEach(rail=>observer.observe(rail));}else window.addEventListener('resize',update);
- if(section.querySelector('.board-tabs'))section.addEventListener('boardchange',update);
+ if(section.querySelector('[role=tablist]'))section.addEventListener('tabchange',update);
  update();
 });

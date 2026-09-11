@@ -37,8 +37,6 @@
 @media(max-width:420px){.stories-grid>.landscape .video-surface{height:var(--film-height);aspect-ratio:auto}}
 .stories-grid>.landscape{--card-width:min(calc(var(--film-height)*16/9),88%)}
 
-/* Bring the two connected story sections together after removing the video footer. */
-.stories{padding-bottom:24px}.quotes{padding-top:24px}
 
 /* Let the mobile panel settle below its trigger, and fade out before hiding. */
 @media(max-width:800px){
@@ -47,23 +45,23 @@
  .menu-toggle span{transition:transform 320ms cubic-bezier(.22,.61,.36,1)}
 }
 
-/* One consistent inset from each main section boundary to its opening text. */
-:root{--section-intro-space:112px}
-main>.section,main>.contact{padding-top:var(--section-intro-space)}
+/* Generous section boundaries, with a smaller gap from heading to content. */
+:root{--section-intro-space:128px;--section-outro-space:96px}
+main>.section,main>.contact{padding-top:var(--section-intro-space);padding-bottom:var(--section-outro-space)}
 main>.hero .hero-inner{padding-top:var(--section-intro-space);align-items:start}
 main>.centres .centres-layout,main>.contact .contact-inner{align-items:start}
 main .section-heading>div:first-child{align-self:flex-start}
-@media(max-width:800px){:root{--section-intro-space:80px}}
+@media(max-width:800px){:root{--section-intro-space:88px;--section-outro-space:72px}}
 
 /* Board choices share the programme palette and retain clear keyboard focus. */
-.board-tabs{display:flex;gap:8px;flex-shrink:0}
-.board-tabs[hidden],.board-panel[hidden],.online[data-board] .board-fallback-title{display:none}
-.board-tabs button{min-height:44px;padding:10px 20px;border:1px solid var(--line);border-radius:8px;background:white;color:var(--deep);font-size:15px;font-weight:500;transition:background .18s,color .18s,border-color .18s}
-.board-tabs button:hover{background:var(--cream);border-color:var(--purple)}
-.board-tabs button[aria-selected=true]{background:var(--purple);border-color:var(--purple);color:white}
-.board-panel{min-width:0}
-.board-panel:focus-visible{outline:3px solid #9560d7;outline-offset:6px}
-.board-fallback-title{font-size:1.25rem;margin-bottom:20px}
+.board-tabs,.team-tabs{display:flex;gap:8px;flex-shrink:0}
+.board-tabs[hidden],.team-tabs[hidden],.board-panel[hidden],.team-panel[hidden],.online[data-board] .board-fallback-title,.faculty[data-tabs-ready] .team-fallback-title{display:none}
+:is(.board-tabs,.team-tabs) button{min-height:44px;padding:10px 20px;border:1px solid var(--line);border-radius:8px;background:white;color:var(--deep);font-size:15px;font-weight:500;transition:background .18s,color .18s,border-color .18s}
+:is(.board-tabs,.team-tabs) button:hover{background:var(--cream);border-color:var(--purple)}
+:is(.board-tabs,.team-tabs) button[aria-selected=true]{background:var(--purple);border-color:var(--purple);color:white}
+.board-panel,.team-panel{min-width:0}
+.board-panel:focus-visible,.team-panel:focus-visible{outline:3px solid #9560d7;outline-offset:6px}
+.board-fallback-title,.team-fallback-title{font-size:1.25rem;margin-bottom:20px}
 .online:not([data-board]) .board-panel+.board-panel{margin-top:32px}
 
 /* Prominent milestones, kept within the existing hero footer. */
@@ -83,4 +81,30 @@ main .section-heading>div:first-child{align-self:flex-start}
 
 
 
-@media(max-width:800px){.online .board-tabs{order:3;flex-basis:100%}.board-tabs button{flex:1}}
+@media(max-width:800px){.online .board-tabs,.team-tabs{order:3;flex-basis:100%}:is(.board-tabs,.team-tabs) button{flex:1}}
+
+/* Section colour changes keep the larger intervals visually intentional. */
+.programmes{background:var(--cream)}
+.programmes .programme-detail{background:white}
+.hero-baseline{padding-bottom:48px}
+.team-tabs{flex-wrap:wrap}
+.team-tabs button{background:transparent;color:var(--cream);border-color:#aa8bc9}
+.team-tabs button:hover{background:#51317f;border-color:var(--cream)}
+.team-tabs button[aria-selected=true]{background:var(--cream);border-color:var(--cream);color:var(--deep)}
+.team-tabs button:focus-visible,.team-panel:focus-visible{outline-color:var(--yellow)}
+.faculty:not([data-tabs-ready]) .team-panel+.team-panel{margin-top:40px}
+.life-grid{--card-width:54%}
+.life-card img,.life-card .video-surface{aspect-ratio:16/9;width:100%;height:auto;object-fit:cover;border-radius:9px;overflow:hidden}
+.life-card .youtube-player{background:transparent}
+.life-card h3{margin:20px 0 6px}
+.life-card p{font-size:14px}
+@media(max-width:1100px){.faculty .section-heading{flex-wrap:wrap}.faculty .team-tabs{order:3;flex-basis:100%}}
+@media(max-width:800px){.hero-baseline{padding-bottom:40px}.team-tabs{gap:6px}.team-tabs button{padding:10px 13px;font-size:14px}.life-grid{--card-width:82%}}
+@media(max-width:420px){.team-tabs button{padding:10px 8px;font-size:12px}.life-grid{--card-width:90%}}
+
+.family-grid{--card-width:100%}
+.faculty .family-photo{max-width:none}
+.family-photo-placeholder{min-height:330px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:12px;text-align:center;background:var(--cream);border-radius:12px;color:var(--deep);padding:32px}
+.family-photo-placeholder>span{font-size:clamp(1.7rem,4vw,2.6rem);font-weight:500;line-height:1.2}
+.faculty .family-photo-placeholder p{color:var(--muted);font-size:14px;margin:0}
+@media(max-width:800px){.family-photo-placeholder{min-height:260px}.team-tabs{display:grid;grid-template-columns:1.45fr 1fr .8fr;width:100%}}
