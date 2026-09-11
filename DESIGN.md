@@ -7,3 +7,5 @@ Written testimonials use fictional AI portraits with visible sample labels. Actu
 Interactive controls receive visible keyboard focus. Native HTML contains all marketing information; class and centre choices enhance it with JavaScript. With JavaScript disabled, navigation stays visible, carousels remain horizontally scrollable and video links open YouTube. Motion never gates content.
 
 Media refinement: videos use native YouTube play/pause controls, with no custom close overlays or hero toolbar. Starting another video restores the previous poster. The stories footnote is removed, and the adjoining section padding is 24px on each side. Testimonial photos use a 4:3 aspect ratio with top-centred framing to preserve full faces at every breakpoint.
+
+Mobile navigation eases down and fades in over 360ms, then exits in 240ms; the menu icon follows a 300ms transition. Closed mobile links become inert immediately, visibility hides after the exit, and desktop navigation remains available. Reduced-motion disables all menu transitions. Animation styling is enabled only by JavaScript so the existing no-JS fallback stays visible.

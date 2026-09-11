@@ -1,7 +1,18 @@
 const menuButton=document.querySelector('.menu-toggle');
 const navigation=document.querySelector('#navigation');
-function closeMenu(){navigation.classList.remove('open');menuButton.setAttribute('aria-expanded','false');menuButton.setAttribute('aria-label','Open navigation');}
-menuButton?.addEventListener('click',()=>{const open=menuButton.getAttribute('aria-expanded')!=='true';navigation.classList.toggle('open',open);menuButton.setAttribute('aria-expanded',String(open));menuButton.setAttribute('aria-label',open?'Close navigation':'Open navigation');});
+const mobileMenu=matchMedia('(max-width: 800px)');
+function setMenuOpen(open){
+ if(!open&&mobileMenu.matches&&navigation.contains(document.activeElement))menuButton.focus();
+ navigation.classList.toggle('open',open);
+ navigation.inert=mobileMenu.matches&&!open;
+ menuButton.setAttribute('aria-expanded',String(open));
+ menuButton.setAttribute('aria-label',open?'Close navigation':'Open navigation');
+}
+function closeMenu(){setMenuOpen(false);}
+navigation.dataset.animated='true';
+closeMenu();
+mobileMenu.addEventListener('change',closeMenu);
+menuButton?.addEventListener('click',()=>setMenuOpen(menuButton.getAttribute('aria-expanded')!=='true'));
 navigation?.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeMenu));
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&navigation?.classList.contains('open')){closeMenu();menuButton.focus();}});
 const grades={8:{title:'Start strong.',description:'Build foundations with clear explanations and regular practice.',focus:'Foundations & study habits'},9:{title:'Take the next step.',description:'Strengthen your concepts and problem-solving skills.',focus:'Concept clarity & problem solving'},10:{title:'Make your board year count.',description:'Clear concepts, board-style practice and focused revision.',focus:'Concepts, practice & revision'},11:{title:'Open up new possibilities.',description:'Navigate higher secondary subjects with structured support.',focus:'Higher secondary foundations'},12:{title:'Finish with confidence.',description:'Focused board preparation, previous-year papers and doubt discussions.',focus:'Board preparation & revision'}};

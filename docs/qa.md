@@ -37,3 +37,9 @@ Not performed: real phone calls/emails, admissions submissions (none exist), Rai
 - Browser confirms hero loading, switching to a student video, exactly one iframe and restoration of the previous poster.
 - Testimonial framing reviewed at 1440px and 390px: full faces visible, 4:3 photo surfaces at both sizes, no page overflow. Story bottom padding and testimonial top padding are both 24px.
 - JavaScript syntax, local asset/anchor/ID checks, removed-control checks and diff check passed. Static design scan returned no findings.
+
+## Mobile menu motion — latest
+- Browser sampled intermediate opening opacity/translation (360ms) and closing opacity (240ms), confirming actual transitions rather than instant display changes.
+- Closed links become inert immediately; panel visibility hides after closing. Escape dismissal and desktop resize were checked, with desktop links visible and no inert attribute.
+- Existing reduced-motion override disables transitions; no-JS fallback is preserved because animation styles require the JS-added data attribute.
+- JavaScript syntax and diff checks pass. Change is limited to menu state and motion.
