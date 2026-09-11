@@ -11,4 +11,15 @@
 - Independent finish reviewer checked scope, source, responsive design and deployment configuration. Both reported issues resolved.
 - Impeccable mechanical detector returned no findings.
 
-Not performed: real phone calls/emails, admissions submissions (none exist), Railway account deployment, or client approval of legal/admissions details.
+## Marketing revision checks
+- Refreshed the supplied Drive inventory: 2,022 entries, unchanged. Inspected selected result posters and preserved links to the originals.
+- Verified App Store and Google Play destinations and Smartup YouTube selections. App links appear in three visible locations.
+- Desktop 1440px, tablet 820px, mobile 390px and 320px: document width equals viewport width. Video frame heights are respectively 360px, 320px, 340px and 340px across both landscape and portrait cards.
+- Browser played the landscape Toppers Talk video and portrait CWC video. One embed is active at a time. Closing restores the poster and launch-link focus. Pointer close and keyboard close work; offscreen player was observed paused.
+- At 320px, mobile navigation opens; Escape closes it. Class 12 selection updates its content and exclusive pressed state. Pathadipalam hides missing directions, while Edappally uses the main phone with its supplied map.
+- Text testimonials are labelled sample copy in both the section note and each attribution. Results specify cohorts and press coverage links to its source.
+- Converted five Rubik files from TTF to WOFF2 (about 860KB to 280KB combined) and removed unused originals. Static output is about 1.3MB, excluding YouTube-delivered media.
+- Fresh `npm run check`, `npm test` (6/6), and `git diff --check` passed. Server tests cover status routes, methods, HEAD, valid/invalid ranges and malformed paths.
+- Final static Impeccable scan of both HTML pages returned `[]`. Independent final technical review found no blocking regression; its unused owl-handler finding was corrected by targeting the displayed small hero owl.
+
+Not performed: real phone calls/emails, admissions submissions (none exist), Railway account deployment, a full WCAG certification or throttled Lighthouse benchmark, caption/transcript approval for final videos, or client approval of legal/admissions details and sample testimonials. Cross-origin YouTube frames handle their own keyboard events; the visible Close video control remains available outside each player.
