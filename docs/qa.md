@@ -23,3 +23,11 @@
 - Final static Impeccable scan of both HTML pages returned `[]`. Independent final technical review found no blocking regression; its unused owl-handler finding was corrected by targeting the displayed small hero owl.
 
 Not performed: real phone calls/emails, admissions submissions (none exist), Railway account deployment, a full WCAG certification or throttled Lighthouse benchmark, caption/transcript approval for final videos, or client approval of legal/admissions details and sample testimonials. Cross-origin YouTube frames handle their own keyboard events; the visible Close video control remains available outside each player.
+
+## Carousel revision — latest
+- Removed duplicate hero/bottom app links and Life at Smartup; top ribbon keeps both verified store links with platform logos.
+- Static asset, internal anchor, duplicate ID, alt text and aria-controls checks passed for five rails. Independent source review found one unequal-height mobile rule; it was corrected.
+- Desktop 1440px, tablet 820px and mobile 320px document widths equal their viewports. All five rails have independent horizontal overflow and active controls. Story videos measured 300px on desktop and 240px on narrow mobile, equal across all formats.
+- Desktop story Next reaches the last card and disables at the boundary. Mobile learning carousel End/Home reaches both boundaries and updates buttons. Video close removes the iframe and restores launch-link focus.
+- Teacher and generated portrait composition inspected in the page. No broken loaded images observed. Final static design detector returned no findings.
+- Existing server tests remain passing (6/6); syntax and diff checks passed. No backend or LMS functionality added.
