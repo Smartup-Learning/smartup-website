@@ -2,6 +2,8 @@
 
 11 September 2026. Marketing website for students in classes 8–12 and their parents.
 
+Subsequent brand-consultant feedback removed the hero owl and the marked section eyebrows. The hero-owl proposal below is historical and is superseded by that direction; this audit records the earlier build.
+
 The strongest next step is to make the supplied owl expressive at two deliberate moments: a welcoming double blink in the hero, then a reassuring smile near the final contact invitation. Add gentle feedback when choosing a class. Start with those three touches and reassess before adding more animation.
 
 ## Why the page can feel plain
