@@ -76,14 +76,17 @@ if('IntersectionObserver' in window){const videoVisibility=new IntersectionObser
 
 // Every content rail has the same manual, keyboard-accessible navigation.
 document.querySelectorAll('[data-carousel]').forEach(section=>{
- const track=section.querySelector('.carousel-track');
+ const tracks=[...section.querySelectorAll('.carousel-track')];
+ let track=tracks[0];
  const controls=section.querySelector('.carousel-actions');
  const previous=controls.querySelector('[data-direction="-1"]');
  const next=controls.querySelector('[data-direction="1"]');
  let queued=false;
  function update(){
   queued=false;
+  track=tracks.find(rail=>!rail.closest('[hidden]'))||tracks[0];
   const max=Math.max(0,track.scrollWidth-track.clientWidth);
+  previous.setAttribute('aria-controls',track.id);next.setAttribute('aria-controls',track.id);
   controls.hidden=max<2;track.tabIndex=max<2?-1:0;
   previous.disabled=track.scrollLeft<2;next.disabled=track.scrollLeft>=max-2;
  }
@@ -95,13 +98,13 @@ document.querySelectorAll('[data-carousel]').forEach(section=>{
   track.scrollTo({left:Math.max(0,Math.min(max,target)),behavior:reduced.matches?'instant':'smooth'});
  }
  controls.querySelectorAll('button').forEach(button=>button.addEventListener('click',()=>move(Number(button.dataset.direction))));
- track.addEventListener('keydown',event=>{
+ tracks.forEach(rail=>rail.addEventListener('keydown',event=>{
   if(event.target!==track)return;
   if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();move(event.key==='ArrowRight'?1:-1);}
   if(event.key==='Home'||event.key==='End'){event.preventDefault();track.scrollTo({left:event.key==='Home'?0:track.scrollWidth,behavior:reduced.matches?'instant':'smooth'});}
- });
- track.addEventListener('scroll',()=>{if(!queued){queued=true;requestAnimationFrame(update);}},{passive:true});
- if('ResizeObserver' in window)new ResizeObserver(update).observe(track);else window.addEventListener('resize',update);
+ }));
+ tracks.forEach(rail=>rail.addEventListener('scroll',()=>{if(!queued){queued=true;requestAnimationFrame(update);}},{passive:true}));
+ if('ResizeObserver' in window){const observer=new ResizeObserver(update);tracks.forEach(rail=>observer.observe(rail));}else window.addEventListener('resize',update);
  if(section.querySelector('.board-tabs'))section.addEventListener('boardchange',update);
  update();
 });
