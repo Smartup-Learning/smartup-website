@@ -35,6 +35,6 @@ Files: `dist/assets/placeholders/parent-woman.webp`, `student-woman.webp`, `pare
 
 ## Interaction design
 
-Native horizontal overflow and scroll snap work without JavaScript. JavaScript adds labelled previous/next controls, disables them at the edges, and updates after scrolling/resizing. A focused rail supports ArrowLeft/ArrowRight and Home/End. Focus inside cards retains normal behaviour. Reduced-motion uses immediate scrolling. Videos load only on play; one player can be active, and the close overlay restores focus.
+Native horizontal overflow and scroll snap work without JavaScript. JavaScript adds labelled previous/next controls, disables them at the edges, and updates after scrolling/resizing. A focused rail supports ArrowLeft/ArrowRight and Home/End. Focus inside cards retains normal behaviour. Reduced-motion uses immediate scrolling. Videos load only on play; one player can be active. Native YouTube controls handle pause/resume. Starting another video restores the previous poster. Custom close overlays, the hero toolbar and the stories footnote were removed in the subsequent media refinement. Testimonial photos use 4:3 top-centred framing, retaining full faces.
 
 Current checks and earlier audit evidence are in `qa.md`. The prior audit remains historical; this revision supersedes its descriptions of three app-link placements and framed video cards.

@@ -16,25 +16,23 @@ function resetMotion(){if(owl)owl.style.removeProperty('transform');moveOwl();}r
 // Click-to-load players keep video embeds out of the initial page request.
 const players=[...document.querySelectorAll('.youtube-player')];
 let activePlayer=null;
-function closeVideo(player,restoreFocus=false){
+function resetVideo(player){
  const frame=player.querySelector('iframe');if(!frame)return;
- frame.remove();const launch=player.querySelector('.video-launch');launch.hidden=false;player.querySelector('.video-close').hidden=true;
- if(activePlayer===player)activePlayer=null;if(restoreFocus)launch.focus();
+ frame.remove();player.querySelector('.video-launch').hidden=false;
+ if(activePlayer===player)activePlayer=null;
 }
 players.forEach(player=>{
  const launch=player.querySelector('.video-launch');
  launch.addEventListener('click',event=>{
   if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
-  event.preventDefault();if(activePlayer&&activePlayer!==player)closeVideo(activePlayer);
+  event.preventDefault();if(activePlayer&&activePlayer!==player)resetVideo(activePlayer);
   const frame=document.createElement('iframe');
-  const params=new URLSearchParams({autoplay:'1',rel:'0',playsinline:'1',enablejsapi:'1',origin:location.origin});
+  const params=new URLSearchParams({autoplay:'1',controls:'1',rel:'0',playsinline:'1',enablejsapi:'1',origin:location.origin});
   frame.src=`https://www.youtube-nocookie.com/embed/${player.dataset.video}?${params}`;
   frame.title=player.dataset.title;frame.allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen';frame.allowFullscreen=true;frame.referrerPolicy='strict-origin-when-cross-origin';
-  launch.hidden=true;player.querySelector('.video-surface').append(frame);player.querySelector('.video-close').hidden=false;activePlayer=player;frame.focus();
+  launch.hidden=true;player.querySelector('.video-surface').append(frame);activePlayer=player;frame.focus();
  });
- player.querySelector('.video-close').addEventListener('click',()=>closeVideo(player,true));
 });
-document.addEventListener('keydown',event=>{if(event.key==='Escape'&&activePlayer)closeVideo(activePlayer,true);});
 function pauseVideo(player){player.querySelector('iframe')?.contentWindow?.postMessage(JSON.stringify({event:'command',func:'pauseVideo',args:[]}),'https://www.youtube-nocookie.com');}
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&activePlayer)pauseVideo(activePlayer);});
 if('IntersectionObserver' in window){const videoVisibility=new IntersectionObserver(entries=>entries.forEach(entry=>{if(!entry.isIntersecting&&activePlayer===entry.target)pauseVideo(entry.target);}),{threshold:0});players.forEach(player=>videoVisibility.observe(player));}

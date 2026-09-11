@@ -14,7 +14,7 @@ Deploy this repository to a Railway service. Railway detects the included Docker
 - Local Rubik WOFF2 fonts are served without third-party font requests.
 - Owl and logo are extracted from the supplied June 2026 brand PDF. Their vector shapes and original colours are preserved. The original owl beside the hero introduction uses bounded scroll movement; motion is disabled on mobile and for reduced-motion users.
 - Four teacher portraits, the Talent Eve hero photo and result announcements come from the client Drive folder. Result links expose the original posters; every statistic identifies its cohort.
-- Video placeholders use the official Smartup YouTube channel. Change `data-video`, `data-title`, poster, accessible name and direct link together when replacing a video. Frameless cards support portrait and landscape media at a common height. All five rails use the shared `.carousel-track` and `data-carousel` pattern in HTML; controls are progressively enabled in app.js.
+- Video placeholders use the official Smartup YouTube channel. Change `data-video`, `data-title`, poster, accessible name and direct link together when replacing a video. Frameless cards support portrait and landscape media at a common height. YouTube’s native controls handle play/pause; no custom close button or hero video toolbar is shown. All five rails use the shared `.carousel-track` and `data-carousel` pattern in HTML; controls are progressively enabled in app.js.
 - Three photo testimonials combine user-authorised sample copy with fictional AI portraits, visibly marked as placeholders. Replace both copy and attribution with approved material before removing those labels.
 - App Store and Google Play links appear once in the top ribbon, with Apple and Android icons. These open the existing student app; no LMS is built into this site.
 
@@ -28,7 +28,7 @@ Deploy this repository to a Railway service. Railway detects the included Docker
 - Set a canonical URL and update the absolute social image URL when the final Railway/custom domain is assigned.
 
 ## Verification
-Responsive and interaction checks cover class switching, centre fallback behaviour, valid phone/maps destinations, mobile navigation, FAQ disclosure, video playback/close, local assets, no horizontal overflow, and desktop/mobile review. See docs/qa.md and docs/audit-2026-09-11.md for evidence and limits.
+Responsive and interaction checks cover class switching, centre fallback behaviour, valid phone/maps destinations, mobile navigation, FAQ disclosure, video loading and switching, local assets, no horizontal overflow, and desktop/mobile review. See docs/qa.md and docs/audit-2026-09-11.md for evidence and limits.
 
 ## Carousel revision
 The visible copy was reduced from 1,205 to 745 words (about 38%). Duplicate hero downloads, the bottom app promotion and Life at Smartup were removed. Video stories, photo testimonials, press, learning formats and teachers now use the same manual carousel pattern. Arrow keys, Home/End and pointer controls are supported; the carousel does not auto-advance. See docs/carousel-revision.md for asset provenance and checks.

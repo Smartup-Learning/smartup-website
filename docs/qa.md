@@ -31,3 +31,9 @@ Not performed: real phone calls/emails, admissions submissions (none exist), Rai
 - Desktop story Next reaches the last card and disables at the boundary. Mobile learning carousel End/Home reaches both boundaries and updates buttons. Video close removes the iframe and restores launch-link focus.
 - Teacher and generated portrait composition inspected in the page. No broken loaded images observed. Final static design detector returned no findings.
 - Existing server tests remain passing (6/6); syntax and diff checks passed. No backend or LMS functionality added.
+
+## Media refinement — latest
+- Removed custom close buttons, hero video toolbar/YouTube link and story footnote from HTML, styles and event handlers. Native YouTube controls explicitly enabled.
+- Browser confirms hero loading, switching to a student video, exactly one iframe and restoration of the previous poster.
+- Testimonial framing reviewed at 1440px and 390px: full faces visible, 4:3 photo surfaces at both sizes, no page overflow. Story bottom padding and testimonial top padding are both 24px.
+- JavaScript syntax, local asset/anchor/ID checks, removed-control checks and diff check passed. Static design scan returned no findings.
