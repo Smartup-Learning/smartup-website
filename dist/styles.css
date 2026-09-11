@@ -46,3 +46,11 @@
  .header nav[data-animated].open{opacity:1;visibility:visible;pointer-events:auto;transform:translateY(0);transition:opacity 420ms cubic-bezier(.22,.61,.36,1),transform 420ms cubic-bezier(.22,.61,.36,1),visibility 0s}
  .menu-toggle span{transition:transform 320ms cubic-bezier(.22,.61,.36,1)}
 }
+
+/* One consistent inset from each main section boundary to its opening text. */
+:root{--section-intro-space:112px}
+main>.section,main>.contact{padding-top:var(--section-intro-space)}
+main>.hero .hero-inner{padding-top:var(--section-intro-space);align-items:start}
+main>.centres .centres-layout,main>.contact .contact-inner{align-items:start}
+main .section-heading>div:first-child{align-self:flex-start}
+@media(max-width:800px){:root{--section-intro-space:80px}}
