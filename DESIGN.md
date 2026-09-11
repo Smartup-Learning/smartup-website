@@ -1,0 +1,5 @@
+# Smartup design system
+Rubik is the client-mandated face. Main purple #5f2ea8, dark purple #392064, cream #f4eee4, ink #1e1e1e, white #ffffff. Yellow #ede60f is limited to small highlights and the main contact action. Display lettering is bold and tightly composed, with a 6rem maximum. Body text is 16px or more.
+Large purple and cream areas carry identity. Original PDF-extracted owl and logo are unchanged. Never invert the original logo for white use. The owl drifts slightly with scroll on desktop, using CSS perspective for depth; it is not a 3D model. Reduced-motion disables decorative movement.
+Marketing flow: offer → class selector → teaching → online options → real community photos → centre finder → questions → contact. Clear phone enquiry remains available. Images are real client media, locally optimised, without invented student outcomes.
+Mobile stacks editorial sections and uses a collapsible navigation. Interactive controls receive visible keyboard focus. No hidden content depends on animation or JS.
