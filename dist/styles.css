@@ -115,3 +115,7 @@ main .section-heading>div:first-child{align-self:flex-start}
 .header nav .diagnostic-cta:after{display:none}
 @media(min-width:801px) and (max-width:1000px){.header{padding-inline:24px;gap:16px}.header .brand img{width:135px}.header nav{gap:14px}.header .button.small{padding-inline:14px;font-size:12px;gap:10px}}
 @media(max-width:800px){.header nav{align-items:stretch}.header nav .diagnostic-cta{align-self:flex-start;min-height:48px;font-size:16px;padding-inline:20px}}
+
+/* Keep the diagnostic visible on mobile without opening navigation. */
+.mobile-diagnostic{display:none}
+@media(max-width:800px){.header nav .diagnostic-cta{display:none}.mobile-diagnostic{display:block;padding:0 20px 20px;background:white}.mobile-diagnostic .button{display:flex;width:100%;min-height:52px;justify-content:space-between;padding:14px 16px;gap:12px;font-size:15px}}

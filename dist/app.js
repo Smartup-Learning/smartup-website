@@ -1,10 +1,12 @@
 const menuButton=document.querySelector('.menu-toggle');
 const navigation=document.querySelector('#navigation');
 const mobileMenu=matchMedia('(max-width: 800px)');
+const mobileDiagnostic=document.querySelector('.mobile-diagnostic');
 function setMenuOpen(open){
  if(!open&&mobileMenu.matches&&navigation.contains(document.activeElement))menuButton.focus();
  navigation.classList.toggle('open',open);
  navigation.inert=mobileMenu.matches&&!open;
+ if(mobileDiagnostic)mobileDiagnostic.inert=mobileMenu.matches&&open;
  menuButton.setAttribute('aria-expanded',String(open));
  menuButton.setAttribute('aria-label',open?'Close navigation':'Open navigation');
 }
