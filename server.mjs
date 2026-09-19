@@ -3,11 +3,14 @@ import { createReadStream } from 'node:fs';
 import { stat } from 'node:fs/promises';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { createAssessmentHandler } from './server/assessment.mjs';
 const root = path.resolve('dist');
 const types = {'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.svg':'image/svg+xml','.webp':'image/webp','.png':'image/png','.jpg':'image/jpeg','.woff2':'font/woff2','.ttf':'font/ttf','.txt':'text/plain; charset=utf-8','.ico':'image/x-icon','.mp4':'video/mp4','.webm':'video/webm','.vtt':'text/vtt; charset=utf-8'};
-export function createSiteServer(){
+export function createSiteServer(options={}){
+ const assessment=createAssessmentHandler(options);
  return http.createServer(async (req,res)=>{
   const send=(status,body,headers={})=>{res.writeHead(status,{'Content-Type':'text/plain; charset=utf-8',...headers});res.end(req.method==='HEAD'?undefined:body);};
+  if(req.url.startsWith('/api/'))return assessment(req,res,new URL(req.url,'http://localhost'));
   if(!['GET','HEAD'].includes(req.method))return send(405,'Method not allowed',{'Allow':'GET, HEAD'});
   try {
    const url=new URL(req.url,'http://localhost');
@@ -39,6 +42,7 @@ export function createSiteServer(){
  });
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(path.resolve(process.argv[1])).href){
+ try{process.loadEnvFile('.env');}catch(error){if(error.code!=='ENOENT')throw error;}
  const port=Number(process.env.PORT)||3000;
  createSiteServer().listen(port,'0.0.0.0',()=>console.log(`Smartup ready at http://localhost:${port}`));
 }

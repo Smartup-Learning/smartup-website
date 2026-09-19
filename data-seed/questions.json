@@ -1,0 +1,4206 @@
+{
+  "version": 1,
+  "status": "draft",
+  "questions": [
+    {
+      "id": "math-foundation-01",
+      "subject": "mathematics",
+      "level": "foundation",
+      "topic": "Addition",
+      "prompt": "What is 7 + 5?",
+      "options": [
+        "12",
+        "11",
+        "10",
+        "13"
+      ],
+      "answer": 0,
+      "explanation": "Adding 5 to 7 gives 12."
+    },
+    {
+      "id": "math-foundation-02",
+      "subject": "mathematics",
+      "level": "foundation",
+      "topic": "Subtraction",
+      "prompt": "What is 15 − 6?",
+      "options": [
+        "10",
+        "9",
+        "11",
+        "8"
+      ],
+      "answer": 1,
+      "explanation": "Taking 6 away from 15 leaves 9."
+    },
+    {
+      "id": "math-foundation-03",
+      "subject": "mathematics",
+      "level": "foundation",
+      "topic": "Multiplication",
+      "prompt": "There are 4 bags with 3 marbles in each bag. How many marbles are there altogether?",
+      "options": [
+        "16",
+        "12",
+        "7",
+        "9"
+      ],
+      "answer": 1,
+      "explanation": "Four groups of 3 make 4 × 3 = 12 marbles."
+    },
+    {
+      "id": "math-foundation-04",
+      "subject": "mathematics",
+      "level": "foundation",
+      "topic": "Division",
+      "prompt": "12 apples are shared equally among 3 children. How many apples does each child get?",
+      "options": [
+        "3",
+        "4",
+        "6",
+        "9"
+      ],
+      "answer": 1,
+      "explanation": "12 ÷ 3 = 4 apples per child."
+    },
+    {
+      "id": "math-foundation-05",
+      "subject": "mathematics",
+      "level": "foundation",
+      "topic": "Place value",
+      "prompt": "What is the value of the digit 4 in 247?",
+      "options": [
+        "4",
+        "24",
+        "400",
+        "40"
+      ],
+      "answer": 3,
+      "explanation": "The digit 4 is in the tens place, so its value is 40."
+    },
+    {
+      "id": "math-foundation-06",
+      "subject": "mathematics",
+      "level": "foundation",
+      "topic": "Fractions",
+      "prompt": "A cake is cut into 4 equal pieces. One piece is what fraction of the cake?",
+      "options": [
+        "1/4",
+        "3/4",
+        "1/2",
+        "4/1"
+      ],
+      "answer": 0,
+      "explanation": "One of four equal parts is one quarter, or 1/4."
+    },
+    {
+      "id": "math-foundation-07",
+      "subject": "mathematics",
+      "level": "foundation",
+      "topic": "Shapes",
+      "prompt": "How many sides does a triangle have?",
+      "options": [
+        "4",
+        "5",
+        "2",
+        "3"
+      ],
+      "answer": 3,
+      "explanation": "A triangle has three straight sides."
+    },
+    {
+      "id": "math-foundation-08",
+      "subject": "mathematics",
+      "level": "foundation",
+      "topic": "Measurement",
+      "prompt": "How many centimetres make 1 metre?",
+      "options": [
+        "1000",
+        "50",
+        "100",
+        "10"
+      ],
+      "answer": 2,
+      "explanation": "One metre is equal to 100 centimetres."
+    },
+    {
+      "id": "math-foundation-09",
+      "subject": "mathematics",
+      "level": "foundation",
+      "topic": "Time",
+      "prompt": "How many minutes are there in half an hour?",
+      "options": [
+        "30",
+        "15",
+        "60",
+        "45"
+      ],
+      "answer": 0,
+      "explanation": "An hour has 60 minutes, and half of 60 is 30."
+    },
+    {
+      "id": "math-foundation-10",
+      "subject": "mathematics",
+      "level": "foundation",
+      "topic": "Number patterns",
+      "prompt": "What number comes next: 2, 4, 6, 8, ___?",
+      "options": [
+        "11",
+        "10",
+        "9",
+        "12"
+      ],
+      "answer": 1,
+      "explanation": "The pattern adds 2 each time, so 8 + 2 = 10."
+    },
+    {
+      "id": "math-5-01",
+      "subject": "mathematics",
+      "level": "5",
+      "topic": "Place value",
+      "prompt": "What is the value of the digit 6 in 46,218?",
+      "options": [
+        "6,000",
+        "60",
+        "60,000",
+        "600"
+      ],
+      "answer": 0,
+      "explanation": "The digit 6 is in the thousands place."
+    },
+    {
+      "id": "math-5-02",
+      "subject": "mathematics",
+      "level": "5",
+      "topic": "Addition",
+      "prompt": "What is 1,275 + 425?",
+      "options": [
+        "1,700",
+        "1,600",
+        "1,800",
+        "1,650"
+      ],
+      "answer": 0,
+      "explanation": "1,275 + 400 = 1,675, and adding 25 gives 1,700."
+    },
+    {
+      "id": "math-5-03",
+      "subject": "mathematics",
+      "level": "5",
+      "topic": "Multiplication",
+      "prompt": "What is 24 × 5?",
+      "options": [
+        "125",
+        "100",
+        "120",
+        "110"
+      ],
+      "answer": 2,
+      "explanation": "20 × 5 = 100 and 4 × 5 = 20, so the total is 120."
+    },
+    {
+      "id": "math-5-04",
+      "subject": "mathematics",
+      "level": "5",
+      "topic": "Division",
+      "prompt": "What is 144 ÷ 12?",
+      "options": [
+        "14",
+        "10",
+        "11",
+        "12"
+      ],
+      "answer": 3,
+      "explanation": "12 × 12 = 144, so 144 ÷ 12 = 12."
+    },
+    {
+      "id": "math-5-05",
+      "subject": "mathematics",
+      "level": "5",
+      "topic": "Equivalent fractions",
+      "prompt": "Which fraction is equal to 1/2?",
+      "options": [
+        "1/4",
+        "3/4",
+        "2/3",
+        "3/6"
+      ],
+      "answer": 3,
+      "explanation": "Multiplying both the numerator and denominator of 1/2 by 3 gives 3/6."
+    },
+    {
+      "id": "math-5-06",
+      "subject": "mathematics",
+      "level": "5",
+      "topic": "Decimals",
+      "prompt": "What is 0.4 + 0.3?",
+      "options": [
+        "0.7",
+        "0.12",
+        "0.1",
+        "7.0"
+      ],
+      "answer": 0,
+      "explanation": "Four tenths plus three tenths equals seven tenths, or 0.7."
+    },
+    {
+      "id": "math-5-07",
+      "subject": "mathematics",
+      "level": "5",
+      "topic": "Perimeter",
+      "prompt": "A rectangle is 8 cm long and 3 cm wide. What is its perimeter?",
+      "options": [
+        "16 cm",
+        "22 cm",
+        "11 cm",
+        "24 cm"
+      ],
+      "answer": 1,
+      "explanation": "The perimeter is 2 × (8 + 3) = 22 cm."
+    },
+    {
+      "id": "math-5-08",
+      "subject": "mathematics",
+      "level": "5",
+      "topic": "Area",
+      "prompt": "A square has sides of length 5 cm. What is its area?",
+      "options": [
+        "20 cm²",
+        "10 cm²",
+        "25 cm²",
+        "15 cm²"
+      ],
+      "answer": 2,
+      "explanation": "The area of a square is side × side, so 5 × 5 = 25 cm²."
+    },
+    {
+      "id": "math-5-09",
+      "subject": "mathematics",
+      "level": "5",
+      "topic": "Angles",
+      "prompt": "What is the size of a right angle?",
+      "options": [
+        "90°",
+        "360°",
+        "45°",
+        "180°"
+      ],
+      "answer": 0,
+      "explanation": "A right angle measures 90 degrees."
+    },
+    {
+      "id": "math-5-10",
+      "subject": "mathematics",
+      "level": "5",
+      "topic": "Unit conversion",
+      "prompt": "How many grams are there in 2 kilograms?",
+      "options": [
+        "20",
+        "20,000",
+        "2,000",
+        "200"
+      ],
+      "answer": 2,
+      "explanation": "Each kilogram is 1,000 grams, so 2 kilograms is 2,000 grams."
+    },
+    {
+      "id": "math-6-01",
+      "subject": "mathematics",
+      "level": "6",
+      "topic": "Integers",
+      "prompt": "What is −3 + 8?",
+      "options": [
+        "5",
+        "−5",
+        "11",
+        "−11"
+      ],
+      "answer": 0,
+      "explanation": "Starting at −3 and moving 8 steps to the right on a number line gives 5."
+    },
+    {
+      "id": "math-6-02",
+      "subject": "mathematics",
+      "level": "6",
+      "topic": "Factors",
+      "prompt": "What is the greatest common factor of 18 and 24?",
+      "options": [
+        "9",
+        "3",
+        "12",
+        "6"
+      ],
+      "answer": 3,
+      "explanation": "6 is the largest number that divides both 18 and 24 exactly."
+    },
+    {
+      "id": "math-6-03",
+      "subject": "mathematics",
+      "level": "6",
+      "topic": "Multiples",
+      "prompt": "What is the least common multiple of 4 and 6?",
+      "options": [
+        "12",
+        "24",
+        "10",
+        "2"
+      ],
+      "answer": 0,
+      "explanation": "12 is the smallest positive number that is a multiple of both 4 and 6."
+    },
+    {
+      "id": "math-6-04",
+      "subject": "mathematics",
+      "level": "6",
+      "topic": "Fractions",
+      "prompt": "What is 2/7 + 3/7?",
+      "options": [
+        "5/7",
+        "6/7",
+        "1/7",
+        "5/14"
+      ],
+      "answer": 0,
+      "explanation": "With equal denominators, add the numerators: 2 + 3 = 5."
+    },
+    {
+      "id": "math-6-05",
+      "subject": "mathematics",
+      "level": "6",
+      "topic": "Decimals",
+      "prompt": "What is 3.5 − 1.2?",
+      "options": [
+        "1.3",
+        "2.7",
+        "4.7",
+        "2.3"
+      ],
+      "answer": 3,
+      "explanation": "Subtracting 1.2 from 3.5 gives 2.3."
+    },
+    {
+      "id": "math-6-06",
+      "subject": "mathematics",
+      "level": "6",
+      "topic": "Ratio",
+      "prompt": "There are 8 red beads and 12 blue beads. What is the ratio of red beads to blue beads in simplest form?",
+      "options": [
+        "1:3",
+        "2:3",
+        "2:5",
+        "3:2"
+      ],
+      "answer": 1,
+      "explanation": "The ratio 8:12 simplifies to 2:3 by dividing both numbers by 4."
+    },
+    {
+      "id": "math-6-07",
+      "subject": "mathematics",
+      "level": "6",
+      "topic": "Algebra",
+      "prompt": "If x + 7 = 12, what is x?",
+      "options": [
+        "19",
+        "4",
+        "5",
+        "7"
+      ],
+      "answer": 2,
+      "explanation": "Subtract 7 from both sides: x = 12 − 7 = 5."
+    },
+    {
+      "id": "math-6-08",
+      "subject": "mathematics",
+      "level": "6",
+      "topic": "Geometry",
+      "prompt": "What is the sum of the three interior angles of a triangle?",
+      "options": [
+        "360°",
+        "270°",
+        "180°",
+        "90°"
+      ],
+      "answer": 2,
+      "explanation": "The interior angles of a triangle add up to 180 degrees."
+    },
+    {
+      "id": "math-6-09",
+      "subject": "mathematics",
+      "level": "6",
+      "topic": "Data handling",
+      "prompt": "What is the arithmetic mean of 4, 6 and 8?",
+      "options": [
+        "18",
+        "4",
+        "8",
+        "6"
+      ],
+      "answer": 3,
+      "explanation": "The mean is (4 + 6 + 8) ÷ 3 = 6."
+    },
+    {
+      "id": "math-6-10",
+      "subject": "mathematics",
+      "level": "6",
+      "topic": "Primes",
+      "prompt": "Which of these numbers is prime?",
+      "options": [
+        "13",
+        "21",
+        "15",
+        "9"
+      ],
+      "answer": 0,
+      "explanation": "13 has exactly two positive factors: 1 and 13."
+    },
+    {
+      "id": "math-7-01",
+      "subject": "mathematics",
+      "level": "7",
+      "topic": "Integers",
+      "prompt": "What is (−6) × (−4)?",
+      "options": [
+        "10",
+        "−24",
+        "−10",
+        "24"
+      ],
+      "answer": 3,
+      "explanation": "The product of two negative numbers is positive, and 6 × 4 = 24."
+    },
+    {
+      "id": "math-7-02",
+      "subject": "mathematics",
+      "level": "7",
+      "topic": "Fractions",
+      "prompt": "What is 3/4 ÷ 1/2?",
+      "options": [
+        "2/3",
+        "1/4",
+        "3/2",
+        "3/8"
+      ],
+      "answer": 2,
+      "explanation": "Dividing by 1/2 means multiplying by 2: 3/4 × 2 = 3/2."
+    },
+    {
+      "id": "math-7-03",
+      "subject": "mathematics",
+      "level": "7",
+      "topic": "Linear equations",
+      "prompt": "Solve 3x + 2 = 17.",
+      "options": [
+        "x = 7",
+        "x = 6",
+        "x = 5",
+        "x = 3"
+      ],
+      "answer": 2,
+      "explanation": "Subtract 2 to get 3x = 15, then divide by 3."
+    },
+    {
+      "id": "math-7-04",
+      "subject": "mathematics",
+      "level": "7",
+      "topic": "Percentages",
+      "prompt": "What is 15% of 200?",
+      "options": [
+        "35",
+        "20",
+        "30",
+        "15"
+      ],
+      "answer": 2,
+      "explanation": "15% of 200 is (15/100) × 200 = 30."
+    },
+    {
+      "id": "math-7-05",
+      "subject": "mathematics",
+      "level": "7",
+      "topic": "Simple interest",
+      "prompt": "What is the simple interest on ₹1,000 at 5% per year for 2 years?",
+      "options": [
+        "₹200",
+        "₹100",
+        "₹50",
+        "₹105"
+      ],
+      "answer": 1,
+      "explanation": "Simple interest is principal × rate × time / 100 = 1,000 × 5 × 2 / 100."
+    },
+    {
+      "id": "math-7-06",
+      "subject": "mathematics",
+      "level": "7",
+      "topic": "Exponents",
+      "prompt": "What is 2³ × 2²?",
+      "options": [
+        "12",
+        "32",
+        "16",
+        "64"
+      ],
+      "answer": 1,
+      "explanation": "For the same base, add exponents: 2³ × 2² = 2⁵ = 32."
+    },
+    {
+      "id": "math-7-07",
+      "subject": "mathematics",
+      "level": "7",
+      "topic": "Angles",
+      "prompt": "Two angles of a triangle are 50° and 60°. What is the third angle?",
+      "options": [
+        "60°",
+        "80°",
+        "70°",
+        "110°"
+      ],
+      "answer": 2,
+      "explanation": "The third angle is 180° − 50° − 60° = 70°."
+    },
+    {
+      "id": "math-7-08",
+      "subject": "mathematics",
+      "level": "7",
+      "topic": "Triangle area",
+      "prompt": "A triangle has base 10 cm and perpendicular height 6 cm. What is its area?",
+      "options": [
+        "60 cm²",
+        "16 cm²",
+        "30 cm²",
+        "20 cm²"
+      ],
+      "answer": 2,
+      "explanation": "The area is 1/2 × base × height = 1/2 × 10 × 6 = 30 cm²."
+    },
+    {
+      "id": "math-7-09",
+      "subject": "mathematics",
+      "level": "7",
+      "topic": "Probability",
+      "prompt": "A fair six-sided die is rolled once. What is the probability of rolling an even number?",
+      "options": [
+        "1/6",
+        "1/3",
+        "2/3",
+        "1/2"
+      ],
+      "answer": 3,
+      "explanation": "Three of the six outcomes are even: 2, 4 and 6. The probability is 3/6 = 1/2."
+    },
+    {
+      "id": "math-7-10",
+      "subject": "mathematics",
+      "level": "7",
+      "topic": "Data handling",
+      "prompt": "What is the median of 2, 4, 7, 9 and 11?",
+      "options": [
+        "7",
+        "9",
+        "6",
+        "4"
+      ],
+      "answer": 0,
+      "explanation": "The median is the middle value in the ordered list, which is 7."
+    },
+    {
+      "id": "math-8-01",
+      "subject": "mathematics",
+      "level": "8",
+      "topic": "Rational numbers",
+      "prompt": "What is −3/4 + 1/2?",
+      "options": [
+        "−1/4",
+        "−1/2",
+        "−5/4",
+        "1/4"
+      ],
+      "answer": 0,
+      "explanation": "Rewrite 1/2 as 2/4, then −3/4 + 2/4 = −1/4."
+    },
+    {
+      "id": "math-8-02",
+      "subject": "mathematics",
+      "level": "8",
+      "topic": "Linear equations",
+      "prompt": "Solve 5x − 7 = 3x + 9.",
+      "options": [
+        "x = 8",
+        "x = 1",
+        "x = 16",
+        "x = 2"
+      ],
+      "answer": 0,
+      "explanation": "Subtract 3x and add 7 on both sides to get 2x = 16, so x = 8."
+    },
+    {
+      "id": "math-8-03",
+      "subject": "mathematics",
+      "level": "8",
+      "topic": "Square roots",
+      "prompt": "What is the positive square root of 144?",
+      "options": [
+        "24",
+        "14",
+        "72",
+        "12"
+      ],
+      "answer": 3,
+      "explanation": "12 × 12 = 144, so the positive square root is 12."
+    },
+    {
+      "id": "math-8-04",
+      "subject": "mathematics",
+      "level": "8",
+      "topic": "Exponents",
+      "prompt": "What is 5⁰?",
+      "options": [
+        "10",
+        "5",
+        "0",
+        "1"
+      ],
+      "answer": 3,
+      "explanation": "Any nonzero number raised to the power 0 is 1."
+    },
+    {
+      "id": "math-8-05",
+      "subject": "mathematics",
+      "level": "8",
+      "topic": "Algebraic identities",
+      "prompt": "Which expression equals (x + 3)²?",
+      "options": [
+        "x² + 6x + 3",
+        "x² + 3x + 9",
+        "x² + 6x + 9",
+        "x² + 9"
+      ],
+      "answer": 2,
+      "explanation": "Using (a + b)² = a² + 2ab + b² gives x² + 6x + 9."
+    },
+    {
+      "id": "math-8-06",
+      "subject": "mathematics",
+      "level": "8",
+      "topic": "Percentages",
+      "prompt": "A ₹500 bag is sold at a 20% discount. What is the selling price?",
+      "options": [
+        "₹400",
+        "₹600",
+        "₹100",
+        "₹480"
+      ],
+      "answer": 0,
+      "explanation": "The discount is 20% of ₹500 = ₹100. Subtracting it leaves ₹400."
+    },
+    {
+      "id": "math-8-07",
+      "subject": "mathematics",
+      "level": "8",
+      "topic": "Direct proportion",
+      "prompt": "Three identical notebooks cost ₹45. At the same price per notebook, what do 7 notebooks cost?",
+      "options": [
+        "₹135",
+        "₹115",
+        "₹90",
+        "₹105"
+      ],
+      "answer": 3,
+      "explanation": "Each notebook costs ₹45 ÷ 3 = ₹15, so 7 cost ₹105."
+    },
+    {
+      "id": "math-8-08",
+      "subject": "mathematics",
+      "level": "8",
+      "topic": "Volume",
+      "prompt": "A cuboid is 4 cm long, 3 cm wide and 2 cm high. What is its volume?",
+      "options": [
+        "18 cm³",
+        "26 cm³",
+        "24 cm³",
+        "9 cm³"
+      ],
+      "answer": 2,
+      "explanation": "The volume is length × width × height = 4 × 3 × 2 = 24 cm³."
+    },
+    {
+      "id": "math-8-09",
+      "subject": "mathematics",
+      "level": "8",
+      "topic": "Polygons",
+      "prompt": "What is the sum of the interior angles of a quadrilateral?",
+      "options": [
+        "540°",
+        "360°",
+        "270°",
+        "180°"
+      ],
+      "answer": 1,
+      "explanation": "A quadrilateral can be split into two triangles, so its angle sum is 2 × 180°."
+    },
+    {
+      "id": "math-8-10",
+      "subject": "mathematics",
+      "level": "8",
+      "topic": "Probability",
+      "prompt": "A bag has 3 red balls and 5 blue balls. One ball is chosen at random. What is the probability that it is blue?",
+      "options": [
+        "3/8",
+        "5/3",
+        "5/8",
+        "1/5"
+      ],
+      "answer": 2,
+      "explanation": "There are 5 blue balls out of 8 equally likely balls, so the probability is 5/8."
+    },
+    {
+      "id": "math-9-01",
+      "subject": "mathematics",
+      "level": "9",
+      "topic": "Number systems",
+      "prompt": "Which of these numbers is irrational?",
+      "options": [
+        "0.75",
+        "1/2",
+        "√2",
+        "−3"
+      ],
+      "answer": 2,
+      "explanation": "√2 cannot be expressed as a ratio of two integers; the other three can."
+    },
+    {
+      "id": "math-9-02",
+      "subject": "mathematics",
+      "level": "9",
+      "topic": "Polynomials",
+      "prompt": "What is the degree of 4x³ − 2x + 7?",
+      "options": [
+        "3",
+        "1",
+        "2",
+        "4"
+      ],
+      "answer": 0,
+      "explanation": "The degree is the highest exponent of x with a nonzero coefficient, which is 3."
+    },
+    {
+      "id": "math-9-03",
+      "subject": "mathematics",
+      "level": "9",
+      "topic": "Polynomial values",
+      "prompt": "If p(x) = x² − 3x + 2, what is p(2)?",
+      "options": [
+        "4",
+        "8",
+        "0",
+        "2"
+      ],
+      "answer": 2,
+      "explanation": "Substitute x = 2: 4 − 6 + 2 = 0."
+    },
+    {
+      "id": "math-9-04",
+      "subject": "mathematics",
+      "level": "9",
+      "topic": "Coordinate geometry",
+      "prompt": "In which quadrant is the point (−3, 4)?",
+      "options": [
+        "Third quadrant",
+        "Fourth quadrant",
+        "First quadrant",
+        "Second quadrant"
+      ],
+      "answer": 3,
+      "explanation": "A negative x-coordinate and a positive y-coordinate place a point in the second quadrant."
+    },
+    {
+      "id": "math-9-05",
+      "subject": "mathematics",
+      "level": "9",
+      "topic": "Linear equations",
+      "prompt": "Which ordered pair satisfies 2x + y = 7?",
+      "options": [
+        "(3, 2)",
+        "(1, 4)",
+        "(2, 3)",
+        "(4, 1)"
+      ],
+      "answer": 2,
+      "explanation": "For (2, 3), 2 × 2 + 3 = 7."
+    },
+    {
+      "id": "math-9-06",
+      "subject": "mathematics",
+      "level": "9",
+      "topic": "Factorisation",
+      "prompt": "What is the factorised form of x² − 9?",
+      "options": [
+        "(x − 3)²",
+        "(x + 3)²",
+        "(x − 9)(x + 1)",
+        "(x − 3)(x + 3)"
+      ],
+      "answer": 3,
+      "explanation": "The difference of two squares is a² − b² = (a − b)(a + b)."
+    },
+    {
+      "id": "math-9-07",
+      "subject": "mathematics",
+      "level": "9",
+      "topic": "Triangle geometry",
+      "prompt": "An isosceles triangle has two equal sides meeting at an angle of 40°. What is each of the other two angles?",
+      "options": [
+        "80°",
+        "40°",
+        "70°",
+        "50°"
+      ],
+      "answer": 2,
+      "explanation": "The equal base angles share 180° − 40° = 140°, so each is 70°."
+    },
+    {
+      "id": "math-9-08",
+      "subject": "mathematics",
+      "level": "9",
+      "topic": "Circle geometry",
+      "prompt": "A line from the centre of a circle meets a chord at a right angle. What does it do to the chord?",
+      "options": [
+        "Doubles its length",
+        "Divides it into two equal parts",
+        "Divides it in a 1:2 ratio",
+        "Makes it a diameter"
+      ],
+      "answer": 1,
+      "explanation": "A perpendicular from the centre of a circle to a chord bisects that chord."
+    },
+    {
+      "id": "math-9-09",
+      "subject": "mathematics",
+      "level": "9",
+      "topic": "Surface area",
+      "prompt": "What is the total surface area of a cube with side length 3 cm?",
+      "options": [
+        "18 cm²",
+        "54 cm²",
+        "36 cm²",
+        "27 cm²"
+      ],
+      "answer": 1,
+      "explanation": "A cube has 6 square faces, so total surface area = 6 × 3² = 54 cm²."
+    },
+    {
+      "id": "math-9-10",
+      "subject": "mathematics",
+      "level": "9",
+      "topic": "Statistics",
+      "prompt": "The mean of 6, 8, 10 and x is 9. What is x?",
+      "options": [
+        "9",
+        "14",
+        "12",
+        "10"
+      ],
+      "answer": 2,
+      "explanation": "Four values with mean 9 have total 36. Since 6 + 8 + 10 = 24, x = 12."
+    },
+    {
+      "id": "math-10-01",
+      "subject": "mathematics",
+      "level": "10",
+      "topic": "Quadratic equations",
+      "prompt": "What are the roots of x² − 5x + 6 = 0?",
+      "options": [
+        "2 and 3",
+        "−1 and −6",
+        "1 and 6",
+        "−2 and −3"
+      ],
+      "answer": 0,
+      "explanation": "x² − 5x + 6 factors as (x − 2)(x − 3)."
+    },
+    {
+      "id": "math-10-02",
+      "subject": "mathematics",
+      "level": "10",
+      "topic": "Discriminant",
+      "prompt": "How many distinct real roots does x² − 4x + 4 = 0 have?",
+      "options": [
+        "Four",
+        "Zero",
+        "One",
+        "Two"
+      ],
+      "answer": 2,
+      "explanation": "The discriminant is (−4)² − 4 × 1 × 4 = 0, giving one repeated real root."
+    },
+    {
+      "id": "math-10-03",
+      "subject": "mathematics",
+      "level": "10",
+      "topic": "Arithmetic progressions",
+      "prompt": "What is the 10th term of the arithmetic progression 3, 7, 11, 15, …?",
+      "options": [
+        "35",
+        "39",
+        "43",
+        "40"
+      ],
+      "answer": 1,
+      "explanation": "The nth term is a + (n − 1)d, so the 10th term is 3 + 9 × 4 = 39."
+    },
+    {
+      "id": "math-10-04",
+      "subject": "mathematics",
+      "level": "10",
+      "topic": "Simultaneous equations",
+      "prompt": "If x + y = 7 and x − y = 1, what is x?",
+      "options": [
+        "4",
+        "3",
+        "5",
+        "6"
+      ],
+      "answer": 0,
+      "explanation": "Adding the equations gives 2x = 8, so x = 4."
+    },
+    {
+      "id": "math-10-05",
+      "subject": "mathematics",
+      "level": "10",
+      "topic": "Coordinate geometry",
+      "prompt": "What is the distance between (1, 2) and (4, 6)?",
+      "options": [
+        "7 units",
+        "5 units",
+        "3 units",
+        "4 units"
+      ],
+      "answer": 1,
+      "explanation": "The distance is √((4 − 1)² + (6 − 2)²) = √25 = 5 units."
+    },
+    {
+      "id": "math-10-06",
+      "subject": "mathematics",
+      "level": "10",
+      "topic": "Trigonometry",
+      "prompt": "For an acute angle θ in a right triangle, the opposite side is 3 cm and the hypotenuse is 5 cm. What is sin θ?",
+      "options": [
+        "4/5",
+        "3/5",
+        "5/3",
+        "3/4"
+      ],
+      "answer": 1,
+      "explanation": "sin θ = opposite side / hypotenuse = 3/5."
+    },
+    {
+      "id": "math-10-07",
+      "subject": "mathematics",
+      "level": "10",
+      "topic": "Similar triangles",
+      "prompt": "Two similar triangles have corresponding side lengths in the ratio 2:3. What is the ratio of their areas?",
+      "options": [
+        "3:2",
+        "8:27",
+        "2:3",
+        "4:9"
+      ],
+      "answer": 3,
+      "explanation": "The areas of similar triangles are in the ratio of the squares of corresponding sides."
+    },
+    {
+      "id": "math-10-08",
+      "subject": "mathematics",
+      "level": "10",
+      "topic": "Circle tangents",
+      "prompt": "What is the angle between a tangent to a circle and the radius drawn to the point of contact?",
+      "options": [
+        "180°",
+        "45°",
+        "90°",
+        "60°"
+      ],
+      "answer": 2,
+      "explanation": "A tangent is perpendicular to the radius at the point of contact."
+    },
+    {
+      "id": "math-10-09",
+      "subject": "mathematics",
+      "level": "10",
+      "topic": "Probability",
+      "prompt": "A fair six-sided die is rolled once. What is the probability of a number greater than 4?",
+      "options": [
+        "2/3",
+        "1/3",
+        "1/6",
+        "1/2"
+      ],
+      "answer": 1,
+      "explanation": "The favourable outcomes are 5 and 6, so the probability is 2/6 = 1/3."
+    },
+    {
+      "id": "math-10-10",
+      "subject": "mathematics",
+      "level": "10",
+      "topic": "Mensuration",
+      "prompt": "A cylinder has radius 3 cm and height 5 cm. What is its volume in terms of π?",
+      "options": [
+        "15π cm³",
+        "90π cm³",
+        "30π cm³",
+        "45π cm³"
+      ],
+      "answer": 3,
+      "explanation": "Cylinder volume is πr²h = π × 3² × 5 = 45π cm³."
+    },
+    {
+      "id": "physics-foundation-01",
+      "subject": "physics",
+      "level": "foundation",
+      "topic": "Light",
+      "prompt": "Which of these gives off its own light?",
+      "options": [
+        "The Sun",
+        "A mirror",
+        "The Moon",
+        "A book"
+      ],
+      "answer": 0,
+      "explanation": "The Sun produces its own light; the other objects are seen by reflected light."
+    },
+    {
+      "id": "physics-foundation-02",
+      "subject": "physics",
+      "level": "foundation",
+      "topic": "Sound",
+      "prompt": "Which body part do we mainly use to hear sounds?",
+      "options": [
+        "Eyes",
+        "Nose",
+        "Skin",
+        "Ears"
+      ],
+      "answer": 3,
+      "explanation": "Our ears detect sound vibrations."
+    },
+    {
+      "id": "physics-foundation-03",
+      "subject": "physics",
+      "level": "foundation",
+      "topic": "Forces",
+      "prompt": "Which action is a pull?",
+      "options": [
+        "Pressing a doorbell",
+        "Drawing a bucket upward from a well with a rope",
+        "Pushing a trolley forward",
+        "Kicking a ball away"
+      ],
+      "answer": 1,
+      "explanation": "Pulling the rope brings the bucket toward the person above it."
+    },
+    {
+      "id": "physics-foundation-04",
+      "subject": "physics",
+      "level": "foundation",
+      "topic": "Gravity",
+      "prompt": "What usually happens when you release a ball above the ground?",
+      "options": [
+        "It moves upward forever",
+        "It falls toward the ground",
+        "It remains still in the air",
+        "It disappears"
+      ],
+      "answer": 1,
+      "explanation": "Earth’s gravity pulls the ball toward the ground."
+    },
+    {
+      "id": "physics-foundation-05",
+      "subject": "physics",
+      "level": "foundation",
+      "topic": "Materials",
+      "prompt": "Which material lets you see clearly through it?",
+      "options": [
+        "Stone",
+        "Clear glass",
+        "Wood",
+        "Cardboard"
+      ],
+      "answer": 1,
+      "explanation": "Clear glass is transparent, so it lets light pass through with little scattering."
+    },
+    {
+      "id": "physics-foundation-06",
+      "subject": "physics",
+      "level": "foundation",
+      "topic": "Heat",
+      "prompt": "Which object is usually the warmest?",
+      "options": [
+        "A book in a room",
+        "A glass of chilled water",
+        "An ice cube",
+        "A cup of freshly boiled water"
+      ],
+      "answer": 3,
+      "explanation": "Freshly boiled water is much warmer than ice, chilled water or an ordinary room."
+    },
+    {
+      "id": "physics-foundation-07",
+      "subject": "physics",
+      "level": "foundation",
+      "topic": "Magnets",
+      "prompt": "Which object is most likely to be attracted by a magnet?",
+      "options": [
+        "A wooden spoon",
+        "An iron nail",
+        "A plastic ruler",
+        "A rubber ball"
+      ],
+      "answer": 1,
+      "explanation": "Magnets attract iron, but not ordinary wood, plastic or rubber."
+    },
+    {
+      "id": "physics-foundation-08",
+      "subject": "physics",
+      "level": "foundation",
+      "topic": "Measurement",
+      "prompt": "Which tool is best for measuring the length of a pencil?",
+      "options": [
+        "A thermometer",
+        "A ruler",
+        "A clock",
+        "A weighing scale"
+      ],
+      "answer": 1,
+      "explanation": "A ruler is marked in units of length."
+    },
+    {
+      "id": "physics-foundation-09",
+      "subject": "physics",
+      "level": "foundation",
+      "topic": "States of matter",
+      "prompt": "What happens to an ice cube when it is warmed enough?",
+      "options": [
+        "It melts into liquid water",
+        "It becomes a magnet",
+        "It grows heavier without anything being added",
+        "It turns into wood"
+      ],
+      "answer": 0,
+      "explanation": "Heating ice can change it from solid water to liquid water."
+    },
+    {
+      "id": "physics-foundation-10",
+      "subject": "physics",
+      "level": "foundation",
+      "topic": "Motion",
+      "prompt": "Which object is moving relative to the road?",
+      "options": [
+        "A fixed streetlight",
+        "A road sign",
+        "A parked car",
+        "A bicycle travelling along the road"
+      ],
+      "answer": 3,
+      "explanation": "The travelling bicycle changes its position relative to the road."
+    },
+    {
+      "id": "physics-5-01",
+      "subject": "physics",
+      "level": "5",
+      "topic": "Shadows",
+      "prompt": "What is needed to form a shadow on a screen?",
+      "options": [
+        "Cold air around the screen",
+        "An opaque object blocking light",
+        "A magnet near the screen",
+        "An object making sound"
+      ],
+      "answer": 1,
+      "explanation": "A shadow forms where an opaque object prevents light from reaching the screen."
+    },
+    {
+      "id": "physics-5-02",
+      "subject": "physics",
+      "level": "5",
+      "topic": "Sound",
+      "prompt": "What happens to a drum skin when the drum makes a sound?",
+      "options": [
+        "It stops moving completely",
+        "It vibrates",
+        "It becomes transparent",
+        "It produces liquid"
+      ],
+      "answer": 1,
+      "explanation": "A vibrating drum skin makes the surrounding air vibrate, producing sound."
+    },
+    {
+      "id": "physics-5-03",
+      "subject": "physics",
+      "level": "5",
+      "topic": "Friction",
+      "prompt": "Why does a rolling ball usually slow down on a level floor?",
+      "options": [
+        "Gravity stops acting",
+        "Friction and air resistance oppose its motion",
+        "Its mass disappears",
+        "The floor pulls it upward"
+      ],
+      "answer": 1,
+      "explanation": "Friction and air resistance oppose the ball’s motion and slow it down."
+    },
+    {
+      "id": "physics-5-04",
+      "subject": "physics",
+      "level": "5",
+      "topic": "Simple machines",
+      "prompt": "Which simple machine is a playground seesaw an example of?",
+      "options": [
+        "A wedge",
+        "A pulley",
+        "A lever",
+        "A screw"
+      ],
+      "answer": 2,
+      "explanation": "A seesaw turns about a fixed support, just as a lever does."
+    },
+    {
+      "id": "physics-5-05",
+      "subject": "physics",
+      "level": "5",
+      "topic": "Energy changes",
+      "prompt": "A working electric fan mainly changes electrical energy into what useful form?",
+      "options": [
+        "Movement of its blades",
+        "Energy stored in a battery",
+        "Nuclear energy",
+        "Chemical energy in food"
+      ],
+      "answer": 0,
+      "explanation": "The fan’s motor uses electrical energy to move the blades."
+    },
+    {
+      "id": "physics-5-06",
+      "subject": "physics",
+      "level": "5",
+      "topic": "Heat",
+      "prompt": "Why can a metal spoon in hot soup become warm?",
+      "options": [
+        "Heat travels from the soup into the spoon",
+        "The spoon creates its own sunlight",
+        "The soup turns into electricity",
+        "Cold flows from the spoon into the soup"
+      ],
+      "answer": 0,
+      "explanation": "Heat transfers from the hotter soup to the cooler spoon."
+    },
+    {
+      "id": "physics-5-07",
+      "subject": "physics",
+      "level": "5",
+      "topic": "Water cycle",
+      "prompt": "What is the change of liquid water at its surface into water vapour, below its boiling point, called?",
+      "options": [
+        "Evaporation",
+        "Melting",
+        "Freezing",
+        "Condensation"
+      ],
+      "answer": 0,
+      "explanation": "Evaporation changes liquid water at its surface into water vapour and can happen below the boiling point."
+    },
+    {
+      "id": "physics-5-08",
+      "subject": "physics",
+      "level": "5",
+      "topic": "Electricity",
+      "prompt": "Which source can power a small battery-operated torch?",
+      "options": [
+        "A dry leaf",
+        "A battery",
+        "A glass marble",
+        "An unconnected plastic wire"
+      ],
+      "answer": 1,
+      "explanation": "A battery supplies electrical energy to the torch."
+    },
+    {
+      "id": "physics-5-09",
+      "subject": "physics",
+      "level": "5",
+      "topic": "Magnetic poles",
+      "prompt": "What happens when two north poles of magnets are brought close together?",
+      "options": [
+        "They lose all their mass",
+        "They attract each other",
+        "They always stick together",
+        "They repel each other"
+      ],
+      "answer": 3,
+      "explanation": "Like magnetic poles repel each other."
+    },
+    {
+      "id": "physics-5-10",
+      "subject": "physics",
+      "level": "5",
+      "topic": "Measurement",
+      "prompt": "Which unit would usually be most convenient for the distance between two towns?",
+      "options": [
+        "Kilometres",
+        "Grams",
+        "Millimetres",
+        "Seconds"
+      ],
+      "answer": 0,
+      "explanation": "A kilometre is a suitable unit for large distances between places."
+    },
+    {
+      "id": "physics-6-01",
+      "subject": "physics",
+      "level": "6",
+      "topic": "Measurement",
+      "prompt": "How many millimetres are in 5 centimetres?",
+      "options": [
+        "5",
+        "0.5",
+        "50",
+        "500"
+      ],
+      "answer": 2,
+      "explanation": "Each centimetre contains 10 millimetres, so 5 cm = 50 mm."
+    },
+    {
+      "id": "physics-6-02",
+      "subject": "physics",
+      "level": "6",
+      "topic": "Types of motion",
+      "prompt": "The blades of a ceiling fan turn around a fixed axis. What type of motion is this?",
+      "options": [
+        "Rotational motion",
+        "No motion",
+        "Random motion only",
+        "Straight-line motion"
+      ],
+      "answer": 0,
+      "explanation": "Turning around an axis is rotational motion."
+    },
+    {
+      "id": "physics-6-03",
+      "subject": "physics",
+      "level": "6",
+      "topic": "Light",
+      "prompt": "Which statement describes how light travels through air in a uniform region?",
+      "options": [
+        "Only in circles",
+        "In a zigzag after every centimetre",
+        "In straight lines",
+        "Only toward magnets"
+      ],
+      "answer": 2,
+      "explanation": "In a uniform medium, light travels in straight lines."
+    },
+    {
+      "id": "physics-6-04",
+      "subject": "physics",
+      "level": "6",
+      "topic": "Reflection",
+      "prompt": "When you see your face in a mirror, what has happened to the light reaching your eyes?",
+      "options": [
+        "It has reflected from the mirror",
+        "It has turned into a magnetic field",
+        "It has become sound",
+        "It has stopped at the mirror"
+      ],
+      "answer": 0,
+      "explanation": "The mirror reflects light from your face into your eyes."
+    },
+    {
+      "id": "physics-6-05",
+      "subject": "physics",
+      "level": "6",
+      "topic": "Electric circuits",
+      "prompt": "A cell, bulb and wires are connected correctly, but the switch is open. What will the bulb do?",
+      "options": [
+        "Flash forever",
+        "Glow brighter than with a closed switch",
+        "Remain off",
+        "Glow at maximum brightness"
+      ],
+      "answer": 2,
+      "explanation": "An open switch breaks the circuit, so current cannot flow through the bulb."
+    },
+    {
+      "id": "physics-6-06",
+      "subject": "physics",
+      "level": "6",
+      "topic": "Conductors",
+      "prompt": "Which of these is a good electrical conductor?",
+      "options": [
+        "Plastic",
+        "Rubber",
+        "Copper",
+        "Dry wood"
+      ],
+      "answer": 2,
+      "explanation": "Copper allows electric current to flow easily."
+    },
+    {
+      "id": "physics-6-07",
+      "subject": "physics",
+      "level": "6",
+      "topic": "Magnets",
+      "prompt": "Where is the magnetic attraction of a bar magnet usually strongest?",
+      "options": [
+        "Only outside Earth’s atmosphere",
+        "Equally weak everywhere",
+        "Only at its exact centre",
+        "Near its poles"
+      ],
+      "answer": 3,
+      "explanation": "A bar magnet’s magnetic effect is strongest near its poles."
+    },
+    {
+      "id": "physics-6-08",
+      "subject": "physics",
+      "level": "6",
+      "topic": "Magnetic materials",
+      "prompt": "Which material would a typical classroom magnet attract strongly?",
+      "options": [
+        "Paper",
+        "Aluminium foil",
+        "Glass",
+        "Iron"
+      ],
+      "answer": 3,
+      "explanation": "Iron is a strongly magnetic material."
+    },
+    {
+      "id": "physics-6-09",
+      "subject": "physics",
+      "level": "6",
+      "topic": "Friction",
+      "prompt": "Why do shoes with rough soles help prevent slipping?",
+      "options": [
+        "They remove gravity",
+        "They provide more friction with the ground",
+        "They make the ground magnetic",
+        "They reduce the wearer’s mass"
+      ],
+      "answer": 1,
+      "explanation": "Rough soles provide grip by increasing friction with the ground."
+    },
+    {
+      "id": "physics-6-10",
+      "subject": "physics",
+      "level": "6",
+      "topic": "Measuring time",
+      "prompt": "Which instrument is best for measuring the time taken for a short race?",
+      "options": [
+        "A metre scale",
+        "A measuring cylinder",
+        "A stopwatch",
+        "A compass"
+      ],
+      "answer": 2,
+      "explanation": "A stopwatch measures elapsed time."
+    },
+    {
+      "id": "physics-7-01",
+      "subject": "physics",
+      "level": "7",
+      "topic": "Temperature",
+      "prompt": "Which instrument measures temperature?",
+      "options": [
+        "A thermometer",
+        "A barometer",
+        "A spring balance",
+        "An ammeter"
+      ],
+      "answer": 0,
+      "explanation": "A thermometer measures how hot or cold something is."
+    },
+    {
+      "id": "physics-7-02",
+      "subject": "physics",
+      "level": "7",
+      "topic": "Heat transfer",
+      "prompt": "How does most heat travel along a solid metal rod from its hot end?",
+      "options": [
+        "Evaporation",
+        "Conduction",
+        "Convection",
+        "Freezing"
+      ],
+      "answer": 1,
+      "explanation": "Conduction transfers heat through a solid without the whole solid flowing."
+    },
+    {
+      "id": "physics-7-03",
+      "subject": "physics",
+      "level": "7",
+      "topic": "Convection",
+      "prompt": "Why does warm air usually rise in cooler surrounding air?",
+      "options": [
+        "It is attracted only by the ceiling",
+        "It is less dense than the cooler air",
+        "It turns into a solid",
+        "It has no mass"
+      ],
+      "answer": 1,
+      "explanation": "Warm air expands and is less dense than nearby cooler air, so buoyancy makes it rise."
+    },
+    {
+      "id": "physics-7-04",
+      "subject": "physics",
+      "level": "7",
+      "topic": "Radiation",
+      "prompt": "How does energy from the Sun reach Earth through space?",
+      "options": [
+        "By convection through water",
+        "By sound waves",
+        "By conduction through air",
+        "By radiation"
+      ],
+      "answer": 3,
+      "explanation": "Radiation can transfer energy through the vacuum of space."
+    },
+    {
+      "id": "physics-7-05",
+      "subject": "physics",
+      "level": "7",
+      "topic": "Speed",
+      "prompt": "A cyclist travels 120 metres in 20 seconds. What is the average speed?",
+      "options": [
+        "100 m/s",
+        "6 m/s",
+        "140 m/s",
+        "2,400 m/s"
+      ],
+      "answer": 1,
+      "explanation": "Average speed = distance / time = 120 / 20 = 6 m/s."
+    },
+    {
+      "id": "physics-7-06",
+      "subject": "physics",
+      "level": "7",
+      "topic": "Motion graphs",
+      "prompt": "On a distance–time graph, a horizontal line over a period of time means the object is doing what?",
+      "options": [
+        "Moving backward at constant speed",
+        "Remaining at rest",
+        "Speeding up steadily",
+        "Moving at its highest speed"
+      ],
+      "answer": 1,
+      "explanation": "A horizontal line means the distance does not change as time passes."
+    },
+    {
+      "id": "physics-7-07",
+      "subject": "physics",
+      "level": "7",
+      "topic": "Electric current",
+      "prompt": "Which effect of electric current is used by a simple electric heater?",
+      "options": [
+        "Shadow-forming effect",
+        "Heating effect",
+        "Sound-reflection effect",
+        "Cooling effect only"
+      ],
+      "answer": 1,
+      "explanation": "Current passing through the heater element produces heat."
+    },
+    {
+      "id": "physics-7-08",
+      "subject": "physics",
+      "level": "7",
+      "topic": "Electromagnets",
+      "prompt": "What makes a simple electromagnet lose most of its magnetism?",
+      "options": [
+        "Switching off the current through its coil",
+        "Increasing the current",
+        "Putting an iron core inside the coil",
+        "Adding more turns to the coil"
+      ],
+      "answer": 0,
+      "explanation": "The magnetic field of the coil disappears when the current is switched off."
+    },
+    {
+      "id": "physics-7-09",
+      "subject": "physics",
+      "level": "7",
+      "topic": "Plane mirrors",
+      "prompt": "An object is 2 m in front of a plane mirror. How far behind the mirror is its image?",
+      "options": [
+        "0 m",
+        "1 m",
+        "4 m",
+        "2 m"
+      ],
+      "answer": 3,
+      "explanation": "A plane mirror forms an image as far behind the mirror as the object is in front."
+    },
+    {
+      "id": "physics-7-10",
+      "subject": "physics",
+      "level": "7",
+      "topic": "White light",
+      "prompt": "What does a prism show when it separates white light into a spectrum?",
+      "options": [
+        "Every colour has the same appearance",
+        "Light cannot change direction",
+        "White light contains different colours",
+        "White light contains only green"
+      ],
+      "answer": 2,
+      "explanation": "A prism separates the different colours present in white light."
+    },
+    {
+      "id": "physics-8-01",
+      "subject": "physics",
+      "level": "8",
+      "topic": "Pressure",
+      "prompt": "The same force is applied to two surfaces. Which surface experiences greater pressure?",
+      "options": [
+        "Both must have zero pressure",
+        "The surface with the larger area",
+        "The surface with the smaller area",
+        "Area never affects pressure"
+      ],
+      "answer": 2,
+      "explanation": "Pressure = force / area, so a smaller area gives greater pressure for the same force."
+    },
+    {
+      "id": "physics-8-02",
+      "subject": "physics",
+      "level": "8",
+      "topic": "Forces",
+      "prompt": "Two opposite horizontal forces of 10 N and 6 N act on a box. What is the magnitude of the net force?",
+      "options": [
+        "60 N",
+        "4 N",
+        "16 N",
+        "0 N"
+      ],
+      "answer": 1,
+      "explanation": "Opposite forces subtract, giving a net force of 10 − 6 = 4 N."
+    },
+    {
+      "id": "physics-8-03",
+      "subject": "physics",
+      "level": "8",
+      "topic": "Liquid pressure",
+      "prompt": "How does pressure in still water change as depth increases?",
+      "options": [
+        "It changes into sound",
+        "It decreases",
+        "It becomes zero",
+        "It increases"
+      ],
+      "answer": 3,
+      "explanation": "A greater depth has more water above it, which produces greater pressure."
+    },
+    {
+      "id": "physics-8-04",
+      "subject": "physics",
+      "level": "8",
+      "topic": "Friction",
+      "prompt": "Why is oil added between moving metal parts in a machine?",
+      "options": [
+        "To increase their mass greatly",
+        "To reduce friction",
+        "To remove all forces",
+        "To make the parts transparent"
+      ],
+      "answer": 1,
+      "explanation": "Oil forms a lubricating layer that reduces direct contact and friction."
+    },
+    {
+      "id": "physics-8-05",
+      "subject": "physics",
+      "level": "8",
+      "topic": "Sound frequency",
+      "prompt": "A vibrating object makes 200 vibrations in one second. What is its frequency?",
+      "options": [
+        "200 m/s",
+        "200 Hz",
+        "200 J",
+        "200 N"
+      ],
+      "answer": 1,
+      "explanation": "Frequency is the number of vibrations per second, measured in hertz."
+    },
+    {
+      "id": "physics-8-06",
+      "subject": "physics",
+      "level": "8",
+      "topic": "Pitch",
+      "prompt": "Which sound has the higher pitch?",
+      "options": [
+        "A sound with frequency 200 Hz",
+        "A sound with frequency 800 Hz",
+        "A sound with frequency 100 Hz",
+        "A sound with frequency 50 Hz"
+      ],
+      "answer": 1,
+      "explanation": "Higher frequency produces a higher-pitched sound."
+    },
+    {
+      "id": "physics-8-07",
+      "subject": "physics",
+      "level": "8",
+      "topic": "Loudness",
+      "prompt": "For the same sound source and conditions, larger vibration amplitude usually produces what?",
+      "options": [
+        "No sound",
+        "A slower speed of sound in air",
+        "A lower frequency in every case",
+        "A louder sound"
+      ],
+      "answer": 3,
+      "explanation": "Larger vibration amplitude carries more sound energy and produces a louder sound."
+    },
+    {
+      "id": "physics-8-08",
+      "subject": "physics",
+      "level": "8",
+      "topic": "Static electricity",
+      "prompt": "What happens when two objects carrying like electric charges are brought near each other?",
+      "options": [
+        "They repel",
+        "Their masses become zero",
+        "They stop having any charge automatically",
+        "They always attract"
+      ],
+      "answer": 0,
+      "explanation": "Like electric charges repel, while unlike charges attract."
+    },
+    {
+      "id": "physics-8-09",
+      "subject": "physics",
+      "level": "8",
+      "topic": "Reflection",
+      "prompt": "A ray hits a plane mirror at 30° to the normal. What is its angle of reflection, measured from the normal?",
+      "options": [
+        "60°",
+        "120°",
+        "30°",
+        "90°"
+      ],
+      "answer": 2,
+      "explanation": "The angle of reflection equals the angle of incidence, both measured from the normal."
+    },
+    {
+      "id": "physics-8-10",
+      "subject": "physics",
+      "level": "8",
+      "topic": "Sound transmission",
+      "prompt": "Through which of these can sound NOT travel?",
+      "options": [
+        "A vacuum",
+        "Water",
+        "Steel",
+        "Air"
+      ],
+      "answer": 0,
+      "explanation": "Sound needs a material medium, so it cannot travel through a vacuum."
+    },
+    {
+      "id": "physics-9-01",
+      "subject": "physics",
+      "level": "9",
+      "topic": "Acceleration",
+      "prompt": "A car’s velocity changes from 5 m/s to 15 m/s in 2 s in the same direction. What is its average acceleration?",
+      "options": [
+        "10 m/s²",
+        "40 m/s²",
+        "5 m/s²",
+        "20 m/s²"
+      ],
+      "answer": 2,
+      "explanation": "Average acceleration = change in velocity / time = (15 − 5) / 2 = 5 m/s²."
+    },
+    {
+      "id": "physics-9-02",
+      "subject": "physics",
+      "level": "9",
+      "topic": "Newton’s second law",
+      "prompt": "What net force gives a 3 kg object an acceleration of 2 m/s²?",
+      "options": [
+        "1.5 N",
+        "9 N",
+        "5 N",
+        "6 N"
+      ],
+      "answer": 3,
+      "explanation": "F = ma = 3 × 2 = 6 N."
+    },
+    {
+      "id": "physics-9-03",
+      "subject": "physics",
+      "level": "9",
+      "topic": "Momentum",
+      "prompt": "A 2 kg object moves at 4 m/s. What is the magnitude of its momentum?",
+      "options": [
+        "2 kg·m/s",
+        "16 kg·m/s",
+        "8 kg·m/s",
+        "6 kg·m/s"
+      ],
+      "answer": 2,
+      "explanation": "Momentum = mass × velocity, so its magnitude is 2 × 4 = 8 kg·m/s."
+    },
+    {
+      "id": "physics-9-04",
+      "subject": "physics",
+      "level": "9",
+      "topic": "Gravitation",
+      "prompt": "Using g = 10 m/s², what is the weight of a 5 kg object?",
+      "options": [
+        "0.5 N",
+        "50 N",
+        "5 N",
+        "15 N"
+      ],
+      "answer": 1,
+      "explanation": "Weight = mg = 5 × 10 = 50 N."
+    },
+    {
+      "id": "physics-9-05",
+      "subject": "physics",
+      "level": "9",
+      "topic": "Work",
+      "prompt": "A constant force of 10 N moves an object 3 m in the direction of the force. How much work does the force do?",
+      "options": [
+        "0 J",
+        "30 J",
+        "13 J",
+        "3 J"
+      ],
+      "answer": 1,
+      "explanation": "Work = force × displacement in the force’s direction = 10 × 3 = 30 J."
+    },
+    {
+      "id": "physics-9-06",
+      "subject": "physics",
+      "level": "9",
+      "topic": "Kinetic energy",
+      "prompt": "What is the kinetic energy of a 2 kg object moving at 3 m/s?",
+      "options": [
+        "3 J",
+        "9 J",
+        "18 J",
+        "6 J"
+      ],
+      "answer": 1,
+      "explanation": "Kinetic energy = 1/2 mv² = 1/2 × 2 × 3² = 9 J."
+    },
+    {
+      "id": "physics-9-07",
+      "subject": "physics",
+      "level": "9",
+      "topic": "Power",
+      "prompt": "A machine does 600 J of work in 3 s. What is its average power?",
+      "options": [
+        "603 W",
+        "200 W",
+        "0.005 W",
+        "1,800 W"
+      ],
+      "answer": 1,
+      "explanation": "Power = work / time = 600 / 3 = 200 W."
+    },
+    {
+      "id": "physics-9-08",
+      "subject": "physics",
+      "level": "9",
+      "topic": "Density",
+      "prompt": "An object has mass 200 g and volume 50 cm³. What is its density?",
+      "options": [
+        "150 g/cm³",
+        "250 g/cm³",
+        "0.25 g/cm³",
+        "4 g/cm³"
+      ],
+      "answer": 3,
+      "explanation": "Density = mass / volume = 200 / 50 = 4 g/cm³."
+    },
+    {
+      "id": "physics-9-09",
+      "subject": "physics",
+      "level": "9",
+      "topic": "Sound waves",
+      "prompt": "A wave has frequency 100 Hz and wavelength 3 m. What is its speed?",
+      "options": [
+        "33.3 m/s",
+        "97 m/s",
+        "300 m/s",
+        "103 m/s"
+      ],
+      "answer": 2,
+      "explanation": "Wave speed = frequency × wavelength = 100 × 3 = 300 m/s."
+    },
+    {
+      "id": "physics-9-10",
+      "subject": "physics",
+      "level": "9",
+      "topic": "Inertia",
+      "prompt": "Why does a passenger tend to move forward when a moving bus brakes suddenly?",
+      "options": [
+        "The passenger’s body tends to continue moving due to inertia",
+        "Air removes all friction",
+        "Gravity suddenly acts forward",
+        "The bus increases the passenger’s mass"
+      ],
+      "answer": 0,
+      "explanation": "Inertia is the tendency to resist a change in motion, so the body tends to keep moving forward."
+    },
+    {
+      "id": "physics-10-01",
+      "subject": "physics",
+      "level": "10",
+      "topic": "Ohm’s law",
+      "prompt": "A 6 Ω resistor has 12 V across it. What current flows through it?",
+      "options": [
+        "72 A",
+        "2 A",
+        "6 A",
+        "0.5 A"
+      ],
+      "answer": 1,
+      "explanation": "By Ohm’s law, I = V/R = 12/6 = 2 A."
+    },
+    {
+      "id": "physics-10-02",
+      "subject": "physics",
+      "level": "10",
+      "topic": "Series circuits",
+      "prompt": "Two resistors of 3 Ω and 5 Ω are connected in series. What is their total resistance?",
+      "options": [
+        "15 Ω",
+        "2 Ω",
+        "8 Ω",
+        "1.875 Ω"
+      ],
+      "answer": 2,
+      "explanation": "Series resistances add: 3 + 5 = 8 Ω."
+    },
+    {
+      "id": "physics-10-03",
+      "subject": "physics",
+      "level": "10",
+      "topic": "Parallel circuits",
+      "prompt": "Two resistors of 6 Ω each are connected in parallel. What is their equivalent resistance?",
+      "options": [
+        "12 Ω",
+        "36 Ω",
+        "6 Ω",
+        "3 Ω"
+      ],
+      "answer": 3,
+      "explanation": "For two equal resistors in parallel, the equivalent resistance is half of one: 6/2 = 3 Ω."
+    },
+    {
+      "id": "physics-10-04",
+      "subject": "physics",
+      "level": "10",
+      "topic": "Electrical power",
+      "prompt": "A device draws 2 A from a 12 V supply. What electrical power does it use?",
+      "options": [
+        "6 W",
+        "14 W",
+        "48 W",
+        "24 W"
+      ],
+      "answer": 3,
+      "explanation": "Electrical power P = VI = 12 × 2 = 24 W."
+    },
+    {
+      "id": "physics-10-05",
+      "subject": "physics",
+      "level": "10",
+      "topic": "Electrical energy",
+      "prompt": "A 100 W lamp is used for 5 hours. How much electrical energy does it use?",
+      "options": [
+        "0.5 kWh",
+        "5 kWh",
+        "50 kWh",
+        "500 kWh"
+      ],
+      "answer": 0,
+      "explanation": "100 W = 0.1 kW, and energy = power × time = 0.1 × 5 = 0.5 kWh."
+    },
+    {
+      "id": "physics-10-06",
+      "subject": "physics",
+      "level": "10",
+      "topic": "Refraction",
+      "prompt": "A light ray enters glass from air at an oblique angle. How does it usually bend?",
+      "options": [
+        "Back into air in every case",
+        "Away from the normal",
+        "Along the surface in every case",
+        "Toward the normal"
+      ],
+      "answer": 3,
+      "explanation": "Light slows on entering glass from air and bends toward the normal."
+    },
+    {
+      "id": "physics-10-07",
+      "subject": "physics",
+      "level": "10",
+      "topic": "Convex lenses",
+      "prompt": "Light rays parallel to the principal axis pass through a thin convex lens in air. Where do they meet?",
+      "options": [
+        "They never meet",
+        "At the principal focus on the incoming side",
+        "At the optical centre",
+        "At the principal focus on the far side"
+      ],
+      "answer": 3,
+      "explanation": "A convex lens converges rays parallel to its principal axis at its principal focus beyond the lens."
+    },
+    {
+      "id": "physics-10-08",
+      "subject": "physics",
+      "level": "10",
+      "topic": "Vision",
+      "prompt": "Which lens is used to correct myopia, or short-sightedness?",
+      "options": [
+        "A cylindrical mirror",
+        "A concave lens",
+        "A plane glass sheet only",
+        "A convex lens"
+      ],
+      "answer": 1,
+      "explanation": "A concave lens diverges incoming light so a myopic eye can focus distant objects on the retina."
+    },
+    {
+      "id": "physics-10-09",
+      "subject": "physics",
+      "level": "10",
+      "topic": "Magnetic effects",
+      "prompt": "What happens to the direction of the magnetic field around a straight wire when its current is reversed?",
+      "options": [
+        "The magnetic field direction reverses",
+        "The wire must lose all resistance",
+        "The direction remains unchanged",
+        "The field becomes a gravitational field"
+      ],
+      "answer": 0,
+      "explanation": "The magnetic field direction depends on current direction and reverses when the current reverses."
+    },
+    {
+      "id": "physics-10-10",
+      "subject": "physics",
+      "level": "10",
+      "topic": "Electromagnetic induction",
+      "prompt": "Which action can induce a current in a closed coil connected to a sensitive meter?",
+      "options": [
+        "Holding a magnet motionless relative to the coil",
+        "Moving a magnet into the coil",
+        "Replacing the coil with a dry wooden ring",
+        "Keeping the coil and magnet far apart and motionless"
+      ],
+      "answer": 1,
+      "explanation": "Moving the magnet changes the magnetic flux through the coil, inducing an electric current."
+    },
+    {
+      "id": "chem-foundation-01",
+      "subject": "chemistry",
+      "level": "foundation",
+      "topic": "States of matter",
+      "prompt": "Which of these is a liquid at room temperature?",
+      "options": [
+        "A stone",
+        "An ice cube",
+        "A wooden block",
+        "Cooking oil"
+      ],
+      "answer": 3,
+      "explanation": "Cooking oil flows and takes the shape of its container."
+    },
+    {
+      "id": "chem-foundation-02",
+      "subject": "chemistry",
+      "level": "foundation",
+      "topic": "States of matter",
+      "prompt": "Which object usually keeps its own shape when moved to a different container?",
+      "options": [
+        "Milk",
+        "Air",
+        "A marble",
+        "Water"
+      ],
+      "answer": 2,
+      "explanation": "A marble is a solid and keeps its shape."
+    },
+    {
+      "id": "chem-foundation-03",
+      "subject": "chemistry",
+      "level": "foundation",
+      "topic": "Air",
+      "prompt": "What fills an ordinary balloon when you blow it up?",
+      "options": [
+        "Wood",
+        "Air",
+        "Sand",
+        "Liquid water"
+      ],
+      "answer": 1,
+      "explanation": "Blowing into a balloon fills it with air, a mixture of gases."
+    },
+    {
+      "id": "chem-foundation-04",
+      "subject": "chemistry",
+      "level": "foundation",
+      "topic": "Melting",
+      "prompt": "What change happens when an ice cube becomes liquid water?",
+      "options": [
+        "Melting",
+        "Freezing",
+        "Burning",
+        "Rusting"
+      ],
+      "answer": 0,
+      "explanation": "Melting changes a solid into a liquid."
+    },
+    {
+      "id": "chem-foundation-05",
+      "subject": "chemistry",
+      "level": "foundation",
+      "topic": "Freezing",
+      "prompt": "What usually forms when liquid water is kept in a freezer long enough?",
+      "options": [
+        "Steam",
+        "Salt",
+        "Smoke",
+        "Ice"
+      ],
+      "answer": 3,
+      "explanation": "Water freezes into solid ice when cooled sufficiently."
+    },
+    {
+      "id": "chem-foundation-06",
+      "subject": "chemistry",
+      "level": "foundation",
+      "topic": "Dissolving",
+      "prompt": "Which material dissolves when a small spoonful is stirred into a glass of water?",
+      "options": [
+        "Dry leaves",
+        "Plastic beads",
+        "Sugar",
+        "Pebbles"
+      ],
+      "answer": 2,
+      "explanation": "Sugar dissolves in water to form a solution."
+    },
+    {
+      "id": "chem-foundation-07",
+      "subject": "chemistry",
+      "level": "foundation",
+      "topic": "Separating mixtures",
+      "prompt": "How could you separate large stones from dry beans by hand?",
+      "options": [
+        "Add more stones",
+        "Pick out the stones",
+        "Melt the beans",
+        "Freeze the stones"
+      ],
+      "answer": 1,
+      "explanation": "Stones that are easy to see and handle can be removed by handpicking."
+    },
+    {
+      "id": "chem-foundation-08",
+      "subject": "chemistry",
+      "level": "foundation",
+      "topic": "Properties of liquids",
+      "prompt": "What happens to water poured from a jug into a bowl?",
+      "options": [
+        "It takes the shape of the bowl",
+        "It becomes a solid immediately",
+        "It keeps the shape of the jug",
+        "It changes into sand"
+      ],
+      "answer": 0,
+      "explanation": "A liquid takes the shape of the part of its container that it occupies."
+    },
+    {
+      "id": "chem-foundation-09",
+      "subject": "chemistry",
+      "level": "foundation",
+      "topic": "Evaporation",
+      "prompt": "A wet cloth dries in the sun because its water mainly changes into what?",
+      "options": [
+        "Sand",
+        "Ice",
+        "Salt",
+        "Water vapour"
+      ],
+      "answer": 3,
+      "explanation": "Liquid water evaporates into water vapour in the air."
+    },
+    {
+      "id": "chem-foundation-10",
+      "subject": "chemistry",
+      "level": "foundation",
+      "topic": "Materials",
+      "prompt": "Which item is mainly made from metal?",
+      "options": [
+        "A rubber band",
+        "A wooden spoon",
+        "An iron nail",
+        "A paper sheet"
+      ],
+      "answer": 2,
+      "explanation": "Iron is a metal, so an iron nail is a metal object."
+    },
+    {
+      "id": "chem-5-01",
+      "subject": "chemistry",
+      "level": "5",
+      "topic": "Condensation",
+      "prompt": "Water droplets form outside a cold glass on a humid day. Where does that water mainly come from?",
+      "options": [
+        "New water made by the glass",
+        "Ice changing directly into metal",
+        "Water vapour in the surrounding air",
+        "Water passing through the glass"
+      ],
+      "answer": 2,
+      "explanation": "Water vapour in the air cools and condenses on the cold surface."
+    },
+    {
+      "id": "chem-5-02",
+      "subject": "chemistry",
+      "level": "5",
+      "topic": "Separation",
+      "prompt": "Which method separates fine flour from larger pieces of bran?",
+      "options": [
+        "Condensing",
+        "Sieving",
+        "Freezing",
+        "Dissolving"
+      ],
+      "answer": 1,
+      "explanation": "A sieve lets fine particles pass while retaining larger pieces."
+    },
+    {
+      "id": "chem-5-03",
+      "subject": "chemistry",
+      "level": "5",
+      "topic": "Magnetic separation",
+      "prompt": "Which tool can help separate iron pins from dry rice?",
+      "options": [
+        "A magnet",
+        "A glass funnel alone",
+        "A paper fan",
+        "A thermometer"
+      ],
+      "answer": 0,
+      "explanation": "A magnet attracts iron pins but does not attract rice."
+    },
+    {
+      "id": "chem-5-04",
+      "subject": "chemistry",
+      "level": "5",
+      "topic": "Solubility",
+      "prompt": "Which mixture contains a substance that remains visibly undissolved after stirring?",
+      "options": [
+        "A little salt and water",
+        "A little sugar and water",
+        "A little glucose and water",
+        "Sand and water"
+      ],
+      "answer": 3,
+      "explanation": "Sand is insoluble in water and remains as solid particles."
+    },
+    {
+      "id": "chem-5-05",
+      "subject": "chemistry",
+      "level": "5",
+      "topic": "Reversible changes",
+      "prompt": "Which change can be reversed simply by cooling the material?",
+      "options": [
+        "Cooking an egg",
+        "Rusting an iron gate",
+        "Melting candle wax without burning it",
+        "Burning paper"
+      ],
+      "answer": 2,
+      "explanation": "Melted wax becomes solid again when it cools."
+    },
+    {
+      "id": "chem-5-06",
+      "subject": "chemistry",
+      "level": "5",
+      "topic": "Irreversible changes",
+      "prompt": "Which change produces new substances and cannot be reversed just by cooling?",
+      "options": [
+        "Evaporating water",
+        "Burning a piece of paper",
+        "Melting ice",
+        "Melting wax"
+      ],
+      "answer": 1,
+      "explanation": "Burning paper produces new substances, including gases and ash."
+    },
+    {
+      "id": "chem-5-07",
+      "subject": "chemistry",
+      "level": "5",
+      "topic": "Air composition",
+      "prompt": "Air is best described as what?",
+      "options": [
+        "A mixture of gases",
+        "A single metal",
+        "Only oxygen",
+        "Only carbon dioxide"
+      ],
+      "answer": 0,
+      "explanation": "Air contains nitrogen, oxygen and smaller amounts of other gases."
+    },
+    {
+      "id": "chem-5-08",
+      "subject": "chemistry",
+      "level": "5",
+      "topic": "Solution vocabulary",
+      "prompt": "In a salt-and-water solution, which substance has dissolved?",
+      "options": [
+        "The glass",
+        "The spoon",
+        "Air above the glass",
+        "Salt"
+      ],
+      "answer": 3,
+      "explanation": "Salt is the dissolved substance, called the solute."
+    },
+    {
+      "id": "chem-5-09",
+      "subject": "chemistry",
+      "level": "5",
+      "topic": "Evaporation",
+      "prompt": "Which condition usually helps a wet floor dry faster?",
+      "options": [
+        "Adding more water",
+        "Keeping the air very humid",
+        "Air moving across the floor",
+        "Covering it with a waterproof sheet"
+      ],
+      "answer": 2,
+      "explanation": "Moving air carries water vapour away and helps evaporation."
+    },
+    {
+      "id": "chem-5-10",
+      "subject": "chemistry",
+      "level": "5",
+      "topic": "States and volume",
+      "prompt": "Which statement describes a gas in a closed container?",
+      "options": [
+        "It always settles as a solid layer",
+        "It spreads out to fill the available space",
+        "It always keeps a fixed shape",
+        "It can exist only as bubbles in water"
+      ],
+      "answer": 1,
+      "explanation": "Gas particles spread throughout the available space."
+    },
+    {
+      "id": "chem-6-01",
+      "subject": "chemistry",
+      "level": "6",
+      "topic": "Filtration",
+      "prompt": "Which mixture can be separated into a solid and a liquid using filter paper?",
+      "options": [
+        "Two gases mixed together",
+        "Sand mixed with water",
+        "Salt dissolved in water",
+        "Sugar dissolved in water"
+      ],
+      "answer": 1,
+      "explanation": "Filter paper traps insoluble sand while water passes through."
+    },
+    {
+      "id": "chem-6-02",
+      "subject": "chemistry",
+      "level": "6",
+      "topic": "Sedimentation",
+      "prompt": "Muddy water is left undisturbed and heavier solid particles settle. What is this process called?",
+      "options": [
+        "Sedimentation",
+        "Evaporation",
+        "Melting",
+        "Combustion"
+      ],
+      "answer": 0,
+      "explanation": "Sedimentation is the settling of heavier suspended particles."
+    },
+    {
+      "id": "chem-6-03",
+      "subject": "chemistry",
+      "level": "6",
+      "topic": "Decantation",
+      "prompt": "After sand settles in water, what is decantation?",
+      "options": [
+        "Heating the sand until it melts",
+        "Adding salt to the mixture",
+        "Shaking the mixture vigorously",
+        "Carefully pouring off the clear water"
+      ],
+      "answer": 3,
+      "explanation": "Decantation separates a liquid by pouring it off without disturbing the settled solid."
+    },
+    {
+      "id": "chem-6-04",
+      "subject": "chemistry",
+      "level": "6",
+      "topic": "Solvent",
+      "prompt": "In a sugar solution made with water, what is the solvent?",
+      "options": [
+        "The container",
+        "The spoon",
+        "Water",
+        "Sugar"
+      ],
+      "answer": 2,
+      "explanation": "The solvent is the substance in which the solute dissolves."
+    },
+    {
+      "id": "chem-6-05",
+      "subject": "chemistry",
+      "level": "6",
+      "topic": "Saturation",
+      "prompt": "At a fixed temperature, extra salt remains undissolved even after stirring. The solution is likely what?",
+      "options": [
+        "A gas",
+        "Saturated with salt",
+        "Pure water",
+        "Completely free of salt"
+      ],
+      "answer": 1,
+      "explanation": "A saturated solution cannot dissolve more of that solute at the same temperature."
+    },
+    {
+      "id": "chem-6-06",
+      "subject": "chemistry",
+      "level": "6",
+      "topic": "Recovering a solute",
+      "prompt": "Which process can recover solid salt from salt water by removing the water?",
+      "options": [
+        "Evaporation",
+        "Handpicking",
+        "Sieving",
+        "Magnetic separation"
+      ],
+      "answer": 0,
+      "explanation": "Water evaporates, leaving the non-volatile dissolved salt behind."
+    },
+    {
+      "id": "chem-6-07",
+      "subject": "chemistry",
+      "level": "6",
+      "topic": "Combustion",
+      "prompt": "Which gas in air supports ordinary burning?",
+      "options": [
+        "Nitrogen",
+        "Helium",
+        "Carbon dioxide",
+        "Oxygen"
+      ],
+      "answer": 3,
+      "explanation": "Oxygen supports the combustion of many common fuels."
+    },
+    {
+      "id": "chem-6-08",
+      "subject": "chemistry",
+      "level": "6",
+      "topic": "Rusting",
+      "prompt": "Which pair of conditions is needed for ordinary rusting of iron?",
+      "options": [
+        "Only bright light",
+        "Salt and darkness without air or water",
+        "Oxygen and water",
+        "Only dry nitrogen"
+      ],
+      "answer": 2,
+      "explanation": "Iron rusts when it reacts with oxygen in the presence of water."
+    },
+    {
+      "id": "chem-6-09",
+      "subject": "chemistry",
+      "level": "6",
+      "topic": "Mixtures",
+      "prompt": "Which example is a mixture of two solids?",
+      "options": [
+        "A single copper wire",
+        "Rice and lentils",
+        "Pure liquid water",
+        "Pure oxygen"
+      ],
+      "answer": 1,
+      "explanation": "Rice and lentils are different solids mixed together."
+    },
+    {
+      "id": "chem-6-10",
+      "subject": "chemistry",
+      "level": "6",
+      "topic": "Insoluble liquids",
+      "prompt": "Oil and water are shaken together and then left to stand. What usually happens?",
+      "options": [
+        "They separate into layers",
+        "They form solid iron",
+        "All the water becomes oil",
+        "Both liquids disappear"
+      ],
+      "answer": 0,
+      "explanation": "Oil and water do not mix uniformly and separate into layers."
+    },
+    {
+      "id": "chem-7-01",
+      "subject": "chemistry",
+      "level": "7",
+      "topic": "Acids",
+      "prompt": "Which familiar substance is acidic?",
+      "options": [
+        "Lemon juice",
+        "Soap solution",
+        "Baking soda solution",
+        "Lime water"
+      ],
+      "answer": 0,
+      "explanation": "Lemon juice contains citric acid."
+    },
+    {
+      "id": "chem-7-02",
+      "subject": "chemistry",
+      "level": "7",
+      "topic": "Indicators",
+      "prompt": "What does an acid generally do to blue litmus paper?",
+      "options": [
+        "Turns it green",
+        "Turns it yellow",
+        "Leaves it blue in every case",
+        "Turns it red"
+      ],
+      "answer": 3,
+      "explanation": "Acids turn blue litmus red."
+    },
+    {
+      "id": "chem-7-03",
+      "subject": "chemistry",
+      "level": "7",
+      "topic": "Bases",
+      "prompt": "A basic solution generally turns red litmus paper which colour?",
+      "options": [
+        "Black",
+        "Red",
+        "Blue",
+        "Orange"
+      ],
+      "answer": 2,
+      "explanation": "Bases turn red litmus blue."
+    },
+    {
+      "id": "chem-7-04",
+      "subject": "chemistry",
+      "level": "7",
+      "topic": "Neutralisation",
+      "prompt": "An acid reacts with a base in a simple neutralisation reaction. What are the usual products?",
+      "options": [
+        "Sand and oil",
+        "Salt and water",
+        "Only oxygen",
+        "Only hydrogen"
+      ],
+      "answer": 1,
+      "explanation": "A typical acid-base neutralisation produces a salt and water."
+    },
+    {
+      "id": "chem-7-05",
+      "subject": "chemistry",
+      "level": "7",
+      "topic": "Physical changes",
+      "prompt": "Which example is a physical change?",
+      "options": [
+        "Cutting a sheet of paper",
+        "Rusting an iron nail",
+        "Burning magnesium",
+        "Souring milk"
+      ],
+      "answer": 0,
+      "explanation": "Cutting changes the paper’s size and shape without forming a new substance."
+    },
+    {
+      "id": "chem-7-06",
+      "subject": "chemistry",
+      "level": "7",
+      "topic": "Chemical changes",
+      "prompt": "Which observation is evidence of a chemical change in an iron nail?",
+      "options": [
+        "The nail is moved to another shelf",
+        "The nail is cut into two pieces",
+        "The nail is cooled without reacting",
+        "A reddish-brown rust coating forms"
+      ],
+      "answer": 3,
+      "explanation": "Rust is a new substance formed by the reaction of iron with oxygen and water."
+    },
+    {
+      "id": "chem-7-07",
+      "subject": "chemistry",
+      "level": "7",
+      "topic": "Rust prevention",
+      "prompt": "Why does an intact paint coating help protect an iron gate from rust?",
+      "options": [
+        "It removes the need for iron",
+        "It makes rust dissolve instantly",
+        "It limits contact with water and oxygen",
+        "It changes all the iron into gold"
+      ],
+      "answer": 2,
+      "explanation": "Paint acts as a barrier between iron and the water and oxygen around it."
+    },
+    {
+      "id": "chem-7-08",
+      "subject": "chemistry",
+      "level": "7",
+      "topic": "Gas identification",
+      "prompt": "Which gas turns clear lime water milky?",
+      "options": [
+        "Nitrogen",
+        "Carbon dioxide",
+        "Oxygen",
+        "Hydrogen"
+      ],
+      "answer": 1,
+      "explanation": "Carbon dioxide reacts with lime water to form insoluble calcium carbonate."
+    },
+    {
+      "id": "chem-7-09",
+      "subject": "chemistry",
+      "level": "7",
+      "topic": "Crystallisation",
+      "prompt": "A concentrated salt solution slowly loses water and forms regular solid crystals. What is this process?",
+      "options": [
+        "Crystallisation",
+        "Combustion",
+        "Rusting",
+        "Condensation"
+      ],
+      "answer": 0,
+      "explanation": "Crystallisation produces solid crystals from a solution."
+    },
+    {
+      "id": "chem-7-10",
+      "subject": "chemistry",
+      "level": "7",
+      "topic": "Natural indicators",
+      "prompt": "Turmeric paper turns reddish-brown when touched with which type of solution?",
+      "options": [
+        "Neutral salt solution",
+        "Acidic lemon juice",
+        "Pure water",
+        "Basic solution"
+      ],
+      "answer": 3,
+      "explanation": "Turmeric changes from yellow to reddish-brown in a basic solution."
+    },
+    {
+      "id": "chem-8-01",
+      "subject": "chemistry",
+      "level": "8",
+      "topic": "Metal properties",
+      "prompt": "Which property lets many metals be beaten into thin sheets?",
+      "options": [
+        "Solubility",
+        "Transparency",
+        "Brittleness",
+        "Malleability"
+      ],
+      "answer": 3,
+      "explanation": "Malleability is the ability to be shaped into thin sheets."
+    },
+    {
+      "id": "chem-8-02",
+      "subject": "chemistry",
+      "level": "8",
+      "topic": "Conductivity",
+      "prompt": "Why is copper commonly used inside electrical wires?",
+      "options": [
+        "It is an electrical insulator",
+        "It is always a liquid",
+        "It conducts electricity well",
+        "It dissolves quickly in water"
+      ],
+      "answer": 2,
+      "explanation": "Copper allows electric charge to flow easily."
+    },
+    {
+      "id": "chem-8-03",
+      "subject": "chemistry",
+      "level": "8",
+      "topic": "Non-metals",
+      "prompt": "Which of these is a non-metal?",
+      "options": [
+        "Iron",
+        "Sulphur",
+        "Copper",
+        "Aluminium"
+      ],
+      "answer": 1,
+      "explanation": "Sulphur is a non-metal."
+    },
+    {
+      "id": "chem-8-04",
+      "subject": "chemistry",
+      "level": "8",
+      "topic": "Combustion conditions",
+      "prompt": "A fuel must usually reach which temperature before it starts burning in air?",
+      "options": [
+        "Its ignition temperature",
+        "Exactly 0°C",
+        "The freezing point of water",
+        "Any temperature below room temperature"
+      ],
+      "answer": 0,
+      "explanation": "Ignition temperature is the minimum temperature needed for a substance to catch fire under given conditions."
+    },
+    {
+      "id": "chem-8-05",
+      "subject": "chemistry",
+      "level": "8",
+      "topic": "Fuel resources",
+      "prompt": "Why is petroleum classified as a non-renewable resource?",
+      "options": [
+        "It is produced instantly by sunlight",
+        "It can never be used as fuel",
+        "It is made daily by every living plant",
+        "It forms far more slowly than we use it"
+      ],
+      "answer": 3,
+      "explanation": "Petroleum forms over geological timescales and is used much faster than it is replaced."
+    },
+    {
+      "id": "chem-8-06",
+      "subject": "chemistry",
+      "level": "8",
+      "topic": "Fossil fuels",
+      "prompt": "Coal formed mainly from the remains of what?",
+      "options": [
+        "Modern metal tools",
+        "Recently melted ice",
+        "Ancient plants",
+        "Plastic bottles"
+      ],
+      "answer": 2,
+      "explanation": "Ancient plant material changed into coal under heat and pressure over very long periods."
+    },
+    {
+      "id": "chem-8-07",
+      "subject": "chemistry",
+      "level": "8",
+      "topic": "Polymers",
+      "prompt": "Many plastics are made of long molecules containing repeating units. These molecules are called what?",
+      "options": [
+        "Salt crystals only",
+        "Polymers",
+        "Individual neutrons",
+        "Pure metal atoms only"
+      ],
+      "answer": 1,
+      "explanation": "Polymers are large molecules built from repeating smaller units."
+    },
+    {
+      "id": "chem-8-08",
+      "subject": "chemistry",
+      "level": "8",
+      "topic": "Reactivity",
+      "prompt": "Zinc placed in copper sulphate solution can displace copper because zinc is what?",
+      "options": [
+        "More reactive than copper",
+        "Less reactive than copper",
+        "A noble gas",
+        "Unable to form compounds"
+      ],
+      "answer": 0,
+      "explanation": "A more reactive metal can displace a less reactive metal from its salt solution."
+    },
+    {
+      "id": "chem-8-09",
+      "subject": "chemistry",
+      "level": "8",
+      "topic": "Metal exceptions",
+      "prompt": "Which non-metal conducts electricity and is used in some electrodes?",
+      "options": [
+        "Sulphur",
+        "Phosphorus",
+        "Dry oxygen",
+        "Graphite"
+      ],
+      "answer": 3,
+      "explanation": "Graphite is a form of carbon with electrons that can move through its structure."
+    },
+    {
+      "id": "chem-8-10",
+      "subject": "chemistry",
+      "level": "8",
+      "topic": "Air pollution",
+      "prompt": "Which poisonous gas can form when a carbon-containing fuel burns with too little oxygen?",
+      "options": [
+        "Neon",
+        "Pure oxygen",
+        "Carbon monoxide",
+        "Helium"
+      ],
+      "answer": 2,
+      "explanation": "Incomplete combustion of carbon-containing fuels can produce carbon monoxide."
+    },
+    {
+      "id": "chem-9-01",
+      "subject": "chemistry",
+      "level": "9",
+      "topic": "Atomic structure",
+      "prompt": "Which particle has a positive electric charge?",
+      "options": [
+        "Electron",
+        "An uncharged atom",
+        "Proton",
+        "Neutron"
+      ],
+      "answer": 2,
+      "explanation": "A proton carries one positive elementary charge."
+    },
+    {
+      "id": "chem-9-02",
+      "subject": "chemistry",
+      "level": "9",
+      "topic": "Atomic number",
+      "prompt": "An atom has 8 protons. What is its atomic number?",
+      "options": [
+        "24",
+        "8",
+        "4",
+        "16"
+      ],
+      "answer": 1,
+      "explanation": "Atomic number equals the number of protons in the nucleus."
+    },
+    {
+      "id": "chem-9-03",
+      "subject": "chemistry",
+      "level": "9",
+      "topic": "Neutral atoms",
+      "prompt": "A neutral sodium atom contains 11 protons. How many electrons does it contain?",
+      "options": [
+        "11",
+        "10",
+        "12",
+        "22"
+      ],
+      "answer": 0,
+      "explanation": "In a neutral atom, the number of electrons equals the number of protons."
+    },
+    {
+      "id": "chem-9-04",
+      "subject": "chemistry",
+      "level": "9",
+      "topic": "Isotopes",
+      "prompt": "Isotopes of the same element have the same number of what?",
+      "options": [
+        "Neutrons",
+        "Protons plus neutrons",
+        "All subatomic particles",
+        "Protons"
+      ],
+      "answer": 3,
+      "explanation": "Isotopes share an atomic number but have different numbers of neutrons."
+    },
+    {
+      "id": "chem-9-05",
+      "subject": "chemistry",
+      "level": "9",
+      "topic": "Chemical formulae",
+      "prompt": "How many hydrogen atoms are represented by one molecule of H₂O?",
+      "options": [
+        "3",
+        "4",
+        "2",
+        "1"
+      ],
+      "answer": 2,
+      "explanation": "The subscript 2 applies to hydrogen, so one water molecule has two hydrogen atoms."
+    },
+    {
+      "id": "chem-9-06",
+      "subject": "chemistry",
+      "level": "9",
+      "topic": "Conservation of mass",
+      "prompt": "In a chemical reaction in a sealed container, total mass before and after the reaction is what?",
+      "options": [
+        "Always zero",
+        "The same",
+        "Always doubled",
+        "Always halved"
+      ],
+      "answer": 1,
+      "explanation": "Mass is conserved in an ordinary chemical reaction when matter cannot enter or leave."
+    },
+    {
+      "id": "chem-9-07",
+      "subject": "chemistry",
+      "level": "9",
+      "topic": "Solutions",
+      "prompt": "Which sample is a homogeneous mixture?",
+      "options": [
+        "Salt fully dissolved in water",
+        "Sand mixed with iron filings",
+        "Oil layered over water",
+        "Pebbles mixed with soil"
+      ],
+      "answer": 0,
+      "explanation": "A salt solution has a uniform composition throughout."
+    },
+    {
+      "id": "chem-9-08",
+      "subject": "chemistry",
+      "level": "9",
+      "topic": "Colloids",
+      "prompt": "A beam of light becomes visible as it passes through a colloid. What is this scattering called?",
+      "options": [
+        "Neutralisation",
+        "Electrolysis",
+        "Sublimation",
+        "The Tyndall effect"
+      ],
+      "answer": 3,
+      "explanation": "Colloidal particles scatter light, producing the Tyndall effect."
+    },
+    {
+      "id": "chem-9-09",
+      "subject": "chemistry",
+      "level": "9",
+      "topic": "Particle model",
+      "prompt": "Compared with a solid, particles in a gas usually have what arrangement?",
+      "options": [
+        "They all occupy the same point",
+        "They contain no space between them",
+        "They are much farther apart",
+        "They are fixed in a rigid lattice"
+      ],
+      "answer": 2,
+      "explanation": "Gas particles are widely separated and move freely."
+    },
+    {
+      "id": "chem-9-10",
+      "subject": "chemistry",
+      "level": "9",
+      "topic": "Molecular mass",
+      "prompt": "Using H = 1 and O = 16, what is the relative molecular mass of water, H₂O?",
+      "options": [
+        "34",
+        "18",
+        "17",
+        "16"
+      ],
+      "answer": 1,
+      "explanation": "Two hydrogen atoms contribute 2 and one oxygen atom contributes 16, giving 18."
+    },
+    {
+      "id": "chem-10-01",
+      "subject": "chemistry",
+      "level": "10",
+      "topic": "Balancing equations",
+      "prompt": "Which coefficients correctly balance H₂ + O₂ → H₂O?",
+      "options": [
+        "2, 2, 1",
+        "2, 1, 2",
+        "1, 1, 1",
+        "1, 2, 1"
+      ],
+      "answer": 1,
+      "explanation": "2H₂ + O₂ → 2H₂O has four hydrogen atoms and two oxygen atoms on each side."
+    },
+    {
+      "id": "chem-10-02",
+      "subject": "chemistry",
+      "level": "10",
+      "topic": "Reaction types",
+      "prompt": "In CaO + H₂O → Ca(OH)₂, which reaction type is illustrated?",
+      "options": [
+        "Combination",
+        "Decomposition",
+        "Double displacement",
+        "Metal displacement"
+      ],
+      "answer": 0,
+      "explanation": "Two reactants combine to form a single product."
+    },
+    {
+      "id": "chem-10-03",
+      "subject": "chemistry",
+      "level": "10",
+      "topic": "Reduction",
+      "prompt": "In CuO + H₂ → Cu + H₂O, which substance is reduced?",
+      "options": [
+        "H₂",
+        "H₂O",
+        "Cu formed as product",
+        "CuO"
+      ],
+      "answer": 3,
+      "explanation": "Copper oxide loses oxygen to form copper, so it is reduced."
+    },
+    {
+      "id": "chem-10-04",
+      "subject": "chemistry",
+      "level": "10",
+      "topic": "pH",
+      "prompt": "Which of these pH values represents the most acidic aqueous solution?",
+      "options": [
+        "7",
+        "10",
+        "2",
+        "5"
+      ],
+      "answer": 2,
+      "explanation": "A lower pH indicates a higher hydrogen-ion concentration and greater acidity."
+    },
+    {
+      "id": "chem-10-05",
+      "subject": "chemistry",
+      "level": "10",
+      "topic": "Ionic bonding",
+      "prompt": "Sodium chloride forms mainly through which process?",
+      "options": [
+        "Conversion of sodium nuclei into chlorine nuclei",
+        "Transfer of an electron from sodium to chlorine",
+        "Equal sharing of all sodium electrons",
+        "Transfer of a proton from chlorine to sodium"
+      ],
+      "answer": 1,
+      "explanation": "Sodium transfers an electron to chlorine, forming oppositely charged ions that attract."
+    },
+    {
+      "id": "chem-10-06",
+      "subject": "chemistry",
+      "level": "10",
+      "topic": "Carbon compounds",
+      "prompt": "What is the molecular formula of methane?",
+      "options": [
+        "CH₄",
+        "C₂H₆",
+        "CO₂",
+        "CH₃OH"
+      ],
+      "answer": 0,
+      "explanation": "Methane has one carbon atom bonded to four hydrogen atoms."
+    },
+    {
+      "id": "chem-10-07",
+      "subject": "chemistry",
+      "level": "10",
+      "topic": "Homologous series",
+      "prompt": "Successive members of an alkane homologous series differ by which group?",
+      "options": [
+        "CO₂",
+        "H₂O",
+        "O₂",
+        "CH₂"
+      ],
+      "answer": 3,
+      "explanation": "Consecutive alkanes differ by one carbon and two hydrogen atoms."
+    },
+    {
+      "id": "chem-10-08",
+      "subject": "chemistry",
+      "level": "10",
+      "topic": "Metals and acids",
+      "prompt": "Zinc reacts with dilute hydrochloric acid to form zinc chloride and which gas?",
+      "options": [
+        "Nitrogen",
+        "Chlorine",
+        "Hydrogen",
+        "Oxygen"
+      ],
+      "answer": 2,
+      "explanation": "Zinc displaces hydrogen from dilute hydrochloric acid."
+    },
+    {
+      "id": "chem-10-09",
+      "subject": "chemistry",
+      "level": "10",
+      "topic": "Soap and hard water",
+      "prompt": "Why does soap form scum in hard water?",
+      "options": [
+        "It converts calcium into gold",
+        "It reacts with calcium and magnesium ions to form insoluble salts",
+        "It changes all the water into oil",
+        "It releases nitrogen from water"
+      ],
+      "answer": 1,
+      "explanation": "Calcium and magnesium ions form insoluble salts with soap."
+    },
+    {
+      "id": "chem-10-10",
+      "subject": "chemistry",
+      "level": "10",
+      "topic": "Electrolysis",
+      "prompt": "During electrolysis of water, the volume of hydrogen collected is approximately how many times the volume of oxygen?",
+      "options": [
+        "Two times",
+        "One-half as much",
+        "Three times",
+        "Four times"
+      ],
+      "answer": 0,
+      "explanation": "Water produces hydrogen and oxygen in a volume ratio of 2:1."
+    },
+    {
+      "id": "bio-foundation-01",
+      "subject": "biology",
+      "level": "foundation",
+      "topic": "Plant parts",
+      "prompt": "Which part usually anchors a plant in the soil?",
+      "options": [
+        "Flowers",
+        "Fruits",
+        "Petals",
+        "Roots"
+      ],
+      "answer": 3,
+      "explanation": "Roots hold a plant in place and absorb water and minerals."
+    },
+    {
+      "id": "bio-foundation-02",
+      "subject": "biology",
+      "level": "foundation",
+      "topic": "Plant growth",
+      "prompt": "Which part of a bean plant can grow into a new bean plant under suitable conditions?",
+      "options": [
+        "A plastic bead",
+        "A piece of glass",
+        "A seed",
+        "A dry stone"
+      ],
+      "answer": 2,
+      "explanation": "A seed contains a young plant that can grow when conditions are suitable."
+    },
+    {
+      "id": "bio-foundation-03",
+      "subject": "biology",
+      "level": "foundation",
+      "topic": "Animal nutrition",
+      "prompt": "Which animal is a herbivore?",
+      "options": [
+        "A crocodile",
+        "A cow",
+        "A tiger",
+        "A lion"
+      ],
+      "answer": 1,
+      "explanation": "A cow mainly eats plant material."
+    },
+    {
+      "id": "bio-foundation-04",
+      "subject": "biology",
+      "level": "foundation",
+      "topic": "Human senses",
+      "prompt": "Which organ is mainly used to hear sounds?",
+      "options": [
+        "Ears",
+        "Eyes",
+        "Tongue",
+        "Nose"
+      ],
+      "answer": 0,
+      "explanation": "Ears detect sounds."
+    },
+    {
+      "id": "bio-foundation-05",
+      "subject": "biology",
+      "level": "foundation",
+      "topic": "Human body",
+      "prompt": "Which body parts form the main framework that supports the human body?",
+      "options": [
+        "Hair strands",
+        "Fingernails",
+        "Sweat drops",
+        "Bones"
+      ],
+      "answer": 3,
+      "explanation": "Bones form the skeleton, which supports and protects the body."
+    },
+    {
+      "id": "bio-foundation-06",
+      "subject": "biology",
+      "level": "foundation",
+      "topic": "Plant needs",
+      "prompt": "Which energy source do green plants use to make food?",
+      "options": [
+        "Noise",
+        "Sand",
+        "Sunlight",
+        "Plastic"
+      ],
+      "answer": 2,
+      "explanation": "Green plants use light energy during photosynthesis."
+    },
+    {
+      "id": "bio-foundation-07",
+      "subject": "biology",
+      "level": "foundation",
+      "topic": "Breathing",
+      "prompt": "Which organs do people mainly use to take oxygen from the air?",
+      "options": [
+        "Bones",
+        "Lungs",
+        "Kidneys",
+        "Stomach"
+      ],
+      "answer": 1,
+      "explanation": "The lungs exchange gases between the air and the blood."
+    },
+    {
+      "id": "bio-foundation-08",
+      "subject": "biology",
+      "level": "foundation",
+      "topic": "Habitats",
+      "prompt": "Which animal is naturally adapted to living mainly in water?",
+      "options": [
+        "A fish",
+        "A cow",
+        "A hen",
+        "A goat"
+      ],
+      "answer": 0,
+      "explanation": "Fish have adaptations such as gills that help them live in water."
+    },
+    {
+      "id": "bio-foundation-09",
+      "subject": "biology",
+      "level": "foundation",
+      "topic": "Growth",
+      "prompt": "Which is a usual sign that a healthy young plant is growing?",
+      "options": [
+        "It turns into a stone",
+        "It stops needing water forever",
+        "Its roots become plastic",
+        "It produces new leaves"
+      ],
+      "answer": 3,
+      "explanation": "Producing new leaves is one sign of plant growth."
+    },
+    {
+      "id": "bio-foundation-10",
+      "subject": "biology",
+      "level": "foundation",
+      "topic": "Food needs",
+      "prompt": "Why do humans need food?",
+      "options": [
+        "To stop needing water",
+        "To turn bones into air",
+        "To obtain energy and materials for growth",
+        "To replace all breathing"
+      ],
+      "answer": 2,
+      "explanation": "Food supplies energy and nutrients needed for growth and repair."
+    },
+    {
+      "id": "bio-5-01",
+      "subject": "biology",
+      "level": "5",
+      "topic": "Germination",
+      "prompt": "Which set of conditions is needed by most seeds to begin germinating?",
+      "options": [
+        "Only dry soil and no air",
+        "Salt water and freezing conditions",
+        "Water, oxygen and a suitable temperature",
+        "Only bright light and no water"
+      ],
+      "answer": 2,
+      "explanation": "Most seeds need water, oxygen and a suitable temperature to germinate."
+    },
+    {
+      "id": "bio-5-02",
+      "subject": "biology",
+      "level": "5",
+      "topic": "Photosynthesis",
+      "prompt": "Which gas do green plants take in for photosynthesis?",
+      "options": [
+        "Neon",
+        "Carbon dioxide",
+        "Helium",
+        "Hydrogen"
+      ],
+      "answer": 1,
+      "explanation": "Plants use carbon dioxide and water to make food during photosynthesis."
+    },
+    {
+      "id": "bio-5-03",
+      "subject": "biology",
+      "level": "5",
+      "topic": "Pollination",
+      "prompt": "What is pollination?",
+      "options": [
+        "Transfer of pollen to the stigma of a flower",
+        "Absorption of water by roots",
+        "Loss of water from a leaf",
+        "Formation of rock from soil"
+      ],
+      "answer": 0,
+      "explanation": "Pollination transfers pollen from an anther to a stigma."
+    },
+    {
+      "id": "bio-5-04",
+      "subject": "biology",
+      "level": "5",
+      "topic": "Food chains",
+      "prompt": "In the chain grass → grasshopper → frog, which organism eats the grasshopper?",
+      "options": [
+        "Grass",
+        "Both grass and frog",
+        "Neither organism",
+        "Frog"
+      ],
+      "answer": 3,
+      "explanation": "The arrow shows food passing from the grasshopper to the frog."
+    },
+    {
+      "id": "bio-5-05",
+      "subject": "biology",
+      "level": "5",
+      "topic": "Circulation",
+      "prompt": "Which organ pumps blood around the human body?",
+      "options": [
+        "Brain",
+        "Kidney",
+        "Heart",
+        "Stomach"
+      ],
+      "answer": 2,
+      "explanation": "The heart contracts to pump blood through blood vessels."
+    },
+    {
+      "id": "bio-5-06",
+      "subject": "biology",
+      "level": "5",
+      "topic": "Protection",
+      "prompt": "Which bones protect the brain?",
+      "options": [
+        "The kneecaps",
+        "The skull",
+        "Finger bones",
+        "Toe bones"
+      ],
+      "answer": 1,
+      "explanation": "The skull forms a protective case around the brain."
+    },
+    {
+      "id": "bio-5-07",
+      "subject": "biology",
+      "level": "5",
+      "topic": "Decomposers",
+      "prompt": "Which organisms help break down dead leaves into simpler substances?",
+      "options": [
+        "Fungi and many bacteria",
+        "Only butterflies",
+        "Only parrots",
+        "Only flowering plants"
+      ],
+      "answer": 0,
+      "explanation": "Decomposers recycle materials by breaking down dead organic matter."
+    },
+    {
+      "id": "bio-5-08",
+      "subject": "biology",
+      "level": "5",
+      "topic": "Animal adaptations",
+      "prompt": "What is stored mainly in a camel’s hump?",
+      "options": [
+        "Liquid drinking water",
+        "Air",
+        "Sand",
+        "Fat"
+      ],
+      "answer": 3,
+      "explanation": "A camel’s hump stores fat, which can be used as an energy reserve."
+    },
+    {
+      "id": "bio-5-09",
+      "subject": "biology",
+      "level": "5",
+      "topic": "Life cycles",
+      "prompt": "Which stage comes between a caterpillar and an adult butterfly?",
+      "options": [
+        "Seed",
+        "Tadpole",
+        "Pupa",
+        "Egg"
+      ],
+      "answer": 2,
+      "explanation": "A caterpillar changes into a pupa before becoming an adult butterfly."
+    },
+    {
+      "id": "bio-5-10",
+      "subject": "biology",
+      "level": "5",
+      "topic": "Balanced diet",
+      "prompt": "Which meal is most likely to provide a wider range of nutrients?",
+      "options": [
+        "Only cooking oil",
+        "Rice, lentils, vegetables and fruit",
+        "Only sugar",
+        "Only plain rice at every meal"
+      ],
+      "answer": 1,
+      "explanation": "A variety of foods provides different nutrients needed by the body."
+    },
+    {
+      "id": "bio-6-01",
+      "subject": "biology",
+      "level": "6",
+      "topic": "Plant transport",
+      "prompt": "Which plant part usually carries water between the roots and leaves?",
+      "options": [
+        "Fruit skin",
+        "Stem",
+        "Petal",
+        "Pollen grain"
+      ],
+      "answer": 1,
+      "explanation": "Water travels from the roots through the stem toward the leaves."
+    },
+    {
+      "id": "bio-6-02",
+      "subject": "biology",
+      "level": "6",
+      "topic": "Root systems",
+      "prompt": "Which plant commonly has a fibrous root system?",
+      "options": [
+        "Wheat",
+        "Carrot",
+        "Radish",
+        "Mustard"
+      ],
+      "answer": 0,
+      "explanation": "Wheat has many thin roots arising near the base of its stem."
+    },
+    {
+      "id": "bio-6-03",
+      "subject": "biology",
+      "level": "6",
+      "topic": "Leaf structure",
+      "prompt": "What are stomata?",
+      "options": [
+        "Large bones in animals",
+        "Seeds inside fruit",
+        "The tips of flower petals",
+        "Tiny pores on plant surfaces, especially leaves"
+      ],
+      "answer": 3,
+      "explanation": "Stomata are pores involved in gas exchange and water-vapour loss."
+    },
+    {
+      "id": "bio-6-04",
+      "subject": "biology",
+      "level": "6",
+      "topic": "Classification",
+      "prompt": "Which animal has no backbone?",
+      "options": [
+        "Lizard",
+        "Sparrow",
+        "Earthworm",
+        "Frog"
+      ],
+      "answer": 2,
+      "explanation": "An earthworm is an invertebrate, meaning it lacks a backbone."
+    },
+    {
+      "id": "bio-6-05",
+      "subject": "biology",
+      "level": "6",
+      "topic": "Habitat",
+      "prompt": "An organism’s habitat is best described as what?",
+      "options": [
+        "The number of legs it has",
+        "The place where it naturally lives",
+        "Only the food it eats",
+        "Only its body colour"
+      ],
+      "answer": 1,
+      "explanation": "A habitat is the natural place where an organism lives."
+    },
+    {
+      "id": "bio-6-06",
+      "subject": "biology",
+      "level": "6",
+      "topic": "Joints",
+      "prompt": "Which type of joint mainly allows your elbow to bend and straighten?",
+      "options": [
+        "Hinge joint",
+        "Ball-and-socket joint",
+        "Fixed joint",
+        "Pivot joint"
+      ],
+      "answer": 0,
+      "explanation": "A hinge joint allows movement mainly in one plane."
+    },
+    {
+      "id": "bio-6-07",
+      "subject": "biology",
+      "level": "6",
+      "topic": "Nutrition",
+      "prompt": "Which nutrient is especially important for growth and repair of body tissues?",
+      "options": [
+        "Dietary fibre alone",
+        "Table salt alone",
+        "Water vapour",
+        "Protein"
+      ],
+      "answer": 3,
+      "explanation": "Proteins provide building material for growth and tissue repair."
+    },
+    {
+      "id": "bio-6-08",
+      "subject": "biology",
+      "level": "6",
+      "topic": "Dietary fibre",
+      "prompt": "What is one main role of dietary fibre?",
+      "options": [
+        "Carrying oxygen in red blood cells",
+        "Making teeth from sunlight",
+        "Helping food waste move through the gut",
+        "Replacing all protein in the body"
+      ],
+      "answer": 2,
+      "explanation": "Dietary fibre adds bulk and helps the movement of waste through the intestine."
+    },
+    {
+      "id": "bio-6-09",
+      "subject": "biology",
+      "level": "6",
+      "topic": "Living processes",
+      "prompt": "A touch-me-not plant folds its leaves when touched. Which feature of living things does this show?",
+      "options": [
+        "Absence of cells",
+        "Response to a stimulus",
+        "Formation of metal",
+        "Lack of movement"
+      ],
+      "answer": 1,
+      "explanation": "Touch is a stimulus, and leaf folding is the plant’s response."
+    },
+    {
+      "id": "bio-6-10",
+      "subject": "biology",
+      "level": "6",
+      "topic": "Water cycle in plants",
+      "prompt": "What is the loss of water vapour from plant leaves called?",
+      "options": [
+        "Transpiration",
+        "Digestion",
+        "Germination",
+        "Pollination"
+      ],
+      "answer": 0,
+      "explanation": "Transpiration is the loss of water vapour from the aerial parts of a plant, mainly leaves."
+    },
+    {
+      "id": "bio-7-01",
+      "subject": "biology",
+      "level": "7",
+      "topic": "Digestion",
+      "prompt": "Where are most digested nutrients absorbed in humans?",
+      "options": [
+        "Small intestine",
+        "Oesophagus",
+        "Mouth",
+        "Rectum"
+      ],
+      "answer": 0,
+      "explanation": "The small intestine has a large surface area for nutrient absorption."
+    },
+    {
+      "id": "bio-7-02",
+      "subject": "biology",
+      "level": "7",
+      "topic": "Saliva",
+      "prompt": "Which food component starts to be chemically digested by an enzyme in saliva?",
+      "options": [
+        "Cellulose",
+        "All fats",
+        "Water",
+        "Starch"
+      ],
+      "answer": 3,
+      "explanation": "Salivary amylase begins breaking down starch."
+    },
+    {
+      "id": "bio-7-03",
+      "subject": "biology",
+      "level": "7",
+      "topic": "Respiration",
+      "prompt": "What is the main purpose of cellular respiration?",
+      "options": [
+        "Making bones bend",
+        "Producing sunlight",
+        "Releasing usable energy from food",
+        "Moving food through the oesophagus"
+      ],
+      "answer": 2,
+      "explanation": "Respiration releases energy from food molecules for cellular activities."
+    },
+    {
+      "id": "bio-7-04",
+      "subject": "biology",
+      "level": "7",
+      "topic": "Gas exchange",
+      "prompt": "In human lungs, where does most gas exchange take place?",
+      "options": [
+        "Diaphragm muscle",
+        "Alveoli",
+        "Ribs",
+        "Vocal cords"
+      ],
+      "answer": 1,
+      "explanation": "Alveoli have thin walls and a large surface area for gas exchange."
+    },
+    {
+      "id": "bio-7-05",
+      "subject": "biology",
+      "level": "7",
+      "topic": "Blood vessels",
+      "prompt": "Which blood vessels carry blood away from the heart?",
+      "options": [
+        "Arteries",
+        "Veins",
+        "Only lymph vessels",
+        "Only airways"
+      ],
+      "answer": 0,
+      "explanation": "Arteries carry blood away from the heart, regardless of its oxygen content."
+    },
+    {
+      "id": "bio-7-06",
+      "subject": "biology",
+      "level": "7",
+      "topic": "Plant transport",
+      "prompt": "Which plant tissue mainly carries water and dissolved minerals upward from the roots?",
+      "options": [
+        "Phloem",
+        "Pollen",
+        "Petal tissue",
+        "Xylem"
+      ],
+      "answer": 3,
+      "explanation": "Xylem transports water and dissolved minerals."
+    },
+    {
+      "id": "bio-7-07",
+      "subject": "biology",
+      "level": "7",
+      "topic": "Asexual reproduction",
+      "prompt": "A potato tuber can produce a new plant from its buds. This is an example of what?",
+      "options": [
+        "Seed dispersal",
+        "Fertilisation",
+        "Vegetative propagation",
+        "Pollination"
+      ],
+      "answer": 2,
+      "explanation": "Vegetative propagation produces a new plant from a vegetative part of the parent."
+    },
+    {
+      "id": "bio-7-08",
+      "subject": "biology",
+      "level": "7",
+      "topic": "Excretion",
+      "prompt": "Which human organs filter blood and form urine?",
+      "options": [
+        "Pancreas",
+        "Kidneys",
+        "Lungs",
+        "Stomach"
+      ],
+      "answer": 1,
+      "explanation": "Kidneys remove wastes and excess water from the blood to form urine."
+    },
+    {
+      "id": "bio-7-09",
+      "subject": "biology",
+      "level": "7",
+      "topic": "Symbiosis",
+      "prompt": "In a lichen, which partner usually makes food by photosynthesis?",
+      "options": [
+        "The alga or cyanobacterium",
+        "The fungal partner alone",
+        "A flowering plant root",
+        "An earthworm"
+      ],
+      "answer": 0,
+      "explanation": "The photosynthetic partner provides food, while the fungus offers protection and support."
+    },
+    {
+      "id": "bio-7-10",
+      "subject": "biology",
+      "level": "7",
+      "topic": "Respiration in plants",
+      "prompt": "When do living plant cells carry out respiration?",
+      "options": [
+        "Only in bright sunlight",
+        "Only when flowers are open",
+        "Only during seed dispersal",
+        "Both during the day and at night"
+      ],
+      "answer": 3,
+      "explanation": "Living plant cells need energy and respire throughout the day and night."
+    },
+    {
+      "id": "bio-8-01",
+      "subject": "biology",
+      "level": "8",
+      "topic": "Cells",
+      "prompt": "Which structure controls most activities of a typical animal cell?",
+      "options": [
+        "Cell wall",
+        "Vacuole alone",
+        "Chloroplast",
+        "Nucleus"
+      ],
+      "answer": 3,
+      "explanation": "The nucleus contains genetic material and helps control cell activities."
+    },
+    {
+      "id": "bio-8-02",
+      "subject": "biology",
+      "level": "8",
+      "topic": "Plant cells",
+      "prompt": "Which structure is present in typical green leaf cells but absent from animal cells?",
+      "options": [
+        "Cytoplasm",
+        "Nucleus",
+        "Chloroplast",
+        "Cell membrane"
+      ],
+      "answer": 2,
+      "explanation": "Chloroplasts contain chlorophyll and carry out photosynthesis."
+    },
+    {
+      "id": "bio-8-03",
+      "subject": "biology",
+      "level": "8",
+      "topic": "Microorganisms",
+      "prompt": "Which microorganism is commonly used to make bread dough rise?",
+      "options": [
+        "Rhizobium",
+        "Yeast",
+        "Amoeba",
+        "Plasmodium"
+      ],
+      "answer": 1,
+      "explanation": "Yeast releases carbon dioxide during fermentation, making dough rise."
+    },
+    {
+      "id": "bio-8-04",
+      "subject": "biology",
+      "level": "8",
+      "topic": "Nitrogen fixation",
+      "prompt": "Rhizobium bacteria in legume root nodules help plants by doing what?",
+      "options": [
+        "Converting atmospheric nitrogen into usable nitrogen compounds",
+        "Producing all the plant’s sunlight",
+        "Removing every mineral from the soil",
+        "Turning roots into flowers"
+      ],
+      "answer": 0,
+      "explanation": "Rhizobium fixes nitrogen into forms that can support plant growth."
+    },
+    {
+      "id": "bio-8-05",
+      "subject": "biology",
+      "level": "8",
+      "topic": "Reproduction",
+      "prompt": "What is fertilisation?",
+      "options": [
+        "Splitting food into smaller pieces",
+        "Loss of water from leaves",
+        "Development of rust on iron",
+        "Fusion of male and female gametes"
+      ],
+      "answer": 3,
+      "explanation": "Fertilisation joins male and female gametes to form a zygote."
+    },
+    {
+      "id": "bio-8-06",
+      "subject": "biology",
+      "level": "8",
+      "topic": "Human reproduction",
+      "prompt": "Where does a human embryo normally develop after implantation?",
+      "options": [
+        "Urinary bladder",
+        "Liver",
+        "Uterus",
+        "Stomach"
+      ],
+      "answer": 2,
+      "explanation": "The embryo normally implants and develops in the uterus."
+    },
+    {
+      "id": "bio-8-07",
+      "subject": "biology",
+      "level": "8",
+      "topic": "Metamorphosis",
+      "prompt": "Which animal undergoes a change from tadpole to adult?",
+      "options": [
+        "Earthworm",
+        "Frog",
+        "Cat",
+        "Hen"
+      ],
+      "answer": 1,
+      "explanation": "A frog develops from a tadpole through metamorphosis."
+    },
+    {
+      "id": "bio-8-08",
+      "subject": "biology",
+      "level": "8",
+      "topic": "Endocrine system",
+      "prompt": "In humans, hormones are best described as what?",
+      "options": [
+        "Chemical messengers produced by endocrine glands",
+        "Only enzymes that digest starch",
+        "The bones that form joints",
+        "Pigments found only in flowers"
+      ],
+      "answer": 0,
+      "explanation": "Hormones carry signals that help regulate body functions."
+    },
+    {
+      "id": "bio-8-09",
+      "subject": "biology",
+      "level": "8",
+      "topic": "Conservation",
+      "prompt": "An endemic species is one that is what?",
+      "options": [
+        "Found in every country",
+        "Always kept as a pet",
+        "Always extinct",
+        "Naturally found only in a particular region"
+      ],
+      "answer": 3,
+      "explanation": "An endemic species has a natural distribution restricted to a particular region."
+    },
+    {
+      "id": "bio-8-10",
+      "subject": "biology",
+      "level": "8",
+      "topic": "Cell membrane",
+      "prompt": "What is a main function of the cell membrane?",
+      "options": [
+        "Producing soil minerals",
+        "Replacing the nucleus in every cell",
+        "Regulating the movement of substances into and out of the cell",
+        "Storing all food outside the cell"
+      ],
+      "answer": 2,
+      "explanation": "The cell membrane selectively regulates exchange with the surroundings."
+    },
+    {
+      "id": "bio-9-01",
+      "subject": "biology",
+      "level": "9",
+      "topic": "Cell organelles",
+      "prompt": "Which organelle is a major site of aerobic respiration in eukaryotic cells?",
+      "options": [
+        "Lysosome",
+        "Large central vacuole",
+        "Mitochondrion",
+        "Golgi apparatus"
+      ],
+      "answer": 2,
+      "explanation": "Mitochondria carry out key stages of aerobic respiration and produce ATP."
+    },
+    {
+      "id": "bio-9-02",
+      "subject": "biology",
+      "level": "9",
+      "topic": "Osmosis",
+      "prompt": "What is osmosis?",
+      "options": [
+        "Movement of solid particles by a magnet",
+        "Net movement of water across a selectively permeable membrane from a more dilute solution to a more concentrated solution",
+        "Movement of only large proteins through a metal sheet",
+        "Movement of light through chlorophyll"
+      ],
+      "answer": 1,
+      "explanation": "In osmosis, water moves across a selectively permeable membrane from a more dilute solution to a more concentrated one."
+    },
+    {
+      "id": "bio-9-03",
+      "subject": "biology",
+      "level": "9",
+      "topic": "Plant tissues",
+      "prompt": "Which tissue contains actively dividing cells that help a plant grow?",
+      "options": [
+        "Meristematic tissue",
+        "Mature cork",
+        "Dead xylem vessels only",
+        "Fully developed sclerenchyma fibres"
+      ],
+      "answer": 0,
+      "explanation": "Meristematic cells divide to produce new cells for plant growth."
+    },
+    {
+      "id": "bio-9-04",
+      "subject": "biology",
+      "level": "9",
+      "topic": "Animal tissues",
+      "prompt": "Which tissue transmits electrical signals around the body?",
+      "options": [
+        "Adipose tissue",
+        "Cartilage",
+        "Epithelial tissue",
+        "Nervous tissue"
+      ],
+      "answer": 3,
+      "explanation": "Neurons in nervous tissue carry electrical signals."
+    },
+    {
+      "id": "bio-9-05",
+      "subject": "biology",
+      "level": "9",
+      "topic": "Cell organisation",
+      "prompt": "What is a tissue?",
+      "options": [
+        "Every organism in a forest",
+        "A mixture of unrelated minerals",
+        "A group of cells working together to perform a function",
+        "A single molecule of water"
+      ],
+      "answer": 2,
+      "explanation": "A tissue is an organised group of cells performing a particular function."
+    },
+    {
+      "id": "bio-9-06",
+      "subject": "biology",
+      "level": "9",
+      "topic": "Prokaryotes",
+      "prompt": "Which feature is typical of a bacterial cell?",
+      "options": [
+        "It contains many membrane-bound nuclei",
+        "It lacks a membrane-bound nucleus",
+        "It has a large chloroplast in every case",
+        "It has no genetic material"
+      ],
+      "answer": 1,
+      "explanation": "Bacteria are prokaryotes with genetic material that is not enclosed in a membrane-bound nucleus."
+    },
+    {
+      "id": "bio-9-07",
+      "subject": "biology",
+      "level": "9",
+      "topic": "Blood tissue",
+      "prompt": "Which blood cells mainly transport oxygen?",
+      "options": [
+        "Red blood cells",
+        "Platelets",
+        "Most white blood cells",
+        "Cartilage cells"
+      ],
+      "answer": 0,
+      "explanation": "Red blood cells contain haemoglobin, which carries oxygen."
+    },
+    {
+      "id": "bio-9-08",
+      "subject": "biology",
+      "level": "9",
+      "topic": "Ecosystem cycles",
+      "prompt": "Which process returns carbon dioxide to the atmosphere from living organisms?",
+      "options": [
+        "Only mineral absorption by roots",
+        "Only seed dispersal",
+        "Only water absorption",
+        "Respiration"
+      ],
+      "answer": 3,
+      "explanation": "Cellular respiration releases carbon dioxide when organic food molecules are broken down aerobically."
+    },
+    {
+      "id": "bio-9-09",
+      "subject": "biology",
+      "level": "9",
+      "topic": "Chromosomes",
+      "prompt": "Chromosomes are composed mainly of DNA and what other type of molecule?",
+      "options": [
+        "Cellulose",
+        "Triglyceride fat",
+        "Proteins",
+        "Starch"
+      ],
+      "answer": 2,
+      "explanation": "Chromosomal DNA is associated with proteins that help package and organise it."
+    },
+    {
+      "id": "bio-9-10",
+      "subject": "biology",
+      "level": "9",
+      "topic": "Cell transport",
+      "prompt": "A cell placed in a very concentrated salt solution loses water. What happens to the water?",
+      "options": [
+        "It is all destroyed by the salt",
+        "It moves out by osmosis",
+        "It changes into protein",
+        "It moves inward only"
+      ],
+      "answer": 1,
+      "explanation": "The more concentrated external solution draws water out through the cell membrane by osmosis."
+    },
+    {
+      "id": "bio-10-01",
+      "subject": "biology",
+      "level": "10",
+      "topic": "Photosynthesis",
+      "prompt": "Which raw materials are used to make glucose during photosynthesis?",
+      "options": [
+        "Protein and oxygen",
+        "Carbon dioxide and water",
+        "Oxygen and glucose",
+        "Nitrogen and oil"
+      ],
+      "answer": 1,
+      "explanation": "Plants use carbon dioxide and water, with light energy, to form carbohydrates."
+    },
+    {
+      "id": "bio-10-02",
+      "subject": "biology",
+      "level": "10",
+      "topic": "Digestive enzymes",
+      "prompt": "Bile helps fat digestion mainly by doing what?",
+      "options": [
+        "Breaking large fat droplets into smaller droplets",
+        "Digesting proteins into amino acids directly",
+        "Converting starch into glucose directly",
+        "Producing hydrochloric acid"
+      ],
+      "answer": 0,
+      "explanation": "Bile emulsifies fats, increasing the surface area available to digestive enzymes."
+    },
+    {
+      "id": "bio-10-03",
+      "subject": "biology",
+      "level": "10",
+      "topic": "Double circulation",
+      "prompt": "Why is human circulation called double circulation?",
+      "options": [
+        "The heart has only two chambers",
+        "Every artery contains two separate hearts",
+        "Blood flows only twice each day",
+        "Blood passes through the heart twice in one complete circuit"
+      ],
+      "answer": 3,
+      "explanation": "The pulmonary and systemic circuits together take blood through the heart twice."
+    },
+    {
+      "id": "bio-10-04",
+      "subject": "biology",
+      "level": "10",
+      "topic": "Nephrons",
+      "prompt": "What is the basic functional unit of a human kidney?",
+      "options": [
+        "Alveolus",
+        "Villus",
+        "Nephron",
+        "Neuron"
+      ],
+      "answer": 2,
+      "explanation": "Nephrons filter blood and modify the filtrate to form urine."
+    },
+    {
+      "id": "bio-10-05",
+      "subject": "biology",
+      "level": "10",
+      "topic": "Reflexes",
+      "prompt": "Which structure usually coordinates a simple spinal withdrawal reflex?",
+      "options": [
+        "Thyroid gland",
+        "Spinal cord",
+        "Stomach",
+        "Pancreas"
+      ],
+      "answer": 1,
+      "explanation": "A spinal reflex is coordinated through the spinal cord for a rapid response."
+    },
+    {
+      "id": "bio-10-06",
+      "subject": "biology",
+      "level": "10",
+      "topic": "Plant hormones",
+      "prompt": "Which plant hormone promotes cell elongation and helps a shoot bend toward light?",
+      "options": [
+        "Auxin",
+        "Insulin",
+        "Thyroxine",
+        "Adrenaline"
+      ],
+      "answer": 0,
+      "explanation": "Uneven auxin distribution causes unequal elongation on the two sides of a shoot."
+    },
+    {
+      "id": "bio-10-07",
+      "subject": "biology",
+      "level": "10",
+      "topic": "Inheritance",
+      "prompt": "In a simple Mendelian cross, Tt × Tt, what fraction of offspring is expected to be tt?",
+      "options": [
+        "One half",
+        "Three quarters",
+        "All offspring",
+        "One quarter"
+      ],
+      "answer": 3,
+      "explanation": "The four equally likely combinations are TT, Tt, Tt and tt."
+    },
+    {
+      "id": "bio-10-08",
+      "subject": "biology",
+      "level": "10",
+      "topic": "Sexual reproduction",
+      "prompt": "Why does sexual reproduction usually produce more genetic variation than asexual reproduction?",
+      "options": [
+        "DNA is absent from the offspring",
+        "All inherited traits are removed",
+        "Genetic material from two parents is combined",
+        "All offspring receive identical copies from one parent"
+      ],
+      "answer": 2,
+      "explanation": "Combining parental genetic material creates new combinations of inherited variants."
+    },
+    {
+      "id": "bio-10-09",
+      "subject": "biology",
+      "level": "10",
+      "topic": "Food webs",
+      "prompt": "Why is less energy generally available at higher trophic levels?",
+      "options": [
+        "Consumers return all energy to sunlight",
+        "Organisms use energy and much is released as heat at each level",
+        "Energy is created only by carnivores",
+        "All energy is recycled without any losses"
+      ],
+      "answer": 1,
+      "explanation": "Energy is used in life processes and dissipated as heat, so only part reaches the next level."
+    },
+    {
+      "id": "bio-10-10",
+      "subject": "biology",
+      "level": "10",
+      "topic": "Decomposition",
+      "prompt": "Which material is readily biodegradable under suitable conditions?",
+      "options": [
+        "Vegetable peels",
+        "A glass bottle",
+        "An aluminium can",
+        "A conventional polyethylene bag"
+      ],
+      "answer": 0,
+      "explanation": "Microorganisms can break down vegetable peels into simpler substances."
+    }
+  ]
+}

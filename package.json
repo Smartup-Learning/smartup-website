@@ -6,10 +6,18 @@
   "scripts": {
     "start": "node server.mjs",
     "dev": "node server.mjs",
-    "check": "node --check server.mjs && node --check dist/app.js",
-    "test": "node --test tests/*.test.mjs"
+    "check": "node --check server.mjs && node --check server/assessment.mjs && node --check dist/app.js && node --check dist/assessment/engine.js && node --check dist/assessment/assessment.js && node --check dist/assessment/admin/admin.js",
+    "test": "node --test tests/*.test.mjs",
+    "build": "esbuild src/assessment/world.js --bundle --format=esm --minify --outfile=dist/assessment/world.js",
+    "setup": "node scripts/setup-local-admin.mjs"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
+  },
+  "dependencies": {
+    "three": "0.186.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
   }
 }

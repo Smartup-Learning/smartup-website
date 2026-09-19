@@ -3,3 +3,8 @@ tmp/
 .DS_Store
 .sites-runtime/
 SmartUp Website/
+
+data/
+.env
+.env.*
+!.env.example

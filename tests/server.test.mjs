@@ -2,9 +2,11 @@ import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { stat } from 'node:fs/promises';
 import { createSiteServer } from '../server.mjs';
-const server=createSiteServer();let base;
+import {AssessmentStore} from '../server/assessment.mjs';
+const store=new AssessmentStore(':memory:');
+const server=createSiteServer({store});let base;
 before(async()=>{await new Promise(r=>server.listen(0,'127.0.0.1',r));base=`http://127.0.0.1:${server.address().port}`;});
-after(()=>new Promise(r=>server.close(r)));
+after(()=>new Promise(r=>server.close(()=>{store.close();r();})));
 test('HTML, health, unknown paths and unsupported methods',async()=>{
  assert.equal((await fetch(base)).status,200);assert.equal(await (await fetch(base+'/health')).text(),'ok');assert.equal((await fetch(base+'/not-found')).status,404);assert.equal((await fetch(base,{method:'POST'})).status,405);
 });
