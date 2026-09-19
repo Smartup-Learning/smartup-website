@@ -108,3 +108,10 @@ main .section-heading>div:first-child{align-self:flex-start}
 .family-photo-placeholder>span{font-size:clamp(1.7rem,4vw,2.6rem);font-weight:500;line-height:1.2}
 .faculty .family-photo-placeholder p{color:var(--muted);font-size:14px;margin:0}
 @media(max-width:800px){.family-photo-placeholder{min-height:260px}.team-tabs{display:grid;grid-template-columns:1.45fr 1fr .8fr;width:100%}}
+
+/* Highlight the diagnostic entry alongside the main navigation. */
+.header nav{align-items:center}
+.header nav .diagnostic-cta{min-height:46px;gap:12px;padding:12px 18px}
+.header nav .diagnostic-cta:after{display:none}
+@media(min-width:801px) and (max-width:1000px){.header{padding-inline:24px;gap:16px}.header .brand img{width:135px}.header nav{gap:14px}.header .button.small{padding-inline:14px;font-size:12px;gap:10px}}
+@media(max-width:800px){.header nav{align-items:stretch}.header nav .diagnostic-cta{align-self:flex-start;min-height:48px;font-size:16px;padding-inline:20px}}
