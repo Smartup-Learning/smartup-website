@@ -119,3 +119,6 @@ main .section-heading>div:first-child{align-self:flex-start}
 /* Keep the diagnostic visible on mobile without opening navigation. */
 .mobile-diagnostic{display:none}
 @media(max-width:800px){.header nav .diagnostic-cta{display:none}.mobile-diagnostic{display:block;padding:0 20px 20px;background:white}.mobile-diagnostic .button{display:flex;width:100%;min-height:52px;justify-content:space-between;padding:14px 16px;gap:12px;font-size:15px}}
+
+/* A visible game entry beside the programme action, within the hero itself. */
+.hero-actions{flex-wrap:wrap}.hero-actions .hero-diagnostic{background:var(--cream);color:var(--deep)}.hero-actions .hero-diagnostic:hover{background:white}.hero-actions .hero-diagnostic:focus-visible{outline-color:var(--yellow)}
