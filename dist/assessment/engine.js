@@ -47,7 +47,7 @@ export class DiagnosticRun {
   if (this.status !== 'playing' || this.feedback || !Number.isInteger(optionIndex) || optionIndex < 0 || optionIndex > 3) return null;
   const question = this.question, correct = optionIndex === question.answer;
   if (correct) {this.correct++; this.streak++; this.bestStreak = Math.max(this.streak, this.bestStreak);} else {this.lives--; this.streak = 0;}
-  this.history.push({id:question.id,level:this.level,topic:question.topic,correct});
+  this.history.push({id:question.id,level:this.level,topic:question.topic,correct,prompt:question.prompt,options:[...question.options],selected:optionIndex,answer:question.options[question.answer],explanation:question.explanation});
   let kind = correct ? 'correct' : 'incorrect';
   if (this.lives === 0) { this.status = 'finished'; kind = 'finished'; }
   else if (this.correct === REQUIRED_CORRECT) {

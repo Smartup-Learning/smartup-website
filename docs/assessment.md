@@ -51,7 +51,7 @@ Subjects are `mathematics`, `physics`, `chemistry`, `biology`. Levels are `found
 
 ## Student details and results
 
-The student provides name, a 10-digit phone number, class and subject, and confirms parent/guardian permission before saving. The server stores the profile, consent version, question snapshot, progress and final result. Refreshing the same browser tab resumes the journey. Starting again retains the previous attempt for the team and gives the new run five lives.
+The student provides name, a 10-digit phone number, class and subject, and confirms parent/guardian permission before saving. The server stores the profile, consent version, question snapshot, progress and final result. Refreshing the same browser tab returns to the welcome screen with a **Continue my journey** action. The complete answered-question trail is restored from the saved attempt. Starting again retains the previous attempt for the team and gives the new run five lives.
 
 Administration → **Student results** shows all saved journeys, including incomplete attempts. **Export CSV** downloads the loaded records; refresh first to include newly submitted journeys. Records can be deleted individually after confirmation. Exported files contain personal information and should be kept with the Smartup team. No student details or result data are included in the public files or browser URLs.
 
@@ -66,13 +66,13 @@ The CSV includes name, phone, enrolled class, subject, assessed level, correct/a
 - Failure reports the last cleared level. Failure at Foundation reports **Pre-Foundation Intervention Needed**. Failure at Class 5 after clearing Foundation reports **Foundation Level**. Clearing the enrolled grade reports **At Grade Level (Proficient)**.
 - Questions shuffle without repeats within a run. A fresh run reshuffles and may include questions seen in earlier runs.
 
-The owl is real extruded 3D geometry derived from the supplied brand artwork. Floating platforms show progression; five tokens track current-level answers. Students can inspect nodes but cannot skip levels. Audio starts off, animation can be paused, reduced-motion preferences are respected, and a branded static fallback keeps the challenge usable without WebGL.
+The welcome page explains the rules before onboarding. During play, answered questions remain in a continuous scrollable trail with expandable explanations. The owl is real extruded 3D geometry derived from the supplied brand artwork, with a sculpted body and expressive face. It travels beside the active question and moves to answer feedback to show a happy or gently disappointed reaction. A sticky HUD keeps shared lives, active level and correct-answer progress visible. Students can inspect level nodes but cannot skip levels. Audio starts off, animation can be paused, reduced-motion preferences are respected, and a branded static fallback keeps the challenge usable without WebGL.
 
 These are original **draft** questions. Teacher review and difficulty calibration are still required before presenting this as an approved diagnostic. Science questions in lower classes are organised by domain for this experience, not claimed as a certified standalone subject syllabus. This is an indicative learning snapshot, not a validated placement test.
 
 ## Railway deployment after client approval
 
-The checked-in Dockerfile serves both the marketing website and the assessment API from a single Node 24 process. The Three.js browser bundle is already in `dist/assessment/world.js`; rebuild it with `npm run build` after editing `src/assessment/world.js`.
+The checked-in Dockerfile serves both the marketing website and the assessment API from a single Node 24 process. The Three.js companion bundle is already in `dist/assessment/companion.js`; rebuild with `npm run build` after editing `src/assessment/companion.js`. The earlier map renderer is retained separately in `src/assessment/world.js`, but is not loaded by the new journey.
 
 1. Deploy this repository as a Railway service using its Dockerfile.
 2. Attach a persistent **volume mounted at `/data`**. Set `DATA_DIR=/data`; the Dockerfile already supplies that default. The SQLite database and its WAL files must survive redeployments. Railway documents persistent mount paths in its [volume guide](https://docs.railway.com/volumes).

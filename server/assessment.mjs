@@ -22,7 +22,7 @@ export class AssessmentStore {
  save(id,run){this.db.prepare('UPDATE runs SET state=?,result=?,status=?,updated_at=? WHERE id=?').run(JSON.stringify(run),run.result()?JSON.stringify(run.result()):null,run.status,new Date().toISOString(),id);}
  close(){this.db.close();}
 }
-function view(run){const q=run.question;return {profile:{name:run.profile.name,grade:run.profile.grade,subject:run.profile.subject},levels:run.levels,level:run.level,levelIndex:run.levelIndex,lives:run.lives,correct:run.correct,streak:run.streak,cleared:run.cleared,status:run.status,feedback:run.feedback,result:run.result(),question:q?{id:q.id,topic:q.topic,prompt:q.prompt,options:q.options}:null};}
+function view(run){const q=run.question;return {profile:{name:run.profile.name,grade:run.profile.grade,subject:run.profile.subject},levels:run.levels,level:run.level,levelIndex:run.levelIndex,lives:run.lives,correct:run.correct,streak:run.streak,cleared:run.cleared,status:run.status,feedback:run.feedback,result:run.result(),history:run.history,question:q?{id:q.id,topic:q.topic,prompt:q.prompt,options:q.options}:null};}
 export function createAssessmentHandler({store=new AssessmentStore(),adminPassword=process.env.ADMIN_PASSWORD||'',secureCookies=process.env.NODE_ENV==='production',trustedProxyHops=Number(process.env.TRUST_PROXY_HOPS)||0}={}) {
  if(process.env.NODE_ENV==='production'&&adminPassword.length<16)throw new Error('Set ADMIN_PASSWORD to at least 16 characters before launching.');
  const salt=randomBytes(16), passwordHash=adminPassword?scryptSync(adminPassword,salt,32):null;

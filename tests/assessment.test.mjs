@@ -23,6 +23,33 @@ const bank=fixtureBank();
 const answers=new Map(bank.map(q=>[q.id,q.answer]));
 const makeRun=overrides=>new DiagnosticRun(profile(overrides),bank,()=>0.42);
 const answerRun=(run,correct)=>run.answer(correct?run.question.answer:(run.question.answer+1)%4);
+test('answered trail resumes with explanations without disclosing future questions',async t=>{
+ const f=await fixture(t),created=await f.start();
+ assert.deepEqual(created.history,[]);
+ const choice=answers.get(created.question.id);
+ const answered=await f.action(created,'answer',{answer:choice});
+ const entry=answered.data.history[0];
+ assert.equal(entry.prompt,created.question.prompt);
+ assert.equal(entry.selected,choice);
+ assert.equal(entry.answer,created.question.options[choice]);
+ assert.equal(entry.correct,true);
+ assert.ok(entry.explanation);
+ await f.action(created,'next');
+ const resumed=await f.call(`/api/assessment/runs/${created.id}`,'GET',undefined,{token:created.token});
+ assert.deepEqual(resumed.data.history,[entry]);
+ assert.notEqual(resumed.data.question.id,entry.id);
+ assert.equal(resumed.data.question.answer,undefined);
+ assert.equal(resumed.data.queues,undefined);
+ assert.equal(resumed.data.profile.phone,undefined);
+});
+test('older saved attempts with summary-only history stay readable',async t=>{
+ const f=await fixture(t),created=await f.start();
+ const loaded=f.store.load(created.id,created.token).run;
+ loaded.history.push({id:'legacy',level:'foundation',topic:'Numbers',correct:true});
+ f.store.save(created.id,loaded);
+ const resumed=await f.call(`/api/assessment/runs/${created.id}`,'GET',undefined,{token:created.token});
+ assert.equal(resumed.status,200);assert.equal(resumed.data.history[0].id,'legacy');
+});
 function finishBucket(run,correct=true){
  const level=run.level;
  do {answerRun(run,correct);if(run.status==='finished'||run.feedback.kind==='level-cleared')break;run.next();}while(run.level===level);
@@ -128,7 +155,7 @@ test('API enforces profile validation and explicit consent without saving reject
 test('API serves only the active question, without answers, queues or student phone',async t=>{
  const f=await fixture(t),run=await f.start();
  assert.deepEqual(Object.keys(run.question).sort(),['id','options','prompt','topic']);assert.equal(run.feedback,null);assert.equal(run.result,null);
- assert.ok(!('queues'in run));assert.ok(!('history'in run));assert.ok(!('phone'in run.profile));assert.ok(!('answer'in run.question));assert.ok(!('explanation'in run.question));
+ assert.ok(!('queues'in run));assert.deepEqual(run.history,[]);assert.ok(!('phone'in run.profile));assert.ok(!('answer'in run.question));assert.ok(!('explanation'in run.question));
  const read=await f.call(`/api/assessment/runs/${run.id}`,'GET',undefined,{token:run.token});assert.equal(read.status,200);assert.ok(!('token'in read.data));assert.ok(!('queues'in read.data));
  const answered=await f.action(run,'answer',{answer:answers.get(run.question.id)});assert.equal(answered.status,200);assert.equal(answered.data.feedback.correct,true);assert.equal(typeof answered.data.feedback.explanation,'string');
 });

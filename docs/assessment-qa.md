@@ -26,3 +26,16 @@ Engine/API coverage includes all 24 subject/grade combinations, global lives, cu
 The original bank was reviewed for factual/key errors; evaporation, human hormones and osmosis wording were clarified. Difficulty still needs teacher calibration. Draft/indicative labels remain.
 
 The local Node/SQLite version is working. Railway infrastructure, TLS/domain setup, persistent-volume redeploy and restore tests have not been performed because the user specified Railway hosting after client confirmation. The old public Sites marketing deployment has not been replaced with API-dependent static files.
+
+
+# Welcome and continuous journey update — 20 September 2026
+
+- Rebuilt student entry as a game-native welcome with rules, then separate onboarding. Original admin CSS is unchanged; student additions are isolated in `quest.css`.
+- Added safe answered-question snapshots to persisted history. Two new regression tests cover resumed explanations without future-answer disclosure and legacy summary-only attempts. Full suite: **56 passed, zero failed**.
+- Browser verified at 1440×960, 390×844 and 320×740. No horizontal overflow. Reviewed actual WebGL welcome, question, happy-feedback and sad-feedback renders.
+- Synthetic mobile journey: wrong Foundation answer → four lives; five correct answers → Foundation cleared; Class 5 starts at zero bucket progress and still four lives. Six earlier questions remain in the trail.
+- Reload verified the welcome resume action restores answered state and the question trail.
+- A second synthetic journey ran with the companion bundle blocked and reduced motion enabled. Static owl remained visible; motion duration was zero; five wrong Foundation answers led to the expected Pre-Foundation result and saved confirmation. Temporary emulation/blocking restored afterward.
+- Independent source review found and resolved duplicate scroll offsets and a possible restart race during pending requests. Independent rendered review could not access the browser/images in its isolated context; root inspected the actual screenshots.
+- One design-detector pass: preserved the intentional rounded dimensional podium rim; removed the redundant response-card accent and progress width animation. Earned progress, heart loss and level unlock use transform/color feedback.
+- Preview only. Public marketing link and Railway deployment remain unchanged pending client approval.
