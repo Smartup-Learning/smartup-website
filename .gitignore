@@ -8,3 +8,6 @@ data/
 .env
 .env.*
 !.env.example
+dist/client/
+dist/server/
+dist/.openai/

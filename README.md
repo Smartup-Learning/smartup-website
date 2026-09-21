@@ -3,10 +3,10 @@
 A responsive marketing website for classes 8–12, with Smartup Quest: a gamified diagnostic page for Classes 5–10. The student app and LMS remain separate. See [the assessment editing and deployment guide](docs/assessment.md) for questions, admin access and saved results.
 
 ## Preview
-Requires Node.js 24 or newer. Run `npm ci`, `npm run setup`, then `npm start`; open http://localhost:3000. Quest is at `/assessment/` and its private editor at `/assessment/admin/`. The local admin password is saved in the ignored `.env` file. `npm run check` checks syntax; `npm test` verifies gameplay, storage, administration and the static server. `npm run build` rebuilds the bundled 3D scene.
+Requires Node.js 24 or newer. Run `npm ci`, `npm run setup`, then `npm start`; open http://localhost:3000. Quest is at `/assessment/` and its private editor at `/assessment/admin/`. The local admin password is saved in the ignored `.env` file. `npm run check` checks syntax; `npm test` verifies gameplay, storage, administration, static delivery and the Sites runtime. `npm run build` rebuilds the 3D scene and Sites publication bundle.
 
 ## Railway
-Deploy this repository to a Railway service. Railway detects the included Dockerfile; the server listens on `0.0.0.0` and the assigned `PORT`. The health check is `/health`. Generate a Railway domain or connect the client's domain after deployment. Set a strong `ADMIN_PASSWORD` and attach a persistent volume at `/data` for the SQLite question bank and student results. Keep one replica. See docs/assessment.md for the complete setup and proxy configuration. The `.openai` folder is for the private Sites review copy and does not affect Railway.
+Deploy this repository to a Railway service after client approval. Railway detects the included Dockerfile; the server listens on `0.0.0.0` and the assigned `PORT`. The health check is `/health`. Generate a Railway domain or connect the client's domain after deployment. Set a strong `ADMIN_PASSWORD` and attach a persistent volume at `/data` for the SQLite question bank and student results. Keep one replica. See docs/assessment.md for the complete setup and proxy configuration. The `.openai` folder configures the existing Sites review and does not affect Railway.
 
 ## Content and assets
 - Website: `dist/index.html`; styling: `dist/styles.css`; interactions: `dist/app.js`.

@@ -82,7 +82,13 @@ The checked-in Dockerfile serves both the marketing website and the assessment A
 6. Enable volume backups and test restoring a copy. Bank JSON and result CSV exports are useful additional backups but do not restore active-run access or admin sessions.
 7. Verify HTTPS admin login, start/finish a synthetic run, edit/import a question, and redeploy once to confirm persistence before inviting students.
 
-The previous `chatgpt.site` link remains the published marketing review. The new assessment is available in the local preview; it has not been deployed to Railway. Uploading only `dist` to static hosting will not provide its API, admin authentication or saved results.
+## Existing Sites review link
+
+The `chatgpt.site` review uses the same website and gameplay engine, with `sites/worker.mjs` providing the API and a private D1 database for questions, student details and results. It supports the same question editor at `/assessment/admin/`. The Sites `ADMIN_PASSWORD` is configured as a hosting secret, with a private local copy in the ignored `.env.sites` file. Source files and browser assets never contain it.
+
+`npm run build` generates `dist/client`, `dist/server` and `dist/.openai` for Sites publication, including database migrations. These generated directories are excluded from Git and the Railway image. The Node server blocks them from public requests. The question bank seeds once; publishing new website versions never replaces saved questions or student records. Conditional revisions protect runs and question edits across concurrent requests.
+
+Local preview, Sites and Railway use separate databases. Before moving to Railway, export the approved question bank as JSON and any required student results as CSV from the Sites editor. Import the bank into the Railway editor; retain the results export with the team. Active review journeys and login sessions do not transfer. Railway remains pending client approval.
 
 ## Verification
 

@@ -15,3 +15,4 @@ test('valid byte range returns only requested bytes',async()=>{const r=await fet
 test('suffix and open-ended ranges work',async()=>{const size=(await stat('dist/assets/logo.svg')).size;for(const range of ['bytes=-20',`bytes=${size-20}-`]){const r=await fetch(base+'/assets/logo.svg',{headers:{range}});assert.equal(r.status,206);assert.equal((await r.arrayBuffer()).byteLength,20);}});
 test('invalid and out-of-bounds ranges return 416',async()=>{for(const range of ['bytes=99999999-','bytes=10-5','bytes=-0','bytes=-','bytes=0-1,4-5'])assert.equal((await fetch(base+'/assets/logo.svg',{headers:{range}})).status,416);});
 test('malformed URLs do not leak filesystem errors',async()=>{assert.equal((await fetch(base+'/%ZZ')).status,400);});
+test('Sites server bundles and metadata are never public on Railway',async()=>{for(const path of ['/server/index.js','/.openai/hosting.json','/client/index.html'])assert.equal((await fetch(base+path)).status,404);});

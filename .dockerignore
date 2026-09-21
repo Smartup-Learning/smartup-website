@@ -8,3 +8,6 @@ data
 AGENTS.md
 SmartUp Website
 tmp
+dist/client
+dist/server
+dist/.openai

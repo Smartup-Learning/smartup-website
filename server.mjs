@@ -17,6 +17,7 @@ export function createSiteServer(options={}){
    if(url.pathname==='/health')return send(200,'ok');
    let requested;
    try{requested=decodeURIComponent(url.pathname);}catch{return send(400,'Invalid URL');}
+   if(requested.split('/').some(part=>part.startsWith('.'))||/^\/(server|client)(\/|$)/.test(requested))return send(404,'Page not found');
    let file=path.resolve(root,'.'+requested);
    if(!file.startsWith(root+path.sep)&&file!==root)return send(403,'Forbidden');
    let info=await stat(file);
