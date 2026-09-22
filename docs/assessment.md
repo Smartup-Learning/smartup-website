@@ -74,7 +74,9 @@ These are original **draft** questions. Teacher review and difficulty calibratio
 
 The result names the subject and compares the last cleared level with the selected class. Students at grade level receive appreciation, those one stage below receive encouragement, and larger gaps receive positive support with a prominent team-guidance link. The report shows correct answers, levels cleared, best streak and a per-level breakdown. The subject overview compares all four subjects against their expected levels and links to each saved snapshot, unfinished quiz or unattempted challenge. Foundation is the stage immediately below Class 5; failure before clearing Foundation is labelled Pre-Foundation.
 
-## Railway deployment after client approval
+## Railway deployment
+
+The website and assessment are live at [smartup-web-production.up.railway.app](https://smartup-web-production.up.railway.app). The [Railway deployment runbook](railway.md) records the production service, verified upload command, deployed version, volume and backup status. The following requirements also apply when provisioning another environment.
 
 The checked-in Dockerfile serves both the marketing website and the assessment API from a single Node 24 process. The Three.js companion bundle is already in `dist/assessment/companion.js`; rebuild with `npm run build` after editing `src/assessment/companion.js`. The earlier map renderer is retained separately in `src/assessment/world.js`, but is not loaded by the new journey.
 
@@ -92,7 +94,7 @@ The `chatgpt.site` review uses the same website and gameplay engine, with `sites
 
 `npm run build` generates `dist/client`, `dist/server` and `dist/.openai` for Sites publication, including database migrations. These generated directories are excluded from Git and the Railway image. The Node server blocks them from public requests. The question bank seeds once; publishing new website versions never replaces saved questions or student records. Conditional revisions protect runs and question edits across concurrent requests.
 
-Local preview, Sites and Railway use separate databases. Before moving to Railway, export the approved question bank as JSON and any required student results as CSV from the Sites editor. Import the bank into the Railway editor; retain the results export with the team. The CSV is a staff archive, not a database migration. Saved review attempts, same-browser credentials and login sessions do not transfer to a different Railway domain through CSV. Plan a full data migration separately if these review records must become live student records. Railway remains pending client approval.
+Local preview, Sites and Railway use separate databases. Railway started with the committed draft bank; Sites review records were not automatically migrated. If the approved Sites bank differs, export it as JSON and import it into the Railway editor. Export any required Sites student results as CSV and retain them with the team. The CSV is a staff archive, not a database migration. Saved review attempts, same-browser credentials and login sessions do not transfer to a different Railway domain through CSV. Plan a full data migration separately if these review records must become live student records.
 
 ## Verification
 

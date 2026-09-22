@@ -1,0 +1,79 @@
+# Railway deployment
+
+The marketing website and Smartup Quest are deployed together at **https://smartup-web-production.up.railway.app**. Administration is at [/assessment/admin/](https://smartup-web-production.up.railway.app/assessment/admin/); the student challenge is at [/assessment/](https://smartup-web-production.up.railway.app/assessment/).
+
+## Deployment record
+
+| Item | Value |
+| --- | --- |
+| Deployed | 22 September 2026 |
+| Workspace | tja1989's Projects |
+| Project | `2e278d8d-41ba-4dd4-a21e-5cd3a47ab81d` |
+| Environment | `production` — `189f0696-d13d-4d82-a448-468c54de72d4` |
+| Service | `smartup-web` — `2da448a9-e82a-42e7-a377-39d39a4bdf3d` |
+| Deployment | `a30bc1b2-68ac-4427-bb58-a1d5ecf05989` |
+| Source commit | `fb71bed6204d0cdb1f063657d9a44cbcc9a153eb` |
+| Volume | `6039a06e-3007-4bc5-83ea-23a452fe8f26`, mounted at `/data` |
+| Volume instance | `156fe3d8-37fc-46e9-a50d-719a096320a9` |
+| Region | `us-west2` |
+| Replicas | `1` |
+| Delivery | Manual CLI upload of a clean committed release; no GitHub autodeploy configured |
+
+The initial deployment reached `SUCCESS`. A synthetic assessment, an actual service restart, saved-result recovery and browser access/privacy checks passed. The database survived the restart. The homepage, diagnostic welcome and details screen rendered correctly in the browser with no console errors. The synthetic run was subsequently deleted and its absence confirmed in administration. This does not constitute a backup-restore test.
+
+## Runtime and secrets
+
+The Dockerfile runs the marketing files and assessment API in one Node 24 process, listening on `0.0.0.0:3000`. Production variables are:
+
+| Variable | Setting |
+| --- | --- |
+| `NODE_ENV` | `production` |
+| `DATA_DIR` | `/data` |
+| `PORT` | `3000` |
+| `TRUST_PROXY_HOPS` | `0` |
+| `ADMIN_PASSWORD` | Unique private secret, at least 16 characters |
+
+The admin secret is stored in Railway variables and the local, ignored `.env.railway` file. Never commit that file or put the password in documentation, deployment messages or browser assets. The production server refuses to start without a valid admin password.
+
+`TRUST_PROXY_HOPS=0` deliberately ignores forwarded IP headers until the ingress chain is verified. Visitors sharing the same proxy may share start/login rate limits. Change the hop count only after verifying the chain and ensuring direct untrusted traffic cannot reach the service.
+
+The persisted service settings use the Dockerfile builder, `/health` health check, and `ON_FAILURE` restart policy with three retries. These are configured directly on the service as well as recorded in `railway.json`. Railway CLI 5.49.6 reported config-as-code deprecation with a 1 December 2026 deadline; future deployments should verify the persisted service settings rather than rely solely on the JSON file.
+
+## Deploy an update
+
+Use Node 24 or newer. Run `npm run check`, `npm test` and `npm run build`, review the changes, and commit the intended runtime files before staging. The Dockerfile copies the committed `dist` assets; it does not run an asset build or install npm dependencies during deployment.
+
+From the repository root, create a new, empty release directory under ignored `tmp/` and extract only the runtime files:
+
+```sh
+release_dir="tmp/railway-release-$(git rev-parse --short HEAD)-$(date +%Y%m%d%H%M%S)"
+mkdir -p "$release_dir"
+git archive HEAD Dockerfile railway.json .dockerignore package.json server.mjs server data-seed dist | tar -x -C "$release_dir"
+cd "$release_dir"
+railway up \
+  --project 2e278d8d-41ba-4dd4-a21e-5cd3a47ab81d \
+  --environment 189f0696-d13d-4d82-a448-468c54de72d4 \
+  --service 2da448a9-e82a-42e7-a377-39d39a4bdf3d \
+  --detach --json \
+  --message 'Smartup client preview with learning assessment'
+```
+
+This explicit-target upload was verified with `/opt/homebrew/bin/railway` version `5.49.6`, running from the clean release directory. It needs no `--path-as-root`. Scoped OAuth authorization works for these project/environment/service IDs. `railway whoami` and `railway link` query all workspaces and can fail under the same scoped authorization; that failure alone does not mean access to this deployment is unavailable. Do not create a replacement project or service to work around it.
+
+`--detach` returns before health is established. Wait for the new deployment to report `SUCCESS`, check `/health`, and verify the homepage, assessment, mobile layout and admin login over HTTPS. Confirm an existing synthetic assessment still resumes after deployment. Record the new deployment ID and source commit here after successful verification.
+
+## Persistence and backups
+
+SQLite data lives at `/data/smartup.sqlite`, with its WAL sidecars on the same persistent volume. Keep the existing service and volume for updates. Do not detach, delete or recreate the volume during a code redeploy. Keep one replica and one Node process; moving to multiple replicas requires a different database/concurrency design.
+
+**Backup schedule: daily, with six-day retention (`518400` seconds).** The configured `DAILY` schedule was verified through Railway's `volumeInstanceBackupScheduleList` query for the volume instance above on 22 September 2026. The first scheduled backup was not yet due at verification; no restore drill has been performed. Confirm that the first backup completes and test restoring a copy before treating recovery as verified.
+
+Question-bank JSON and student-results CSV exports are useful supplementary copies, but cannot restore browser credentials, active attempts or admin sessions. Use a consistent database/volume backup when a complete restore is required; copying only a live SQLite database file can omit WAL data.
+
+The initial bank seeds an empty database once. Later code deployments preserve live question edits and saved results. Use the [assessment administration guide](assessment.md) to edit/import questions and export results.
+
+## Relationship to the Sites review
+
+The existing `chatgpt.site` review and this Railway service use separate databases. Railway began with the committed draft question bank; Sites review attempts were not automatically migrated. Export/import an approved question bank through administration if it differs from the seed. Retain any required Sites results CSV as a staff archive, or plan a separate full migration.
+
+Student access is restricted to the original browser. A phone number alone cannot retrieve saved results. Clearing cookies or moving between the Sites and Railway domains does not transfer access; the student must contact the team. One attempt per phone number per subject applies within each deployment's database.
