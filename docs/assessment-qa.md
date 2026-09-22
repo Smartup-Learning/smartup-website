@@ -8,7 +8,7 @@
 - Impeccable detector on both new HTML surfaces — zero findings. Independent finishing review also checked desktop and mobile renders; the Foundation label width was corrected afterward.
 - `git diff --check` — clean.
 
-Engine/API coverage includes all 24 subject/grade combinations, global lives, cumulative correct answers, Foundation/Class 5/Class 7 failure scoring, enrolled-grade completion, nine-question worst-case buckets, invalid and duplicate inputs, no answer-key leakage, per-run tokens, consent, protected administration, session expiry/logout, saved records surviving database reopen, atomic question-bank validation, conflicting bank revisions, unchanged active-run snapshots, concurrent delayed request bodies, UTF-8 chunk boundaries, pagination beyond 1,000 records, and explicit proxy trust behavior. The shipped 280-question bank passes the same schema checks and complete-run exercise.
+Engine/API coverage includes all 24 subject/grade combinations, global lives, cumulative correct answers, Foundation/Class 5/Class 7 failure scoring, enrolled-grade completion, nine-question worst-case buckets, invalid and duplicate inputs, no answer-key leakage, per-run tokens, versioned data notices and legacy permission payloads, protected administration, session expiry/logout, saved records surviving database reopen, atomic question-bank validation, conflicting bank revisions, unchanged active-run snapshots, concurrent delayed request bodies, UTF-8 chunk boundaries, pagination beyond 1,000 records, and explicit proxy trust behavior. The shipped 280-question bank passes the same schema checks and complete-run exercise.
 
 ## Browser walkthrough
 
@@ -39,3 +39,15 @@ The local Node/SQLite version is working. Railway infrastructure, TLS/domain set
 - Independent source review found and resolved duplicate scroll offsets and a possible restart race during pending requests. Independent rendered review could not access the browser/images in its isolated context; root inspected the actual screenshots.
 - One design-detector pass: preserved the intentional rounded dimensional podium rim; removed the redundant response-card accent and progress width animation. Earned progress, heart loss and level unlock use transform/color feedback.
 - Preview only. Public marketing link and Railway deployment remain unchanged pending client approval.
+
+# Mobile refinement — 22 September 2026
+
+- Welcome simplified to the owl, short introduction and play action; rules now follow the details form. Subject choices use branded dimensional graph, magnet, atom and DNA icons.
+- Removed the guardian checkbox. New runs record the displayed data-notice version rather than asserting guardian permission. Both Node/SQLite and Sites/D1 accept the new notice and preserve legacy client compatibility; unknown notice versions are rejected.
+- Automated suite: **59 passed, zero failed**. Source syntax, production build and whitespace checks passed. Independent review identified a disabled-button focus issue; feedback now receives programmatic focus before the next action.
+- Mobile browser journey at 390×844: one incorrect Foundation answer, five correct answers, visible Foundation → Class 5 unlock card, four lives carried into Class 5, then exhaustion. Result correctly reports Foundation Level, 5/10 correct and 0/5 lives. The isolated QA database confirms the saved result and v2 notice.
+- Verified 320×740 and 1440×960: questions use full width without the owl; feedback includes the expressive owl; no horizontal page overflow. HUD includes subject/current level and the stage count. Earlier questions remain in the trail and saved progress resumes after navigation.
+- Confirmed split-heart animation and the −1 life notice. Reduced-motion emulation suppresses the animation while retaining readable feedback; normal emulation restored afterward.
+- Added versioned engine imports after the browser exposed a cached-module mismatch. Welcome, onboarding and complete gameplay load with the revised assets.
+- One Impeccable detector pass. Retained the established dimensional podium and button edges intentionally. Its inherited progress-width finding is already overridden with `transition:none` in the Quest HUD.
+- Test records used a separate `tmp/quest-refinement-qa` database; real student records were not modified. Railway deployment remains the user's next step; the existing Dockerfile and persistent-volume instructions are unchanged.

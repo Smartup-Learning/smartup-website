@@ -143,6 +143,15 @@ test('engine ignores invalid answers, duplicates and next before an answer',()=>
  answerRun(run,false);const answered=JSON.stringify(run);assert.equal(answerRun(run,true),null);assert.equal(JSON.stringify(run),answered);
 });
 
+test('API accepts a data notice without claiming guardian permission',async t=>{
+ const f=await fixture(t);
+ const created=await f.call('/api/assessment/runs','POST',{...profile(),dataNoticeVersion:'assessment-data-notice-v2'});
+ assert.equal(created.status,201);
+ assert.equal(f.store.load(created.data.id,created.data.token).row.consent_version,'assessment-data-notice-v2');
+ const legacy=await f.start();assert.equal(f.store.load(legacy.id,legacy.token).row.consent_version,'assessment-v1');
+ for(const value of ['',null,'unknown'])assert.equal((await f.call('/api/assessment/runs','POST',{...profile(),consent:true,dataNoticeVersion:value})).status,400);
+ assert.equal(f.store.db.prepare('SELECT COUNT(*) AS n FROM runs').get().n,2);
+});
 test('API enforces profile validation and explicit consent without saving rejected starts',async t=>{
  const f=await fixture(t);
  for(const consent of [undefined,false,'true']){const r=await f.call('/api/assessment/runs','POST',{...profile(),consent});assert.equal(r.status,400);assert.ok(r.data.fields.consent);}

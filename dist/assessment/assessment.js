@@ -1,8 +1,8 @@
-import {LEVELS,levelName,validateProfile} from './engine.js';
+import {levelName,validateProfile,DATA_NOTICE_VERSION} from './engine.js?v=quest-refined-20260922c';
 const $=id=>document.getElementById(id);
 const titleCase=value=>value.charAt(0).toUpperCase()+value.slice(1);
 const reduced=()=>matchMedia('(prefers-reduced-motion:reduce)').matches;
-let run=null,access=null,selected=null,busy=false,companion=null,sound=false,audioContext=null,motionPaused=false;
+let run=null,access=null,selected=null,busy=false,companion=null,sound=false,audioContext=null,motionPaused=false,stopScroll=null;
 const sessionKey='smartup-quest-run';
 function remember(){try{if(access)sessionStorage.setItem(sessionKey,JSON.stringify(access));else sessionStorage.removeItem(sessionKey);}catch{}}
 async function request(path,method='GET',data){
@@ -11,57 +11,129 @@ async function request(path,method='GET',data){
  if(!response.ok){const error=new Error(result.error||'Please try again.');error.fields=result.fields;error.state=result.state;error.status=response.status;throw error;}return result;
 }
 function element(tag,className,text){const el=document.createElement(tag);if(className)el.className=className;if(text!==undefined)el.textContent=text;return el;}
-function setBusy(value){busy=value;$('restart-button').disabled=value;}
+function setBusy(value){busy=value;for(const id of ['restart-button','continue-button','next-level-button','rules-start'])$(id).disabled=value;}
 function showError(message){$('action-error').textContent=message;$('action-error').hidden=!message;}
 function setMood(mood){$('owl-companion').dataset.mood=mood;companion?.setMood(mood);}
-function moveOwl(dockId,travel=false){const owl=$('owl-companion'),dock=$(dockId);if(owl.parentElement!==dock)dock.append(owl);if(travel&&!reduced()&&!motionPaused)owl.animate([{transform:'translateY(-75px) rotate(-8deg)',opacity:.5},{transform:'translateY(0) rotate(0)',opacity:1}],{duration:800,easing:'cubic-bezier(.22,1,.36,1)'});}
-function setView(view){for(const name of ['welcome','setup','play','result'])$(`${name}-view`).hidden=name!==view;document.body.dataset.state=view==='play'?'playing':view;$('play-hud').hidden=view!=='play';moveOwl(({welcome:'welcome-dock',setup:'setup-dock',play:'question-dock',result:'result-dock'})[view]);}
-function scrollToQuestion(){requestAnimationFrame(()=>{$('active-question').scrollIntoView({block:'start',behavior:reduced()?'instant':'smooth'});$('question-title').focus({preventScroll:true});});}
+function moveOwl(dockId,travel=false){
+ const owl=$('owl-companion'),dock=dockId?$(dockId):null;owl.hidden=!dock;
+ companion?.setPaused(motionPaused||!dock);
+ if(!dock)return;
+ if(owl.parentElement!==dock)dock.append(owl);
+ if(travel&&!reduced()&&!motionPaused)owl.animate([{transform:'translateY(18px) scale(.94)',opacity:.5},{transform:'translateY(0) scale(1)',opacity:1}],{duration:520,easing:'cubic-bezier(.22,1,.36,1)'});
+}
+function setView(view){
+ for(const name of ['welcome','setup','rules','play','result'])$(`${name}-view`).hidden=name!==view;
+ document.body.dataset.state=view==='play'?'playing':view;$('play-hud').hidden=view!=='play';
+ moveOwl(({welcome:'welcome-dock',setup:'setup-dock',result:'result-dock'})[view]||null);
+}
+function smoothScrollTo(target){
+ stopScroll?.();
+ const start=window.scrollY,end=Math.max(0,Math.min(target,document.documentElement.scrollHeight-innerHeight));
+ if(reduced()||motionPaused||Math.abs(end-start)<3){window.scrollTo({top:end,behavior:'instant'});return Promise.resolve();}
+ return new Promise(resolve=>{
+  const began=performance.now(),duration=Math.min(780,Math.max(480,Math.abs(end-start)*.45));let frame;
+  const finish=()=>{cancelAnimationFrame(frame);for(const event of ['wheel','touchstart','pointerdown','keydown'])window.removeEventListener(event,finish);stopScroll=null;resolve();};
+  stopScroll=finish;for(const event of ['wheel','touchstart','pointerdown','keydown'])window.addEventListener(event,finish,{once:true,passive:true});
+  const tick=now=>{const t=Math.min(1,(now-began)/duration),ease=1-Math.pow(1-t,4);window.scrollTo({top:start+(end-start)*ease,behavior:'instant'});if(t<1)frame=requestAnimationFrame(tick);else finish();};
+  frame=requestAnimationFrame(tick);
+ });
+}
+async function scrollToQuestion(){
+ await new Promise(requestAnimationFrame);
+ const cleared=run?.feedback?.kind==='level-cleared';
+ const target=$(cleared?'answer-feedback':'active-question').getBoundingClientRect().top+scrollY-$('play-hud').offsetHeight-20;
+ $(cleared?'feedback-title':'question-title').focus({preventScroll:true});
+ if(!run.feedback&&!reduced()&&!motionPaused)$('active-question').animate([{opacity:.35,transform:'translateY(24px)'},{opacity:1,transform:'translateY(0)'}],{duration:560,easing:'cubic-bezier(.22,1,.36,1)'});
+ await smoothScrollTo(target);
+}
 function sceneState(previous){if(!run)return;const levels=run.levels,index=run.levelIndex;
  $('journey-nodes').replaceChildren();
  levels.forEach((level,i)=>{const item=element('li'),button=element('button','',levelName(level));button.type='button';button.dataset.marker=run.cleared.includes(level)?'✓':i===0?'F':level;
- if(run.cleared.includes(level))button.className='cleared';else if(i>index)button.className='locked';if(i===index)button.setAttribute('aria-current','step');button.setAttribute('aria-label',`${levelName(level)}: ${run.cleared.includes(level)?'cleared':i===index?'current level':'locked'}`);button.addEventListener('click',()=>inspectNode(i));item.append(button);$('journey-nodes').append(item);});
+ const ready=run.feedback?.kind==='level-cleared'&&i===index+1;if(run.cleared.includes(level))button.className='cleared';else if(i>index&&!ready)button.className='locked';if(i===index)button.setAttribute('aria-current','step');button.setAttribute('aria-label',`${levelName(level)}: ${run.cleared.includes(level)?'cleared':i===index?'current level':ready?'unlocked':'locked'}`);button.addEventListener('click',()=>inspectNode(i));item.append(button);$('journey-nodes').append(item);});
  $('hearts').replaceChildren();for(let i=0;i<5;i++){const heart=element('span',`heart${i>=run.lives?' heart-spent':''}${previous&&i>=run.lives&&i<previous.lives?' just-lost':''}`,'♥');$('hearts').append(heart);}
- document.querySelector('.lives').setAttribute('aria-label',`${run.lives} of 5 lives remaining`);$('hud-level').textContent=levelName(run.level);$('hud-streak').textContent=`${run.streak} in a row`;$('hud-subject').textContent=titleCase(run.profile.subject);$('progress-count').textContent=`${run.correct} / 5 correct`;$('level-progress').value=run.correct;
+ const lost=Boolean(previous&&run.lives<previous.lives);$('life-change').hidden=!lost;if(lost){$('life-change').classList.remove('life-change-show');void $('life-change').offsetWidth;$('life-change').classList.add('life-change-show');}
+ document.querySelector('.lives').setAttribute('aria-label',`${run.lives} of 5 lives remaining`);$('hud-level').textContent=levelName(run.level);$('hud-streak').textContent=`${run.streak} in a row`;$('hud-subject').textContent=`${titleCase(run.profile.subject)} · Current level`;$('hud-stage-number').textContent=`${run.levelIndex+1} / ${run.levels.length}`;$('progress-count').textContent=`${run.correct} / 5 correct`;$('level-progress').value=run.correct;
  $('journey-subject').textContent=`${run.profile.name} · ${titleCase(run.profile.subject)} · Class ${run.profile.grade}`;
  for(const [selector,animate] of [['.hud-progress',previous&&run.correct>previous.correct],['.hud-stage',previous&&run.level!==previous.level]]){const el=document.querySelector(selector);el.classList.remove('earned','unlocked');if(animate){void el.offsetWidth;el.classList.add(selector==='.hud-progress'?'earned':'unlocked');}}
  if(previous)$('hud-announcement').textContent=run.level!==previous.level?`${levelName(run.level)} unlocked. ${run.lives} lives remaining.`:`${run.lives} lives remaining. ${run.correct} of 5 correct in ${levelName(run.level)}.`;
  inspectNode(index);
 }
-function inspectNode(index){const level=run?.levels[index];if(!level)return;$('node-inspect').textContent=run.cleared.includes(level)?`${levelName(level)} cleared · Five discoveries made`:index===run.levelIndex?`${levelName(level)} · Five correct answers unlock the next step`:`${levelName(level)} unlocks after ${levelName(run.levels[index-1])}`;}
+function inspectNode(index){const level=run?.levels[index];if(!level)return;$('node-inspect').textContent=run.cleared.includes(level)?`${levelName(level)} cleared · Five discoveries made`:index===run.levelIndex?`${levelName(level)} · Five correct answers unlock the next step`:run.feedback?.kind==='level-cleared'&&index===run.levelIndex+1?`${levelName(level)} unlocked · Continue below to enter`:`${levelName(level)} unlocks after ${levelName(run.levels[index-1])}`;}
 function soundCue(kind){if(!sound)return;try{audioContext??=new AudioContext();audioContext.resume();const time=audioContext.currentTime;const notes=kind==='incorrect'||kind==='finished'?[330,294]:kind==='level-cleared'||kind==='proficient'?[523,659,784]:[523,659];notes.forEach((note,i)=>{const oscillator=audioContext.createOscillator(),gain=audioContext.createGain();oscillator.type='sine';oscillator.frequency.value=note;gain.gain.setValueAtTime(0,time+i*.1);gain.gain.linearRampToValueAtTime(.06,time+i*.1+.02);gain.gain.exponentialRampToValueAtTime(.001,time+i*.1+.25);oscillator.connect(gain);gain.connect(audioContext.destination);oscillator.start(time+i*.1);oscillator.stop(time+i*.1+.27);});}catch{}}
 function gate(level,first=false){const el=element('div','level-gate'),copy=element('div','',first?'Foundation · Your starting point':`${levelName(level)} unlocked`);copy.append(element('small','',first?'Every adventure begins with the basics':'A new level. The same five-heart journey.'));el.append(copy);return el;}
-function renderHistory(){const history=(run.history||[]).filter(q=>q.id!==run.question.id),host=$('question-history');host.replaceChildren();let lastLevel=null;
- history.forEach((q,i)=>{if(q.level!==lastLevel)host.append(gate(q.level,i===0));lastLevel=q.level;const card=element('article','history-card');card.dataset.correct=String(q.correct);const meta=element('div','history-meta');meta.append(element('span','',`QUESTION ${String(i+1).padStart(2,'0')} · ${levelName(q.level)}`),element('span','',q.correct?'✓ Discovered':'↗ Learning moment'));card.append(meta,element('h2','',q.prompt||q.topic));
- if(q.options&&q.selected!==undefined)card.append(element('p','history-result',`${q.correct?'✓':'Your answer:'} ${q.options[q.selected]}`));
- if(q.explanation){const details=element('details'),summary=element('summary','','Revisit the explanation');details.append(summary,element('p','',`${q.correct?'':`Correct answer: ${q.answer}. `}${q.explanation}`));card.append(details);}host.append(card);});
+function renderHistory(){
+ const history=(run.history||[]).filter(q=>q.id!==run.question.id),host=$('question-history');
+ const existing=new Map([...host.children].map(el=>[el.dataset.questionId,el]));let lastLevel=null;
+ history.forEach((q,i)=>{
+  let entry=existing.get(q.id);
+  if(!entry){
+   entry=element('div','history-entry');entry.dataset.questionId=q.id;
+   if(q.level!==lastLevel)entry.append(gate(q.level,i===0));
+   const card=element('article','history-card');card.dataset.correct=String(q.correct);
+   const meta=element('div','history-meta');meta.append(element('span','',`QUESTION ${String(i+1).padStart(2,'0')} · ${levelName(q.level)}`),element('span','',q.correct?'✓ Correct':'↗ Keep learning'));
+   card.append(meta,element('h2','',q.prompt||q.topic));
+   if(q.options&&q.selected!==undefined)card.append(element('p','history-result',`${q.correct?'✓':'Your answer:'} ${q.options[q.selected]}`));
+   if(q.explanation){const details=element('details'),summary=element('summary','','Revisit the explanation');details.append(summary,element('p','',`${q.correct?'':`Correct answer: ${q.answer}. `}${q.explanation}`));card.append(details);}
+   entry.append(card);
+  }
+  if(host.children[i]!==entry)host.append(entry);existing.delete(q.id);lastLevel=q.level;
+ });
+ for(const entry of existing.values())entry.remove();
  $('active-gate').hidden=lastLevel===run.level;const g=gate(run.level,history.length===0);$('active-gate').replaceChildren(...g.childNodes);
  $('question-number').textContent=String(history.length+1).padStart(2,'0');
 }
-function renderQuestion({focus=true,previous=null,travel=false}={}){setView('play');selected=null;renderHistory();$('question-topic').textContent=run.question.topic;$('question-title').textContent=run.question.prompt;$('answer-options').replaceChildren();
+function renderQuestion({focus=true,previous=null}={}){setView('play');selected=null;renderHistory();$('question-topic').textContent=run.question.topic;$('question-title').textContent=run.question.prompt;$('answer-options').replaceChildren();
  const saved=(run.history||[]).find(q=>q.id===run.question.id);
  run.question.options.forEach((option,i)=>{const label=element('label','answer-choice'),input=element('input');input.type='radio';input.name='answer';input.value=i;input.disabled=Boolean(run.feedback);input.checked=saved?.selected===i;const span=element('span'),letter=element('b','',String.fromCharCode(65+i));letter.setAttribute('aria-hidden','true');span.append(letter,document.createTextNode(option));label.append(input,span);input.addEventListener('change',()=>{selected=i;$('check-button').disabled=false;});if(run.feedback&&option===run.feedback.answer){label.classList.add('correct');span.append(element('small','','Correct'));}else if(saved?.selected===i&&!saved.correct){label.classList.add('incorrect');span.append(element('small','','Your answer'));}$('answer-options').append(label);});
- $('check-button').disabled=true;$('check-button').hidden=Boolean(run.feedback);$('continue-button').hidden=!run.feedback;$('answer-feedback').hidden=!run.feedback;$('active-question').dataset.response=run.feedback?(run.feedback.correct?'correct':'incorrect'):'';
- if(run.feedback)renderFeedback();else{$('owl-message').textContent=run.correct===0?'We’ve got this. One question at a time.':`${5-run.correct} more discoveries to unlock the next level.`;setMood('neutral');}
- sceneState(previous);if(travel&&!run.feedback)moveOwl('question-dock',true);if(focus)scrollToQuestion();
+ $('check-button').disabled=true;$('check-button').hidden=Boolean(run.feedback);$('continue-button').hidden=!run.feedback||run.feedback.kind==='level-cleared';$('level-transition').hidden=run.feedback?.kind!=='level-cleared';$('answer-feedback').hidden=!run.feedback;$('active-question').dataset.response=run.feedback?(run.feedback.correct?'correct':'incorrect'):'';
+ if(run.feedback)renderFeedback();else setMood('neutral');
+ sceneState(previous);if(focus)scrollToQuestion();
 }
 function renderFeedback(){const f=run.feedback;$('answer-feedback').dataset.correct=String(f.correct);$('feedback-title').textContent=f.kind==='level-cleared'?`${levelName(run.level)} cleared!`:f.kind==='proficient'?'You reached your class level!':f.kind==='finished'?'Your learning snapshot is ready':f.correct?'That’s right!':'A little learning moment';
  $('feedback-copy').textContent=f.explanation;$('continue-button').textContent=run.status==='finished'?'See my result →':f.kind==='level-cleared'?`Unlock ${levelName(run.levels[run.levelIndex+1])} →`:'Next question →';
- $('owl-message').textContent=f.correct?(f.kind==='level-cleared'?'Five discoveries! Ready to fly a little higher?':'Yes! Look at you go.'):(run.lives?'It’s okay. Every answer helps us learn.':'You showed up and gave it a go. That matters.');moveOwl('feedback-dock',true);setMood(f.correct?(f.kind==='level-cleared'||f.kind==='proficient'?'celebrate':'happy'):'sad');}
+ $('feedback-life').hidden=f.correct;$('feedback-life').textContent=`−1 life · ${run.lives} ${run.lives===1?'life':'lives'} left`;
+ moveOwl('feedback-dock',true);setMood(f.correct?(f.kind==='level-cleared'||f.kind==='proficient'?'celebrate':'happy'):'sad');
+ if(f.kind==='level-cleared'){
+  const next=run.levels[run.levelIndex+1];$('transition-from').textContent=levelName(run.level);$('transition-to').textContent=levelName(next);$('transition-number').textContent=next;
+  $('transition-lives').textContent=`${run.lives} ${run.lives===1?'life travels':'lives travel'} with you`;
+  $('next-level-button').textContent=`Enter ${levelName(next)} →`;
+ }
+}
+
 function renderResult(){setView('result');const result=run.result;$('result-heading').textContent=result.proficient?'Look how far you’ve come':'Your next step is clearer';$('result-person').textContent=`${run.profile.name} · Class ${run.profile.grade} · ${titleCase(run.profile.subject)}`;$('result-level').textContent=result.label;
  $('result-description').textContent=result.proficient?`You cleared every level from Foundation through Class ${run.profile.grade}. Keep building on that understanding.`:result.lastCleared===null?'Let’s strengthen the foundations together. A little focused support is a good place to begin.':`You cleared ${levelName(result.lastCleared)}. Practising ${levelName(result.failedLevel)} concepts is your next step.`;
  $('result-correct').textContent=`${result.correct} / ${result.answered}`;$('result-cleared').textContent=`${run.cleared.length} / ${run.levels.length}`;$('result-lives').textContent=`${run.lives} / 5`;$('practice-topics').replaceChildren();for(const topic of result.topicsToPractise.slice(0,5))$('practice-topics').append(element('li','',topic));$('practice-summary').hidden=!result.topicsToPractise.length;setMood(result.proficient?'celebrate':'happy');window.scrollTo({top:0,behavior:reduced()?'instant':'smooth'});$('result-heading').focus({preventScroll:true});}
 function showSetup(){setView('setup');setMood('neutral');showError('');window.scrollTo({top:0,behavior:'instant'});$('setup-title').focus({preventScroll:true});}
-function clearRun(){run=null;access=null;remember();selected=null;$('restart-confirm').close();$('resume-button').hidden=true;$('welcome-start').replaceChildren(document.createTextNode('Let’s play '),element('span','','→'));showSetup();}
+function clearRun(){stopScroll?.();$('question-history').replaceChildren();run=null;access=null;remember();selected=null;$('restart-confirm').close();$('resume-button').hidden=true;$('welcome-start').replaceChildren(document.createTextNode('Let’s play '),element('span','','→'));showSetup();}
 async function init(){try{await request('/api/assessment/config');$('start-button').disabled=false;$('start-button').textContent='Begin my journey ↗';$('load-status').textContent='';$('retry-load').hidden=true;try{access=JSON.parse(sessionStorage.getItem(sessionKey)||'null');}catch{access=null;}if(access){try{run=await request(`/api/assessment/runs/${access.id}`);$('resume-button').hidden=false;$('resume-button').textContent=run.status==='finished'?'View my saved result →':'Continue my journey →';$('welcome-start').textContent='Start a new journey →';}catch(error){if(error.status===404){access=null;remember();}else throw error;}}}catch(error){$('load-status').textContent=error.message;$('retry-load').hidden=false;$('start-button').disabled=true;$('start-button').textContent='Challenge unavailable';}}
-$('welcome-start').addEventListener('click',showSetup);$('back-welcome').addEventListener('click',()=>{setView('welcome');setMood('neutral');window.scrollTo({top:0,behavior:'instant'});$('welcome-start').focus({preventScroll:true});});$('resume-button').addEventListener('click',()=>run.status==='finished'?renderResult():renderQuestion({travel:true}));
-$('setup-form').addEventListener('submit',async event=>{event.preventDefault();if(busy)return;const data=Object.fromEntries(new FormData(event.currentTarget));data.consent=$('save-consent').checked;const errors=validateProfile(data);if(!data.consent)errors.consent='Please confirm permission to share these details.';for(const field of ['name','phone','grade','subject','consent']){const el=$(field==='consent'?'save-consent':`student-${field}`);$(`${field}-error`).textContent=errors[field]||'';el?.setAttribute('aria-invalid',String(Boolean(errors[field])));}if(Object.keys(errors).length){const first=Object.keys(errors)[0];$(first==='consent'?'save-consent':`student-${first}`)?.focus();return;}
- setBusy(true);$('start-button').disabled=true;$('start-button').textContent='Starting…';showError('');try{const created=await request('/api/assessment/runs','POST',data);access={id:created.id,token:created.token};remember();run=created;renderQuestion({travel:true});}catch(error){showError(error.message);}finally{setBusy(false);$('start-button').disabled=false;$('start-button').textContent='Begin my journey ↗';}});
-$('check-button').addEventListener('click',async()=>{if(busy||selected===null||run.feedback)return;setBusy(true);$('check-button').disabled=true;showError('');const chosen=selected,previous=run;try{run=await request(`/api/assessment/runs/${access.id}/answer`,'POST',{questionId:run.question.id,answer:chosen});renderQuestion({focus:false,previous});soundCue(run.feedback.kind);$('continue-button').focus({preventScroll:true});if(matchMedia('(max-width:800px)').matches)$('answer-feedback').scrollIntoView({block:'nearest',behavior:reduced()?'instant':'smooth'});}catch(error){if(error.state){run=error.state;renderQuestion({focus:false});}showError(error.message);$('check-button').disabled=false;}finally{setBusy(false);}});
-$('continue-button').addEventListener('click',async()=>{if(busy)return;if(run.status==='finished'){renderResult();return;}setBusy(true);$('continue-button').disabled=true;showError('');const previous=run;try{run=await request(`/api/assessment/runs/${access.id}/next`,'POST',{questionId:run.question.id});renderQuestion({previous,travel:true});if(run.level!==previous.level)soundCue('level-cleared');}catch(error){if(error.state){run=error.state;renderQuestion({focus:false});}showError(error.message);}finally{setBusy(false);$('continue-button').disabled=false;}});
+$('welcome-start').addEventListener('click',showSetup);$('back-welcome').addEventListener('click',()=>{setView('welcome');setMood('neutral');window.scrollTo({top:0,behavior:'instant'});$('welcome-start').focus({preventScroll:true});});$('resume-button').addEventListener('click',()=>run.status==='finished'?renderResult():access.rulesSeen===false?showRules():renderQuestion());
+function showRules(){
+ setView('rules');$('rules-intro').textContent=`${titleCase(run.profile.subject)} · Foundation to Class ${run.profile.grade}`;
+ window.scrollTo({top:0,behavior:'instant'});$('rules-title').focus({preventScroll:true});
+}
+$('rules-start').addEventListener('click',()=>{if(busy)return;access.rulesSeen=true;remember();renderQuestion();});
+$('setup-form').addEventListener('submit',async event=>{
+ event.preventDefault();if(busy)return;
+ const data={...Object.fromEntries(new FormData(event.currentTarget)),dataNoticeVersion:DATA_NOTICE_VERSION},errors=validateProfile(data);
+ for(const field of ['name','phone','grade','subject']){const el=$(`student-${field}`);$(`${field}-error`).textContent=errors[field]||'';el?.setAttribute('aria-invalid',String(Boolean(errors[field])));}
+ if(Object.keys(errors).length){$(`student-${Object.keys(errors)[0]}`)?.focus();return;}
+ setBusy(true);$('start-button').disabled=true;$('start-button').textContent='Starting…';showError('');
+ try{const created=await request('/api/assessment/runs','POST',data);access={id:created.id,token:created.token,rulesSeen:false};remember();run=created;$('question-history').replaceChildren();showRules();}
+ catch(error){showError(error.message);}
+ finally{setBusy(false);$('start-button').disabled=false;$('start-button').textContent='Begin my journey ↗';}
+});
+$('check-button').addEventListener('click',async()=>{if(busy||selected===null||run.feedback)return;setBusy(true);$('check-button').disabled=true;showError('');const chosen=selected,previous=run;try{run=await request(`/api/assessment/runs/${access.id}/answer`,'POST',{questionId:run.question.id,answer:chosen});renderQuestion({focus:false,previous});soundCue(run.feedback.kind);$('feedback-title').focus({preventScroll:true});if(run.feedback.kind==='level-cleared'||matchMedia('(max-width:800px)').matches){const feedback=$('answer-feedback').getBoundingClientRect();if(run.feedback.kind==='level-cleared'||feedback.bottom>innerHeight-30)await smoothScrollTo(feedback.top+scrollY-$('play-hud').offsetHeight-24);}}catch(error){if(error.state){run=error.state;renderQuestion({focus:false});}showError(error.message);$('check-button').disabled=false;}finally{setBusy(false);}});
+async function advanceQuestion(){
+ if(busy)return;if(run.status==='finished'){renderResult();return;}
+ setBusy(true);showError('');const previous=run;
+ try{run=await request(`/api/assessment/runs/${access.id}/next`,'POST',{questionId:run.question.id});renderQuestion({previous,focus:false});await scrollToQuestion();if(run.level!==previous.level)soundCue('level-cleared');}
+ catch(error){if(error.state){run=error.state;renderQuestion({focus:false});}showError(error.message);}
+ finally{setBusy(false);}
+}
+$('continue-button').addEventListener('click',advanceQuestion);$('next-level-button').addEventListener('click',advanceQuestion);
 $('retry-load').addEventListener('click',init);
 $('sound-toggle').addEventListener('click',()=>{sound=!sound;$('sound-toggle').textContent=sound?'Sound on':'Sound off';$('sound-toggle').setAttribute('aria-pressed',String(sound));if(sound)soundCue('correct');});
-$('motion-toggle').addEventListener('click',()=>{motionPaused=!motionPaused;document.body.dataset.motion=motionPaused?'paused':'playing';companion?.setPaused(motionPaused);$('motion-toggle').textContent=motionPaused?'Resume motion':'Pause motion';$('motion-toggle').setAttribute('aria-pressed',String(motionPaused));$('motion-toggle').setAttribute('aria-label',motionPaused?'Resume scene animation':'Pause scene animation');});
+$('motion-toggle').addEventListener('click',()=>{motionPaused=!motionPaused;document.body.dataset.motion=motionPaused?'paused':'playing';companion?.setPaused(motionPaused||$('owl-companion').hidden);if(motionPaused)stopScroll?.();$('motion-toggle').textContent=motionPaused?'Resume motion':'Pause motion';$('motion-toggle').setAttribute('aria-pressed',String(motionPaused));$('motion-toggle').setAttribute('aria-label',motionPaused?'Resume scene animation':'Pause scene animation');});
 $('restart-button').addEventListener('click',()=>{if(busy)return;$('restart-confirm').showModal();$('keep-playing').focus();});$('keep-playing').addEventListener('click',()=>{$('restart-confirm').close();$('restart-button').focus();});$('confirm-restart').addEventListener('click',clearRun);$('play-again').addEventListener('click',clearRun);
 setView('welcome');init();
-import('./companion.js?v=quest-flow-1').then(async module=>{companion=await module.createCompanion($('companion-canvas'));$('owl-companion').classList.add('has-companion');companion.setPaused(motionPaused);companion.setMood($('owl-companion').dataset.mood);}).catch(()=>{$('companion-canvas').replaceChildren();$('motion-toggle').hidden=true;});
+import('./companion.js?v=quest-flow-1').then(async module=>{companion=await module.createCompanion($('companion-canvas'));$('owl-companion').classList.add('has-companion');companion.setPaused(motionPaused||$('owl-companion').hidden);companion.setMood($('owl-companion').dataset.mood);}).catch(()=>{$('companion-canvas').replaceChildren();$('motion-toggle').hidden=true;});

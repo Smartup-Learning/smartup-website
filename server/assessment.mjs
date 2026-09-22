@@ -3,7 +3,7 @@ import {readFileSync,mkdirSync} from 'node:fs';
 import {randomBytes,createHash,timingSafeEqual,scryptSync} from 'node:crypto';
 import path from 'node:path';
 import {isIP} from 'node:net';
-import {DiagnosticRun,validateProfile,validateBank} from '../dist/assessment/engine.js';
+import {DiagnosticRun,validateProfile,validateBank,acceptedDataNotice} from '../dist/assessment/engine.js';
 const hash=value=>createHash('sha256').update(value).digest('hex');
 const token=()=>randomBytes(32).toString('base64url');
 export class AssessmentStore {
@@ -17,7 +17,7 @@ export class AssessmentStore {
  }
  questions(){return this.db.prepare('SELECT content FROM questions ORDER BY subject,level,id').all().map(r=>JSON.parse(r.content));}
  replaceBank(questions){validateBank(questions);this.db.exec('BEGIN IMMEDIATE');try{this.db.exec('DELETE FROM questions');const insert=this.db.prepare('INSERT INTO questions VALUES(?,?,?,?)');for(const q of questions)insert.run(q.id,q.subject,q.level,JSON.stringify(q));this.db.exec('COMMIT');}catch(e){this.db.exec('ROLLBACK');throw e;}}
- create(profile){const run=new DiagnosticRun(profile,this.questions());const id=randomBytes(12).toString('hex'),secret=token(),now=new Date().toISOString();this.db.prepare('INSERT INTO runs VALUES(?,?,?,?,?,?,?,?,?,?,?,?)').run(id,hash(secret),profile.name.trim(),profile.phone.trim(),Number(profile.grade),profile.subject,now,now,'playing',JSON.stringify(run),null,'assessment-v1');return {id,secret,run};}
+ create(profile,noticeVersion='assessment-v1'){const run=new DiagnosticRun(profile,this.questions());const id=randomBytes(12).toString('hex'),secret=token(),now=new Date().toISOString();this.db.prepare('INSERT INTO runs VALUES(?,?,?,?,?,?,?,?,?,?,?,?)').run(id,hash(secret),profile.name.trim(),profile.phone.trim(),Number(profile.grade),profile.subject,now,now,'playing',JSON.stringify(run),null,noticeVersion);return {id,secret,run};}
  load(id,secret){const row=this.db.prepare('SELECT * FROM runs WHERE id=? AND access_hash=?').get(id,hash(secret||''));if(!row)return null;const run=Object.assign(Object.create(DiagnosticRun.prototype),JSON.parse(row.state));return {run,row};}
  save(id,run){this.db.prepare('UPDATE runs SET state=?,result=?,status=?,updated_at=? WHERE id=?').run(JSON.stringify(run),run.result()?JSON.stringify(run.result()):null,run.status,new Date().toISOString(),id);}
  close(){this.db.close();}
@@ -46,9 +46,10 @@ export function createAssessmentHandler({store=new AssessmentStore(),adminPasswo
    if(route==='/api/assessment/runs'&&req.method==='POST'){
     if(limited('run:'+ip,60,3600000))return respond(429,{error:'Too many starts. Please try again later.'});
     const input=await body(req),errors=validateProfile(input);
-    if(input.consent!==true)errors.consent='Please confirm permission to save these details.';
+    const noticeVersion=acceptedDataNotice(input);
+    if(!noticeVersion)errors.consent='Please review the data notice before beginning.';
     if(Object.keys(errors).length)return respond(400,{error:'Check the highlighted details.',fields:errors});
-    const created=store.create(input);return respond(201,{...view(created.run),id:created.id,token:created.secret});
+    const created=store.create(input,noticeVersion);return respond(201,{...view(created.run),id:created.id,token:created.secret});
    }
    const runMatch=route.match(/^\/api\/assessment\/runs\/([a-f0-9]{24})(?:\/(answer|next))?$/);
    if(runMatch){

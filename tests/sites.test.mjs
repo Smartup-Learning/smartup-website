@@ -67,6 +67,11 @@ test('Sites diagnostic persists runs, protects answers and supports safe concurr
  assert.equal(state.result.label,'Pre-Foundation Intervention Needed');
  const rows=(await call('/api/admin/results','GET',undefined,auth)).data.results;
  assert.equal(rows.length,1);assert.equal(rows[0].phone,profile.phone);assert.deepEqual(rows[0].result,state.result);
+ const noticed=await call('/api/assessment/runs','POST',{...profile,consent:undefined,dataNoticeVersion:'assessment-data-notice-v2'});
+ assert.equal(noticed.status,201);
+ assert.equal((await db.prepare('SELECT consent_version FROM runs WHERE id=?').bind(noticed.data.id).first()).consent_version,'assessment-data-notice-v2');
+ assert.equal((await db.prepare('SELECT consent_version FROM runs WHERE id=?').bind(run.id).first()).consent_version,'assessment-v1');
+ assert.equal((await call('/api/assessment/runs','POST',{...profile,dataNoticeVersion:'unknown'})).status,400);
  assert.equal((await call('/api/admin/questions','PUT',{questions:updated,revision:savedBank.revision},{...auth,Origin:'https://evil.test'})).status,403);
  assert.equal((await call('/api/admin/logout','POST',{},auth)).status,200);
  assert.equal((await call('/api/admin/results','GET',undefined,auth)).status,401);

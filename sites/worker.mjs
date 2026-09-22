@@ -1,5 +1,5 @@
 // Sites review deployment. Railway continues to use server.mjs and SQLite.
-import {DiagnosticRun,validateProfile,validateBank} from '../dist/assessment/engine.js';
+import {DiagnosticRun,validateProfile,validateBank,acceptedDataNotice} from '../dist/assessment/engine.js';
 import seed from '../data-seed/questions.json' with {type:'json'};
 
 const hex=bytes=>Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('');
@@ -58,10 +58,11 @@ export async function assessment(request,env){
   if(route==='/api/assessment/runs'&&method==='POST'){
    if(await limited(db,'run:'+ip,60,3600000))return respond(429,{error:'Too many starts. Please try again later.'});
    const input=await body(request),errors=validateProfile(input);
-   if(input.consent!==true)errors.consent='Please confirm permission to save these details.';
+   const noticeVersion=acceptedDataNotice(input);
+   if(!noticeVersion)errors.consent='Please review the data notice before beginning.';
    if(Object.keys(errors).length)return respond(400,{error:'Check the highlighted details.',fields:errors});
    const run=new DiagnosticRun(input,(await bank(db)).questions),id=token(12),secret=token(),now=new Date().toISOString();
-   await db.prepare('INSERT INTO runs(id,access_hash,name,phone,grade,subject,created_at,updated_at,status,state,result,consent_version,revision) VALUES(?,?,?,?,?,?,?,?,?,?,NULL,?,0)').bind(id,await hash(secret),run.profile.name,run.profile.phone,run.profile.grade,run.profile.subject,now,now,'playing',JSON.stringify(run),'assessment-v1').run();
+   await db.prepare('INSERT INTO runs(id,access_hash,name,phone,grade,subject,created_at,updated_at,status,state,result,consent_version,revision) VALUES(?,?,?,?,?,?,?,?,?,?,NULL,?,0)').bind(id,await hash(secret),run.profile.name,run.profile.phone,run.profile.grade,run.profile.subject,now,now,'playing',JSON.stringify(run),noticeVersion).run();
    return respond(201,{...view(run),id,token:secret});
   }
   const match=route.match(/^\/api\/assessment\/runs\/([a-f0-9]{24})(?:\/(answer|next))?$/);

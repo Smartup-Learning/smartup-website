@@ -2,6 +2,11 @@ export const SUBJECTS = ['mathematics', 'physics', 'chemistry', 'biology'];
 export const LEVELS = ['foundation', '5', '6', '7', '8', '9', '10'];
 export const REQUIRED_CORRECT = 5;
 export const STARTING_LIVES = 5;
+export const DATA_NOTICE_VERSION = 'assessment-data-notice-v2';
+export function acceptedDataNotice(input) {
+ if ('dataNoticeVersion' in input) return input.dataNoticeVersion === DATA_NOTICE_VERSION ? DATA_NOTICE_VERSION : null;
+ return input.consent === true ? 'assessment-v1' : null;
+}
 export const levelName = level => level === 'foundation' ? 'Foundation' : `Class ${level}`;
 export function validateProfile({name, phone, grade, subject}) {
  const errors = {};
