@@ -82,3 +82,5 @@ body[data-motion=paused] *,body[data-motion=paused] *::before,body[data-motion=p
  .question-card #question-title{font-size:21px}.level-crossing{gap:10px}
 }
 @media(prefers-reduced-motion:reduce){.life-change-show{opacity:1}.heart.just-lost::before,.heart.just-lost::after{display:none}}
+/* Keep the native class selector readable, including its dropdown arrow. */
+.setup-form-panel .form-row{grid-template-columns:repeat(auto-fit,minmax(min(100%,11rem),1fr));gap:0 14px}.setup-form-panel .form-row>.field{min-width:0}
