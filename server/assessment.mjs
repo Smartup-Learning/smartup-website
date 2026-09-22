@@ -4,6 +4,7 @@ import {randomBytes,createHash,timingSafeEqual,scryptSync} from 'node:crypto';
 import path from 'node:path';
 import {isIP} from 'node:net';
 import {DiagnosticRun,validateProfile,validateBank,acceptedDataNotice} from '../dist/assessment/engine.js';
+import {subjectOverview} from '../dist/assessment/snapshot.js';
 const hash=value=>createHash('sha256').update(value).digest('hex');
 const token=()=>randomBytes(32).toString('base64url');
 export class AssessmentStore {
@@ -13,13 +14,27 @@ export class AssessmentStore {
   this.db.exec(`CREATE TABLE IF NOT EXISTS questions(id TEXT PRIMARY KEY, subject TEXT NOT NULL, level TEXT NOT NULL, content TEXT NOT NULL); CREATE INDEX IF NOT EXISTS questions_bucket ON questions(subject,level);
   CREATE TABLE IF NOT EXISTS runs(id TEXT PRIMARY KEY, access_hash TEXT NOT NULL, name TEXT NOT NULL, phone TEXT NOT NULL, grade INTEGER NOT NULL, subject TEXT NOT NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL, status TEXT NOT NULL, state TEXT NOT NULL, result TEXT, consent_version TEXT NOT NULL);
   CREATE TABLE IF NOT EXISTS sessions(token_hash TEXT PRIMARY KEY, expires INTEGER NOT NULL);`);
+  this.db.exec('BEGIN IMMEDIATE');
+  try{
+  const columns=this.db.prepare('PRAGMA table_info(runs)').all().map(c=>c.name);
+  if(!columns.includes('browser_hash'))this.db.exec("ALTER TABLE runs ADD COLUMN browser_hash TEXT NOT NULL DEFAULT '';");
+  if(!columns.includes('attempt_slot')){
+   this.db.exec("ALTER TABLE runs ADD COLUMN attempt_slot INTEGER NOT NULL DEFAULT 1; UPDATE runs SET attempt_slot=0;");
+   this.db.exec(`UPDATE runs SET attempt_slot=1 WHERE id IN (SELECT id FROM (SELECT id,ROW_NUMBER() OVER(PARTITION BY phone,subject ORDER BY (status='finished') DESC,created_at ASC,id ASC) AS position FROM runs) WHERE position=1);`);
+  }
+  this.db.exec(`CREATE UNIQUE INDEX IF NOT EXISTS runs_one_attempt ON runs(phone,subject) WHERE attempt_slot=1;
+  CREATE TABLE IF NOT EXISTS phone_profiles(phone TEXT PRIMARY KEY,browser_hash TEXT NOT NULL,name TEXT NOT NULL,grade INTEGER NOT NULL,updated_at TEXT NOT NULL);
+  CREATE INDEX IF NOT EXISTS profiles_browser ON phone_profiles(browser_hash);`);
+   this.db.exec('COMMIT');
+  }catch(error){this.db.exec('ROLLBACK');throw error;}
   if(!this.db.prepare('SELECT COUNT(*) AS n FROM questions').get().n)this.replaceBank(JSON.parse(readFileSync(new URL('../data-seed/questions.json',import.meta.url))).questions);
  }
  questions(){return this.db.prepare('SELECT content FROM questions ORDER BY subject,level,id').all().map(r=>JSON.parse(r.content));}
  replaceBank(questions){validateBank(questions);this.db.exec('BEGIN IMMEDIATE');try{this.db.exec('DELETE FROM questions');const insert=this.db.prepare('INSERT INTO questions VALUES(?,?,?,?)');for(const q of questions)insert.run(q.id,q.subject,q.level,JSON.stringify(q));this.db.exec('COMMIT');}catch(e){this.db.exec('ROLLBACK');throw e;}}
- create(profile,noticeVersion='assessment-v1'){const run=new DiagnosticRun(profile,this.questions());const id=randomBytes(12).toString('hex'),secret=token(),now=new Date().toISOString();this.db.prepare('INSERT INTO runs VALUES(?,?,?,?,?,?,?,?,?,?,?,?)').run(id,hash(secret),profile.name.trim(),profile.phone.trim(),Number(profile.grade),profile.subject,now,now,'playing',JSON.stringify(run),null,noticeVersion);return {id,secret,run};}
- load(id,secret){const row=this.db.prepare('SELECT * FROM runs WHERE id=? AND access_hash=?').get(id,hash(secret||''));if(!row)return null;const run=Object.assign(Object.create(DiagnosticRun.prototype),JSON.parse(row.state));return {run,row};}
+ create(profile,noticeVersion='assessment-v1',browserHash=''){const run=new DiagnosticRun(profile,this.questions());const id=randomBytes(12).toString('hex'),secret=token(),now=new Date().toISOString();this.db.prepare('INSERT INTO runs(id,access_hash,name,phone,grade,subject,created_at,updated_at,status,state,result,consent_version,browser_hash,attempt_slot) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,1)').run(id,hash(secret),profile.name.trim(),profile.phone.trim(),Number(profile.grade),profile.subject,now,now,'playing',JSON.stringify(run),null,noticeVersion,browserHash);return {id,secret,run};}
+ load(id,secret,browserHash=''){const row=this.db.prepare("SELECT * FROM runs WHERE id=? AND (access_hash=? OR (browser_hash<>'' AND browser_hash=?))").get(id,hash(secret||''),browserHash);if(!row)return null;const run=Object.assign(Object.create(DiagnosticRun.prototype),JSON.parse(row.state));return {run,row};}
  save(id,run){this.db.prepare('UPDATE runs SET state=?,result=?,status=?,updated_at=? WHERE id=?').run(JSON.stringify(run),run.result()?JSON.stringify(run.result()):null,run.status,new Date().toISOString(),id);}
+ overview(profile){return subjectOverview(profile,this.db.prepare('SELECT id,subject,status,grade,result,browser_hash,updated_at FROM runs WHERE phone=? AND attempt_slot=1').all(profile.phone),profile.browser_hash);}
  close(){this.db.close();}
 }
 function view(run){const q=run.question;return {profile:{name:run.profile.name,grade:run.profile.grade,subject:run.profile.subject},levels:run.levels,level:run.level,levelIndex:run.levelIndex,lives:run.lives,correct:run.correct,streak:run.streak,cleared:run.cleared,status:run.status,feedback:run.feedback,result:run.result(),history:run.history,question:q?{id:q.id,topic:q.topic,prompt:q.prompt,options:q.options}:null};}
@@ -42,25 +57,57 @@ export function createAssessmentHandler({store=new AssessmentStore(),adminPasswo
     if(req.headers['sec-fetch-site']==='cross-site')return respond(403,{error:'This request is not allowed.'});
    }
    const ip=clientAddress(req);
-   if(route==='/api/assessment/config'&&req.method==='GET')return respond(200,{ready:true,bankStatus:'draft',savedResults:true});
+   const browserSecret=(req.headers.cookie||'').split(';').map(x=>x.trim()).find(x=>x.startsWith('smartup_learner='))?.slice(16)||'';
+   const browserHash=browserSecret?hash(browserSecret):'';
+   const learnerCookie=secret=>({'Set-Cookie':`smartup_learner=${secret}; Path=/api/assessment; HttpOnly; SameSite=Strict; Max-Age=31536000${secureCookies?'; Secure':''}`});
+   if(route==='/api/assessment/profile'&&req.method==='GET'){
+    const profile=browserHash&&store.db.prepare('SELECT * FROM phone_profiles WHERE browser_hash=? ORDER BY updated_at DESC,phone LIMIT 1').get(browserHash);
+    return profile?respond(200,store.overview(profile)):respond(404,{error:'No saved profile in this browser.'});
+   }
+   if(route==='/api/assessment/profile/claim'&&req.method==='POST'){
+    if(!browserSecret)return respond(428,{error:'Please reload the challenge to enable saved progress in this browser.',code:'BROWSER_REQUIRED'},learnerCookie(token()));
+    const input=await body(req),saved=store.load(typeof input.runId==='string'?input.runId:'',req.headers.authorization?.replace(/^Bearer /,''),browserHash);
+    if(!saved||!saved.row.attempt_slot)return respond(404,{error:'This saved journey is unavailable.'});
+    const owner=store.db.prepare('SELECT * FROM phone_profiles WHERE phone=?').get(saved.row.phone);
+    if(owner&&owner.browser_hash!==browserHash)return respond(403,{error:'Continue in the browser you first used, or contact our team.'});
+    const secret=browserSecret||token(),key=hash(secret),profile={...saved.row,browser_hash:key};
+    store.db.prepare('INSERT OR IGNORE INTO phone_profiles VALUES(?,?,?,?,?)').run(profile.phone,key,profile.name,profile.grade,new Date().toISOString());
+    store.db.prepare("UPDATE runs SET browser_hash=? WHERE id=? AND (browser_hash='' OR browser_hash=?)").run(key,profile.id,key);
+    return respond(200,store.overview(profile),learnerCookie(secret));
+   }
+   if(route==='/api/assessment/config'&&req.method==='GET')return respond(200,{ready:true,bankStatus:'draft',savedResults:true},learnerCookie(browserSecret||token()));
    if(route==='/api/assessment/runs'&&req.method==='POST'){
     if(limited('run:'+ip,60,3600000))return respond(429,{error:'Too many starts. Please try again later.'});
     const input=await body(req),errors=validateProfile(input);
     const noticeVersion=acceptedDataNotice(input);
     if(!noticeVersion)errors.consent='Please review the data notice before beginning.';
     if(Object.keys(errors).length)return respond(400,{error:'Check the highlighted details.',fields:errors});
-    const created=store.create(input,noticeVersion);return respond(201,{...view(created.run),id:created.id,token:created.secret});
+    if(!browserSecret)return respond(428,{error:'Please reload the challenge to enable saved progress in this browser.',code:'BROWSER_REQUIRED'},learnerCookie(token()));
+    let owner=store.db.prepare('SELECT * FROM phone_profiles WHERE phone=?').get(input.phone.trim());
+    const prior=store.db.prepare('SELECT * FROM runs WHERE phone=? AND attempt_slot=1 LIMIT 1').get(input.phone.trim());
+    if((owner&&owner.browser_hash!==browserHash)||(!owner&&prior))return respond(409,{error:'This number already has a saved journey. Continue in the browser you first used, or contact our team.',code:'ORIGINAL_BROWSER_REQUIRED'});
+    const secret=browserSecret||token(),key=hash(secret),now=new Date().toISOString();
+    if(!owner){store.db.prepare('INSERT INTO phone_profiles VALUES(?,?,?,?,?)').run(input.phone.trim(),key,input.name.trim(),Number(input.grade),now);owner={phone:input.phone.trim(),browser_hash:key};}
+    const existing=store.db.prepare('SELECT * FROM runs WHERE phone=? AND subject=? AND attempt_slot=1').get(input.phone.trim(),input.subject);
+    if(existing){
+     if(existing.browser_hash!==key)return respond(409,{error:'This subject already has a saved attempt. Contact our team for guidance.'});
+     const run=Object.assign(Object.create(DiagnosticRun.prototype),JSON.parse(existing.state));
+     return respond(200,{...view(run),id:existing.id,token:null,resumed:true},learnerCookie(secret));
+    }
+    store.db.prepare('UPDATE phone_profiles SET name=?,grade=?,updated_at=? WHERE phone=? AND browser_hash=?').run(input.name.trim(),Number(input.grade),now,input.phone.trim(),key);
+    const created=store.create(input,noticeVersion,key);return respond(201,{...view(created.run),id:created.id,token:created.secret},learnerCookie(secret));
    }
    const runMatch=route.match(/^\/api\/assessment\/runs\/([a-f0-9]{24})(?:\/(answer|next))?$/);
    if(runMatch){
     // Consume the asynchronous body before reading state. The following load/mutate/save
     // is synchronous so concurrent requests cannot overwrite a newer run snapshot.
     const input=req.method==='POST'?await body(req):null;
-    const saved=store.load(runMatch[1],req.headers.authorization?.replace(/^Bearer /,''));
+    const saved=store.load(runMatch[1],req.headers.authorization?.replace(/^Bearer /,''),browserHash);
     if(!saved)return respond(404,{error:'This journey could not be found. Start a new challenge.'});
     const run=saved.run;
     if(req.method==='GET'&&!runMatch[2])return respond(200,view(run));
     if(req.method!=='POST')return respond(405,{error:'Method not allowed.'});
+    if(!saved.row.attempt_slot)return respond(409,{error:'An attempt is already saved for this subject. Contact our team for guidance.'});
     // A question id is an idempotency boundary: stale and duplicate submissions never cost a life.
     if(input.questionId!==run.question?.id)return respond(409,{error:'This question has already moved on.',state:view(run)});
     if(runMatch[2]==='answer'){

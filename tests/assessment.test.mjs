@@ -1,12 +1,15 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import http from 'node:http';
+import {DatabaseSync} from 'node:sqlite';
+import {createHash} from 'node:crypto';
 import {once} from 'node:events';
 import {setImmediate as nextTurn} from 'node:timers/promises';
 import {mkdtemp,rm,readFile} from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import {DiagnosticRun,validateProfile,validateBank,SUBJECTS,LEVELS} from '../dist/assessment/engine.js';
+import {learningInsight,competencyName} from '../dist/assessment/snapshot.js';
 import {AssessmentStore} from '../server/assessment.mjs';
 import {createSiteServer} from '../server.mjs';
 
@@ -64,10 +67,13 @@ async function fixture(t,options={}){
   const response=await fetch(base+route,{method,headers:{'Content-Type':'application/json','X-Smartup-Request':'1',...(token?{Authorization:`Bearer ${token}`} : {}),...(cookie?{Cookie:cookie}:{}),...headers},...(data!==undefined?{body:JSON.stringify(data)}:{})});
   return {status:response.status,data:await response.json(),headers:response.headers};
  }
- async function start(overrides={}){const response=await call('/api/assessment/runs','POST',{...profile(),consent:true,...overrides});assert.equal(response.status,201,JSON.stringify(response.data));return response.data;}
+ const bootstrap=await call('/api/assessment/config');
+ const cookie=bootstrap.headers.get('set-cookie').split(';')[0];
+ let startCount=0;
+ async function start(overrides={}){const response=await call('/api/assessment/runs','POST',{...profile(),phone:String(9000000000+(++startCount)),consent:true,...overrides},{cookie});assert.equal(response.status,201,JSON.stringify(response.data));return response.data;}
  async function login(){const result=await call('/api/admin/login','POST',{password:ADMIN_PASSWORD});assert.equal(result.status,200);return result.headers.get('set-cookie').split(';')[0];}
  async function action(run,operation,payload={}){return call(`/api/assessment/runs/${run.id}/${operation}`,'POST',{questionId:run.question.id,...payload},{token:run.token});}
- return {store,server,base,call,start,login,action};
+ return {store,server,base,call,start,login,action,cookie};
 }
 async function partialRequest(f,route,payload,split,{token,cookie}={}){
  const bytes=Buffer.isBuffer(payload)?payload:Buffer.from(JSON.stringify(payload));
@@ -145,10 +151,10 @@ test('engine ignores invalid answers, duplicates and next before an answer',()=>
 
 test('API accepts a data notice without claiming guardian permission',async t=>{
  const f=await fixture(t);
- const created=await f.call('/api/assessment/runs','POST',{...profile(),dataNoticeVersion:'assessment-data-notice-v2'});
+ const created=await f.call('/api/assessment/runs','POST',{...profile(),dataNoticeVersion:'assessment-data-notice-v2'},{cookie:f.cookie});
  assert.equal(created.status,201);
  assert.equal(f.store.load(created.data.id,created.data.token).row.consent_version,'assessment-data-notice-v2');
- const legacy=await f.start();assert.equal(f.store.load(legacy.id,legacy.token).row.consent_version,'assessment-v1');
+ const legacy=await f.start({phone:'9000000002'});assert.equal(f.store.load(legacy.id,legacy.token).row.consent_version,'assessment-v1');
  for(const value of ['',null,'unknown'])assert.equal((await f.call('/api/assessment/runs','POST',{...profile(),consent:true,dataNoticeVersion:value})).status,400);
  assert.equal(f.store.db.prepare('SELECT COUNT(*) AS n FROM runs').get().n,2);
 });
@@ -248,13 +254,13 @@ test('a delayed answer body cannot rewind a run after another request advances i
 
 test('JSON decoder preserves UTF-8 characters split between request chunks',{timeout:10000},async t=>{
  const f=await fixture(t);const name='Test छात्र ₹ λ';const payload=Buffer.from(JSON.stringify({...profile({name}),consent:true}));const split=payload.indexOf(Buffer.from('छ'))+1;assert.ok(split>0);
- const delayed=await partialRequest(f,'/api/assessment/runs',payload,split);t.after(()=>delayed.request.destroy());delayed.finish();const created=await delayed.response;
+ const delayed=await partialRequest(f,'/api/assessment/runs',payload,split,{cookie:f.cookie});t.after(()=>delayed.request.destroy());delayed.finish();const created=await delayed.response;
  assert.equal(created.status,201);assert.equal(created.data.profile.name,name);assert.equal(f.store.load(created.data.id,created.data.token).row.name,name);
 });
 
 test('admin pagination makes more than 1,000 saved journeys available without omissions',async t=>{
  const f=await fixture(t),created=f.store.create(profile());
- const copy=f.store.db.prepare('INSERT INTO runs SELECT ?,access_hash,name,phone,grade,subject,created_at,updated_at,status,state,result,consent_version FROM runs WHERE id=?');
+ const copy=f.store.db.prepare('INSERT INTO runs(id,access_hash,name,phone,grade,subject,created_at,updated_at,status,state,result,consent_version,browser_hash,attempt_slot) SELECT ?,access_hash,name,phone,grade,subject,created_at,updated_at,status,state,result,consent_version,browser_hash,0 FROM runs WHERE id=?');
  for(let i=0;i<1004;i++)copy.run(i.toString(16).padStart(24,'0'),created.id);
  const cookie=await f.login(),ids=new Set();let offset=0,pages=0;
  do {
@@ -281,4 +287,107 @@ test('configured proxy hop count uses the rightmost trusted position, not a spoo
 test('shipped draft bank has 280 valid questions and every grade can complete',async()=>{
  const actual=JSON.parse(await readFile(new URL('../data-seed/questions.json',import.meta.url),'utf8')).questions;assert.equal(actual.length,280);assert.equal(validateBank(actual),true);
  for(const subject of SUBJECTS){const run=new DiagnosticRun(profile({subject,grade:10}),actual);const seen=new Set();while(run.status==='playing'){assert.ok(!seen.has(run.question.id));seen.add(run.question.id);run.answer(run.question.answer);if(run.status==='playing')run.next();}assert.equal(run.result().proficient,true);assert.equal(run.result().answered,35);}
+});
+
+test('snapshot encouragement compares cleared competency with the enrolled grade',()=>{
+ for(const [current,grade,tone,gap] of [['7',7,'on-track',0],['6',7,'close',1],['5',7,'growing',2],['foundation',5,'close',1],[null,5,'growing',2]]){
+  const insight=learningInsight({lastCleared:current},grade,'physics');
+  assert.equal(insight.tone,tone);assert.equal(insight.gap,gap);assert.match(insight.message,new RegExp(`Class ${grade}`));
+  assert.ok(!/failed|poor|behind|intervention/i.test(insight.title+' '+insight.message));
+ }
+ assert.match(learningInsight({lastCleared:'7'},7,'physics').message,/Physics/);
+ assert.equal(competencyName(null),'Pre-Foundation');assert.equal(competencyName('foundation'),'Foundation');assert.equal(competencyName('7'),'Class 7');
+});
+
+test('same-browser identity resumes one attempt per phone and subject without resetting lives',async t=>{
+ const f=await fixture(t,{secureCookies:true});
+ const created=await f.call('/api/assessment/runs','POST',{...profile(),consent:true},{cookie:f.cookie});assert.equal(created.status,201);
+ const header=created.headers.get('set-cookie'),cookie=header.split(';')[0];
+ for(const flag of ['HttpOnly','SameSite=Strict','Path=/api/assessment','Max-Age=31536000','Secure'])assert.ok(header.includes(flag));
+ const rawSecret=cookie.slice('smartup_learner='.length),stored=f.store.db.prepare('SELECT browser_hash FROM phone_profiles').get();
+ assert.equal(stored.browser_hash,createHash('sha256').update(rawSecret).digest('hex'));assert.notEqual(stored.browser_hash,rawSecret);
+ const run=created.data;
+ const answered=await f.action(run,'answer',{answer:(answers.get(run.question.id)+1)%4});assert.equal(answered.data.lives,4);
+ const resumed=await f.call('/api/assessment/runs','POST',{...profile({grade:10,name:'Changed Name'}),consent:true},{cookie});
+ assert.equal(resumed.status,200);assert.equal(resumed.data.id,run.id);assert.equal(resumed.data.resumed,true);assert.equal(resumed.data.token,null);
+ assert.equal(resumed.data.lives,4);assert.equal(resumed.data.profile.grade,7);assert.equal(resumed.data.history.length,1);
+ const cookieOnly=await f.call(`/api/assessment/runs/${run.id}`,'GET',undefined,{cookie});assert.equal(cookieOnly.status,200);assert.equal(cookieOnly.data.lives,4);
+ const advanced=await f.call(`/api/assessment/runs/${run.id}/next`,'POST',{questionId:run.question.id},{cookie});assert.equal(advanced.status,200);
+ const overview=await f.call('/api/assessment/profile','GET',undefined,{cookie});assert.equal(overview.status,200);assert.equal(overview.data.profile.phone,profile().phone);
+ assert.equal(overview.data.subjects.find(s=>s.subject==='mathematics').status,'in_progress');
+ assert.equal(overview.data.subjects.find(s=>s.subject==='physics').status,'available');
+ const physics=await f.call('/api/assessment/runs','POST',{...profile({subject:'physics'}),consent:true},{cookie});assert.equal(physics.status,201);assert.equal(physics.data.lives,5);
+ assert.equal(f.store.db.prepare('SELECT COUNT(*) AS n FROM runs WHERE phone=?').get(profile().phone).n,2);
+ assert.equal((await f.call('/api/assessment/profile')).status,404);
+ assert.equal((await f.call('/api/assessment/profile','GET',undefined,{cookie:'smartup_learner=unknown-browser'})).status,404);
+ const denied=await f.call('/api/assessment/runs','POST',{...profile(),consent:true},{cookie:'smartup_learner=unknown-browser'});assert.equal(denied.status,409);assert.equal(denied.data.code,'ORIGINAL_BROWSER_REQUIRED');
+ assert.equal(denied.data.id,undefined);assert.equal(denied.data.profile,undefined);assert.equal(denied.data.result,undefined);
+ assert.equal((await f.call('/api/assessment/runs','POST',{...profile({subject:'chemistry'}),consent:true},{cookie:'smartup_learner=unknown-browser'})).status,409);
+});
+
+test('finished attempts remain the only subject result when revisited or started concurrently',async t=>{
+ const f=await fixture(t),created=await f.call('/api/assessment/runs','POST',{...profile({subject:'physics',grade:5}),consent:true},{cookie:f.cookie});
+ const cookie=created.headers.get('set-cookie').split(';')[0],access={id:created.data.id,token:created.data.token};let run=created.data;
+ while(run.status==='playing'){
+  if(run.feedback)run=(await f.action({...run,...access},'next')).data;
+  run=(await f.action({...run,...access},'answer',{answer:answers.get(run.question.id)})).data;
+ }
+ assert.equal(run.result.proficient,true);assert.equal(run.result.lastCleared,'5');
+ const responses=await Promise.all(Array.from({length:5},()=>f.call('/api/assessment/runs','POST',{...profile({subject:'physics',grade:10}),consent:true},{cookie})));
+ for(const response of responses){assert.equal(response.status,200);assert.equal(response.data.id,access.id);assert.deepEqual(response.data.result,run.result);assert.equal(response.data.profile.grade,5);}
+ assert.equal(f.store.db.prepare('SELECT COUNT(*) AS n FROM runs').get().n,1);
+ const overview=(await f.call('/api/assessment/profile','GET',undefined,{cookie})).data;
+ const result=overview.subjects.find(s=>s.subject==='physics');assert.equal(result.status,'completed');assert.equal(result.currentLevel,'5');assert.equal(result.expectedLevel,'5');assert.ok(result.completedAt);
+});
+
+test('legacy run-token recovery authorizes only that run and never another result sharing its number',async t=>{
+ const f=await fixture(t),legacy=f.store.create(profile()),other=f.store.create(profile({subject:'physics'}));
+ finishBucket(other.run,false);f.store.save(other.id,other.run);
+ const numbered=await f.call('/api/assessment/runs','POST',{...profile(),consent:true},{cookie:f.cookie});assert.equal(numbered.status,409);
+ assert.equal((await f.call('/api/assessment/profile/claim','POST',{runId:legacy.id},{cookie:f.cookie})).status,404);
+ const claimed=await f.call('/api/assessment/profile/claim','POST',{runId:legacy.id},{token:legacy.secret,cookie:f.cookie});assert.equal(claimed.status,200);
+ const cookie=claimed.headers.get('set-cookie').split(';')[0],math=claimed.data.subjects.find(s=>s.subject==='mathematics'),physics=claimed.data.subjects.find(s=>s.subject==='physics');
+ assert.equal(math.runId,legacy.id);assert.equal(math.status,'in_progress');
+ assert.deepEqual(physics,{subject:'physics',status:'unavailable',expectedLevel:'7'});
+ assert.equal((await f.call(`/api/assessment/runs/${other.id}`,'GET',undefined,{cookie})).status,404);
+ assert.equal((await f.call('/api/assessment/runs','POST',{...profile({subject:'physics'}),consent:true},{cookie})).status,409);
+ assert.equal((await f.call('/api/assessment/profile/claim','POST',{runId:legacy.id},{token:legacy.secret,cookie:'smartup_learner=other-browser'})).status,403);
+ // Possession of a second legacy token in the original browser can recover that exact result.
+ const second=await f.call('/api/assessment/profile/claim','POST',{runId:other.id},{token:other.secret,cookie});assert.equal(second.status,200);
+ assert.equal(second.data.subjects.find(s=>s.subject==='physics').status,'completed');
+});
+
+test('legacy migration preserves every record and locks the earliest completed attempt per subject',async t=>{
+ const directory=await mkdtemp(path.join(os.tmpdir(),'smartup-legacy-test-'));t.after(()=>rm(directory,{recursive:true,force:true}));
+ const file=path.join(directory,'assessment.sqlite'),legacy=new DatabaseSync(file);
+ legacy.exec('CREATE TABLE runs(id TEXT PRIMARY KEY,access_hash TEXT NOT NULL,name TEXT NOT NULL,phone TEXT NOT NULL,grade INTEGER NOT NULL,subject TEXT NOT NULL,created_at TEXT NOT NULL,updated_at TEXT NOT NULL,status TEXT NOT NULL,state TEXT NOT NULL,result TEXT,consent_version TEXT NOT NULL)');
+ const insert=legacy.prepare('INSERT INTO runs VALUES(?,?,?,?,?,?,?,?,?,?,?,?)');
+ for(const [i,date,finished] of [[1,'2026-01-01',false],[2,'2026-01-03',true],[3,'2026-01-02',true]]){
+  const run=makeRun();if(finished)finishBucket(run,false);
+  insert.run(String(i).padStart(24,'0'),createHash('sha256').update('legacy-secret').digest('hex'),'Test Student',profile().phone,7,'mathematics',date,date,run.status,JSON.stringify(run),run.result()?JSON.stringify(run.result()):null,'assessment-v1');
+ }
+ legacy.close();const migrated=new AssessmentStore(file);t.after(()=>migrated.close());
+ const rows=migrated.db.prepare('SELECT id,attempt_slot FROM runs ORDER BY id').all();assert.equal(rows.length,3);
+ assert.deepEqual(rows.map(r=>r.attempt_slot),[0,0,1]);assert.ok(migrated.load(rows[0].id,'legacy-secret'));
+ assert.throws(()=>migrated.create(profile()),/UNIQUE/);
+});
+
+test('noncanonical legacy attempts stay readable but cannot consume new answers',async t=>{
+ const f=await fixture(t),old=f.store.create(profile());f.store.db.prepare('UPDATE runs SET attempt_slot=0 WHERE id=?').run(old.id);
+ const canonical=f.store.create(profile());
+ const read=await f.call(`/api/assessment/runs/${old.id}`,'GET',undefined,{token:old.secret});assert.equal(read.status,200);
+ const answer=await f.call(`/api/assessment/runs/${old.id}/answer`,'POST',{questionId:old.run.question.id,answer:0},{token:old.secret});assert.equal(answer.status,409);
+ assert.equal(f.store.load(old.id,old.secret).run.history.length,0);assert.equal(f.store.load(canonical.id,canonical.secret).row.attempt_slot,1);
+ assert.equal((await f.call('/api/assessment/profile/claim','POST',{runId:old.id},{token:old.secret,cookie:f.cookie})).status,404);
+});
+
+test('a missing browser cookie cannot reserve a number before the client receives its identity',async t=>{
+ const f=await fixture(t),missing=await f.call('/api/assessment/runs','POST',{...profile(),consent:true});
+ assert.equal(missing.status,428);assert.equal(missing.data.code,'BROWSER_REQUIRED');
+ assert.equal(f.store.db.prepare('SELECT COUNT(*) AS n FROM phone_profiles').get().n,0);assert.equal(f.store.db.prepare('SELECT COUNT(*) AS n FROM runs').get().n,0);
+ const cookie=missing.headers.get('set-cookie').split(';')[0];
+ const retry=await f.call('/api/assessment/runs','POST',{...profile(),consent:true},{cookie});assert.equal(retry.status,201);
+ // Losing this response is harmless: the established cookie can resume without its bearer token.
+ const recovered=await f.call('/api/assessment/runs','POST',{...profile(),consent:true},{cookie});assert.equal(recovered.status,200);assert.equal(recovered.data.id,retry.data.id);
+ assert.equal(f.store.db.prepare('SELECT COUNT(*) AS n FROM runs').get().n,1);
 });

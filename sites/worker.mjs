@@ -1,5 +1,6 @@
 // Sites review deployment. Railway continues to use server.mjs and SQLite.
 import {DiagnosticRun,validateProfile,validateBank,acceptedDataNotice} from '../dist/assessment/engine.js';
+import {subjectOverview} from '../dist/assessment/snapshot.js';
 import seed from '../data-seed/questions.json' with {type:'json'};
 
 const hex=bytes=>Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('');
@@ -52,8 +53,28 @@ export async function assessment(request,env){
    if(request.headers.get('Sec-Fetch-Site')==='cross-site')return respond(403,{error:'This request is not allowed.'});
   }
   const ip=request.headers.get('CF-Connecting-IP')||'unknown';
+  const browserSecret=(request.headers.get('Cookie')||'').split(';').map(x=>x.trim()).find(x=>x.startsWith('smartup_learner='))?.slice(16)||'';
+  const browserHash=browserSecret?await hash(browserSecret):'';
+  const learnerCookie=secret=>({'Set-Cookie':`smartup_learner=${secret}; Path=/api/assessment; HttpOnly; SameSite=Strict; Max-Age=31536000; Secure`});
+  const overview=async profile=>subjectOverview(profile,(await db.prepare('SELECT id,subject,status,grade,result,browser_hash,updated_at FROM runs WHERE phone=? AND attempt_slot=1').bind(profile.phone).all()).results,profile.browser_hash);
+  if(route==='/api/assessment/profile'&&method==='GET'){
+   const profile=browserHash&&await db.prepare('SELECT * FROM phone_profiles WHERE browser_hash=? ORDER BY updated_at DESC,phone LIMIT 1').bind(browserHash).first();
+   return profile?respond(200,await overview(profile)):respond(404,{error:'No saved profile in this browser.'});
+  }
+  if(route==='/api/assessment/profile/claim'&&method==='POST'){
+   if(!browserSecret)return respond(428,{error:'Please reload the challenge to enable saved progress in this browser.',code:'BROWSER_REQUIRED'},learnerCookie(token()));
+   const input=await body(request),accessHash=await hash(request.headers.get('Authorization')?.replace(/^Bearer /,'')||'');
+   const saved=await db.prepare("SELECT * FROM runs WHERE id=? AND attempt_slot=1 AND (access_hash=? OR (browser_hash<>'' AND browser_hash=?))").bind(typeof input.runId==='string'?input.runId:'',accessHash,browserHash).first();
+   if(!saved)return respond(404,{error:'This saved journey is unavailable.'});
+   const secret=browserSecret||token(),key=await hash(secret);
+   await db.prepare('INSERT OR IGNORE INTO phone_profiles VALUES(?,?,?,?,?)').bind(saved.phone,key,saved.name,saved.grade,new Date().toISOString()).run();
+   const owner=await db.prepare('SELECT * FROM phone_profiles WHERE phone=?').bind(saved.phone).first();
+   if(owner.browser_hash!==key)return respond(403,{error:'Continue in the browser you first used, or contact our team.'});
+   await db.prepare("UPDATE runs SET browser_hash=? WHERE id=? AND (browser_hash='' OR browser_hash=?)").bind(key,saved.id,key).run();
+   return respond(200,await overview(owner),learnerCookie(secret));
+  }
   if(route==='/api/assessment/config'&&method==='GET'){
-   await bank(db);return respond(200,{ready:true,bankStatus:'draft',savedResults:true});
+   await bank(db);return respond(200,{ready:true,bankStatus:'draft',savedResults:true},learnerCookie(browserSecret||token()));
   }
   if(route==='/api/assessment/runs'&&method==='POST'){
    if(await limited(db,'run:'+ip,60,3600000))return respond(429,{error:'Too many starts. Please try again later.'});
@@ -61,9 +82,28 @@ export async function assessment(request,env){
    const noticeVersion=acceptedDataNotice(input);
    if(!noticeVersion)errors.consent='Please review the data notice before beginning.';
    if(Object.keys(errors).length)return respond(400,{error:'Check the highlighted details.',fields:errors});
-   const run=new DiagnosticRun(input,(await bank(db)).questions),id=token(12),secret=token(),now=new Date().toISOString();
-   await db.prepare('INSERT INTO runs(id,access_hash,name,phone,grade,subject,created_at,updated_at,status,state,result,consent_version,revision) VALUES(?,?,?,?,?,?,?,?,?,?,NULL,?,0)').bind(id,await hash(secret),run.profile.name,run.profile.phone,run.profile.grade,run.profile.subject,now,now,'playing',JSON.stringify(run),noticeVersion).run();
-   return respond(201,{...view(run),id,token:secret});
+   if(!browserSecret)return respond(428,{error:'Please reload the challenge to enable saved progress in this browser.',code:'BROWSER_REQUIRED'},learnerCookie(token()));
+   let owner=await db.prepare('SELECT * FROM phone_profiles WHERE phone=?').bind(input.phone.trim()).first();
+   const prior=await db.prepare('SELECT id FROM runs WHERE phone=? AND attempt_slot=1 LIMIT 1').bind(input.phone.trim()).first();
+   if((owner&&owner.browser_hash!==browserHash)||(!owner&&prior))return respond(409,{error:'This number already has a saved journey. Continue in the browser you first used, or contact our team.',code:'ORIGINAL_BROWSER_REQUIRED'});
+   const secret=browserSecret||token(),key=await hash(secret),now=new Date().toISOString();
+   await db.prepare('INSERT OR IGNORE INTO phone_profiles VALUES(?,?,?,?,?)').bind(input.phone.trim(),key,input.name.trim(),Number(input.grade),now).run();
+   owner=await db.prepare('SELECT * FROM phone_profiles WHERE phone=?').bind(input.phone.trim()).first();
+   if(owner.browser_hash!==key)return respond(409,{error:'Continue in the browser you first used, or contact our team.',code:'ORIGINAL_BROWSER_REQUIRED'});
+   let existing=await db.prepare('SELECT * FROM runs WHERE phone=? AND subject=? AND attempt_slot=1').bind(input.phone.trim(),input.subject).first();
+   if(existing){
+    if(existing.browser_hash!==key)return respond(409,{error:'This subject already has a saved attempt. Contact our team for guidance.'});
+    return respond(200,{...view(restore(existing.state)),id:existing.id,token:null,resumed:true},learnerCookie(secret));
+   }
+   const run=new DiagnosticRun(input,(await bank(db)).questions),id=token(12),accessSecret=token();
+   const inserted=await db.prepare('INSERT INTO runs(id,access_hash,name,phone,grade,subject,created_at,updated_at,status,state,result,consent_version,revision,browser_hash,attempt_slot) VALUES(?,?,?,?,?,?,?,?,?,?,NULL,?,0,?,1) ON CONFLICT(phone,subject) WHERE attempt_slot=1 DO NOTHING').bind(id,await hash(accessSecret),run.profile.name,run.profile.phone,run.profile.grade,run.profile.subject,now,now,'playing',JSON.stringify(run),noticeVersion,key).run();
+   if(inserted.meta.changes!==1){
+    existing=await db.prepare('SELECT * FROM runs WHERE phone=? AND subject=? AND attempt_slot=1 AND browser_hash=?').bind(run.profile.phone,run.profile.subject,key).first();
+    if(!existing)return respond(409,{error:'An attempt already exists for this subject.'});
+    return respond(200,{...view(restore(existing.state)),id:existing.id,token:null,resumed:true},learnerCookie(secret));
+   }
+   await db.prepare('UPDATE phone_profiles SET name=?,grade=?,updated_at=? WHERE phone=? AND browser_hash=?').bind(run.profile.name,run.profile.grade,now,run.profile.phone,key).run();
+   return respond(201,{...view(run),id,token:accessSecret},learnerCookie(secret));
   }
   const match=route.match(/^\/api\/assessment\/runs\/([a-f0-9]{24})(?:\/(answer|next))?$/);
   if(match){
@@ -72,11 +112,12 @@ export async function assessment(request,env){
    // D1 reads are async. A compare-and-swap revision prevents lost lives,
    // duplicate answers and rewinds when different Worker instances race.
    for(let attempt=0;attempt<5;attempt++){
-    const row=await db.prepare('SELECT state,revision FROM runs WHERE id=? AND access_hash=?').bind(match[1],accessHash).first();
+    const row=await db.prepare("SELECT state,revision,access_hash,attempt_slot FROM runs WHERE id=? AND (access_hash=? OR (browser_hash<>'' AND browser_hash=?))").bind(match[1],accessHash,browserHash).first();
     if(!row)return respond(404,{error:'This journey could not be found. Start a new challenge.'});
     const run=restore(row.state);
     if(method==='GET'&&!match[2])return respond(200,view(run));
     if(method!=='POST')return respond(405,{error:'Method not allowed.'});
+    if(!row.attempt_slot)return respond(409,{error:'An attempt is already saved for this subject. Contact our team for guidance.'});
     if(input.questionId!==run.question?.id)return respond(409,{error:'This question has already moved on.',state:view(run)});
     if(match[2]==='answer'){
      if(!Number.isInteger(input.answer)||input.answer<0||input.answer>3)return respond(400,{error:'Choose one answer.'});
@@ -86,7 +127,7 @@ export async function assessment(request,env){
      if(!run.next())return respond(200,view(run));
     }else return respond(404,{error:'Not found.'});
     const result=run.result();
-    const update=await db.prepare('UPDATE runs SET state=?,result=?,status=?,updated_at=?,revision=revision+1 WHERE id=? AND access_hash=? AND revision=?').bind(JSON.stringify(run),result?JSON.stringify(result):null,run.status,new Date().toISOString(),match[1],accessHash,row.revision).run();
+    const update=await db.prepare('UPDATE runs SET state=?,result=?,status=?,updated_at=?,revision=revision+1 WHERE id=? AND access_hash=? AND revision=?').bind(JSON.stringify(run),result?JSON.stringify(result):null,run.status,new Date().toISOString(),match[1],row.access_hash,row.revision).run();
     if(update.meta.changes===1)return respond(200,view(run));
    }
    return respond(409,{error:'Your progress changed in another window. Please resume the challenge.'});

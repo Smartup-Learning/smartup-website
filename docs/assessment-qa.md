@@ -51,3 +51,13 @@ The local Node/SQLite version is working. Railway infrastructure, TLS/domain set
 - Added versioned engine imports after the browser exposed a cached-module mismatch. Welcome, onboarding and complete gameplay load with the revised assets.
 - One Impeccable detector pass. Retained the established dimensional podium and button edges intentionally. Its inherited progress-width finding is already overridden with `transition:none` in the Quest HUD.
 - Test records used a separate `tmp/quest-refinement-qa` database; real student records were not modified. Railway deployment remains the user's next step; the existing Dockerfile and persistent-volume instructions are unchanged.
+
+# Learning Snapshot and saved subject journey — 22 September 2026
+
+- Replaced the result card with subject-specific competency, current/expected levels, gap-based encouragement and a prominent team-guidance action. Quiz totals, per-level performance, practice topics and the four-subject overview follow.
+- Added one canonical attempt per phone number and subject, resumable unfinished progress, fixed completed results and same-browser cookie access. Number-only requests cannot retrieve histories. Legacy recovery proves only the individual run; migrations retain all historical records and lock canonical slots.
+- Full Node 24 suite: **66 passed, zero failed**. Syntax, build and whitespace checks pass. Independent backend review resolved first-request credential loss and made the SQLite migration transactional. D1 tests cover migration, old-worker insertion defaults, eight concurrent starts and competing browsers.
+- Browser checked at 1440×1000, 375×812 and 320×740. No horizontal overflow. The long Pre-Foundation label uses a stacked comparison on mobile. The yellow guidance action remains prominent; subject icons and the expressive owl preserve the brand.
+- Synthetic local fixtures exercised at-grade Mathematics, one-stage-gap Biology and Pre-Foundation Physics. Each displayed the correct message and performance summary. The result's next-subject action opened the correct rules, and a fresh tab restored all saved subjects using the browser cookie alone.
+- The in-app preview service worker reused old GET responses despite server no-store headers. Student API reads now use no-store and a fresh request URL, preventing stale histories and config responses. Public assets use a new version key.
+- New snapshot CSS detector scan returned no findings. Test data is isolated in `tmp/quest-snapshot-qa`; real student data was not modified. Railway volume persistence instructions remain required for the user's deployment.

@@ -1,12 +1,16 @@
 import {levelName,validateProfile,DATA_NOTICE_VERSION} from './engine.js?v=quest-refined-20260922c';
+import {subjectName,competencyName,learningInsight} from './snapshot.js?v=snapshot-20260922c';
 const $=id=>document.getElementById(id);
 const titleCase=value=>value.charAt(0).toUpperCase()+value.slice(1);
 const reduced=()=>matchMedia('(prefers-reduced-motion:reduce)').matches;
+let profileContext=null;
 let run=null,access=null,selected=null,busy=false,companion=null,sound=false,audioContext=null,motionPaused=false,stopScroll=null;
 const sessionKey='smartup-quest-run';
 function remember(){try{if(access)sessionStorage.setItem(sessionKey,JSON.stringify(access));else sessionStorage.removeItem(sessionKey);}catch{}}
 async function request(path,method='GET',data){
- const response=await fetch(path,{method,headers:{'Content-Type':'application/json','X-Smartup-Request':'1',...(access?{Authorization:`Bearer ${access.token}`}:{})},...(data?{body:JSON.stringify(data)}:{})});
+ // Saved progress must be fresh even in previews or proxies that reuse GET responses.
+ const url=method==='GET'?`${path}${path.includes('?')?'&':'?'}fresh=${crypto.randomUUID()}`:path;
+ const response=await fetch(url,{method,cache:'no-store',headers:{'Content-Type':'application/json','X-Smartup-Request':'1',...(access?.token?{Authorization:`Bearer ${access.token}`}:{})},...(data?{body:JSON.stringify(data)}:{})});
  let result;try{result=await response.json();}catch{throw new Error('The challenge service is unavailable. Please try again.');}
  if(!response.ok){const error=new Error(result.error||'Please try again.');error.fields=result.fields;error.state=result.state;error.status=response.status;throw error;}return result;
 }
@@ -22,7 +26,7 @@ function moveOwl(dockId,travel=false){
  if(travel&&!reduced()&&!motionPaused)owl.animate([{transform:'translateY(18px) scale(.94)',opacity:.5},{transform:'translateY(0) scale(1)',opacity:1}],{duration:520,easing:'cubic-bezier(.22,1,.36,1)'});
 }
 function setView(view){
- for(const name of ['welcome','setup','rules','play','result'])$(`${name}-view`).hidden=name!==view;
+ for(const name of ['welcome','setup','rules','play','result','profile'])$(`${name}-view`).hidden=name!==view;
  document.body.dataset.state=view==='play'?'playing':view;$('play-hud').hidden=view!=='play';
  moveOwl(({welcome:'welcome-dock',setup:'setup-dock',result:'result-dock'})[view]||null);
 }
@@ -100,13 +104,57 @@ function renderFeedback(){const f=run.feedback;$('answer-feedback').dataset.corr
  }
 }
 
-function renderResult(){setView('result');const result=run.result;$('result-heading').textContent=result.proficient?'Look how far you’ve come':'Your next step is clearer';$('result-person').textContent=`${run.profile.name} · Class ${run.profile.grade} · ${titleCase(run.profile.subject)}`;$('result-level').textContent=result.label;
- $('result-description').textContent=result.proficient?`You cleared every level from Foundation through Class ${run.profile.grade}. Keep building on that understanding.`:result.lastCleared===null?'Let’s strengthen the foundations together. A little focused support is a good place to begin.':`You cleared ${levelName(result.lastCleared)}. Practising ${levelName(result.failedLevel)} concepts is your next step.`;
- $('result-correct').textContent=`${result.correct} / ${result.answered}`;$('result-cleared').textContent=`${run.cleared.length} / ${run.levels.length}`;$('result-lives').textContent=`${run.lives} / 5`;$('practice-topics').replaceChildren();for(const topic of result.topicsToPractise.slice(0,5))$('practice-topics').append(element('li','',topic));$('practice-summary').hidden=!result.topicsToPractise.length;setMood(result.proficient?'celebrate':'happy');window.scrollTo({top:0,behavior:reduced()?'instant':'smooth'});$('result-heading').focus({preventScroll:true});}
+function renderSubjectRows(hostId){
+ const host=$(hostId);host.replaceChildren();
+ if(!profileContext)return;
+ for(const entry of profileContext.subjects){
+  const row=element('article','subject-result-row'),identity=element('div','subject-identity'),icon=element('img');icon.src=`/assessment/icons/${entry.subject}.svg`;icon.alt='';icon.width=46;icon.height=46;
+  const title=element('h3','',subjectName(entry.subject));identity.append(icon,title);row.append(identity);
+  const comparison=element('dl','subject-levels'),current=element('div'),expected=element('div');
+  current.append(element('dt','','Current level'),element('dd','',entry.status==='completed'?competencyName(entry.currentLevel):entry.status==='in_progress'?'In progress':entry.status==='unavailable'?'Saved elsewhere':'Not taken yet'));
+  expected.append(element('dt','','Expected level'),element('dd','',levelName(entry.expectedLevel)));comparison.append(current,expected);row.append(comparison);
+  if(entry.status==='unavailable'){const link=element('a','subject-action','Contact our team ↗');link.href='tel:+918891910919';row.append(link);}
+  else{const button=element('button','subject-action',entry.status==='completed'?'View snapshot ↗':entry.status==='in_progress'?'Continue quiz →':`Try ${subjectName(entry.subject)} →`);button.type='button';button.addEventListener('click',()=>openSubject(entry));row.append(button);}
+  host.append(row);
+ }
+}
+async function refreshOverview(){
+ $('retry-overview').hidden=true;$('snapshot-save-status').textContent='Loading your saved subjects…';
+ try{profileContext=await request('/api/assessment/profile/claim','POST',{runId:access.id});renderSubjectRows('snapshot-subjects');$('snapshot-save-status').textContent=`Saved to your number ending ${profileContext.profile.phone.slice(-4)} · Available in this browser`;}
+ catch(error){$('snapshot-save-status').textContent='This result is saved. Your other subjects could not be loaded.';$('retry-overview').hidden=false;}
+}
+function renderResult(){
+ setView('result');const result=run.result,insight=learningInsight(result,run.profile.grade,run.profile.subject);
+ $('result-heading').textContent=`Assessed competency in ${subjectName(run.profile.subject)}`;$('result-person').textContent=`${run.profile.name} · Selected Class ${run.profile.grade}`;
+ $('snapshot-icon').src=`/assessment/icons/${run.profile.subject}.svg`;$('snapshot-current').textContent=competencyName(result.lastCleared);document.querySelector('.level-comparison').classList.toggle('foundation-result',result.lastCleared===null||result.lastCleared==='foundation');$('snapshot-expected').textContent=levelName(String(run.profile.grade));
+ $('snapshot-message-title').textContent=insight.title;$('snapshot-message').textContent=insight.message;$('result-view').dataset.tone=insight.tone;
+ $('snapshot-correct').textContent=`${result.correct} / ${result.answered}`;$('snapshot-cleared').textContent=`${run.cleared.length} / ${run.levels.length}`;$('snapshot-streak').textContent=`${result.bestStreak} in a row`;
+ $('quiz-breakdown').replaceChildren();for(const level of run.levels){const answers=(run.history||[]).filter(q=>q.level===level);if(!answers.length)continue;const row=element('div','quiz-level-row');row.append(element('span','',levelName(level)),element('span','',`${answers.filter(q=>q.correct).length} / ${answers.length} correct`),element('span','level-status',run.cleared.includes(level)?'✓ Cleared':'Keep practising'));$('quiz-breakdown').append(row);}
+ $('snapshot-practice').hidden=!result.topicsToPractise.length;$('snapshot-topics').textContent=result.topicsToPractise.slice(0,3).join(' · ');
+ $('snapshot-subjects').replaceChildren();setMood(result.proficient?'celebrate':'happy');window.scrollTo({top:0,behavior:reduced()?'instant':'smooth'});$('result-heading').focus({preventScroll:true});refreshOverview();
+}
+function showProfile(){
+ if(!profileContext){showSetup();return;}
+ setView('profile');showError('');$('profile-person').textContent=`${profileContext.profile.name} · Class ${profileContext.profile.grade} · Number ending ${profileContext.profile.phone.slice(-4)}`;renderSubjectRows('profile-subjects');window.scrollTo({top:0,behavior:'instant'});$('profile-heading').focus({preventScroll:true});
+}
+async function openSubject(entry){
+ if(busy)return;setBusy(true);showError('');
+ try{
+  let next;if(entry.runId){next=await request(`/api/assessment/runs/${entry.runId}`);next={...next,id:entry.runId,token:null,resumed:true};}
+  else next=await request('/api/assessment/runs','POST',{...profileContext.profile,subject:entry.subject,dataNoticeVersion:DATA_NOTICE_VERSION});
+  acceptRun(next);
+ }catch(error){showError(error.message);}finally{setBusy(false);}
+}
+function acceptRun(created){access={id:created.id,token:created.token,rulesSeen:Boolean(created.resumed)};remember();run=created;$('question-history').replaceChildren();if(run.status==='finished')renderResult();else if(created.resumed)renderQuestion();else showRules();}
+$('retry-overview').addEventListener('click',refreshOverview);
+$('different-profile').addEventListener('click',()=>{access=null;run=null;remember();$('setup-form').reset();showSetup();});
 function showSetup(){setView('setup');setMood('neutral');showError('');window.scrollTo({top:0,behavior:'instant'});$('setup-title').focus({preventScroll:true});}
-function clearRun(){stopScroll?.();$('question-history').replaceChildren();run=null;access=null;remember();selected=null;$('restart-confirm').close();$('resume-button').hidden=true;$('welcome-start').replaceChildren(document.createTextNode('Let’s play '),element('span','','→'));showSetup();}
-async function init(){try{await request('/api/assessment/config');$('start-button').disabled=false;$('start-button').textContent='Begin my journey ↗';$('load-status').textContent='';$('retry-load').hidden=true;try{access=JSON.parse(sessionStorage.getItem(sessionKey)||'null');}catch{access=null;}if(access){try{run=await request(`/api/assessment/runs/${access.id}`);$('resume-button').hidden=false;$('resume-button').textContent=run.status==='finished'?'View my saved result →':'Continue my journey →';$('welcome-start').textContent='Start a new journey →';}catch(error){if(error.status===404){access=null;remember();}else throw error;}}}catch(error){$('load-status').textContent=error.message;$('retry-load').hidden=false;$('start-button').disabled=true;$('start-button').textContent='Challenge unavailable';}}
-$('welcome-start').addEventListener('click',showSetup);$('back-welcome').addEventListener('click',()=>{setView('welcome');setMood('neutral');window.scrollTo({top:0,behavior:'instant'});$('welcome-start').focus({preventScroll:true});});$('resume-button').addEventListener('click',()=>run.status==='finished'?renderResult():access.rulesSeen===false?showRules():renderQuestion());
+async function clearRun(){
+ if(busy)return;setBusy(true);stopScroll?.();$('restart-confirm').close();
+ try{profileContext=await request('/api/assessment/profile/claim','POST',{runId:access.id});showProfile();}catch(error){showError(error.message);}finally{setBusy(false);}
+}
+async function init(){try{await request('/api/assessment/config');$('start-button').disabled=false;$('start-button').textContent='Begin my journey ↗';$('load-status').textContent='';$('retry-load').hidden=true;try{profileContext=await request('/api/assessment/profile');$('welcome-start').textContent='Choose a subject →';}catch(error){if(error.status!==404)throw error;}try{access=JSON.parse(sessionStorage.getItem(sessionKey)||'null');}catch{access=null;}if(access){try{run=await request(`/api/assessment/runs/${access.id}`);$('resume-button').hidden=false;$('resume-button').textContent=run.status==='finished'?'View my saved result →':'Continue my journey →';$('welcome-start').textContent='Choose a subject →';}catch(error){if(error.status===404){access=null;remember();}else throw error;}}}catch(error){$('load-status').textContent=error.message;$('retry-load').hidden=false;$('start-button').disabled=true;$('start-button').textContent='Challenge unavailable';}}
+$('welcome-start').addEventListener('click',()=>profileContext?showProfile():showSetup());$('back-welcome').addEventListener('click',()=>{setView('welcome');setMood('neutral');window.scrollTo({top:0,behavior:'instant'});$('welcome-start').focus({preventScroll:true});});$('resume-button').addEventListener('click',()=>run.status==='finished'?renderResult():access.rulesSeen===false?showRules():renderQuestion());
 function showRules(){
  setView('rules');$('rules-intro').textContent=`${titleCase(run.profile.subject)} · Foundation to Class ${run.profile.grade}`;
  window.scrollTo({top:0,behavior:'instant'});$('rules-title').focus({preventScroll:true});
@@ -118,7 +166,7 @@ $('setup-form').addEventListener('submit',async event=>{
  for(const field of ['name','phone','grade','subject']){const el=$(`student-${field}`);$(`${field}-error`).textContent=errors[field]||'';el?.setAttribute('aria-invalid',String(Boolean(errors[field])));}
  if(Object.keys(errors).length){$(`student-${Object.keys(errors)[0]}`)?.focus();return;}
  setBusy(true);$('start-button').disabled=true;$('start-button').textContent='Starting…';showError('');
- try{const created=await request('/api/assessment/runs','POST',data);access={id:created.id,token:created.token,rulesSeen:false};remember();run=created;$('question-history').replaceChildren();showRules();}
+ try{const created=await request('/api/assessment/runs','POST',data);acceptRun(created);}
  catch(error){showError(error.message);}
  finally{setBusy(false);$('start-button').disabled=false;$('start-button').textContent='Begin my journey ↗';}
 });
@@ -134,6 +182,6 @@ $('continue-button').addEventListener('click',advanceQuestion);$('next-level-but
 $('retry-load').addEventListener('click',init);
 $('sound-toggle').addEventListener('click',()=>{sound=!sound;$('sound-toggle').textContent=sound?'Sound on':'Sound off';$('sound-toggle').setAttribute('aria-pressed',String(sound));if(sound)soundCue('correct');});
 $('motion-toggle').addEventListener('click',()=>{motionPaused=!motionPaused;document.body.dataset.motion=motionPaused?'paused':'playing';companion?.setPaused(motionPaused||$('owl-companion').hidden);if(motionPaused)stopScroll?.();$('motion-toggle').textContent=motionPaused?'Resume motion':'Pause motion';$('motion-toggle').setAttribute('aria-pressed',String(motionPaused));$('motion-toggle').setAttribute('aria-label',motionPaused?'Resume scene animation':'Pause scene animation');});
-$('restart-button').addEventListener('click',()=>{if(busy)return;$('restart-confirm').showModal();$('keep-playing').focus();});$('keep-playing').addEventListener('click',()=>{$('restart-confirm').close();$('restart-button').focus();});$('confirm-restart').addEventListener('click',clearRun);$('play-again').addEventListener('click',clearRun);
+$('restart-button').addEventListener('click',()=>{if(busy)return;$('restart-confirm').showModal();$('keep-playing').focus();});$('keep-playing').addEventListener('click',()=>{$('restart-confirm').close();$('restart-button').focus();});$('confirm-restart').addEventListener('click',clearRun);
 setView('welcome');init();
 import('./companion.js?v=quest-flow-1').then(async module=>{companion=await module.createCompanion($('companion-canvas'));$('owl-companion').classList.add('has-companion');companion.setPaused(motionPaused||$('owl-companion').hidden);companion.setMood($('owl-companion').dataset.mood);}).catch(()=>{$('companion-canvas').replaceChildren();$('motion-toggle').hidden=true;});
