@@ -1,0 +1,39 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import SocialIcon from '../components/SocialIcon.astro';
+import { getStore } from '../lib/store';
+const settings = getStore(Astro.locals).settings();
+const describe = { facebook: 'News, results and event photos', instagram: 'Reels, results and student life', youtube: 'Free classes, workouts and events', linkedin: 'Company news and careers' } as Record<string, string>;
+---
+<Base title="Community" description="Join the Smartup community on Instagram, YouTube, Facebook and LinkedIn." page="community">
+  <PageHero eyebrow="Community" title="Join the Smartup" highlight="community" intro="Follow us for free classes, study tips, results and student life. Enrolled students also get WhatsApp learning groups with notes, MCQs and exam tips." />
+  <section class="section" aria-labelledby="channels-title">
+    <div class="container">
+      <h2 id="channels-title" class="sr-only">Our channels</h2>
+      <ul class="channels" data-reveal="group">
+        {settings.social.map((s: any) => (
+          <li data-reveal-item>
+            <a class="channel" href={s.url} target="_blank" rel="noopener">
+              <span class="icon"><SocialIcon network={s.network} /></span>
+              <span><strong>{s.label}</strong><span class="desc">{describe[s.network]}</span></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      {settings.communityLinks?.length > 0 && (
+        <div class="groups"><h3>Student groups</h3><ul>{settings.communityLinks.map((g: any) => <li><a class="link-arrow" href={g.url} target="_blank" rel="noopener">{g.label}</a></li>)}</ul></div>
+      )}
+    </div>
+  </section>
+</Base>
+<style>
+  .channels { list-style: none; padding: 0; display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); }
+  .channel { display: flex; gap: 1rem; align-items: center; min-height: 44px; padding: 1.1rem 1.25rem; border: 1px solid var(--line); border-radius: var(--radius); text-decoration: none; }
+  .channel:hover { border-color: var(--purple); }
+  .icon { display: grid; place-items: center; width: 48px; height: 48px; flex: none; border-radius: 50%; background: var(--purple-tint); color: var(--purple); }
+  .channel strong { display: block; }
+  .desc { display: block; font-size: var(--step--1); color: var(--ink-soft); }
+  .groups { margin-top: 2.5rem; display: grid; gap: 0.5rem; }
+  .groups ul { list-style: none; padding: 0; }
+</style>

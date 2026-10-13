@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Owl from '../components/Owl.astro';
+import { getStore } from '../lib/store';
+const settings = getStore(Astro.locals).settings();
+const features = [
+  { title: 'Notes from every class', text: 'Class notes are shared through the app, so revision starts where the lesson ended.' },
+  { title: 'Recorded classes', text: 'Catch up on recorded classes within the week, at your own pace.' },
+  { title: 'Late Night Express', text: 'Quick revision sessions on the app before board exams.' },
+  { title: 'AI-integrated learning and LMS', text: 'Tracks practice and progress alongside live classes and daily quizzes.' },
+];
+---
+<Base title="Smartup App" description="The Smartup Learning app: class notes, recorded classes and revision in one place. On the App Store and Google Play." page="app">
+  <PageHero eyebrow="Smartup App" title="Your classes, notes and revision" highlight="in one place" intro="Smartup Learning is our AI-integrated learning app and LMS, used by students in every programme." tone="purple">
+    <div class="stores">
+      <a class="btn btn--yellow" href={settings.appLinks?.ios} target="_blank" rel="noopener">Download on the App Store</a>
+      <a class="btn btn--ghost" href={settings.appLinks?.android} target="_blank" rel="noopener">Get it on Google Play</a>
+    </div>
+  </PageHero>
+  <section class="section" aria-labelledby="features-title">
+    <div class="container">
+      <h2 id="features-title" class="title">What students use it for</h2>
+      <ul class="features" data-reveal="group">{features.map(f => <li data-reveal-item><h3>{f.title}</h3><p>{f.text}</p></li>)}</ul>
+    </div>
+  </section>
+  <section class="section section--cream">
+    <div class="container quest" data-reveal>
+      <Owl size="5rem" badge />
+      <div><h2>Try Smartup Quest</h2><p>A free learning challenge for Classes 5 to 10 that shows where your child stands in each subject.</p><a class="link-arrow" href="/assessment/">Start Smartup Quest</a></div>
+    </div>
+  </section>
+</Base>
+<style>
+  .stores { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem; }
+  .stores .btn--ghost { color: var(--white); }
+  .title { font-size: var(--step-4); font-weight: 800; margin-bottom: 2rem; }
+  .features { list-style: none; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
+  .features li { padding: 1.5rem; border: 1px solid var(--line); border-radius: var(--radius); display: grid; gap: 0.5rem; }
+  .features h3 { font-size: var(--step-1); }
+  .features p { color: var(--ink-soft); }
+  .quest { display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap; }
+  .quest h2 { font-size: var(--step-3); font-weight: 800; }
+</style>

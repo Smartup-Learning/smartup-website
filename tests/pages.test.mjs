@@ -215,3 +215,22 @@ test('an empty blog shows a friendly message', async t => {
   t.after(site.close);
   assert.match(await site.html('/blog'), /First articles are on their way/);
 });
+
+test('Ask Smartup lists FAQs and offers a phone and email fallback', async t => {
+  const site = await start();
+  t.after(site.close);
+  const page = await site.html('/ask');
+  assert.equal([...page.matchAll(/data-faq/g)].length, 13);
+  assert.match(page, /href="tel:\+918891910919"/);
+  assert.match(page, /mailto:info@smartupedu\.in/);
+});
+
+test('App and Community pages link to the stores and every social channel', async t => {
+  const site = await start();
+  t.after(site.close);
+  const app = await site.html('/app');
+  assert.match(app, /apps\.apple\.com\/in\/app\/smartup-learning/);
+  assert.match(app, /play\.google\.com\/store\/apps\/details\?id=com\.paperlms\.smartup/);
+  const community = await site.html('/community');
+  assert.equal([...community.matchAll(/class="channel"/g)].length, 7);
+});

@@ -1,0 +1,64 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { formatPhone } from '../../server/content-store.mjs';
+import { getStore } from '../lib/store';
+const store = getStore(Astro.locals);
+const settings = store.settings();
+const faqs = store.faqs();
+const categories = [...new Set(faqs.map(f => f.category))];
+const mail = `mailto:${settings.email}?subject=${encodeURIComponent('A question for Smartup')}`;
+---
+<Base title="Ask Smartup" description="Answers to common questions about Smartup classes, programmes, centres and admissions." page="ask">
+  <PageHero eyebrow="Ask Smartup" title="Questions," highlight="answered" intro="Search the questions parents and students ask most. Can't find yours? Ask us directly.">
+    <form class="search" role="search" hidden onsubmit="return false">
+      <label for="faq-search">Search questions</label>
+      <input id="faq-search" type="search" placeholder="Try “fees”, “mentor” or “online”" autocomplete="off" />
+    </form>
+  </PageHero>
+  <section class="section" aria-labelledby="faq-title">
+    <div class="container narrow">
+      <h2 id="faq-title" class="sr-only">Frequently asked questions</h2>
+      {faqs.length === 0 && <p>Answers to common questions will appear here soon.</p>}
+      {categories.map(category => (
+        <div class="group">
+          <h3 class="eyebrow">{category}</h3>
+          {faqs.filter(f => f.category === category).map(f => (
+            <div class="faq" data-faq>
+              <details><summary>{f.question}</summary><p>{f.answer}</p></details>
+            </div>
+          ))}
+        </div>
+      ))}
+      <p id="faq-none" class="none" hidden>No questions match. Ask us below.</p>
+    </div>
+  </section>
+  <section class="section section--purple" aria-labelledby="ask-us">
+    <div class="container ask" data-reveal>
+      <h2 id="ask-us">Still have a question?</h2>
+      <p>Our team answers every day from 5 to 9 pm.</p>
+      <div class="actions">
+        {settings.phone && <a class="btn btn--yellow" href={`tel:${settings.phone}`}>Call {formatPhone(settings.phone)}</a>}
+        {settings.whatsapp && <a class="btn btn--ghost" href={`https://wa.me/${settings.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener">WhatsApp us</a>}
+        <a class="btn btn--ghost" href={mail}>Email your question</a>
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .search { display: grid; gap: 0.4rem; max-width: 32rem; margin-top: 0.5rem; }
+  .search[hidden] { display: none; }
+  label { font-weight: 600; }
+  input { min-height: 3rem; padding: 0 1rem; border: 1px solid var(--line); border-radius: 999px; font: 1rem var(--font); }
+  .narrow { max-width: 48rem; }
+  .group { display: grid; gap: 0.5rem; margin-bottom: 2rem; }
+  .faq[hidden] { display: none; }
+  details { border-bottom: 1px solid var(--line); }
+  summary { min-height: 44px; padding: 1rem 0; font-weight: 600; cursor: pointer; list-style-position: outside; }
+  details p { padding-bottom: 1rem; color: var(--ink-soft); }
+  .ask { display: grid; gap: 1rem; justify-items: start; }
+  .ask h2 { font-size: var(--step-4); font-weight: 800; color: var(--white); }
+  .ask p { color: var(--on-purple-soft); }
+  .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .actions .btn--ghost { color: var(--white); }
+</style>
