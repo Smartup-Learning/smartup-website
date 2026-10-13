@@ -1,1 +1,1 @@
-export const PAGES = ['/', '/story', '/does-not-exist'];
+export const PAGES = ['/', '/story', '/founders', '/does-not-exist'];

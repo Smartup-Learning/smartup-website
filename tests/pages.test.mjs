@@ -93,3 +93,12 @@ test('the homepage description is built from the live stats', async t => {
   t.after(site.close);
   assert.match(await site.html('/'), /<meta name="description" content="[^"]*10 centres in kochi/i);
 });
+
+test('Founders lists all four leaders with full bios and Vision 2030', async t => {
+  const site = await start();
+  t.after(site.close);
+  const page = await site.html('/founders');
+  for (const name of ['Mohamed Rayees', 'Dhanesh Narayanan Achari', 'Mohamed Shihas K. Y.', 'Shanu K. Y.']) assert.match(page, new RegExp(name.replace(/\./g, '\\.')));
+  assert.match(page, /Vision 2030/);
+  assert.match(page, /The place where academic champions are born/);
+});

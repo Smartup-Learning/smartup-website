@@ -1,0 +1,88 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHead from '../components/SectionHead.astro';
+import Picture from '../components/Picture.astro';
+import YouTube from '../components/YouTube.astro';
+import { getStore } from '../lib/store';
+const store = getStore(Astro.locals);
+const settings = store.settings();
+const leaders = store.leaders();
+const talks = store.videos('chairman');
+const initiatives = [
+  { title: 'Coffee With Chairman', text: 'Mentoring sessions where students meet the Chairman to talk about goals, discipline and confidence.' },
+  { title: 'Talent Eve', text: 'Our award ceremony and arts festival, recognising achievement and talent in every batch.' },
+  { title: 'Shoot the Drugs', text: 'A sports tournament that carries an anti-drug message to students and their families.' },
+];
+---
+<Base title="Founders" description="Meet the founders of Smartup: Mohamed Rayees, Dhanesh Narayanan Achari, Mohamed Shihas K. Y. and Shanu K. Y." page="founders">
+  <PageHero eyebrow="Founders" title="The people behind" highlight="Smartup" intro={settings.positioning} />
+
+  {leaders.length > 0 && (
+    <section class="section" aria-labelledby="leaders-title">
+      <div class="container">
+        <h2 id="leaders-title" class="sr-only">Leadership</h2>
+        <div class="leaders">
+          {leaders.map(leader => (
+            <article class="leader" data-reveal>
+              {leader.photo && <div class="photo"><Picture base={leader.photo} alt={leader.photoAlt} sizes="(min-width: 900px) 24rem, 90vw" /></div>}
+              <div class="text">
+                <p class="role">{leader.role}</p>
+                <h3>{leader.name}</h3>
+                <p>{leader.bio || leader.summary}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section section--cream" aria-labelledby="initiatives-title">
+    <div class="container">
+      <SectionHead eyebrow="Beyond the classroom" title="Initiatives led by our Chairman" id="initiatives-title" link={{ href: '/life', label: 'See Life @ Smartup' }} />
+      <ul class="initiatives" data-reveal="group">
+        {initiatives.map(i => <li data-reveal-item><h3>{i.title}</h3><p>{i.text}</p></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--purple" aria-labelledby="vision-title">
+    <div class="container vision" data-reveal>
+      <p class="eyebrow">Vision 2030</p>
+      <h2 id="vision-title">Mentoring beyond Class 12</h2>
+      <p>{settings.vision?.vision2030}</p>
+      <p class="mission"><strong>Our mission.</strong> {settings.mission}</p>
+    </div>
+  </section>
+
+  {talks.length > 0 && (
+    <section class="section" aria-labelledby="talks-title">
+      <div class="container">
+        <SectionHead eyebrow="From the Chairman" title="Talks and messages" id="talks-title" />
+        <div class="rail talks" data-reveal="group">{talks.map(v => <YouTube id={v.youtubeId} title={v.title} format={v.format} />)}</div>
+      </div>
+    </section>
+  )}
+</Base>
+<style>
+  .leaders { display: grid; gap: clamp(2.5rem, 2rem + 3vw, 4.5rem); }
+  .leader { display: grid; gap: 1.5rem; align-items: center; }
+  .photo { border-radius: var(--radius); overflow: hidden; background: var(--purple-tint); }
+  .photo :global(img) { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: center 22%; }
+  .text { display: grid; gap: 0.6rem; max-width: 40rem; }
+  .role { font-weight: 600; color: var(--purple); }
+  .leader h3 { font-size: var(--step-3); font-weight: 800; }
+  .initiatives { list-style: none; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); }
+  .initiatives li { padding: 1.5rem; border-radius: var(--radius); background: var(--white); display: grid; gap: 0.5rem; }
+  .initiatives h3 { font-size: var(--step-1); }
+  .vision { display: grid; gap: 1rem; max-width: 46rem; }
+  .vision h2 { font-size: var(--step-4); font-weight: 800; color: var(--white); }
+  .vision p { font-size: var(--step-1); color: var(--on-purple-soft); }
+  .talks { grid-auto-columns: min(80%, 22rem); }
+  @media (min-width: 900px) {
+    .leader { grid-template-columns: 22rem 1fr; gap: 3rem; }
+    .leader:nth-child(even) { grid-template-columns: 1fr 22rem; }
+    .leader:nth-child(even) .photo { order: 2; }
+  }
+</style>

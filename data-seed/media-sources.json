@@ -25,7 +25,7 @@
   {"name": "leader-mohamed-rayees", "kind": "image", "from": "drive", "id": "1OzDUzM2lohG0JIKOZzCuhFPjVv7Kr3PX", "ext": ".jpg"},
   {"name": "leader-dhanesh-narayanan-achari", "kind": "image", "from": "drive", "id": "1DZOoSpQuGEH8tH4sUII8wt2v_ZSne6Ec", "ext": ".jpg"},
   {"name": "leader-mohamed-shihas", "kind": "image", "from": "drive", "id": "1sHNxdxCta8XpEj0vEyx0UyBmG4s_xJs0", "ext": ".jpg"},
-  {"name": "leader-shanu", "kind": "image", "from": "drive", "id": "1GcGNx0sduCxcd9QGMFZlyflz39rZhvok", "ext": ".jpg"},
+  {"name": "leader-shanu", "kind": "image", "from": "drive", "id": "1GcGNx0sduCxcd9QGMFZlyflz39rZhvok", "ext": ".jpg", "crop": {"x": 0.3, "y": 0.3, "w": 0.5, "h": 0.45}},
   {"name": "results-sslc-2026", "kind": "image", "from": "local", "path": "dist/assets/results/sslc-2026.jpg"},
   {"name": "results-aysha-palakki", "kind": "image", "from": "local", "path": "dist/assets/results/aysha-palakki.jpg"},
   {"name": "results-archana", "kind": "image", "from": "local", "path": "dist/assets/results/archana.jpg"},
