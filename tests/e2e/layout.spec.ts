@@ -86,3 +86,10 @@ test('phone, email and breadcrumb links on inner pages are at least 44px tall', 
     for (const h of heights) expect(h, `${path} ${selector}`).toBeGreaterThanOrEqual(44);
   }
 });
+
+test('long text staff type keeps its line breaks on the website', async ({ page }) => {
+  for (const [path, selector] of [['/ask', '[data-faq] details p'], ['/founders', '.leader .bio'], ['/story', '.chapter-story'], ['/life', '.summary']]) {
+    await page.goto(path);
+    expect(await page.locator(selector).first().evaluate(el => getComputedStyle(el).whiteSpace), `${path} ${selector}`).toBe('pre-line');
+  }
+});

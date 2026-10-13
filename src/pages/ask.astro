@@ -76,7 +76,7 @@ const topic = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').r
   summary::-webkit-details-marker { display: none; }
   summary::before { content: '+'; flex: none; width: 1rem; font-weight: 800; color: var(--purple); }
   details[open] summary::before { content: '−'; }
-  details p { padding: 0 0 1rem 1.75rem; color: var(--ink-soft); }
+  details p { white-space: pre-line; padding: 0 0 1rem 1.75rem; color: var(--ink-soft); }
   .form-title { font-size: var(--step-3); font-weight: 800; }
   .form-intro { margin: 0.5rem 0 1.5rem; color: var(--ink-soft); }
   .ask { display: grid; gap: 1rem; justify-items: start; }

@@ -29,7 +29,7 @@ const initiatives = [
               <div class="text">
                 <p class="role">{leader.role}</p>
                 <h3>{leader.name}</h3>
-                <p>{leader.bio || leader.summary}</p>
+                <p class="bio">{leader.bio || leader.summary}</p>
               </div>
             </article>
           ))}
@@ -72,6 +72,7 @@ const initiatives = [
   .photo :global(img) { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: center 22%; }
   .text { display: grid; gap: 0.6rem; max-width: 40rem; }
   .role { font-weight: 600; color: var(--purple); }
+  .bio { white-space: pre-line; }
   .leader h3 { font-size: var(--step-3); font-weight: 800; }
   .initiatives { list-style: none; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); }
   .initiatives li { padding: 1.5rem; border-radius: var(--radius); background: var(--white); display: grid; gap: 0.5rem; }

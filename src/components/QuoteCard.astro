@@ -18,7 +18,7 @@ const { item } = Astro.props;
   .quote-card { display: grid; gap: 1rem; align-content: space-between; padding: 1.5rem; border-radius: var(--radius); background: var(--cream); color: var(--ink); }
   .shot { display: block; border-radius: var(--radius-sm); overflow: hidden; background: var(--white); }
   .shot :global(img) { width: 100%; max-height: 28rem; object-fit: contain; }
-  blockquote { margin: 0; font-size: var(--step-1); font-weight: 500; line-height: 1.45; }
+  blockquote { margin: 0; white-space: pre-line; font-size: var(--step-1); font-weight: 500; line-height: 1.45; }
   blockquote::before { content: '“'; display: block; font-size: 3rem; line-height: 0.8; font-weight: 800; color: var(--purple); }
   figcaption { display: grid; gap: 0.15rem; font-size: var(--step--1); }
   figcaption span { color: var(--ink-soft); }
