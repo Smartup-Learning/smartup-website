@@ -2,22 +2,39 @@
 import Base from '../../layouts/Base.astro';
 import { getStore } from '../../lib/store';
 import { renderMarkdown } from '../../lib/markdown.mjs';
-const post = getStore(Astro.locals).post(Astro.params.slug ?? '');
+const store = getStore(Astro.locals);
+const post = store.post(Astro.params.slug ?? '');
 if (!post) return Astro.rewrite('/404');
 const date = new Date(`${post.publishedAt}T00:00:00Z`).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 const html = renderMarkdown(post.body);
+const minutes = Math.max(1, Math.round(post.body.split(/\s+/).filter(Boolean).length / 200));
+const url = new URL(`/blog/${post.slug}`, Astro.url).href;
+const share = [
+  { label: 'WhatsApp', href: `https://wa.me/?text=${encodeURIComponent(`${post.title} ${url}`)}` },
+  { label: 'Facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}` },
+];
+// Same category first, then newest.
+const related = store.posts().filter(p => p.slug !== post.slug)
+  .sort((a, b) => Number(b.category === post.category) - Number(a.category === post.category)).slice(0, 2);
 ---
 <Base title={post.title} description={post.excerpt} page="post">
   <article class="section">
     <div class="container post">
       <p class="eyebrow"><a href="/blog">Blog</a> · {post.category}</p>
       <h1>{post.title}</h1>
-      <p class="meta"><time datetime={post.publishedAt}>{date}</time> · {post.author}</p>
+      <p class="meta"><time datetime={post.publishedAt}>{date}</time> · {post.author} · {minutes} min read</p>
       <div class="body" set:html={html} />
+      <p class="share"><span>Share</span>{share.map(s => <a href={s.href} target="_blank" rel="noopener">{s.label}</a>)}</p>
       <aside class="cta">
         <p><strong>Want a plan for your child?</strong> Our teachers can help.</p>
         <a class="btn btn--primary" href="/demo">Book a free demo class</a>
       </aside>
+      {related.length > 0 && (
+        <nav class="related" aria-labelledby="related-title">
+          <h2 id="related-title">Keep reading</h2>
+          <ul>{related.map(p => <li><span class="eyebrow">{p.category}</span><a href={`/blog/${p.slug}`}>{p.title}</a></li>)}</ul>
+        </nav>
+      )}
     </div>
   </article>
 </Base>
@@ -30,5 +47,14 @@ const html = renderMarkdown(post.body);
   .body :global(h2) { font-size: var(--step-2); margin-top: 1rem; }
   .body :global(ul), .body :global(ol) { padding-left: 1.25rem; display: grid; gap: 0.4rem; }
   .body :global(a) { color: var(--purple); font-weight: 600; }
+  .share { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 1rem; font-weight: 600; }
+  .share a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 1rem; border: 1px solid var(--line); border-radius: 999px; text-decoration: none; }
+  .share a:hover { border-color: var(--purple); color: var(--purple); }
+  .related { display: grid; gap: 1rem; margin-top: 2rem; }
+  .related h2 { font-size: var(--step-2); font-weight: 800; }
+  .related ul { list-style: none; padding: 0; display: grid; gap: 0.75rem; }
+  .related li { display: grid; gap: 0.25rem; padding: 1.25rem; border: 1px solid var(--line); border-radius: var(--radius); }
+  .related a { display: flex; align-items: center; min-height: 44px; font-weight: 700; font-size: var(--step-1); text-decoration: none; }
+  .related a:hover { color: var(--purple); }
   .cta { display: grid; gap: 1rem; justify-items: start; margin-top: 2rem; padding: 1.5rem; border-radius: var(--radius); background: var(--cream); }
 </style>

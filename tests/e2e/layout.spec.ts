@@ -79,7 +79,7 @@ test('proof numbers fit their boxes on a 360px phone', async ({ page }) => {
 });
 
 test('phone, email and breadcrumb links on inner pages are at least 44px tall', async ({ page }) => {
-  for (const [path, selector] of [['/contact', '.lines a'], ['/demo', '.near a'], ['/blog/board-exam-90-day-plan', '.eyebrow a']]) {
+  for (const [path, selector] of [['/contact', '.lines a'], ['/demo', '.near a'], ['/blog/board-exam-90-day-plan', '.eyebrow a, .share a, .related a']]) {
     await page.goto(path);
     const heights = await page.locator(selector).evaluateAll(els => els.map(e => e.getBoundingClientRect().height));
     expect(heights.length, path).toBeGreaterThan(0);

@@ -220,7 +220,7 @@ test('Ask Smartup lists FAQs and offers a phone and email fallback', async t => 
   const site = await start();
   t.after(site.close);
   const page = await site.html('/ask');
-  assert.equal([...page.matchAll(/data-faq/g)].length, 13);
+  assert.equal([...page.matchAll(/data-faq[\s>]/g)].length, 13);
   assert.match(page, /href="tel:\+918891910919"/);
   assert.match(page, /mailto:info@smartupedu\.in/);
 });
@@ -273,4 +273,17 @@ test('every menu link resolves to a page', async t => {
   const { navGroups, quickLinks } = await import('../src/lib/nav.ts');
   const links = new Set([...navGroups.flatMap(g => g.links), ...quickLinks].map(l => l.href));
   for (const href of links) await site.html(href);
+});
+
+test('a post shows its reading time, share links and the other posts', async t => {
+  const site = await start();
+  t.after(site.close);
+  const post = await site.html('/blog/board-exam-90-day-plan');
+  assert.match(post, /\d+ min read/);
+  assert.match(post, /href="https:\/\/wa\.me\/\?text=[^"]*%2Fblog%2Fboard-exam-90-day-plan"/);
+  assert.match(post, /href="https:\/\/www\.facebook\.com\/sharer\/sharer\.php\?u=[^"]*%2Fblog%2Fboard-exam-90-day-plan"/);
+  const related = post.slice(post.indexOf('Keep reading'));
+  assert.match(related, /href="\/blog\/how-parents-can-help-in-exam-season"/);
+  assert.match(related, /href="\/blog\/daily-practice-beats-cramming"/);
+  assert.doesNotMatch(related, /href="\/blog\/board-exam-90-day-plan"/);
 });
