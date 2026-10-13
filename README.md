@@ -13,6 +13,9 @@ Requires Node.js 24 (`nvm use 24`). Run `npm ci`, `npm run setup`, then `npm run
 
 After pulling Phase 2, run `npm run content:reset` once so local content picks up the new seed.
 
+## Admin
+Open `/admin` and sign in with `ADMIN_PASSWORD` (locally it is in `.env`, created by `npm run setup`). Staff edit every content section, the site settings and photos, and handle demo bookings, job applications and questions, with CSV export. Uploaded photos are stored in `DATA_DIR/uploads`, which must be on the persistent volume. Staff guide: [docs/admin-guide.md](docs/admin-guide.md).
+
 ## Railway
 Live at [smartup-web-production.up.railway.app](https://smartup-web-production.up.railway.app), including the assessment and private admin workspace. See the [Railway deployment runbook](docs/railway.md) for the deployed version, project IDs, update command, secrets, persistent `/data` volume and backup status. Keep one replica for the SQLite database. The `.openai` folder configures the separate Sites review and does not affect Railway.
 

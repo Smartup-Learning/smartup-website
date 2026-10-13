@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.mjs",
     "dev": "astro dev",
-    "check": "node --check server.mjs && node --check server/assessment.mjs && node --check sites/worker.mjs && node --check scripts/build-sites.mjs && node --check dist/app.js && node --check dist/assessment/engine.js && node --check dist/assessment/assessment.js && node --check dist/assessment/admin/admin.js && node --check server/content-store.mjs",
+    "check": "node --check server.mjs && for f in server/*.mjs sites/worker.mjs scripts/build-sites.mjs dist/app.js dist/assessment/engine.js dist/assessment/assessment.js dist/assessment/admin/admin.js; do node --check \"$f\" || exit 1; done",
     "test": "node --test tests/*.test.mjs",
     "pretest": "astro build && node scripts/build-sites.mjs",
     "test:e2e": "astro build && playwright test",
