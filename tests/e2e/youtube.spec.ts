@@ -17,3 +17,17 @@ test('without JavaScript a video opens on YouTube', async ({ browser }) => {
   await expect(page.locator('[data-yt] a').first()).toHaveAttribute('href', /^https:\/\/www\.youtube\.com\/watch\?v=/);
   await context.close();
 });
+
+test('a tapped video plays at the size of its thumbnail and takes focus', async ({ page }) => {
+  await page.goto('/testimonials');
+  for (const format of ['landscape', 'portrait']) {
+    const figure = page.locator(`.yt--${format}`).first();
+    const before = await figure.locator('a.yt-frame').boundingBox();
+    await figure.locator('a.yt-frame').click();
+    const iframe = figure.locator('iframe');
+    const after = await iframe.boundingBox();
+    expect(Math.abs(after!.width - before!.width)).toBeLessThanOrEqual(1);
+    expect(Math.abs(after!.height - before!.height)).toBeLessThanOrEqual(1);
+    await expect(iframe).toBeFocused();
+  }
+});

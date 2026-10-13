@@ -15,6 +15,7 @@ export function initYouTube() {
       frame.className = link.className;
       frame.append(iframe);
       link.replaceWith(frame);
+      iframe.focus();
     });
   });
 }
