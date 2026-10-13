@@ -13,6 +13,9 @@ export function initFaqSearch() {
       item.hidden = !match;
       if (match) shown++;
     });
+    document.querySelectorAll<HTMLElement>('[data-faq-group]').forEach(group => {
+      group.hidden = !group.querySelector('[data-faq]:not([hidden])');
+    });
     if (none) none.hidden = shown > 0;
   });
 }

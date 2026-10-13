@@ -17,3 +17,11 @@ test('answers open and close as native disclosures', async ({ page }) => {
   await first.click();
   await expect(page.locator('[data-faq] details').first()).toHaveAttribute('open', '');
 });
+
+test('a search hides category headings that have no matching questions', async ({ page }) => {
+  await page.goto('/ask');
+  await page.getByLabel('Search questions').fill('syllabus');
+  await expect(page.locator('.group h3').filter({ visible: true })).toHaveCount(1);
+  await page.getByLabel('Search questions').fill('');
+  await expect(page.locator('.group h3').filter({ visible: true })).toHaveCount(await page.locator('.group').count());
+});

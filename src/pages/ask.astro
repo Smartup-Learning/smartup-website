@@ -21,7 +21,7 @@ const mail = `mailto:${settings.email}?subject=${encodeURIComponent('A question 
       <h2 id="faq-title" class="sr-only">Frequently asked questions</h2>
       {faqs.length === 0 && <p>Answers to common questions will appear here soon.</p>}
       {categories.map(category => (
-        <div class="group">
+        <div class="group" data-faq-group>
           <h3 class="eyebrow">{category}</h3>
           {faqs.filter(f => f.category === category).map(f => (
             <div class="faq" data-faq>
@@ -52,7 +52,7 @@ const mail = `mailto:${settings.email}?subject=${encodeURIComponent('A question 
   input { min-height: 3rem; padding: 0 1rem; border: 1px solid var(--line); border-radius: 999px; font: 1rem var(--font); }
   .narrow { max-width: 48rem; }
   .group { display: grid; gap: 0.5rem; margin-bottom: 2rem; }
-  .faq[hidden] { display: none; }
+  .group[hidden], .faq[hidden] { display: none; }
   details { border-bottom: 1px solid var(--line); }
   summary { min-height: 44px; padding: 1rem 0; font-weight: 600; cursor: pointer; list-style-position: outside; }
   details p { padding-bottom: 1rem; color: var(--ink-soft); }
