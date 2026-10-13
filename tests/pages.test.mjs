@@ -389,3 +389,15 @@ test('the privacy page explains form data, cookies and YouTube, and the footer l
   for (const text of ['When you fill in a form', 'Smartup Quest', 'youtube-nocookie\\.com', 'i\\.ytimg\\.com', 'Continue on WhatsApp', 'does not use advertising or analytics cookies']) assert.match(page, new RegExp(text));
   assert.match(await site.html('/'), /href="\/privacy"/);
 });
+
+test('pages without content say so instead of showing empty sections', async t => {
+  const site = await start(content => content.db.exec('UPDATE testimonials SET published = 0; UPDATE videos SET published = 0; UPDATE centres SET published = 0;'));
+  t.after(site.close);
+  assert.match(await site.html('/testimonials'), /Student and parent stories will appear here soon/);
+  assert.match(await site.html('/videos'), /New videos are on their way/);
+  const contact = await site.html('/contact');
+  assert.doesNotMatch(contact, /id="centres-title"/);
+  assert.doesNotMatch(contact, /0 centres/);
+  assert.doesNotMatch(await site.html('/courses'), /0 centres/);
+  assert.doesNotMatch(await site.html('/demo'), /id="near-title"/);
+});

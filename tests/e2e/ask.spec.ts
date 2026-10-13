@@ -38,3 +38,12 @@ test('topic chips and the search box narrow the questions together', async ({ pa
   await page.getByRole('button', { name: 'All topics' }).click();
   await expect(items.filter({ visible: true })).toHaveCount(await items.count());
 });
+
+test('each question shows a plus sign inside the page edge that turns into a minus when open', async ({ page }) => {
+  await page.goto('/ask');
+  const summary = page.locator('[data-faq] summary').first();
+  expect(await summary.evaluate(s => getComputedStyle(s, '::before').content)).toBe('"+"');
+  await summary.click();
+  expect(await summary.evaluate(s => getComputedStyle(s, '::before').content)).toBe('"−"');
+  expect((await summary.boundingBox())!.x).toBeGreaterThanOrEqual(12);
+});

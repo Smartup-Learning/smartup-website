@@ -10,7 +10,7 @@ const centres = store.centres();
 const cbse = courseBoards.find(b => b.id === 'cbse')!;
 const state = courseBoards.find(b => b.id === 'state')!;
 ---
-<Base title="Courses" description="Smartup programmes for CBSE and Kerala State Board: Pro, Trio, Power and the State Board programme, online and at 9 centres in Kochi." page="courses">
+<Base title="Courses" description={`Smartup programmes for CBSE and Kerala State Board: Pro, Trio, Power and the State Board programme, online${centres.length ? ` and at ${centres.length} centres in Kochi` : ''}.`} page="courses">
   <PageHero eyebrow="Courses" title="Programmes built around" highlight="every student" intro="CBSE and Kerala State Board, classes 8 to 12 — online, or at one of our centres in Kochi." />
 
   <section class="section" aria-labelledby="cbse-title">
@@ -69,7 +69,7 @@ const state = courseBoards.find(b => b.id === 'state')!;
 
   <section class="section" aria-labelledby="where-title">
     <div class="container" data-reveal>
-      <SectionHead eyebrow="Online or offline" title={`Learn from home, or at ${centres.length} centres`} intro={`Every centre is open ${settings.hours}.`} id="where-title" link={{ href: '/contact', label: 'Find your nearest centre' }} />
+      <SectionHead eyebrow="Online or offline" title={centres.length ? `Learn from home, or at ${centres.length} centres` : 'Learn from home'} intro={centres.length ? `Every centre is open ${settings.hours}.` : undefined} id="where-title" link={{ href: '/contact', label: 'Find your nearest centre' }} />
       <a class="btn btn--primary" href="/demo">Book a free demo class</a>
     </div>
   </section>

@@ -51,7 +51,7 @@ test('without JavaScript the menu link jumps to the footer navigation', async ({
 test('unknown pages show the branded 404 with status 404', async ({ page }) => {
   const response = await page.goto('/does-not-exist');
   expect(response?.status()).toBe(404);
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText("This page isn't here yet");
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText("We couldn't find that page");
 });
 
 test('keyboard focus stays inside the open menu', async ({ page }) => {

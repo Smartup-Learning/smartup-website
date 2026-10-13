@@ -71,7 +71,7 @@ test('a null byte in the URL is rejected as a bad request', async () => {
 test('an unknown blog post returns the branded 404', async () => {
   const r = await fetch(base + '/blog/no-such-post');
   assert.equal(r.status, 404);
-  assert.match(await r.text(), /This page isn't here yet/);
+  assert.match(await r.text(), /We couldn't find that page/);
 });
 
 test('the old privacy address redirects to the new privacy page', async () => {

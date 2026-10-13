@@ -72,8 +72,11 @@ const topic = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').r
   .group { display: grid; gap: 0.5rem; margin-bottom: 2rem; }
   .group[hidden], .faq[hidden] { display: none; }
   details { border-bottom: 1px solid var(--line); }
-  summary { min-height: 44px; padding: 1rem 0; font-weight: 600; cursor: pointer; list-style-position: outside; }
-  details p { padding-bottom: 1rem; color: var(--ink-soft); }
+  summary { display: flex; gap: 0.75rem; min-height: 44px; padding: 1rem 0; font-weight: 600; cursor: pointer; list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: '+'; flex: none; width: 1rem; font-weight: 800; color: var(--purple); }
+  details[open] summary::before { content: '−'; }
+  details p { padding: 0 0 1rem 1.75rem; color: var(--ink-soft); }
   .form-title { font-size: var(--step-3); font-weight: 800; }
   .form-intro { margin: 0.5rem 0 1.5rem; color: var(--ink-soft); }
   .ask { display: grid; gap: 1rem; justify-items: start; }

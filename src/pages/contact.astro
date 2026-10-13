@@ -8,7 +8,8 @@ const settings = store.settings();
 const centres = store.centres();
 ---
 <Base title="Centres & contact" description="Smartup centres in Kochi, phone numbers, email and our registered office." page="contact">
-  <PageHero eyebrow="Centres & contact" title="Visit us, call us," highlight="ask us anything" intro={`${centres.length} centres across Kochi, all open ${settings.hours}.`} />
+  <PageHero eyebrow="Centres & contact" title="Visit us, call us," highlight="ask us anything" intro={centres.length ? `${centres.length} centres across Kochi, all open ${settings.hours}.` : 'Call or email us, and our team will help.'} />
+  {centres.length > 0 && (
   <section class="section" aria-labelledby="centres-title">
     <div class="container">
       <h2 id="centres-title" class="title">Our centres</h2>
@@ -23,6 +24,7 @@ const centres = store.centres();
       </ul>
     </div>
   </section>
+  )}
   <section class="section section--cream" aria-labelledby="reach-title">
     <div class="container reach" data-reveal>
       <div>

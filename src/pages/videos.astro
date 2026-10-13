@@ -28,9 +28,13 @@ const groups = [
       </div>
     </section>
   ))}
+  {groups.length === 0 && (
+    <section class="section"><div class="container"><p class="empty">New videos are on their way. Meanwhile, visit our YouTube channels above.</p></div></section>
+  )}
 </Base>
 <style>
   .channels { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem; }
   .videos { grid-auto-columns: min(82%, 22rem); }
   .videos.portrait { grid-auto-columns: min(55%, 14rem); }
+  .empty { font-size: var(--step-1); }
 </style>
