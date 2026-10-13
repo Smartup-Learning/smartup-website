@@ -182,3 +182,11 @@ test('Alumni shows the alumni videos and an invitation to share a story', async 
   assert.equal([...page.matchAll(/<video /g)].length, 3);
   assert.match(page, /mailto:info@smartupedu\.in\?subject=/);
 });
+
+test('Courses explains every programme, class lengths and parent updates', async t => {
+  const site = await start();
+  t.after(site.close);
+  const page = await site.html('/courses');
+  for (const text of ['Smartup Pro', 'Smartup Trio', 'Smartup Power', 'State Board programme', '1 hr 45 min', 'Monthly report', '1 mentor : 10 students', 'Previous Year Questions']) assert.match(page, new RegExp(text));
+  assert.match(page, /9 centres/);
+});

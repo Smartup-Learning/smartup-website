@@ -1,0 +1,97 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHead from '../components/SectionHead.astro';
+import { courseBoards, classDurations, sessionPlan, mentorRatios, parentUpdates, stateProgramme, formatMinutes } from '../data/courses';
+import { getStore } from '../lib/store';
+const store = getStore(Astro.locals);
+const settings = store.settings();
+const centres = store.centres();
+const cbse = courseBoards.find(b => b.id === 'cbse')!;
+const state = courseBoards.find(b => b.id === 'state')!;
+---
+<Base title="Courses" description="Smartup programmes for CBSE and Kerala State Board: Pro, Trio, Power and the State Board programme, online and at 9 centres in Kochi." page="courses">
+  <PageHero eyebrow="Courses" title="Programmes built around" highlight="every student" intro="CBSE and Kerala State Board, classes 8 to 12 — online, or at one of our centres in Kochi." />
+
+  <section class="section" aria-labelledby="cbse-title">
+    <div class="container">
+      <SectionHead eyebrow="CBSE" title={cbse.heading} id="cbse-title" />
+      <div class="programmes" data-reveal="group">
+        {cbse.programmes.map(p => (
+          <article class="programme" data-reveal-item>
+            <p class="eyebrow">{p.eyebrow}</p>
+            <p class="ratio">{p.ratio}</p>
+            <h3>{p.name}</h3>
+            <ul>{p.features.map(f => <li>{f}</li>)}</ul>
+            <a class="link-arrow" href="/demo">{p.ask}</a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--cream" aria-labelledby="class-title">
+    <div class="container two">
+      <div data-reveal>
+        <SectionHead eyebrow="Every class" title="How long, and what happens" id="class-title" />
+        <table>
+          <caption class="sr-only">Class length by level</caption>
+          <tbody>{classDurations.map(d => <tr><th scope="row">{d.level}</th><td>{formatMinutes(d.minutes)}</td></tr>)}</tbody>
+        </table>
+      </div>
+      <ol class="steps" data-reveal="group">
+        {sessionPlan.map(s => <li data-reveal-item><strong>{s.step}</strong><span>{formatMinutes(s.minutes)}</span></li>)}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="parents-title">
+    <div class="container">
+      <SectionHead eyebrow="For parents" title="You always know how your child is doing" id="parents-title" />
+      <div class="updates" data-reveal="group">
+        {parentUpdates.map(u => <article class="update" data-reveal-item><h3>{u.name}</h3><p class="who">{u.who}</p><ul>{u.covers.map(c => <li>{c}</li>)}</ul></article>)}
+        <article class="update" data-reveal-item><h3>Mentors</h3><p class="who">Follow-up, attendance, homework, motivation and parent communication</p><ul>{mentorRatios.map(m => <li>{m.programme}: {m.ratio}</li>)}</ul></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--deep" aria-labelledby="state-title">
+    <div class="container">
+      <SectionHead eyebrow="Kerala State Board" title={state.heading} intro={state.programmes[0].features[0]} id="state-title" />
+      <div class="state" data-reveal="group">
+        <article data-reveal-item><h3>Teaching method</h3><ul>{stateProgramme.method.map(m => <li>{m}</li>)}</ul></article>
+        <article data-reveal-item><h3>Each class, about 2 hours</h3><ul>{stateProgramme.session.map(s => <li>{s.step}: {formatMinutes(s.minutes)}</li>)}</ul></article>
+        <article data-reveal-item><h3>Daily practice</h3><ul>{stateProgramme.practice.map(m => <li>{m}</li>)}</ul></article>
+        <article data-reveal-item><h3>Before the exams</h3><ul>{stateProgramme.examPrep.map(m => <li>{m}</li>)}</ul></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="where-title">
+    <div class="container" data-reveal>
+      <SectionHead eyebrow="Online or offline" title={`Learn from home, or at ${centres.length} centres`} intro={`Every centre is open ${settings.hours}.`} id="where-title" link={{ href: '/contact', label: 'Find your nearest centre' }} />
+      <a class="btn btn--primary" href="/demo">Book a free demo class</a>
+    </div>
+  </section>
+</Base>
+<style>
+  .programmes { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); }
+  .programme { display: grid; gap: 0.6rem; align-content: start; padding: 1.5rem; border: 1px solid var(--line); border-radius: var(--radius); }
+  .ratio { font-size: var(--step-4); font-weight: 800; color: var(--purple); line-height: 1; }
+  h3 { font-size: var(--step-1); }
+  ul { padding-left: 1.1rem; display: grid; gap: 0.3rem; }
+  .programme ul, .update ul { color: var(--ink-soft); }
+  .two { display: grid; gap: 2rem; }
+  table { width: 100%; border-collapse: collapse; font-size: var(--step-1); }
+  th, td { padding: 0.75rem 0; border-bottom: 1px solid #ddd2c2; text-align: left; }
+  td { text-align: right; font-weight: 700; color: var(--purple); }
+  .steps { list-style: none; padding: 0; display: grid; gap: 0.75rem; counter-reset: s; }
+  .steps li { display: flex; justify-content: space-between; gap: 1rem; padding: 1rem 1.25rem; border-radius: var(--radius-sm); background: var(--white); }
+  .updates, .state { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); }
+  .update { padding: 1.5rem; border-radius: var(--radius); background: var(--cream); display: grid; gap: 0.5rem; align-content: start; }
+  .who { font-weight: 600; color: var(--purple); font-size: var(--step--1); }
+  .state article { padding: 1.5rem; border-radius: var(--radius); background: var(--purple-600); display: grid; gap: 0.6rem; align-content: start; }
+  .state h3 { color: var(--white); }
+  .state ul { color: var(--on-purple-soft); }
+  @media (min-width: 900px) { .two { grid-template-columns: 1fr 1fr; align-items: end; } }
+</style>
