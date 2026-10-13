@@ -159,3 +159,26 @@ test('an empty events table shows a friendly message', async t => {
   t.after(site.close);
   assert.match(await site.html('/life'), /New photos and stories are on their way/);
 });
+
+test('Testimonials shows student and parent videos, and hides Google Reviews until a link is set', async t => {
+  const site = await start();
+  t.after(site.close);
+  const page = await site.html('/testimonials');
+  assert.equal([...page.matchAll(/<video /g)].length, 3);
+  assert.match(page, /Smartup through a parent/);
+  assert.doesNotMatch(page, /Google Reviews/);
+});
+
+test('a Google Reviews link appears once it is set', async t => {
+  const site = await start(content => content.db.prepare("UPDATE settings SET value = ? WHERE key = 'googleReviewsUrl'").run(JSON.stringify('https://g.page/r/example/review')));
+  t.after(site.close);
+  assert.match(await site.html('/testimonials'), /href="https:\/\/g\.page\/r\/example\/review"/);
+});
+
+test('Alumni shows the alumni videos and an invitation to share a story', async t => {
+  const site = await start();
+  t.after(site.close);
+  const page = await site.html('/alumni');
+  assert.equal([...page.matchAll(/<video /g)].length, 3);
+  assert.match(page, /mailto:info@smartupedu\.in\?subject=/);
+});

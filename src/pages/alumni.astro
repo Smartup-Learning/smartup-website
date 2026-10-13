@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHead from '../components/SectionHead.astro';
+import VideoCard from '../components/VideoCard.astro';
+import QuoteCard from '../components/QuoteCard.astro';
+import { getStore } from '../lib/store';
+const store = getStore(Astro.locals);
+const settings = store.settings();
+const alumni = store.testimonials('alumni');
+const mail = `mailto:${settings.email}?subject=${encodeURIComponent('My Smartup alumni story')}`;
+---
+<Base title="Alumni" description="Smartup alumni share where their journey has taken them." page="alumni">
+  <PageHero eyebrow="Alumni" title="Where Smartup" highlight="students go" intro="Our students carry Smartup with them into higher education and careers." tone="purple" />
+  {alumni.length > 0 && (
+    <section class="section" aria-labelledby="alumni-stories">
+      <div class="container">
+        <SectionHead eyebrow="Stories" title="Alumni journeys" id="alumni-stories" />
+        <div class="rail tall" data-reveal="group">{alumni.map(item => item.kind === 'video' ? <VideoCard item={item} /> : <QuoteCard item={item} />)}</div>
+      </div>
+    </section>
+  )}
+  <section class="section section--cream">
+    <div class="container cta" data-reveal>
+      <p class="eyebrow">Vision 2030</p>
+      <h2>500+ Smartup-mentored professionals on one stage</h2>
+      <p>{settings.vision?.vision2030}</p>
+      <a class="btn btn--primary" href={mail}>Share your alumni story</a>
+    </div>
+  </section>
+</Base>
+<style>
+  .tall { grid-auto-columns: min(60%, 15rem); }
+  .cta { display: grid; gap: 1rem; justify-items: start; max-width: 46rem; }
+  .cta h2 { font-size: var(--step-3); font-weight: 800; }
+</style>
