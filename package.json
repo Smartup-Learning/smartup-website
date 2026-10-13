@@ -24,6 +24,7 @@
     "@astrojs/node": "11.1.7",
     "astro": "7.3.8",
     "compression": "1.8.2",
+    "cookie": "2.0.1",
     "motion": "14.1.0",
     "sharp": "0.35.5",
     "three": "0.186.0"

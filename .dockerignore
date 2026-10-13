@@ -11,3 +11,10 @@ tmp
 dist/client
 dist/server
 dist/.openai
+content-source
+build
+tests
+test-results
+playwright-report
+.astro
+.superpowers
