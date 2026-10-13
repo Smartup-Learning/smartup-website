@@ -99,7 +99,9 @@ export class InboxStore {
 
   /** Adds an answered question to the public FAQ and closes it. Returns the FAQ id, or null if the question is gone. */
   publishAnswer(id, input) {
-    if (!this.db.prepare('SELECT 1 FROM ask_questions WHERE id = ?').get(id)) return null;
+    const existing = this.db.prepare('SELECT faq_id FROM ask_questions WHERE id = ?').get(id);
+    if (!existing) return null;
+    if (existing.faq_id) throw httpError(409, 'This question is already in the FAQ. Edit it under FAQ.');
     const category = line(input?.category);
     const question = line(input?.question);
     const answer = block(input?.answer);

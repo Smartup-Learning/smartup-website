@@ -47,11 +47,23 @@ test('an answered question can be published to the FAQ', async t => {
   await send(site, 'ask', { name: 'Meera', phone: '9895085731', question: 'do u teach class 8 online??' });
   await site.signIn();
   const [question] = (await site.call('/api/admin/inbox/ask')).data.items;
+  const bad = await site.call(`/api/admin/inbox/ask/${question.id}/publish`, { method: 'POST', json: { category: '', question: 'Q', answer: '' } });
+  assert.equal(bad.status, 400);
+  assert.ok(bad.data.fields.category);
   const published = await site.call(`/api/admin/inbox/ask/${question.id}/publish`, { method: 'POST', json: { category: 'Programmes', question: 'Do you teach Class 8 online?', answer: 'Yes. Class 8 is taught online and at every centre.' } });
   assert.equal(published.status, 201);
   assert.match(await site.page('/ask'), /Do you teach Class 8 online\?/);
   assert.equal((await site.call('/api/admin/inbox/ask')).data.items[0].status, 'closed');
-  const bad = await site.call(`/api/admin/inbox/ask/${question.id}/publish`, { method: 'POST', json: { category: '', question: 'Q', answer: '' } });
-  assert.equal(bad.status, 400);
-  assert.ok(bad.data.fields.category);
+});
+
+test('a question already published cannot be published again', async t => {
+  const site = await startSite(t);
+  await send(site, 'ask', { name: 'Meera', phone: '9895085731', question: 'Is there a weekend batch for Class 9?' });
+  await site.signIn();
+  const [question] = (await site.call('/api/admin/inbox/ask')).data.items;
+  const answer = { category: 'Programmes', question: 'Is there a weekend batch?', answer: 'Yes, on Saturdays at every centre.' };
+  assert.equal((await site.call(`/api/admin/inbox/ask/${question.id}/publish`, { method: 'POST', json: answer })).status, 201);
+  const again = await site.call(`/api/admin/inbox/ask/${question.id}/publish`, { method: 'POST', json: answer });
+  assert.equal(again.status, 409);
+  assert.equal([...(await site.page('/ask')).matchAll(/Is there a weekend batch\?/g)].length, 1);
 });

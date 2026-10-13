@@ -30,8 +30,11 @@ export async function inboxView(main: HTMLElement, kind: string, schema: Schema,
     const answer = h('textarea', { id: `faq-a-${entry.id}`, rows: 4, maxlength: 2000 }, String(entry.answer ?? ''));
     const topic = h('input', { id: `faq-t-${entry.id}`, list: 'faq-topics', maxlength: 60 });
     const error = h('p', { class: 'error', role: 'alert' });
+    const button = h('button', { type: 'button' }, 'Publish to FAQ');
     const publish = async () => {
       error.textContent = '';
+      // A second click while the first is still sending would publish the question twice.
+      button.disabled = true;
       try {
         await api(`inbox/ask/${entry.id}/publish`, { method: 'POST', body: { category: topic.value, question: question.value, answer: answer.value } });
         entry.status = 'closed';
@@ -42,11 +45,14 @@ export async function inboxView(main: HTMLElement, kind: string, schema: Schema,
       } catch (failure) {
         if (!(failure instanceof ApiError)) throw failure;
         error.textContent = Object.values(failure.fields)[0] ?? failure.message;
+      } finally {
+        button.disabled = false;
       }
     };
+    button.addEventListener('click', publish);
     return h('fieldset', {}, h('legend', {}, 'Answer and publish to the FAQ'),
       labelled(question.id, 'FAQ question', question), labelled(answer.id, 'Answer', answer), labelled(topic.id, 'FAQ topic', topic), error,
-      h('div', { class: 'actions' }, h('button', { type: 'button', onclick: publish }, 'Publish to FAQ')));
+      h('div', { class: 'actions' }, button));
   };
 
   const entryView = (entry: Entry) => {

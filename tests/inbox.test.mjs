@@ -89,12 +89,12 @@ test('the CSV export has a header, readable phones and safe cells', () => {
 test('an answered question is published to the FAQ and closed', () => {
   const { inbox, content } = setup();
   const id = inbox.add('ask', validateAsk({ name: 'Meera', phone: '9895085731', question: 'do u teach class 8 online??' }).values);
+  assert.throws(() => inbox.publishAnswer(id, { category: '', question: 'Q?', answer: '' }), /highlighted/);
   const faqId = inbox.publishAnswer(id, { category: 'Programmes', question: 'Do you teach Class 8 online?', answer: 'Yes. Class 8 is taught online and at every centre.' });
   assert.ok(faqId > 0);
   assert.equal(content.faqs().at(-1).question, 'Do you teach Class 8 online?');
   const [row] = inbox.list('ask');
   assert.equal(row.status, 'closed');
   assert.equal(row.faq_id, faqId);
-  assert.throws(() => inbox.publishAnswer(id, { category: '', question: 'Q?', answer: '' }), /highlighted/);
   assert.equal(inbox.publishAnswer(9999, { category: 'Programmes', question: 'Question?', answer: 'Answer.' }), null);
 });
