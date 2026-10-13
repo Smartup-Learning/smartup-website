@@ -48,3 +48,10 @@ test('self-hosted Rubik fonts are subset to the Latin glyphs the site uses', asy
     assert.ok(size <= 30 * 1024, `rubik-${weight} is ${size} bytes`);
   }
 });
+
+test('crop boxes are whole pixels inside the image', async () => {
+  const { cropBox } = await import('../src/lib/media.mjs');
+  assert.deepEqual(cropBox(1000, 2000, { x: 0.21, y: 0.335, w: 0.53, h: 0.285 }), { left: 210, top: 670, width: 530, height: 570 });
+  assert.deepEqual(cropBox(329, 424, { x: 0, y: 0, w: 1, h: 0.86 }), { left: 0, top: 0, width: 329, height: 365 });
+  assert.throws(() => validateSources([{ name: 'a', kind: 'image', from: 'drive', id: 'x', crop: { x: 0.5, y: 0, w: 0.7, h: 1 } }]), /crop/);
+});

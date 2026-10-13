@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import sharp from 'sharp';
-import { variantFiles, validateSources } from '../src/lib/media.mjs';
+import { variantFiles, validateSources, cropBox } from '../src/lib/media.mjs';
 
 const sources = JSON.parse(readFileSync('data-seed/media-sources.json', 'utf8'));
 validateSources(sources);
@@ -25,7 +25,10 @@ for (const s of sources) {
     for (const { width, file } of variantFiles(s.name)) {
       const out = path.join(imgDir, file);
       if (force || !(await exists(out))) {
-        await sharp(input).rotate().resize({ width, withoutEnlargement: true }).webp({ quality: 78 }).toFile(out);
+        // failOn: 'none' accepts slightly truncated phone JPEGs; rotate first so crops match what people see.
+        const { data, info } = await sharp(input, { failOn: 'none' }).rotate().toBuffer({ resolveWithObject: true });
+        const base = s.crop ? sharp(data).extract(cropBox(info.width, info.height, s.crop)) : sharp(data);
+        await base.resize({ width, withoutEnlargement: true }).webp({ quality: 78 }).toFile(out);
       }
       bytes += (await stat(out)).size;
     }

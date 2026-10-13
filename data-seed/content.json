@@ -10,12 +10,41 @@
     "whatsapp": null,
     "hours": "5–9 pm",
     "social": [
-      { "network": "facebook", "label": "Smartup Educations on Facebook", "url": "https://www.facebook.com/smartupeducations/" },
-      { "network": "facebook", "label": "Smartup CBSE on Facebook", "url": "https://www.facebook.com/profile.php?id=61594263833669" },
-      { "network": "instagram", "label": "Smartup Educations on Instagram", "url": "https://www.instagram.com/smartupeducations/" },
-      { "network": "instagram", "label": "Smartup CBSE on Instagram", "url": "https://www.instagram.com/smartup_cbse/" },
-      { "network": "youtube", "label": "Smartup Educations on YouTube", "url": "https://www.youtube.com/@smartupeducations" },
-      { "network": "youtube", "label": "Smartup CBSE on YouTube", "url": "https://www.youtube.com/@smartup-cbse" }
+      {
+        "network": "facebook",
+        "label": "Smartup Educations on Facebook",
+        "url": "https://www.facebook.com/smartupeducations/"
+      },
+      {
+        "network": "facebook",
+        "label": "Smartup CBSE on Facebook",
+        "url": "https://www.facebook.com/profile.php?id=61594263833669"
+      },
+      {
+        "network": "instagram",
+        "label": "Smartup Educations on Instagram",
+        "url": "https://www.instagram.com/smartupeducations/"
+      },
+      {
+        "network": "instagram",
+        "label": "Smartup CBSE on Instagram",
+        "url": "https://www.instagram.com/smartup_cbse/"
+      },
+      {
+        "network": "youtube",
+        "label": "Smartup Educations on YouTube",
+        "url": "https://www.youtube.com/@smartupeducations"
+      },
+      {
+        "network": "youtube",
+        "label": "Smartup CBSE on YouTube",
+        "url": "https://www.youtube.com/@smartup-cbse"
+      },
+      {
+        "network": "linkedin",
+        "label": "Smartup on LinkedIn",
+        "url": "https://www.linkedin.com/company/smart-up-learning-ventures-pvt-ltd/"
+      }
     ],
     "appLinks": {
       "ios": "https://apps.apple.com/in/app/smartup-learning/id6789860033",
@@ -29,126 +58,1795 @@
         "We do more than impart knowledge: we discover each student’s strengths, nurture their capabilities and help them grow with confidence. Our goal is to become a trusted, globally recognised K–12 education brand, connecting students across India and the GCC with accessible, high-quality learning, personalised guidance and technology that supports every learner."
       ],
       "priorities": [
-        { "title": "A global education network", "text": "Expand across the GCC while strengthening our presence in Kerala, as a trusted brand for students and families." },
-        { "title": "Personalised, technology-enabled learning", "text": "Digital tools and AI that tailor lessons to each student, find knowledge gaps and show clear progress." },
-        { "title": "Academic excellence", "text": "High-quality Kerala State and CBSE learning through excellent teachers, structured systems and consistent support." },
-        { "title": "Online and offline, at scale", "text": "Online learning connected to a growing network of centres, serving more students without losing quality." },
-        { "title": "Accessible education for every student", "text": "Quality learning for students from every background, so each learner can build confidence and reach their potential." }
+        {
+          "title": "A global education network",
+          "text": "Expand across the GCC while strengthening our presence in Kerala, as a trusted brand for students and families."
+        },
+        {
+          "title": "Personalised, technology-enabled learning",
+          "text": "Digital tools and AI that tailor lessons to each student, find knowledge gaps and show clear progress."
+        },
+        {
+          "title": "Academic excellence",
+          "text": "High-quality Kerala State and CBSE learning through excellent teachers, structured systems and consistent support."
+        },
+        {
+          "title": "Online and offline, at scale",
+          "text": "Online learning connected to a growing network of centres, serving more students without losing quality."
+        },
+        {
+          "title": "Accessible education for every student",
+          "text": "Quality learning for students from every background, so each learner can build confidence and reach their potential."
+        }
       ],
       "vision2030": "Vision 2030: keep mentoring students beyond Class 12, through higher education and into careers — and bring 500+ professionals mentored by Smartup together on one stage in 2030."
-    }
+    },
+    "positioning": "The place where academic champions are born",
+    "mission": "Offer the best, complete and easy-access learning opportunities to students by bridging the gap between hard work and excellence, through dedicated, knowledgeable teachers and interactive classes using advanced technology.",
+    "companyVision": "To be established as the most trusted academic partner for students by setting a benchmark of excellence in education.",
+    "legalName": "Smartup Eduventures Private Limited",
+    "registeredOffice": {
+      "address": "Thomson Building, Cheruparambath Road, Kadavanthra, Ernakulam 682020, Kerala",
+      "mapUrl": "https://maps.app.goo.gl/J94zDDBt6BUJRHPbA"
+    },
+    "phones": [
+      "8891910919",
+      "7356072079",
+      "7994436060"
+    ],
+    "googleReviewsUrl": null,
+    "communityLinks": []
   },
   "stats": [
-    { "value": "12+", "label": "Years of teaching", "source": "Since 2014" },
-    { "value": "9", "label": "Centres in Kochi", "source": "October 2026" },
-    { "value": "30,000+", "label": "Students reached", "source": "Since 2014" },
-    { "value": "107", "label": "Full A+ in SSLC", "source": "SSLC 2026" }
+    {
+      "value": "12+",
+      "label": "Years of teaching",
+      "source": "Since 2014"
+    },
+    {
+      "value": "9",
+      "label": "Centres in Kochi",
+      "source": "October 2026"
+    },
+    {
+      "value": "30,000+",
+      "label": "Students reached",
+      "source": "Since 2014"
+    },
+    {
+      "value": "107",
+      "label": "Full A+ in SSLC",
+      "source": "SSLC 2026"
+    }
   ],
   "timeline": [
-    { "yearLabel": "2014", "title": "Smartup is founded", "story": "Smartup opens its first branch in Kochi with 63 students.", "statValue": "63", "statLabel": "students", "featured": true,
+    {
+      "yearLabel": "2014",
+      "title": "Smartup is founded",
+      "story": "Smartup opens its first branch in Kochi with 63 students.",
+      "statValue": "63",
+      "statLabel": "students",
+      "featured": true,
       "media": [
-        { "src": "/seed/img/timeline-2014-branch", "alt": "Students studying in Smartup's first branch, 2014" },
-        { "src": "/seed/img/timeline-2014-independence", "alt": "Smartup students at an Independence Day parade, 2014" } ] },
-    { "yearLabel": "2015", "title": "Growing the first classroom", "story": "Teachers' Day is celebrated as the student community grows past 130.", "statValue": "130+", "statLabel": "students",
-      "media": [ { "src": "/seed/img/timeline-2015-teachers-day", "alt": "Students lighting candles on Teachers' Day, 2015" } ] },
-    { "yearLabel": "2016", "title": "Honoured for contribution to education", "story": "Smartup receives an award for its educational and social work in Kochi, presented by Kerala Assembly Speaker P. Sreeramakrishnan.", "statValue": "2", "statLabel": "centres",
-      "media": [ { "src": "/seed/img/timeline-2016-award", "alt": "Poster announcing Smartup's award from the Kerala Assembly Speaker, 2016" } ] },
-    { "yearLabel": "2017", "title": "A new branch at Chullickal", "story": "A third centre opens as Smartup reaches 550+ students.", "statValue": "3", "statLabel": "centres",
+        {
+          "src": "/seed/img/timeline-2014-branch",
+          "alt": "Students studying in Smartup's first branch, 2014"
+        },
+        {
+          "src": "/seed/img/timeline-2014-independence",
+          "alt": "Smartup students at an Independence Day parade, 2014"
+        }
+      ]
+    },
+    {
+      "yearLabel": "2015",
+      "title": "Growing the first classroom",
+      "story": "Teachers' Day is celebrated as the student community grows past 130.",
+      "statValue": "130+",
+      "statLabel": "students",
       "media": [
-        { "src": "/seed/img/timeline-2017-chullickal", "alt": "Opening of the new Smartup branch at Chullickal, 2017" },
-        { "src": "/seed/img/timeline-2017-christmas", "alt": "Christmas celebration at Smartup, 2017" } ] },
-    { "yearLabel": "2018", "title": "The first Coffee With Chairman", "story": "Coffee With Chairman (CWC) begins: a mentoring session where students meet the chairman. Smartup grows to 7 centres.", "statValue": "1,600+", "statLabel": "students", "featured": true,
-      "media": [ { "src": "/seed/img/timeline-2018-cwc-1", "alt": "A speaker on stage at the first Coffee With Chairman session, 2018" } ] },
-    { "yearLabel": "2019", "title": "Shoot the Drugs, and a festival online", "story": "The first season of Shoot the Drugs brings sport and anti-drug awareness together, and an online arts festival keeps students creating.", "statValue": "15,000", "statLabel": "students",
+        {
+          "src": "/seed/img/timeline-2015-teachers-day",
+          "alt": "Students lighting candles on Teachers' Day, 2015"
+        }
+      ]
+    },
+    {
+      "yearLabel": "2016",
+      "title": "Honoured for contribution to education",
+      "story": "Smartup receives an award for its educational and social work in Kochi, presented by Kerala Assembly Speaker P. Sreeramakrishnan.",
+      "statValue": "2",
+      "statLabel": "centres",
       "media": [
-        { "src": "/seed/img/timeline-2019-shoot-the-drugs", "alt": "Students celebrating at Shoot the Drugs season 1, 2019" },
-        { "src": "/seed/img/timeline-2019-kalolsavam", "alt": "Newspaper report on Smartup's online arts festival, 2019" },
-        { "src": "/seed/img/timeline-2019-results", "alt": "Smartup board results poster, 2019" },
-        { "src": "/seed/img/timeline-2019-onam", "alt": "Onam flower carpet made by Smartup students, 2019" },
-        { "src": "/seed/img/timeline-2019-tour", "alt": "Smartup students on a study tour, 2019" } ] },
-    { "yearLabel": "2020", "title": "Results that speak", "story": "Board results stay strong, including Abhishek N's 97.1% in Plus One.", "statValue": "25,000+", "statLabel": "students",
-      "media": [ { "src": "/seed/img/timeline-2020-results", "alt": "Result poster for Abhishek N, 97.1% in Plus One, 2020" } ] },
-    { "yearLabel": "2021", "title": "Interactive panel classes arrive", "story": "Smartup launches the first interactive panel classes in West Kochi, inaugurated by K. J. Maxy MLA on 14 June 2021.", "featured": true,
-      "media": [ { "src": "/seed/img/timeline-2021-interactive-panel", "alt": "Poster for the launch of interactive panel classes, June 2021" } ] },
-    { "yearLabel": "2022", "title": "Shoot the Drugs makes the news", "story": "Kerala Kaumudi covers the Shoot the Drugs sports tournament.", "sourceUrl": "https://keralakaumudi.com/news/news.php?id=919001&u=local-news-ernakulam",
-      "media": [ { "src": "/seed/img/timeline-2022-kaumudi", "alt": "Shoot the Drugs tournament winners with their trophy, as pictured in Kerala Kaumudi, 2022" } ] },
-    { "yearLabel": "2023", "title": "Celebrating together", "story": "Smartup students march together on Independence Day.",
-      "media": [ { "src": "/seed/img/timeline-2023-independence", "alt": "Smartup students in an Independence Day rally, 2023" } ] },
-    { "yearLabel": "2024", "title": "Shoot the Drugs, season 6", "story": "Shoot the Drugs returns for its sixth season, from 21 to 31 December.",
-      "media": [ { "src": "/seed/img/timeline-2024-shoot-the-drugs-6", "alt": "Poster for Shoot the Drugs season 6" } ] },
-    { "yearLabel": "2025", "title": "Champions and journeys", "story": "Another Shoot the Drugs season crowns its champions, and students travel together on a study tour.",
+        {
+          "src": "/seed/img/timeline-2016-award",
+          "alt": "Poster announcing Smartup's award from the Kerala Assembly Speaker, 2016"
+        }
+      ]
+    },
+    {
+      "yearLabel": "2017",
+      "title": "A new branch at Chullickal",
+      "story": "A third centre opens as Smartup reaches 550+ students.",
+      "statValue": "3",
+      "statLabel": "centres",
       "media": [
-        { "src": "/seed/img/timeline-2025-shoot-the-drugs", "alt": "Shoot the Drugs champions on the field, 2025" },
-        { "src": "/seed/img/timeline-2025-tour", "alt": "Smartup students on a study tour, 2025" } ] },
-    { "yearLabel": "2026", "title": "107 Full A+ and a new chapter", "story": "107 students score Full A+ in SSLC 2026. Talent Eve celebrates achievers, Coffee With Chairman reaches its 18th edition, and Smartup opens a new office with a new brand.", "statValue": "9", "statLabel": "centres", "featured": true,
+        {
+          "src": "/seed/img/timeline-2017-chullickal",
+          "alt": "Opening of the new Smartup branch at Chullickal, 2017"
+        },
+        {
+          "src": "/seed/img/timeline-2017-christmas",
+          "alt": "Christmas celebration at Smartup, 2017"
+        }
+      ]
+    },
+    {
+      "yearLabel": "2018",
+      "title": "The first Coffee With Chairman",
+      "story": "Coffee With Chairman (CWC) begins: a mentoring session where students meet the chairman. Smartup grows to 7 centres.",
+      "statValue": "1,600+",
+      "statLabel": "students",
+      "featured": true,
       "media": [
-        { "src": "/seed/img/timeline-2026-talent-eve", "alt": "Graduates celebrating on stage at Talent Eve, 2026" },
-        { "src": "/seed/img/timeline-2026-cwc-18", "alt": "Coffee With Chairman, 18th edition, 2026" },
-        { "src": "/seed/img/timeline-2026-new-office", "alt": "Opening of Smartup's new office, 2026" },
-        { "src": "/seed/img/timeline-2026-camp", "alt": "Students at a Smartup camp, 2026" } ] },
-    { "yearLabel": "Next", "title": "Vision 2030", "story": "Mentoring students beyond Class 12, through higher education and into careers — and bringing 500+ Smartup-mentored professionals together on one stage in 2030.", "media": [] }
+        {
+          "src": "/seed/img/timeline-2018-cwc-1",
+          "alt": "A speaker on stage at the first Coffee With Chairman session, 2018"
+        }
+      ]
+    },
+    {
+      "yearLabel": "2019",
+      "title": "Shoot the Drugs, and a festival online",
+      "story": "The first season of Shoot the Drugs brings sport and anti-drug awareness together, and an online arts festival keeps students creating.",
+      "statValue": "15,000",
+      "statLabel": "students",
+      "media": [
+        {
+          "src": "/seed/img/timeline-2019-shoot-the-drugs",
+          "alt": "Students celebrating at Shoot the Drugs season 1, 2019"
+        },
+        {
+          "src": "/seed/img/timeline-2019-kalolsavam",
+          "alt": "Newspaper report on Smartup's online arts festival, 2019"
+        },
+        {
+          "src": "/seed/img/timeline-2019-results",
+          "alt": "Smartup board results poster, 2019"
+        },
+        {
+          "src": "/seed/img/timeline-2019-onam",
+          "alt": "Onam flower carpet made by Smartup students, 2019"
+        },
+        {
+          "src": "/seed/img/timeline-2019-tour",
+          "alt": "Smartup students on a study tour, 2019"
+        }
+      ]
+    },
+    {
+      "yearLabel": "2020",
+      "title": "Results that speak",
+      "story": "Board results stay strong, including Abhishek N's 97.1% in Plus One.",
+      "statValue": "25,000+",
+      "statLabel": "students",
+      "media": [
+        {
+          "src": "/seed/img/timeline-2020-results",
+          "alt": "Result poster for Abhishek N, 97.1% in Plus One, 2020"
+        }
+      ]
+    },
+    {
+      "yearLabel": "2021",
+      "title": "Interactive panel classes arrive",
+      "story": "Smartup launches the first interactive panel classes in West Kochi, inaugurated by K. J. Maxy MLA on 14 June 2021.",
+      "featured": true,
+      "media": [
+        {
+          "src": "/seed/img/timeline-2021-interactive-panel",
+          "alt": "Poster for the launch of interactive panel classes, June 2021"
+        }
+      ]
+    },
+    {
+      "yearLabel": "2022",
+      "title": "Shoot the Drugs makes the news",
+      "story": "Kerala Kaumudi covers the Shoot the Drugs sports tournament.",
+      "sourceUrl": "https://keralakaumudi.com/news/news.php?id=919001&u=local-news-ernakulam",
+      "media": [
+        {
+          "src": "/seed/img/timeline-2022-kaumudi",
+          "alt": "Shoot the Drugs tournament winners with their trophy, as pictured in Kerala Kaumudi, 2022"
+        }
+      ]
+    },
+    {
+      "yearLabel": "2023",
+      "title": "Celebrating together",
+      "story": "Smartup students march together on Independence Day.",
+      "media": [
+        {
+          "src": "/seed/img/timeline-2023-independence",
+          "alt": "Smartup students in an Independence Day rally, 2023"
+        }
+      ]
+    },
+    {
+      "yearLabel": "2024",
+      "title": "Shoot the Drugs, season 6",
+      "story": "Shoot the Drugs returns for its sixth season, from 21 to 31 December.",
+      "media": [
+        {
+          "src": "/seed/img/timeline-2024-shoot-the-drugs-6",
+          "alt": "Poster for Shoot the Drugs season 6"
+        }
+      ]
+    },
+    {
+      "yearLabel": "2025",
+      "title": "Champions and journeys",
+      "story": "Another Shoot the Drugs season crowns its champions, and students travel together on a study tour.",
+      "media": [
+        {
+          "src": "/seed/img/timeline-2025-shoot-the-drugs",
+          "alt": "Shoot the Drugs champions on the field, 2025"
+        },
+        {
+          "src": "/seed/img/timeline-2025-tour",
+          "alt": "Smartup students on a study tour, 2025"
+        }
+      ]
+    },
+    {
+      "yearLabel": "2026",
+      "title": "107 Full A+ and a new chapter",
+      "story": "107 students score Full A+ in SSLC 2026. Talent Eve celebrates achievers, Coffee With Chairman reaches its 18th edition, and Smartup opens a new office with a new brand.",
+      "statValue": "9",
+      "statLabel": "centres",
+      "featured": true,
+      "media": [
+        {
+          "src": "/seed/img/timeline-2026-talent-eve",
+          "alt": "Graduates celebrating on stage at Talent Eve, 2026"
+        },
+        {
+          "src": "/seed/img/timeline-2026-cwc-18",
+          "alt": "Coffee With Chairman, 18th edition, 2026"
+        },
+        {
+          "src": "/seed/img/timeline-2026-new-office",
+          "alt": "Opening of Smartup's new office, 2026"
+        },
+        {
+          "src": "/seed/img/timeline-2026-camp",
+          "alt": "Students at a Smartup camp, 2026"
+        }
+      ]
+    },
+    {
+      "yearLabel": "Next",
+      "title": "Vision 2030",
+      "story": "Mentoring students beyond Class 12, through higher education and into careers — and bringing 500+ Smartup-mentored professionals together on one stage in 2030.",
+      "media": []
+    }
   ],
   "growth": [
-    { "year": 2014, "students": 63, "studentsLabel": "63", "centres": 1 },
-    { "year": 2015, "students": 130, "studentsLabel": "130+", "centres": 1 },
-    { "year": 2016, "students": 330, "studentsLabel": "330+", "centres": 2 },
-    { "year": 2017, "students": 550, "studentsLabel": "550+", "centres": 3 },
-    { "year": 2018, "students": 1600, "studentsLabel": "1,600+", "centres": 7 },
-    { "year": 2019, "students": 15000, "studentsLabel": "15,000", "centres": 7 },
-    { "year": 2020, "students": 25000, "studentsLabel": "25,000+", "centres": 8 },
-    { "year": 2026, "students": 30000, "studentsLabel": "30,000+", "centres": 9 }
+    {
+      "year": 2014,
+      "students": 63,
+      "studentsLabel": "63",
+      "centres": 1
+    },
+    {
+      "year": 2015,
+      "students": 130,
+      "studentsLabel": "130+",
+      "centres": 1
+    },
+    {
+      "year": 2016,
+      "students": 330,
+      "studentsLabel": "330+",
+      "centres": 2
+    },
+    {
+      "year": 2017,
+      "students": 550,
+      "studentsLabel": "550+",
+      "centres": 3
+    },
+    {
+      "year": 2018,
+      "students": 1600,
+      "studentsLabel": "1,600+",
+      "centres": 7
+    },
+    {
+      "year": 2019,
+      "students": 15000,
+      "studentsLabel": "15,000",
+      "centres": 7
+    },
+    {
+      "year": 2020,
+      "students": 25000,
+      "studentsLabel": "25,000+",
+      "centres": 8
+    },
+    {
+      "year": 2026,
+      "students": 30000,
+      "studentsLabel": "30,000+",
+      "centres": 9
+    }
   ],
   "leaders": [
-    { "name": "Mohamed Rayees", "role": "Chairman and CEO", "photo": "/seed/img/leader-mohamed-rayees", "photoAlt": "Mohamed Rayees speaking at Talent Eve",
+    {
+      "name": "Mohamed Rayees",
+      "role": "Chairman and CEO",
+      "photo": "/seed/img/leader-mohamed-rayees",
+      "photoAlt": "Mohamed Rayees speaking at Talent Eve",
       "summary": "Leads Smartup's mentoring initiatives, including Coffee With Chairman, Talent Eve and Shoot the Drugs.",
-      "bio": "Mohamed Rayees is the Chairman and CEO of Smartup, with over a decade of experience in education and student development. He leads initiatives that combine quality education, meaningful mentorship and opportunities for students to build confidence, discipline and life skills — including Coffee With Chairman (CWC), Talent Eve and Shoot the Drugs. His Vision 2030 commits Smartup to mentoring students beyond Class 12, through higher education and into careers." },
-    { "name": "Dhanesh Narayanan Achari", "role": "Co-Founder and Vice Chairman", "photo": "/seed/img/leader-dhanesh-narayanan-achari", "photoAlt": "Dhanesh Narayanan Achari speaking at Talent Eve",
+      "bio": "Mohamed Rayees is the Chairman and CEO of Smartup, with over a decade of experience in education and student development. He leads initiatives that combine quality education, meaningful mentorship and opportunities for students to build confidence, discipline and life skills — including Coffee With Chairman (CWC), Talent Eve and Shoot the Drugs. His Vision 2030 commits Smartup to mentoring students beyond Class 12, through higher education and into careers."
+    },
+    {
+      "name": "Dhanesh Narayanan Achari",
+      "role": "Co-Founder and Vice Chairman",
+      "photo": "/seed/img/leader-dhanesh-narayanan-achari",
+      "photoAlt": "Dhanesh Narayanan Achari speaking at Talent Eve",
       "summary": "M.Sc. Mathematics and B.Ed., committed to advancing quality education.",
-      "bio": "Dhanesh Narayanan Achari is the Co-Founder and Vice Chairman of Smartup. He holds an M.Sc. in Mathematics and a B.Ed., and is committed to advancing quality education." },
-    { "name": "Mohamed Shihas K. Y.", "role": "Founder and Director", "photo": "/seed/img/leader-mohamed-shihas", "photoAlt": "Mohamed Shihas K. Y. at Talent Eve",
+      "bio": "Dhanesh Narayanan Achari is the Co-Founder and Vice Chairman of Smartup. He holds an M.Sc. in Mathematics and a B.Ed., and is committed to advancing quality education."
+    },
+    {
+      "name": "Mohamed Shihas K. Y.",
+      "role": "Founder and Director",
+      "photo": "/seed/img/leader-mohamed-shihas",
+      "photoAlt": "Mohamed Shihas K. Y. at Talent Eve",
       "summary": "Leads strategic growth, business development and digital expansion.",
-      "bio": "Mohamed Shihas K. Y. is the Founder and Director of Smartup, with over a decade of experience in the education industry. He leads strategic growth, business development and digital expansion, driving Smartup's vision to become a leading K–12 education provider across India and the GCC." },
-    { "name": "Shanu K. Y.", "role": "Co-Founder and Director", "photo": "/seed/img/leader-shanu", "photoAlt": "Shanu K. Y. speaking at Talent Eve",
+      "bio": "Mohamed Shihas K. Y. is the Founder and Director of Smartup, with over a decade of experience in the education industry. He leads strategic growth, business development and digital expansion, driving Smartup's vision to become a leading K–12 education provider across India and the GCC."
+    },
+    {
+      "name": "Shanu K. Y.",
+      "role": "Co-Founder and Director",
+      "photo": "/seed/img/leader-shanu",
+      "photoAlt": "Shanu K. Y. speaking at Talent Eve",
       "summary": "Focused on strategic development and operational excellence.",
-      "bio": "Shanu K. Y. is the Co-Founder and Director of Smartup. With a Bachelor of Commerce, he is dedicated to strategic development, operational excellence and innovative approaches to quality education." }
+      "bio": "Shanu K. Y. is the Co-Founder and Director of Smartup. With a Bachelor of Commerce, he is dedicated to strategic development, operational excellence and innovative approaches to quality education."
+    }
   ],
   "results": [
-    { "year": "2026", "board": "State", "exam": "SSLC", "headline": "107 students with Full A+", "detail": "100% pass in SSLC 2026", "poster": "/seed/img/results-sslc-2026", "posterAlt": "Smartup SSLC 2026 results poster", "featured": true },
-    { "year": "2026", "board": "CBSE", "exam": "Class 10", "headline": "Aysha Palakki — 96%", "detail": "CBSE Class 10, 2025–26", "poster": "/seed/img/results-aysha-palakki", "posterAlt": "Result poster for Aysha Palakki, 96% in CBSE Class 10", "featured": true },
-    { "year": "2026", "board": "State", "exam": "Plus Two", "headline": "Archana K.A — 1159/1200", "detail": "Full A+, Plus Two 2026", "poster": "/seed/img/results-archana", "posterAlt": "Result poster for Archana K.A, 1159 out of 1200 in Plus Two", "featured": true },
-    { "year": "2020", "board": "State", "exam": "Plus One", "headline": "Abhishek N — 97.1%", "detail": "Plus One, 2020", "poster": "/seed/img/timeline-2020-results", "posterAlt": "Result poster for Abhishek N, 97.1% in Plus One", "featured": true }
+    {
+      "year": "2026",
+      "board": "State",
+      "exam": "SSLC",
+      "kind": "summary",
+      "headline": "107 students with Full A+",
+      "detail": "100% pass in SSLC 2026",
+      "poster": "/seed/img/result-2026-sslc-107",
+      "posterAlt": "Smartup poster announcing 107 Full A+ in SSLC 2026",
+      "featured": true
+    },
+    {
+      "year": "2026",
+      "board": "State",
+      "exam": "SSLC",
+      "kind": "summary",
+      "headline": "175 students with distinction and above",
+      "detail": "114 scored 90% and above · 34 with 9 A+ · 63 with 8 A+ · 72 with 7 A+ · 65 with 6 A+",
+      "poster": "/seed/img/results-sslc-2026",
+      "posterAlt": "Smartup SSLC 2026 results chart"
+    },
+    {
+      "year": "2026",
+      "board": "CBSE",
+      "exam": "Class 10",
+      "kind": "summary",
+      "headline": "100% pass in CBSE Class 10",
+      "detail": "80% of students scored distinction and above (2025–26)"
+    },
+    {
+      "year": "2026",
+      "board": "State",
+      "exam": "Plus One",
+      "kind": "summary",
+      "headline": "Plus One 2026 toppers",
+      "detail": "Students scoring 90% and above, as published by Smartup",
+      "poster": "/seed/img/result-2026-plus-one-toppers",
+      "posterAlt": "Smartup Plus One 2026 toppers poster"
+    },
+    {
+      "year": "2026",
+      "board": "CBSE",
+      "exam": "Class 10",
+      "headline": "Aysha Palakki — 96%",
+      "detail": "CBSE Class 10, 2025–26",
+      "poster": "/seed/img/results-aysha-palakki",
+      "posterAlt": "Result poster for Aysha Palakki, 96% in CBSE Class 10",
+      "featured": true
+    },
+    {
+      "year": "2026",
+      "board": "CBSE",
+      "exam": "Class 10",
+      "headline": "S Shraavan Madhav — 91%",
+      "detail": "CBSE Class 10, 2025–26",
+      "poster": "/seed/img/result-2026-cbse-shraavan-madhav",
+      "posterAlt": "Result poster for S Shraavan Madhav, 91% in CBSE Class 10"
+    },
+    {
+      "year": "2026",
+      "board": "CBSE",
+      "exam": "Class 10",
+      "headline": "Ashiq Mohammed — 89%",
+      "detail": "CBSE Class 10, 2025–26",
+      "poster": "/seed/img/result-2026-cbse-ashiq-mohammed",
+      "posterAlt": "Result poster for Ashiq Mohammed, 89% in CBSE Class 10"
+    },
+    {
+      "year": "2026",
+      "board": "CBSE",
+      "exam": "Class 10",
+      "headline": "Minnah Shamsu — 86.8%",
+      "detail": "CBSE Class 10, 2025–26",
+      "poster": "/seed/img/result-2026-cbse-minnah-shamsu",
+      "posterAlt": "Result poster for Minnah Shamsu, 86.8% in CBSE Class 10"
+    },
+    {
+      "year": "2026",
+      "board": "CBSE",
+      "exam": "Class 10",
+      "headline": "Muhammed Rayyan — 86%",
+      "detail": "CBSE Class 10, 2025–26",
+      "poster": "/seed/img/result-2026-cbse-muhammed-rayyan",
+      "posterAlt": "Result poster for Muhammed Rayyan, 86% in CBSE Class 10"
+    },
+    {
+      "year": "2026",
+      "board": "CBSE",
+      "exam": "Class 10",
+      "headline": "Salman Faris — 81%",
+      "detail": "CBSE Class 10, 2025–26",
+      "poster": "/seed/img/result-2026-cbse-salman-faris",
+      "posterAlt": "Result poster for Salman Faris, 81% in CBSE Class 10"
+    },
+    {
+      "year": "2026",
+      "board": "CBSE",
+      "exam": "Class 10",
+      "headline": "Indrajith Jayakrishnan — 71.4%",
+      "detail": "CBSE Class 10, 2025–26",
+      "poster": "/seed/img/result-2026-cbse-indrajith-jayakrishnan",
+      "posterAlt": "Result poster for Indrajith Jayakrishnan, 71.4% in CBSE Class 10"
+    },
+    {
+      "year": "2026",
+      "board": "CBSE",
+      "exam": "Class 10",
+      "headline": "Muhammed Safwan — 69%",
+      "detail": "CBSE Class 10, 2025–26",
+      "poster": "/seed/img/result-2026-cbse-muhammed-safwan",
+      "posterAlt": "Result poster for Muhammed Safwan, 69% in CBSE Class 10"
+    },
+    {
+      "year": "2026",
+      "board": "CBSE",
+      "exam": "Class 10",
+      "headline": "Muhammed Farzan — 66.2%",
+      "detail": "CBSE Class 10, 2025–26",
+      "poster": "/seed/img/result-2026-cbse-muhammed-farzan",
+      "posterAlt": "Result poster for Muhammed Farzan, 66.2% in CBSE Class 10"
+    },
+    {
+      "year": "2026",
+      "board": "State",
+      "exam": "Plus Two",
+      "headline": "Archana K.A — 1159/1200",
+      "detail": "Full A+, Plus Two 2026",
+      "poster": "/seed/img/results-archana",
+      "posterAlt": "Result poster for Archana K.A, 1159 out of 1200 in Plus Two",
+      "featured": true
+    },
+    {
+      "year": "2026",
+      "board": "State",
+      "exam": "Plus Two",
+      "headline": "Afna Navas — 1108/1200",
+      "detail": "Plus Two 2026",
+      "poster": "/seed/img/result-2026-plus-two-afna-navas",
+      "posterAlt": "Result poster for Afna Navas, 1108 out of 1200 in Plus Two"
+    },
+    {
+      "year": "2026",
+      "board": "State",
+      "exam": "Plus Two",
+      "headline": "Ananya J — 1104/1200",
+      "detail": "Plus Two 2026",
+      "poster": "/seed/img/result-2026-plus-two-ananya-j",
+      "posterAlt": "Result poster for Ananya J, 1104 out of 1200 in Plus Two"
+    },
+    {
+      "year": "2026",
+      "board": "State",
+      "exam": "Plus Two",
+      "headline": "Aiden Clarence — 1078/1200",
+      "detail": "Plus Two 2026",
+      "poster": "/seed/img/result-2026-plus-two-aiden-clarence",
+      "posterAlt": "Result poster for Aiden Clarence, 1078 out of 1200 in Plus Two"
+    },
+    {
+      "year": "2026",
+      "board": "State",
+      "exam": "Plus Two",
+      "headline": "Fazlul Fariza — 1064/1200",
+      "detail": "Plus Two 2026",
+      "poster": "/seed/img/result-2026-plus-two-fazlul-fariza",
+      "posterAlt": "Result poster for Fazlul Fariza, 1064 out of 1200 in Plus Two"
+    },
+    {
+      "year": "2026",
+      "board": "State",
+      "exam": "Plus Two",
+      "headline": "Nidha Noufal — 1058/1200",
+      "detail": "Plus Two 2026",
+      "poster": "/seed/img/result-2026-plus-two-nidha-noufal",
+      "posterAlt": "Result poster for Nidha Noufal, 1058 out of 1200 in Plus Two"
+    },
+    {
+      "year": "2026",
+      "board": "State",
+      "exam": "Plus Two",
+      "headline": "Mohammed Harshad — 1038/1200",
+      "detail": "Plus Two 2026",
+      "poster": "/seed/img/result-2026-plus-two-mohammed-harshad",
+      "posterAlt": "Result poster for Mohammed Harshad, 1038 out of 1200 in Plus Two"
+    },
+    {
+      "year": "2026",
+      "board": "State",
+      "exam": "Plus Two",
+      "headline": "Aadhil — 1030/1200",
+      "detail": "Plus Two 2026",
+      "poster": "/seed/img/result-2026-plus-two-aadhil",
+      "posterAlt": "Result poster for Aadhil, 1030 out of 1200 in Plus Two"
+    },
+    {
+      "year": "2026",
+      "board": "State",
+      "exam": "Plus Two",
+      "headline": "Elvis Christy — 1024/1200",
+      "detail": "Plus Two 2026",
+      "poster": "/seed/img/result-2026-plus-two-elvis-christy",
+      "posterAlt": "Result poster for Elvis Christy, 1024 out of 1200 in Plus Two"
+    },
+    {
+      "year": "2026",
+      "board": "State",
+      "exam": "Plus One",
+      "headline": "Haneena Parveen — 516/520",
+      "detail": "Full A+, Plus One 2026",
+      "poster": "/seed/img/result-2026-plus-one-haneena-parveen",
+      "posterAlt": "Result poster for Haneena Parveen, 516 out of 520 in Plus One"
+    },
+    {
+      "year": "2026",
+      "board": "State",
+      "exam": "Plus One",
+      "headline": "Alwin Wilson — 514/520",
+      "detail": "Full A+, Plus One 2026",
+      "poster": "/seed/img/result-2026-plus-one-alwin-wilson",
+      "posterAlt": "Result poster for Alwin Wilson, 514 out of 520 in Plus One"
+    },
+    {
+      "year": "2026",
+      "board": "State",
+      "exam": "Plus One",
+      "headline": "Hiba Sajeer — 506/520",
+      "detail": "Full A+, Plus One 2026",
+      "poster": "/seed/img/result-2026-plus-one-hiba-sajeer",
+      "posterAlt": "Result poster for Hiba Sajeer, 506 out of 520 in Plus One"
+    },
+    {
+      "year": "2026",
+      "board": "State",
+      "exam": "Plus One",
+      "headline": "Thwalib Nasar — 500/520",
+      "detail": "Full A+, Plus One 2026",
+      "poster": "/seed/img/result-2026-plus-one-thwalib-nasar",
+      "posterAlt": "Result poster for Thwalib Nasar, 500 out of 520 in Plus One"
+    },
+    {
+      "year": "2026",
+      "board": "State",
+      "exam": "Plus One",
+      "headline": "Athulya — 495/520",
+      "detail": "Full A+, Plus One 2026",
+      "poster": "/seed/img/result-2026-plus-one-athulya",
+      "posterAlt": "Result poster for Athulya, 495 out of 520 in Plus One"
+    },
+    {
+      "year": "2026",
+      "board": "State",
+      "exam": "Plus One",
+      "headline": "Muhammed Jahfar — 481/520",
+      "detail": "Full A+, Plus One 2026",
+      "poster": "/seed/img/result-2026-plus-one-muhammed-jahfar",
+      "posterAlt": "Result poster for Muhammed Jahfar, 481 out of 520 in Plus One"
+    },
+    {
+      "year": "2026",
+      "board": "State",
+      "exam": "Plus One",
+      "headline": "Aliya P A — 92.5%",
+      "detail": "Plus One 2026",
+      "poster": "/seed/img/result-2026-plus-one-aliya-pa",
+      "posterAlt": "Result poster for Aliya P A, 92.5% in Plus One"
+    },
+    {
+      "year": "2026",
+      "board": "State",
+      "exam": "SSLC",
+      "headline": "Shazma Binth Muqthar — Full A+",
+      "detail": "SSLC 2026 · Palluruthy",
+      "poster": "/seed/img/result-2026-sslc-shazma-binth-muqthar",
+      "posterAlt": "Result poster for Shazma Binth Muqthar, Full A+ in SSLC 2026"
+    },
+    {
+      "year": "2026",
+      "board": "State",
+      "exam": "SSLC",
+      "headline": "Kailash — Full A+",
+      "detail": "SSLC 2026 · Chullickal",
+      "poster": "/seed/img/result-2026-sslc-kailash",
+      "posterAlt": "Result poster for Kailash, Full A+ in SSLC 2026"
+    },
+    {
+      "year": "2026",
+      "board": "State",
+      "exam": "SSLC",
+      "headline": "Mohammed Aamir — Full A+",
+      "detail": "SSLC 2026 · Chullickal",
+      "poster": "/seed/img/result-2026-sslc-mohammed-aamir",
+      "posterAlt": "Result poster for Mohammed Aamir, Full A+ in SSLC 2026"
+    },
+    {
+      "year": "2026",
+      "board": "State",
+      "exam": "SSLC",
+      "headline": "Abdulla A A — Full A+",
+      "detail": "SSLC 2026 · Chullickal",
+      "poster": "/seed/img/result-2026-sslc-abdulla-aa",
+      "posterAlt": "Result poster for Abdulla A A, Full A+ in SSLC 2026"
+    },
+    {
+      "year": "2026",
+      "board": "State",
+      "exam": "SSLC",
+      "headline": "Diya K Vima — Full A+",
+      "detail": "SSLC 2026 · Chullickal",
+      "poster": "/seed/img/result-2026-sslc-diya-k-vima",
+      "posterAlt": "Result poster for Diya K Vima, Full A+ in SSLC 2026"
+    },
+    {
+      "year": "2025",
+      "board": "State",
+      "exam": "SSLC",
+      "kind": "summary",
+      "headline": "100+ students with Full A+",
+      "detail": "The fifth year in a row with 100+ Full A+ in SSLC",
+      "poster": "/seed/img/result-2025-sslc-100",
+      "posterAlt": "Smartup poster announcing 100+ Full A+ in SSLC 2025"
+    },
+    {
+      "year": "2025",
+      "board": "State",
+      "exam": "SSLC",
+      "headline": "Hanna Fathima — Full A+",
+      "detail": "SSLC 2025",
+      "poster": "/seed/img/result-2025-sslc-hanna-fathima",
+      "posterAlt": "Result poster for Hanna Fathima, Full A+ in SSLC 2025"
+    },
+    {
+      "year": "2025",
+      "board": "State",
+      "exam": "SSLC",
+      "headline": "Haneena — Full A+",
+      "detail": "SSLC 2025",
+      "poster": "/seed/img/result-2025-sslc-haneena",
+      "posterAlt": "Result poster for Haneena, Full A+ in SSLC 2025"
+    },
+    {
+      "year": "2025",
+      "board": "State",
+      "exam": "SSLC",
+      "headline": "Anton Rayen — Full A+",
+      "detail": "SSLC 2025 · Moolamkuzhi",
+      "poster": "/seed/img/result-2025-sslc-anton-rayen",
+      "posterAlt": "Result poster for Anton Rayen, Full A+ in SSLC 2025"
+    },
+    {
+      "year": "2025",
+      "board": "State",
+      "exam": "SSLC",
+      "headline": "Sreeranjini — Full A+",
+      "detail": "SSLC 2025",
+      "poster": "/seed/img/result-2025-sslc-sreeranjini",
+      "posterAlt": "Result poster for Sreeranjini, Full A+ in SSLC 2025"
+    },
+    {
+      "year": "2025",
+      "board": "State",
+      "exam": "SSLC",
+      "headline": "Darsana — Full A+",
+      "detail": "SSLC 2025 · Chullickal",
+      "poster": "/seed/img/result-2025-sslc-darsana",
+      "posterAlt": "Result poster for Darsana, Full A+ in SSLC 2025"
+    },
+    {
+      "year": "2025",
+      "board": "State",
+      "exam": "SSLC",
+      "headline": "Farasha Firoz — Full A+",
+      "detail": "SSLC 2025",
+      "poster": "/seed/img/result-2025-sslc-farasha-firoz",
+      "posterAlt": "Result poster for Farasha Firoz, Full A+ in SSLC 2025"
+    },
+    {
+      "year": "2025",
+      "board": "State",
+      "exam": "SSLC",
+      "headline": "Irine Ann Mary — 9 A+",
+      "detail": "SSLC 2025",
+      "poster": "/seed/img/result-2025-sslc-irine-ann-mary",
+      "posterAlt": "Result poster for Irine Ann Mary, nine A+ in SSLC 2025"
+    },
+    {
+      "year": "2025",
+      "board": "State",
+      "exam": "Plus Two",
+      "headline": "Angela and Ann Fiya — Full A+",
+      "detail": "Plus Two 2025",
+      "poster": "/seed/img/result-2025-plus-two-angela-ann-fiya",
+      "posterAlt": "Result poster for Angela and Ann Fiya, Full A+ in Plus Two 2025"
+    },
+    {
+      "year": "2025",
+      "board": "State",
+      "exam": "Plus Two",
+      "headline": "Aasia Azeez — Full A+",
+      "detail": "Plus Two 2025",
+      "poster": "/seed/img/result-2025-plus-two-aasia-azeez",
+      "posterAlt": "Result poster for Aasia Azeez, Full A+ in Plus Two 2025"
+    },
+    {
+      "year": "2025",
+      "board": "State",
+      "exam": "Plus Two",
+      "headline": "Afna Suneer — Full A+",
+      "detail": "Plus Two 2025",
+      "poster": "/seed/img/result-2025-plus-two-afna-suneer",
+      "posterAlt": "Result poster for Afna Suneer, Full A+ in Plus Two 2025"
+    },
+    {
+      "year": "2025",
+      "board": "State",
+      "exam": "Plus Two",
+      "headline": "Agnus Manuel — Full A+",
+      "detail": "Plus Two 2025",
+      "poster": "/seed/img/result-2025-plus-two-agnus-manuel",
+      "posterAlt": "Result poster for Agnus Manuel, Full A+ in Plus Two 2025"
+    },
+    {
+      "year": "2025",
+      "board": "State",
+      "exam": "Plus Two",
+      "headline": "Amaan Firoz — Full A+",
+      "detail": "Plus Two 2025",
+      "poster": "/seed/img/result-2025-plus-two-amaan-firoz",
+      "posterAlt": "Result poster for Amaan Firoz, Full A+ in Plus Two 2025"
+    },
+    {
+      "year": "2025",
+      "board": "State",
+      "exam": "Plus Two",
+      "headline": "Amna Raheem — Full A+",
+      "detail": "Plus Two 2025",
+      "poster": "/seed/img/result-2025-plus-two-amna-raheem",
+      "posterAlt": "Result poster for Amna Raheem, Full A+ in Plus Two 2025"
+    },
+    {
+      "year": "2025",
+      "board": "State",
+      "exam": "Plus Two",
+      "headline": "Serin Mayble — Full A+",
+      "detail": "Plus Two 2025",
+      "poster": "/seed/img/result-2025-plus-two-serin-mayble",
+      "posterAlt": "Result poster for Serin Mayble, Full A+ in Plus Two 2025"
+    },
+    {
+      "year": "2025",
+      "board": "State",
+      "exam": "Plus Two",
+      "headline": "Amal Antony — Full A+",
+      "detail": "Plus Two 2025",
+      "poster": "/seed/img/result-2025-plus-two-amal-antony",
+      "posterAlt": "Result poster for Amal Antony, Full A+ in Plus Two 2025"
+    },
+    {
+      "year": "2025",
+      "board": "State",
+      "exam": "Plus Two",
+      "headline": "Rugma Ramesh — Full A+",
+      "detail": "Plus Two 2025",
+      "poster": "/seed/img/result-2025-plus-two-rugma-ramesh",
+      "posterAlt": "Result poster for Rugma Ramesh, Full A+ in Plus Two 2025"
+    },
+    {
+      "year": "2024",
+      "board": "State",
+      "exam": "Plus One",
+      "headline": "Siya P.S — 99%",
+      "detail": "Full A+, Plus One 2024 · Palluruthy",
+      "poster": "/seed/img/result-2024-plus-one-siya-ps",
+      "posterAlt": "Result poster for Siya P.S, 99% in Plus One 2024"
+    },
+    {
+      "year": "2024",
+      "board": "State",
+      "exam": "SSLC",
+      "headline": "Aysha Mohammed Sunil — Full A+",
+      "detail": "SSLC 2024 · Chullickal",
+      "poster": "/seed/img/result-2024-sslc-aysha-mohammed-sunil",
+      "posterAlt": "Result poster for Aysha Mohammed Sunil, Full A+ in SSLC 2024"
+    },
+    {
+      "year": "2024",
+      "board": "State",
+      "exam": "SSLC",
+      "headline": "Devon Moses — Full A+",
+      "detail": "SSLC 2024 · Fort Kochi",
+      "poster": "/seed/img/result-2024-sslc-devon-moses",
+      "posterAlt": "Result poster for Devon Moses, Full A+ in SSLC 2024"
+    },
+    {
+      "year": "2024",
+      "board": "State",
+      "exam": "SSLC",
+      "headline": "Haleema Jihan — 9 A+",
+      "detail": "SSLC 2024 · Chullickal",
+      "poster": "/seed/img/result-2024-sslc-haleema-jihan",
+      "posterAlt": "Result poster for Haleema Jihan, nine A+ in SSLC 2024"
+    },
+    {
+      "year": "2024",
+      "board": "State",
+      "exam": "SSLC",
+      "headline": "Muhammed Faris — 7 A+",
+      "detail": "SSLC 2024 · Chullickal",
+      "poster": "/seed/img/result-2024-sslc-muhammed-faris",
+      "posterAlt": "Result poster for Muhammed Faris, seven A+ in SSLC 2024"
+    },
+    {
+      "year": "2023",
+      "board": "State",
+      "exam": "SSLC",
+      "kind": "summary",
+      "headline": "127 students with Full A+",
+      "detail": "100% pass · 49 with 9 A+ · 45 with 8 A+ · 33 with 7 A+ · 42 with 6 A+",
+      "poster": "/seed/img/result-2023-sslc-127",
+      "posterAlt": "Smartup poster announcing 127 Full A+ in SSLC 2023"
+    },
+    {
+      "year": "2023",
+      "board": "State",
+      "exam": "Plus Two",
+      "kind": "summary",
+      "headline": "71 Full A+",
+      "detail": "Plus Two 2023, as announced by Smartup"
+    },
+    {
+      "year": "2023",
+      "board": "State",
+      "exam": "Plus Two",
+      "headline": "Aleena Jackson — Full A+",
+      "detail": "Plus Two 2023 · Science · Chullickal",
+      "poster": "/seed/img/result-2023-plus-two-aleena-jackson",
+      "posterAlt": "Result poster for Aleena Jackson, Full A+ in Plus Two 2023"
+    },
+    {
+      "year": "2023",
+      "board": "State",
+      "exam": "Plus Two",
+      "headline": "Safri Shajahan — Full A+",
+      "detail": "Plus Two 2023 · Science · Palluruthy",
+      "poster": "/seed/img/result-2023-plus-two-safri-shajahan",
+      "posterAlt": "Result poster for Safri Shajahan, Full A+ in Plus Two 2023"
+    },
+    {
+      "year": "2023",
+      "board": "State",
+      "exam": "Plus Two",
+      "headline": "Fahmitha Salim — Full A+",
+      "detail": "Plus Two 2023 · Science · Chullickal",
+      "poster": "/seed/img/result-2023-plus-two-fahmitha-salim",
+      "posterAlt": "Result poster for Fahmitha Salim, Full A+ in Plus Two 2023"
+    },
+    {
+      "year": "2023",
+      "board": "State",
+      "exam": "Plus Two",
+      "headline": "Samuel Shibu — Full A+",
+      "detail": "Plus Two 2023 · Commerce",
+      "poster": "/seed/img/result-2023-plus-two-samuel-shibu",
+      "posterAlt": "Result poster for Samuel Shibu, Full A+ in Plus Two 2023"
+    },
+    {
+      "year": "2023",
+      "board": "State",
+      "exam": "Plus Two",
+      "headline": "Thansa H R — Full A+",
+      "detail": "Plus Two 2023 · Science · Eraveli",
+      "poster": "/seed/img/result-2023-plus-two-thansa-hr",
+      "posterAlt": "Result poster for Thansa H R, Full A+ in Plus Two 2023"
+    },
+    {
+      "year": "2023",
+      "board": "State",
+      "exam": "Plus Two",
+      "headline": "Maksoodha — Full A+",
+      "detail": "Plus Two 2023 · Science · Eraveli",
+      "poster": "/seed/img/result-2023-plus-two-maksoodha",
+      "posterAlt": "Result poster for Maksoodha, Full A+ in Plus Two 2023"
+    },
+    {
+      "year": "2023",
+      "board": "State",
+      "exam": "Plus Two",
+      "headline": "Abdul Jezeem — Full A+",
+      "detail": "Plus Two 2023 · Commerce · Eraveli",
+      "poster": "/seed/img/result-2023-plus-two-abdul-jezeem",
+      "posterAlt": "Result poster for Abdul Jezeem, Full A+ in Plus Two 2023"
+    },
+    {
+      "year": "2020",
+      "board": "State",
+      "exam": "Plus One",
+      "headline": "Abhishek N — 97.1%",
+      "detail": "Plus One, 2020",
+      "poster": "/seed/img/timeline-2020-results",
+      "posterAlt": "Result poster for Abhishek N, 97.1% in Plus One",
+      "featured": true
+    }
   ],
   "testimonials": [
-    { "kind": "video", "section": "feedback", "title": "Students, in their own words", "video": "/seed/video/video-student-testimonial.mp4", "poster": "/seed/video/video-student-testimonial-poster.webp" },
-    { "kind": "video", "section": "feedback", "title": "A student and parent share their experience", "video": "/seed/video/video-student-and-parent.mp4", "poster": "/seed/video/video-student-and-parent-poster.webp" },
-    { "kind": "video", "section": "feedback", "title": "Two students on learning at Smartup", "video": "/seed/video/video-two-students.mp4", "poster": "/seed/video/video-two-students-poster.webp" },
-    { "kind": "video", "section": "alumni", "title": "A Smartup journey", "video": "/seed/video/video-story-7.mp4", "poster": "/seed/video/video-story-7-poster.webp" },
-    { "kind": "video", "section": "alumni", "title": "Smartup stories", "video": "/seed/video/video-story-mix.mp4", "poster": "/seed/video/video-story-mix-poster.webp" },
-    { "kind": "video", "section": "alumni", "title": "More Smartup stories", "video": "/seed/video/video-story-mix-3.mp4", "poster": "/seed/video/video-story-mix-3-poster.webp" }
+    {
+      "kind": "video",
+      "section": "feedback",
+      "title": "Students, in their own words",
+      "video": "/seed/video/video-student-testimonial.mp4",
+      "poster": "/seed/video/video-student-testimonial-poster.webp"
+    },
+    {
+      "kind": "video",
+      "section": "feedback",
+      "title": "A student and parent share their experience",
+      "video": "/seed/video/video-student-and-parent.mp4",
+      "poster": "/seed/video/video-student-and-parent-poster.webp"
+    },
+    {
+      "kind": "video",
+      "section": "feedback",
+      "title": "Two students on learning at Smartup",
+      "video": "/seed/video/video-two-students.mp4",
+      "poster": "/seed/video/video-two-students-poster.webp"
+    },
+    {
+      "kind": "video",
+      "section": "alumni",
+      "title": "A Smartup journey",
+      "video": "/seed/video/video-story-7.mp4",
+      "poster": "/seed/video/video-story-7-poster.webp"
+    },
+    {
+      "kind": "video",
+      "section": "alumni",
+      "title": "Smartup stories",
+      "video": "/seed/video/video-story-mix.mp4",
+      "poster": "/seed/video/video-story-mix-poster.webp"
+    },
+    {
+      "kind": "video",
+      "section": "alumni",
+      "title": "More Smartup stories",
+      "video": "/seed/video/video-story-mix-3.mp4",
+      "poster": "/seed/video/video-story-mix-3-poster.webp"
+    }
   ],
   "jobs": [
-    { "title": "Physics teacher", "type": "Full time" },
-    { "title": "Chemistry teacher", "type": "Part time", "location": "Eraveli" },
-    { "title": "Biology teacher", "type": "Part time", "location": "Eraveli" },
-    { "title": "Hindi teacher", "type": "Part time", "location": "Moolamkuzhi" },
-    { "title": "Malayalam teacher", "type": "Part time", "location": "Moolamkuzhi" },
-    { "title": "Assistant Maths teacher", "type": "Part time", "location": "Edappally and Vennala" },
-    { "title": "Maths teaching assistant", "type": "Teaching assistant" },
-    { "title": "Physics teaching assistant", "type": "Teaching assistant" },
-    { "title": "Chemistry teaching assistant", "type": "Teaching assistant" },
-    { "title": "Academic counsellor (offline)", "type": "Other" },
-    { "title": "Junior staff", "type": "Other" },
-    { "title": "Mentor", "type": "Other" }
+    {
+      "title": "Physics teacher",
+      "type": "Full time"
+    },
+    {
+      "title": "Chemistry teacher",
+      "type": "Part time",
+      "location": "Eraveli"
+    },
+    {
+      "title": "Biology teacher",
+      "type": "Part time",
+      "location": "Eraveli"
+    },
+    {
+      "title": "Hindi teacher",
+      "type": "Part time",
+      "location": "Moolamkuzhi"
+    },
+    {
+      "title": "Malayalam teacher",
+      "type": "Part time",
+      "location": "Moolamkuzhi"
+    },
+    {
+      "title": "Assistant Maths teacher",
+      "type": "Part time",
+      "location": "Edappally and Vennala"
+    },
+    {
+      "title": "Maths teaching assistant",
+      "type": "Teaching assistant"
+    },
+    {
+      "title": "Physics teaching assistant",
+      "type": "Teaching assistant"
+    },
+    {
+      "title": "Chemistry teaching assistant",
+      "type": "Teaching assistant"
+    },
+    {
+      "title": "Academic counsellor (offline)",
+      "type": "Other"
+    },
+    {
+      "title": "Junior staff",
+      "type": "Other"
+    },
+    {
+      "title": "Mentor",
+      "type": "Other"
+    }
   ],
   "centres": [
-    { "name": "Chullickal", "phone": "79071 26725", "mapUrl": "https://maps.app.goo.gl/fPcDGwooDWMdMyQj8", "hours": "5–9 pm" },
-    { "name": "Kadavanthra", "phone": "92070 76473", "mapUrl": "https://maps.app.goo.gl/dHgturY8vL8KXyhM9", "hours": "5–9 pm" },
-    { "name": "Eraveli", "phone": "87144 46244", "mapUrl": "https://maps.app.goo.gl/T7BtN9yKTBg9dGS47", "hours": "5–9 pm" },
-    { "name": "Thoppumpady", "phone": "98950 85731", "mapUrl": "https://maps.app.goo.gl/avuWtnrD2aYmXLnb6", "hours": "5–9 pm" },
-    { "name": "Palluruthy", "phone": "81291 79749", "mapUrl": "https://maps.app.goo.gl/nqiTJA4cjZeExYHe9", "hours": "5–9 pm" },
-    { "name": "Moolamkuzhi", "phone": "77364 23463", "mapUrl": "https://maps.app.goo.gl/GhSUr39w1vyMvzLi7", "hours": "5–9 pm" },
-    { "name": "Fort Kochi", "phone": "81295 08689", "mapUrl": "https://maps.app.goo.gl/Jc21d9sY4MX177As9", "hours": "5–9 pm" },
-    { "name": "Vennala", "phone": "6282-179991", "mapUrl": "https://maps.app.goo.gl/7MRpY4dZUXRkj8gB8", "hours": "5–9 pm" },
-    { "name": "Edappally", "phone": "8137-859426", "mapUrl": "https://maps.app.goo.gl/Gp159hZFmEDV3xkb9", "hours": "5–9 pm" }
+    {
+      "name": "Chullickal",
+      "phone": "79071 26725",
+      "mapUrl": "https://maps.app.goo.gl/fPcDGwooDWMdMyQj8",
+      "hours": "5–9 pm"
+    },
+    {
+      "name": "Kadavanthra",
+      "phone": "92070 76473",
+      "mapUrl": "https://maps.app.goo.gl/dHgturY8vL8KXyhM9",
+      "hours": "5–9 pm"
+    },
+    {
+      "name": "Eraveli",
+      "phone": "87144 46244",
+      "mapUrl": "https://maps.app.goo.gl/T7BtN9yKTBg9dGS47",
+      "hours": "5–9 pm"
+    },
+    {
+      "name": "Thoppumpady",
+      "phone": "98950 85731",
+      "mapUrl": "https://maps.app.goo.gl/avuWtnrD2aYmXLnb6",
+      "hours": "5–9 pm"
+    },
+    {
+      "name": "Palluruthy",
+      "phone": "81291 79749",
+      "mapUrl": "https://maps.app.goo.gl/nqiTJA4cjZeExYHe9",
+      "hours": "5–9 pm"
+    },
+    {
+      "name": "Moolamkuzhi",
+      "phone": "77364 23463",
+      "mapUrl": "https://maps.app.goo.gl/GhSUr39w1vyMvzLi7",
+      "hours": "5–9 pm"
+    },
+    {
+      "name": "Fort Kochi",
+      "phone": "81295 08689",
+      "mapUrl": "https://maps.app.goo.gl/Jc21d9sY4MX177As9",
+      "hours": "5–9 pm"
+    },
+    {
+      "name": "Vennala",
+      "phone": "6282-179991",
+      "mapUrl": "https://maps.app.goo.gl/7MRpY4dZUXRkj8gB8",
+      "hours": "5–9 pm"
+    },
+    {
+      "name": "Edappally",
+      "phone": "8137-859426",
+      "mapUrl": "https://maps.app.goo.gl/Gp159hZFmEDV3xkb9",
+      "hours": "5–9 pm"
+    }
+  ],
+  "faculty": [
+    {
+      "name": "Aflah K. R.",
+      "role": "Academic Head",
+      "team": "team",
+      "qualification": "MSc, BEd",
+      "note": "Research published in an Elsevier journal",
+      "photo": "/seed/img/faculty-aflah-kr"
+    },
+    {
+      "name": "Liya Justin",
+      "role": "Mathematics",
+      "team": "mathematics",
+      "qualification": "MSc, MEd · KTET 2 & 3",
+      "photo": "/seed/img/faculty-liya-justin"
+    },
+    {
+      "name": "Abdul Ahad A G",
+      "role": "Mathematics",
+      "team": "mathematics",
+      "qualification": "BSc Mathematics",
+      "photo": "/seed/img/faculty-abdul-ahad-ag"
+    },
+    {
+      "name": "Anju S Venu",
+      "role": "Mathematics",
+      "team": "mathematics",
+      "qualification": "MSc Mathematics",
+      "photo": "/seed/img/faculty-anju-s-venu"
+    },
+    {
+      "name": "Chaitanya Krishna",
+      "role": "Mathematics",
+      "team": "mathematics",
+      "qualification": "MSc, BEd (Mathematics)",
+      "photo": "/seed/img/faculty-chaitanya-krishna"
+    },
+    {
+      "name": "Abhiram",
+      "role": "Physics",
+      "team": "physics",
+      "qualification": "MSc, BEd",
+      "photo": "/seed/img/faculty-abhiram"
+    },
+    {
+      "name": "Akza",
+      "role": "Physics",
+      "team": "physics",
+      "qualification": "MSc, BEd",
+      "photo": "/seed/img/faculty-akza"
+    },
+    {
+      "name": "Ayanarani K",
+      "role": "Physics",
+      "team": "physics",
+      "qualification": "MSc Physics",
+      "photo": "/seed/img/faculty-ayanarani-k"
+    },
+    {
+      "name": "Ijas Ahammed",
+      "role": "Physics",
+      "team": "physics",
+      "qualification": "BSc Physics, BEd",
+      "photo": "/seed/img/faculty-ijas-ahammed"
+    },
+    {
+      "name": "Anjali Anand",
+      "role": "Chemistry",
+      "team": "chemistry",
+      "qualification": "MSc Chemistry, BEd · KTET 2 & 3",
+      "photo": "/seed/img/faculty-anjali-anand"
+    },
+    {
+      "name": "Jishnu T K",
+      "role": "Chemistry",
+      "team": "chemistry",
+      "qualification": "MSc Chemistry",
+      "photo": "/seed/img/faculty-jishnu-tk"
+    },
+    {
+      "name": "Manjima Manoj",
+      "role": "Chemistry",
+      "team": "chemistry",
+      "qualification": "MSc Chemistry",
+      "photo": "/seed/img/faculty-manjima-manoj"
+    },
+    {
+      "name": "Nair Akhila Suresh",
+      "role": "Chemistry",
+      "team": "chemistry",
+      "qualification": "MSc Chemistry, BEd",
+      "photo": "/seed/img/faculty-nair-akhila-suresh"
+    },
+    {
+      "name": "Mohammed Bilal K S",
+      "role": "Chemistry",
+      "team": "chemistry",
+      "qualification": "BSc Chemistry",
+      "photo": "/seed/img/faculty-mohammed-bilal-ks"
+    },
+    {
+      "name": "Hunais N K",
+      "role": "Botany",
+      "team": "biology",
+      "qualification": "MSc Botany",
+      "note": "Aligarh Muslim University",
+      "photo": "/seed/img/faculty-hunais-nk"
+    },
+    {
+      "name": "Noorniza",
+      "role": "Biology",
+      "team": "biology",
+      "qualification": "MSc Life Sciences",
+      "photo": "/seed/img/faculty-noorniza"
+    },
+    {
+      "name": "Akhinesh R Prakash",
+      "role": "Medical entrance",
+      "team": "biology",
+      "note": "Three years of medical entrance coaching",
+      "photo": "/seed/img/faculty-akhinesh-r-prakash"
+    },
+    {
+      "name": "Salih P R",
+      "role": "Commerce",
+      "team": "commerce",
+      "qualification": "BCom",
+      "photo": "/seed/img/faculty-salih-pr"
+    },
+    {
+      "name": "Ibrahim",
+      "role": "Commerce",
+      "team": "commerce",
+      "qualification": "MCom (pursuing)",
+      "photo": "/seed/img/faculty-ibrahim"
+    },
+    {
+      "name": "Muhzeen P A",
+      "role": "Commerce",
+      "team": "commerce",
+      "qualification": "BBA",
+      "photo": "/seed/img/faculty-muhzeen-pa"
+    },
+    {
+      "name": "Rohith Krishna A",
+      "role": "Humanities",
+      "team": "humanities",
+      "qualification": "MA Applied Sociology",
+      "note": "University first rank holder",
+      "photo": "/seed/img/faculty-rohith-krishna-a"
+    },
+    {
+      "name": "Ranjith P S",
+      "role": "Humanities",
+      "team": "humanities",
+      "qualification": "MA Archaeology",
+      "photo": "/seed/img/faculty-ranjith-ps"
+    },
+    {
+      "name": "Farhana Naushad",
+      "role": "Academic team",
+      "team": "humanities",
+      "qualification": "MA",
+      "photo": "/seed/img/faculty-farhana-naushad"
+    },
+    {
+      "name": "Avinash Raj",
+      "role": "Academic team",
+      "team": "team",
+      "qualification": "MSc",
+      "photo": "/seed/img/faculty-avinash-raj"
+    },
+    {
+      "name": "Sajith T S",
+      "role": "Academic team",
+      "team": "team",
+      "qualification": "MSc Electronics, MBA",
+      "photo": "/seed/img/faculty-sajith-ts"
+    },
+    {
+      "name": "Abhishek K",
+      "role": "Academic team",
+      "team": "team",
+      "qualification": "BTech, Electronics and Communication",
+      "photo": "/seed/img/faculty-abhishek-k"
+    },
+    {
+      "name": "Manjusha Madhu",
+      "role": "Academic team",
+      "team": "team",
+      "qualification": "BTech, Electronics and Communication",
+      "photo": "/seed/img/faculty-manjusha-madhu"
+    },
+    {
+      "name": "Fathima Rahfa K",
+      "role": "Academic team",
+      "team": "team",
+      "qualification": "BPharm",
+      "photo": "/seed/img/faculty-fathima-rahfa-k"
+    },
+    {
+      "name": "Farzana A Naushad",
+      "role": "Academic team",
+      "team": "team",
+      "qualification": "Graduate",
+      "photo": "/seed/img/faculty-farzana-a-naushad"
+    },
+    {
+      "name": "Asif Ali",
+      "role": "Academic team",
+      "team": "team",
+      "photo": "/seed/img/faculty-asif-ali"
+    },
+    {
+      "name": "Saleh Lukman",
+      "role": "Academic team",
+      "team": "team",
+      "photo": "/seed/img/faculty-saleh-lukman"
+    },
+    {
+      "name": "Anzaf",
+      "role": "Academic team",
+      "team": "team",
+      "photo": "/seed/img/faculty-anzaf"
+    },
+    {
+      "name": "Nebil Navas",
+      "role": "Academic team",
+      "team": "team",
+      "photo": "/seed/img/faculty-nebil-navas"
+    },
+    {
+      "name": "Mohammed Shafi V K",
+      "role": "Academic team",
+      "team": "team",
+      "photo": "/seed/img/faculty-mohammed-shafi-vk"
+    },
+    {
+      "name": "Rahul V Rajeev",
+      "role": "Academic team",
+      "team": "team",
+      "photo": "/seed/img/faculty-rahul-v-rajeev"
+    }
+  ],
+  "events": [
+    {
+      "category": "Talent Eve",
+      "title": "Talent Eve 7.0",
+      "dateLabel": "2026",
+      "summary": "Smartup's award night and arts festival: Crown Awards for achievers, performances from students and a graduation stage for every batch.",
+      "youtubeId": "W7a4CxsJHTA",
+      "media": [
+        {
+          "src": "/seed/img/life-talent-eve-stage",
+          "alt": "Graduating students in gowns on the Talent Eve stage"
+        },
+        {
+          "src": "/seed/img/life-talent-eve-award",
+          "alt": "A student receiving a Crown Award at Talent Eve"
+        },
+        {
+          "src": "/seed/img/life-talent-eve-crown",
+          "alt": "Crown Award presentation at Talent Eve"
+        },
+        {
+          "src": "/seed/img/life-talent-eve-dance",
+          "alt": "Students performing a dance at Talent Eve"
+        },
+        {
+          "src": "/seed/img/life-talent-eve-guitar",
+          "alt": "A student playing guitar on the Talent Eve stage"
+        },
+        {
+          "src": "/seed/img/life-talent-eve-band",
+          "alt": "A student band performing at Talent Eve"
+        }
+      ]
+    },
+    {
+      "category": "Shoot the Drugs",
+      "title": "Shoot the Drugs",
+      "dateLabel": "Since 2019 · season 7 in 2025",
+      "summary": "A football and throwball tournament for juniors and seniors that carries an anti-drug message to students and families.",
+      "youtubeId": "_xb6qBGeQ4E",
+      "media": [
+        {
+          "src": "/seed/img/timeline-2025-shoot-the-drugs",
+          "alt": "Shoot the Drugs champions on the field"
+        },
+        {
+          "src": "/seed/img/life-std-march",
+          "alt": "Teams marching on the final day of Shoot the Drugs"
+        },
+        {
+          "src": "/seed/img/life-std-matchday",
+          "alt": "Shoot the Drugs matchday result poster"
+        },
+        {
+          "src": "/seed/img/timeline-2019-shoot-the-drugs",
+          "alt": "Students celebrating at Shoot the Drugs season 1, 2019"
+        }
+      ]
+    },
+    {
+      "category": "Coffee With Chairman",
+      "title": "Coffee With Chairman",
+      "dateLabel": "Since 2018 · 18 editions",
+      "summary": "Mentoring sessions led by Chairman Mohamed Rayees, where students talk about goals, discipline and confidence.",
+      "youtubeId": "5_wOmNJIBVM",
+      "media": [
+        {
+          "src": "/seed/img/timeline-2026-cwc-18",
+          "alt": "Coffee With Chairman, 18th edition"
+        },
+        {
+          "src": "/seed/img/timeline-2018-cwc-1",
+          "alt": "The first Coffee With Chairman session, 2018"
+        }
+      ]
+    },
+    {
+      "category": "Workshops & academics",
+      "title": "EDX: Kochi's first educational conclave",
+      "dateLabel": "2024",
+      "summary": "Smartup's educational conclave, held alongside Talent Eve.",
+      "youtubeId": "SAEchdn17j8",
+      "media": [
+        {
+          "src": "/seed/img/life-edx",
+          "alt": "EDX, Kochi's first educational conclave, poster"
+        }
+      ]
+    },
+    {
+      "category": "Workshops & academics",
+      "title": "JWALA 2025: an awakening against drug addiction",
+      "dateLabel": "2025",
+      "summary": "An awareness programme against drug addiction, led by Chairman Mohamed Rayees.",
+      "youtubeId": "-GbYk75Qupk",
+      "media": []
+    },
+    {
+      "category": "Workshops & academics",
+      "title": "Interactive panel classes",
+      "dateLabel": "2021",
+      "summary": "Smartup brought interactive panel classes to West Kochi.",
+      "media": [
+        {
+          "src": "/seed/img/timeline-2021-interactive-panel",
+          "alt": "Poster for the launch of interactive panel classes, June 2021"
+        }
+      ]
+    },
+    {
+      "category": "Celebrations",
+      "title": "Onam",
+      "dateLabel": "2019",
+      "summary": "Flower carpets, games and a festive day together.",
+      "youtubeId": "zwUf7ZLEj9o",
+      "media": [
+        {
+          "src": "/seed/img/timeline-2019-onam",
+          "alt": "Onam flower carpet made by Smartup students"
+        }
+      ]
+    },
+    {
+      "category": "Celebrations",
+      "title": "Independence Day",
+      "dateLabel": "Every year",
+      "summary": "Students march together on Independence Day.",
+      "media": [
+        {
+          "src": "/seed/img/timeline-2023-independence",
+          "alt": "Smartup students in an Independence Day rally, 2023"
+        },
+        {
+          "src": "/seed/img/timeline-2014-independence",
+          "alt": "Smartup students at an Independence Day parade, 2014"
+        }
+      ]
+    },
+    {
+      "category": "Celebrations",
+      "title": "Christmas and New Year",
+      "dateLabel": "2017",
+      "summary": "Music and celebration at the end of the year.",
+      "media": [
+        {
+          "src": "/seed/img/timeline-2017-christmas",
+          "alt": "Christmas celebration at Smartup, 2017"
+        }
+      ]
+    },
+    {
+      "category": "Celebrations",
+      "title": "Teachers' Day",
+      "dateLabel": "2015",
+      "summary": "Students thank their teachers.",
+      "media": [
+        {
+          "src": "/seed/img/timeline-2015-teachers-day",
+          "alt": "Students lighting candles on Teachers' Day, 2015"
+        }
+      ]
+    },
+    {
+      "category": "Trips & camps",
+      "title": "Study tours and camps",
+      "dateLabel": "2019–2026",
+      "summary": "Trips and camps where batches learn and travel together.",
+      "media": [
+        {
+          "src": "/seed/img/timeline-2026-camp",
+          "alt": "Students at a Smartup camp, 2026"
+        },
+        {
+          "src": "/seed/img/timeline-2025-tour",
+          "alt": "Smartup students on a study tour, 2025"
+        },
+        {
+          "src": "/seed/img/timeline-2019-tour",
+          "alt": "Smartup students on a study tour, 2019"
+        }
+      ]
+    }
+  ],
+  "videos": [
+    {
+      "youtubeId": "Fb2Qcs9kkVY",
+      "title": "Plus Two Economics — live class",
+      "category": "classes"
+    },
+    {
+      "youtubeId": "jf5HtSXHmt4",
+      "title": "Plus One Economics — live class",
+      "category": "classes"
+    },
+    {
+      "youtubeId": "mZa6x2qrC_0",
+      "title": "Plus Two Maths — SAY exam live class",
+      "category": "classes"
+    },
+    {
+      "youtubeId": "T8EmJ9Re3pc",
+      "title": "Plus Two Chemistry — question paper workout",
+      "category": "exam-prep"
+    },
+    {
+      "youtubeId": "mOc4Q_RR2WI",
+      "title": "Plus One Physics — question paper workout",
+      "category": "exam-prep"
+    },
+    {
+      "youtubeId": "XTPZG0OjQsg",
+      "title": "Class 10 State Maths — question paper workout",
+      "category": "exam-prep"
+    },
+    {
+      "youtubeId": "m5kSWBaJWKM",
+      "title": "SSLC 2026 live",
+      "category": "exam-prep"
+    },
+    {
+      "youtubeId": "Aypb_y7umfo",
+      "title": "Physics in a football kick: impulse",
+      "category": "short-lessons",
+      "format": "portrait"
+    },
+    {
+      "youtubeId": "c4ktcuFK8Ik",
+      "title": "How memory pathways reactivate",
+      "category": "short-lessons",
+      "format": "portrait"
+    },
+    {
+      "youtubeId": "IN6jKzWjz-0",
+      "title": "Does everything feel important while you study?",
+      "category": "short-lessons",
+      "format": "portrait"
+    },
+    {
+      "youtubeId": "aJ8xJ3GdIVw",
+      "title": "Learning combinations",
+      "category": "short-lessons",
+      "format": "portrait"
+    },
+    {
+      "youtubeId": "qY8-oiF6U8g",
+      "title": "Maths during a power cut",
+      "category": "short-lessons",
+      "format": "portrait"
+    },
+    {
+      "youtubeId": "6TnxqTfDG0A",
+      "title": "Toppers Talk, episode 1: Alfiya Jennath",
+      "category": "toppers"
+    },
+    {
+      "youtubeId": "5GslTzK3O6Q",
+      "title": "Toppers Talk, episode 2: Fiza Farshad",
+      "category": "toppers"
+    },
+    {
+      "youtubeId": "besmcr_hsBw",
+      "title": "Toppers Talk, episode 3: Hayden Mathew",
+      "category": "toppers"
+    },
+    {
+      "youtubeId": "A7BneqCcDCw",
+      "title": "Toppers Talk, episode 4: Amna Raheem",
+      "category": "toppers"
+    },
+    {
+      "youtubeId": "5_wOmNJIBVM",
+      "title": "Words from our Chairman",
+      "category": "chairman"
+    },
+    {
+      "youtubeId": "4dgcjAnpKvQ",
+      "title": "What is Smartup's Vision 2030?",
+      "category": "chairman"
+    },
+    {
+      "youtubeId": "l0FZLS4fKmo",
+      "title": "Vision 2026–2027",
+      "category": "chairman"
+    },
+    {
+      "youtubeId": "_5vb0VMhKp4",
+      "title": "Introducing Smartup online classes",
+      "category": "chairman"
+    },
+    {
+      "youtubeId": "W7a4CxsJHTA",
+      "title": "Talent Eve 7.0 highlights",
+      "category": "events"
+    },
+    {
+      "youtubeId": "iXelMSWc0UI",
+      "title": "Crown Award: success stories",
+      "category": "events"
+    },
+    {
+      "youtubeId": "_xb6qBGeQ4E",
+      "title": "Shoot the Drugs, season 6",
+      "category": "events"
+    },
+    {
+      "youtubeId": "zwUf7ZLEj9o",
+      "title": "Onam celebration 2019",
+      "category": "events"
+    },
+    {
+      "youtubeId": "l4oi_UBHYcU",
+      "title": "Parent and student feedback: Aadhidev, Class 8 CBSE",
+      "category": "parents"
+    },
+    {
+      "youtubeId": "xwVKwCIg6ek",
+      "title": "Smartup through a parent's eyes",
+      "category": "parents",
+      "format": "portrait"
+    },
+    {
+      "youtubeId": "HNCb1u9fAbQ",
+      "title": "Parent feedback on Smartup classes",
+      "category": "parents",
+      "format": "portrait"
+    },
+    {
+      "youtubeId": "cUi0yBbeOmg",
+      "title": "How are the Smartup classes?",
+      "category": "parents",
+      "format": "portrait"
+    },
+    {
+      "youtubeId": "fhqdKP_9anA",
+      "title": "From exam fear to exam confidence",
+      "category": "parents",
+      "format": "portrait"
+    }
+  ],
+  "posts": [
+    {
+      "slug": "board-exam-90-day-plan",
+      "title": "A 90-day plan for the SSLC and CBSE Class 10 board exams",
+      "category": "Exam preparation",
+      "publishedAt": "2026-10-13",
+      "excerpt": "Three months is enough time to revise every chapter twice — if you plan it. Here is the plan our teachers share with every Class 10 batch.",
+      "body": "## Days 1–30: finish the first round\n\nList every chapter in every subject and give each one a date. Aim to finish one full round of revision in the first month, even if some chapters feel rushed. Mark each chapter green, yellow or red as you go.\n\n## Days 31–60: practise with past papers\n\nSpend this month on previous years' questions. Solve one paper a week under exam conditions and correct it the same day. Every mistake goes into a single notebook, sorted by chapter.\n\n- Start with your red chapters\n- Time yourself on every paper\n- Read the marking scheme, not just the answer\n\n## Days 61–90: second round and rest\n\nRevise from your mistakes notebook, not from the textbook. Keep two days a week lighter, and sleep at the same time every night. The last week is for short revision only.\n\n**Need help building your plan?** Our teachers do this with every batch. [Book a free demo class](https://smartupedu.in/demo) or call +91 88919 10919."
+    },
+    {
+      "slug": "how-parents-can-help-in-exam-season",
+      "title": "Five ways parents can help during board exam season",
+      "category": "Parent guidance",
+      "publishedAt": "2026-10-06",
+      "excerpt": "Your child does the studying, but home sets the pace. Small, steady habits from parents make a real difference before board exams.",
+      "body": "## 1. Keep a steady routine\n\nRegular meals, sleep and study hours matter more than long nights. A predictable day lowers stress for everyone.\n\n## 2. Ask about plans, not marks\n\nInstead of asking for scores, ask what your child will revise today. It keeps the focus on effort they control.\n\n## 3. Make space to study\n\nA quiet corner, good light and a phone parked in another room help more than any new book.\n\n## 4. Stay in touch with teachers\n\nRead the weekly and monthly updates, and come to parent meetings. Teachers can tell you exactly which chapters need attention.\n\n## 5. Celebrate small wins\n\nA finished chapter or a better test score deserves notice. Confidence grows from many small successes.\n\nAt Smartup, parents receive regular progress updates and meet teachers through the year. [Talk to our team](https://smartupedu.in/contact) to learn how it works."
+    },
+    {
+      "slug": "daily-practice-beats-cramming",
+      "title": "Why ten minutes of daily practice beats a night of cramming",
+      "category": "Study tips",
+      "publishedAt": "2026-09-29",
+      "excerpt": "Short daily quizzes build memory that lasts until the exam. Here is why, and how to make it a habit.",
+      "body": "## Memory needs repetition\n\nWhen you recall something a day after learning it, your brain strengthens the path to that memory. Cramming skips those repeats, so most of it fades within days.\n\n## How we use it in class\n\nEvery Smartup class ends with a short daily quiz on the previous topic. It takes about ten minutes, and it shows students and teachers exactly what needs another look.\n\n## Build the habit at home\n\n- Pick one subject each evening\n- Write five quick questions from today's class\n- Answer them tomorrow before you open the book\n- Mark anything you missed and try it again on Sunday\n\nTen focused minutes a day add up to more than a whole night before the exam — and they leave you rested on exam day."
+    }
+  ],
+  "faqs": [
+    {
+      "category": "Admissions",
+      "question": "Which classes and boards do you teach?",
+      "answer": "Smartup teaches classes 8 to 12 (Plus One and Plus Two) for CBSE and Kerala State Board students, at 9 centres in Kochi and online."
+    },
+    {
+      "category": "Admissions",
+      "question": "How do I book a free demo class?",
+      "answer": "Call +91 88919 10919 or visit your nearest centre between 5 and 9 pm. Our team will arrange a free demo class for your child."
+    },
+    {
+      "category": "Admissions",
+      "question": "How can I find out about fees and admissions?",
+      "answer": "Call +91 88919 10919 or contact your nearest centre. The team will explain the relevant programme, fees, payment options and current batch availability."
+    },
+    {
+      "category": "Programmes",
+      "question": "What is the difference between Smartup Pro, Trio and Power?",
+      "answer": "Smartup Pro is one-to-one, with a student diagnosis, a personalised learning plan, mentorship and monthly parent meetings. Smartup Trio teaches three students together, with mentorship, regular evaluations and parent meetings every two months. Smartup Power is a micro batch with competency-based learning, daily, weekly and monthly evaluations, and quarterly parent meetings."
+    },
+    {
+      "category": "Programmes",
+      "question": "How long is each class?",
+      "answer": "In our CBSE programmes, Class 8 sessions run 1 hour 30 minutes, Classes 9 and 10 run 1 hour 45 minutes, and Plus One and Plus Two run 2 hours. State Board sessions run about 2 hours. Each session includes teaching, a short daily quiz, corrections and time for doubts."
+    },
+    {
+      "category": "Programmes",
+      "question": "Do you follow my school's syllabus?",
+      "answer": "Yes. Our CBSE programmes strictly follow each student's school syllabus, and State Board classes are built around SCERT texts and board-style questions."
+    },
+    {
+      "category": "Programmes",
+      "question": "Can I join a State Board batch?",
+      "answer": "Yes. Contact your nearest centre for the subjects, timings and formats available for your class."
+    },
+    {
+      "category": "Parents",
+      "question": "How will I know how my child is doing?",
+      "answer": "Parents in Smartup Pro and Trio receive a weekly update on attendance, topics completed, homework and test performance. Every programme sends a monthly report with marks, improvement, strengths, weak areas, teacher remarks and next month's target."
+    },
+    {
+      "category": "Parents",
+      "question": "Will my child have a mentor?",
+      "answer": "Yes. Mentors follow up on attendance, homework and motivation, and keep parents informed. In Smartup Pro each mentor looks after up to 10 students; in Smartup Trio, up to 20."
+    },
+    {
+      "category": "Centres and online",
+      "question": "Where are your centres and when are they open?",
+      "answer": "Chullickal, Kadavanthra, Eraveli, Thoppumpady, Palluruthy, Moolamkuzhi, Fort Kochi, Vennala and Edappally. All centres are open from 5 to 9 pm."
+    },
+    {
+      "category": "Centres and online",
+      "question": "Can my child study online?",
+      "answer": "Yes. Our CBSE and State Board programmes run online, with an AI-integrated learning app and LMS, WhatsApp learning groups and live exam-preparation sessions on YouTube."
+    },
+    {
+      "category": "Centres and online",
+      "question": "Is there a Smartup app?",
+      "answer": "Yes. The Smartup Learning app is on the App Store and Google Play. Students use it for class notes, recorded classes and revision sessions."
+    },
+    {
+      "category": "Student life",
+      "question": "What are Coffee With Chairman, Talent Eve and Shoot the Drugs?",
+      "answer": "Coffee With Chairman (CWC) is a mentoring programme led by our Chairman, Mohamed Rayees. Talent Eve is our award ceremony and arts festival. Shoot the Drugs is a sports tournament that spreads awareness against drug abuse."
+    }
   ]
 }

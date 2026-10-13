@@ -6,6 +6,10 @@ export const srcset = base => WIDTHS.map(w => `${base}-${w}.webp ${w}w`).join(',
 
 export const driveUrl = id => `https://drive.google.com/uc?export=download&id=${encodeURIComponent(id)}`;
 
+export function cropBox(width, height, crop) {
+  return { left: Math.round(crop.x * width), top: Math.round(crop.y * height), width: Math.round(crop.w * width), height: Math.round(crop.h * height) };
+}
+
 export function validateSources(list) {
   const seen = new Set();
   for (const s of list) {
@@ -16,6 +20,11 @@ export function validateSources(list) {
     if (s.from === 'drive' && !s.id) throw new Error(`${s.name}: drive source needs an id`);
     if (s.from === 'local' && !s.path) throw new Error(`${s.name}: local source needs a path`);
     if (!['drive', 'local'].includes(s.from)) throw new Error(`${s.name}: from must be drive or local`);
+    if (s.crop) {
+      const { x, y, w, h } = s.crop;
+      const ok = [x, y, w, h].every(v => typeof v === 'number' && v >= 0 && v <= 1) && w > 0 && h > 0 && x + w <= 1 && y + h <= 1;
+      if (!ok) throw new Error(`${s.name}: crop must be fractions inside the image`);
+    }
   }
 }
 

@@ -52,7 +52,7 @@ test('settings decode JSON and WhatsApp starts unset', () => {
   const s = seeded().settings();
   assert.equal(s.whatsapp, null);
   assert.equal(s.phone, '+918891910919');
-  assert.equal(s.social.length, 6);
+  assert.equal(s.social.length, 7);
   assert.equal(s.vision.priorities.length, 5);
 });
 
@@ -74,7 +74,7 @@ test('a settings key missing from an existing database is restored, and edited v
   const store = seeded();
   store.db.exec("DELETE FROM settings WHERE key = 'social'; UPDATE settings SET value = '\"Edited\"' WHERE key = 'heroHeadline';");
   store.applySeed();
-  assert.equal(store.settings().social.length, 6);
+  assert.equal(store.settings().social.length, 7);
   assert.equal(store.settings().heroHeadline, 'Edited');
 });
 
@@ -82,7 +82,7 @@ test('settings fall back to seed defaults for keys missing at runtime', () => {
   const store = seeded();
   store.db.exec("DELETE FROM settings WHERE key IN ('social', 'vision', 'hours')");
   const s = store.settings();
-  assert.equal(s.social.length, 6);
+  assert.equal(s.social.length, 7);
   assert.equal(s.vision.priorities.length, 5);
   assert.equal(s.hours, '5–9 pm');
 });
@@ -113,4 +113,46 @@ test('two stores seeding the same new database do not collide', async () => {
   const racing = new Proxy(seed, { get(target, key) { if (!raced && key === 'stats') { raced = true; a.applySeed(); } return target[key]; } });
   assert.doesNotThrow(() => b.applySeed(racing));
   assert.equal(b.stats().length, 4);
+});
+
+test('Phase 2 content is seeded', () => {
+  const store = seeded();
+  assert.equal(store.faculty().length, 35);
+  assert.ok(store.events().length >= 10);
+  assert.ok(store.videos('toppers').length === 4);
+  assert.equal(store.posts().length, 3);
+  assert.ok(store.faqs().length >= 12);
+  assert.ok(store.results().filter(r => r.kind === 'summary').length >= 6);
+  assert.ok(store.results().length >= 60);
+});
+
+test('a single post is found by slug, and unknown slugs return null', () => {
+  const store = seeded();
+  const [first] = store.posts();
+  assert.equal(store.post(first.slug).title, first.title);
+  assert.equal(store.post('no-such-post'), null);
+});
+
+test('posts come newest first and unpublished posts are hidden', () => {
+  const store = seeded();
+  const dates = store.posts().map(p => p.publishedAt);
+  assert.deepEqual(dates, [...dates].sort().reverse());
+  store.db.exec('UPDATE posts SET published = 0');
+  assert.deepEqual(store.posts(), []);
+});
+
+test('company settings and extra phones are available', () => {
+  const s = seeded().settings();
+  assert.equal(s.legalName, 'Smartup Eduventures Private Limited');
+  assert.deepEqual(s.phones, ['+918891910919', '+917356072079', '+917994436060']);
+  assert.ok(s.social.some(x => x.network === 'linkedin'));
+  assert.equal(s.googleReviewsUrl, null);
+});
+
+test('an older database without a results kind column is upgraded', () => {
+  const db = new DatabaseSync(':memory:');
+  db.exec("CREATE TABLE results(id INTEGER PRIMARY KEY, year TEXT NOT NULL, board TEXT NOT NULL, exam TEXT NOT NULL, headline TEXT NOT NULL, detail TEXT NOT NULL DEFAULT '', poster TEXT NOT NULL DEFAULT '', poster_alt TEXT NOT NULL DEFAULT '', featured INTEGER NOT NULL DEFAULT 0, sort INTEGER NOT NULL DEFAULT 0, published INTEGER NOT NULL DEFAULT 1)");
+  db.exec("INSERT INTO results(year, board, exam, headline) VALUES('2020', 'State', 'Plus One', 'Old row')");
+  const store = new ContentStore(db);
+  assert.equal(store.results()[0].kind, 'student');
 });

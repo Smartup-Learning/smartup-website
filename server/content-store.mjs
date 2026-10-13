@@ -9,10 +9,15 @@ CREATE TABLE IF NOT EXISTS stats(id INTEGER PRIMARY KEY, value TEXT NOT NULL, la
 CREATE TABLE IF NOT EXISTS timeline_entries(id INTEGER PRIMARY KEY, year_label TEXT NOT NULL, title TEXT NOT NULL, story TEXT NOT NULL DEFAULT '', stat_value TEXT NOT NULL DEFAULT '', stat_label TEXT NOT NULL DEFAULT '', media TEXT NOT NULL DEFAULT '[]', source_url TEXT NOT NULL DEFAULT '', featured INTEGER NOT NULL DEFAULT 0, sort INTEGER NOT NULL DEFAULT 0, published INTEGER NOT NULL DEFAULT 1);
 CREATE TABLE IF NOT EXISTS growth_points(year INTEGER PRIMARY KEY, students INTEGER NOT NULL, students_label TEXT NOT NULL, centres INTEGER NOT NULL);
 CREATE TABLE IF NOT EXISTS leaders(id INTEGER PRIMARY KEY, name TEXT NOT NULL, role TEXT NOT NULL, summary TEXT NOT NULL DEFAULT '', bio TEXT NOT NULL DEFAULT '', photo TEXT NOT NULL DEFAULT '', photo_alt TEXT NOT NULL DEFAULT '', sort INTEGER NOT NULL DEFAULT 0, published INTEGER NOT NULL DEFAULT 1);
-CREATE TABLE IF NOT EXISTS results(id INTEGER PRIMARY KEY, year TEXT NOT NULL, board TEXT NOT NULL, exam TEXT NOT NULL, headline TEXT NOT NULL, detail TEXT NOT NULL DEFAULT '', poster TEXT NOT NULL DEFAULT '', poster_alt TEXT NOT NULL DEFAULT '', featured INTEGER NOT NULL DEFAULT 0, sort INTEGER NOT NULL DEFAULT 0, published INTEGER NOT NULL DEFAULT 1);
+CREATE TABLE IF NOT EXISTS results(id INTEGER PRIMARY KEY, year TEXT NOT NULL, board TEXT NOT NULL, exam TEXT NOT NULL, headline TEXT NOT NULL, detail TEXT NOT NULL DEFAULT '', poster TEXT NOT NULL DEFAULT '', poster_alt TEXT NOT NULL DEFAULT '', kind TEXT NOT NULL DEFAULT 'student', featured INTEGER NOT NULL DEFAULT 0, sort INTEGER NOT NULL DEFAULT 0, published INTEGER NOT NULL DEFAULT 1);
 CREATE TABLE IF NOT EXISTS testimonials(id INTEGER PRIMARY KEY, kind TEXT NOT NULL CHECK(kind IN ('video','written')), section TEXT NOT NULL CHECK(section IN ('feedback','alumni')), title TEXT NOT NULL, person TEXT NOT NULL DEFAULT '', quote TEXT NOT NULL DEFAULT '', video TEXT NOT NULL DEFAULT '', poster TEXT NOT NULL DEFAULT '', sort INTEGER NOT NULL DEFAULT 0, published INTEGER NOT NULL DEFAULT 1);
 CREATE TABLE IF NOT EXISTS jobs(id INTEGER PRIMARY KEY, title TEXT NOT NULL, type TEXT NOT NULL, location TEXT NOT NULL DEFAULT '', sort INTEGER NOT NULL DEFAULT 0, published INTEGER NOT NULL DEFAULT 1);
-CREATE TABLE IF NOT EXISTS centres(id INTEGER PRIMARY KEY, name TEXT NOT NULL, phone TEXT NOT NULL, map_url TEXT NOT NULL, hours TEXT NOT NULL, sort INTEGER NOT NULL DEFAULT 0, published INTEGER NOT NULL DEFAULT 1);`;
+CREATE TABLE IF NOT EXISTS centres(id INTEGER PRIMARY KEY, name TEXT NOT NULL, phone TEXT NOT NULL, map_url TEXT NOT NULL, hours TEXT NOT NULL, sort INTEGER NOT NULL DEFAULT 0, published INTEGER NOT NULL DEFAULT 1);
+CREATE TABLE IF NOT EXISTS faculty(id INTEGER PRIMARY KEY, name TEXT NOT NULL, role TEXT NOT NULL DEFAULT '', team TEXT NOT NULL DEFAULT 'team', qualification TEXT NOT NULL DEFAULT '', note TEXT NOT NULL DEFAULT '', photo TEXT NOT NULL DEFAULT '', sort INTEGER NOT NULL DEFAULT 0, published INTEGER NOT NULL DEFAULT 1);
+CREATE TABLE IF NOT EXISTS events(id INTEGER PRIMARY KEY, category TEXT NOT NULL, title TEXT NOT NULL, date_label TEXT NOT NULL DEFAULT '', summary TEXT NOT NULL DEFAULT '', media TEXT NOT NULL DEFAULT '[]', youtube_id TEXT NOT NULL DEFAULT '', sort INTEGER NOT NULL DEFAULT 0, published INTEGER NOT NULL DEFAULT 1);
+CREATE TABLE IF NOT EXISTS videos(id INTEGER PRIMARY KEY, youtube_id TEXT NOT NULL, title TEXT NOT NULL, category TEXT NOT NULL, format TEXT NOT NULL DEFAULT 'landscape' CHECK(format IN ('landscape','portrait')), sort INTEGER NOT NULL DEFAULT 0, published INTEGER NOT NULL DEFAULT 1);
+CREATE TABLE IF NOT EXISTS posts(id INTEGER PRIMARY KEY, slug TEXT NOT NULL UNIQUE, title TEXT NOT NULL, category TEXT NOT NULL, excerpt TEXT NOT NULL DEFAULT '', body TEXT NOT NULL, author TEXT NOT NULL DEFAULT 'Smartup Academic Team', published_at TEXT NOT NULL, published INTEGER NOT NULL DEFAULT 1);
+CREATE TABLE IF NOT EXISTS faqs(id INTEGER PRIMARY KEY, category TEXT NOT NULL, question TEXT NOT NULL, answer TEXT NOT NULL, sort INTEGER NOT NULL DEFAULT 0, published INTEGER NOT NULL DEFAULT 1);`;
 
 export function normalizePhone(raw) {
   const digits = String(raw).replace(/\D/g, '');
@@ -61,8 +66,8 @@ const SECTIONS = {
     rows.forEach((r, i) => put.run(r.name, r.role, r.summary ?? '', r.bio ?? '', r.photo ?? '', r.photoAlt ?? '', i));
   },
   results(db, rows) {
-    const put = db.prepare('INSERT INTO results(year, board, exam, headline, detail, poster, poster_alt, featured, sort) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)');
-    rows.forEach((r, i) => put.run(r.year, r.board, r.exam, r.headline, r.detail ?? '', r.poster ?? '', r.posterAlt ?? '', flag(r.featured), i));
+    const put = db.prepare('INSERT INTO results(year, board, exam, headline, detail, poster, poster_alt, featured, kind, sort) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    rows.forEach((r, i) => put.run(r.year, r.board, r.exam, r.headline, r.detail ?? '', r.poster ?? '', r.posterAlt ?? '', flag(r.featured), r.kind ?? 'student', i));
   },
   testimonials(db, rows) {
     const put = db.prepare('INSERT INTO testimonials(kind, section, title, person, quote, video, poster, sort) VALUES(?, ?, ?, ?, ?, ?, ?, ?)');
@@ -76,12 +81,35 @@ const SECTIONS = {
     const put = db.prepare('INSERT INTO centres(name, phone, map_url, hours, sort) VALUES(?, ?, ?, ?, ?)');
     rows.forEach((r, i) => put.run(r.name, normalizePhone(r.phone), r.mapUrl, r.hours, i));
   },
+  faculty(db, rows) {
+    const put = db.prepare('INSERT INTO faculty(name, role, team, qualification, note, photo, sort) VALUES(?, ?, ?, ?, ?, ?, ?)');
+    rows.forEach((r, i) => put.run(r.name, r.role ?? '', r.team ?? 'team', r.qualification ?? '', r.note ?? '', r.photo ?? '', i));
+  },
+  events(db, rows) {
+    const put = db.prepare('INSERT INTO events(category, title, date_label, summary, media, youtube_id, sort) VALUES(?, ?, ?, ?, ?, ?, ?)');
+    rows.forEach((r, i) => put.run(r.category, r.title, r.dateLabel ?? '', r.summary ?? '', JSON.stringify(r.media ?? []), r.youtubeId ?? '', i));
+  },
+  videos(db, rows) {
+    const put = db.prepare('INSERT INTO videos(youtube_id, title, category, format, sort) VALUES(?, ?, ?, ?, ?)');
+    rows.forEach((r, i) => put.run(r.youtubeId, r.title, r.category, r.format ?? 'landscape', i));
+  },
+  posts(db, rows) {
+    const put = db.prepare('INSERT INTO posts(slug, title, category, excerpt, body, author, published_at) VALUES(?, ?, ?, ?, ?, ?, ?)');
+    for (const r of rows) put.run(r.slug, r.title, r.category, r.excerpt ?? '', r.body, r.author ?? 'Smartup Academic Team', r.publishedAt);
+  },
+  faqs(db, rows) {
+    const put = db.prepare('INSERT INTO faqs(category, question, answer, sort) VALUES(?, ?, ?, ?)');
+    rows.forEach((r, i) => put.run(r.category, r.question, r.answer, i));
+  },
 };
 
 export class ContentStore {
   constructor(db) {
     this.db = db;
     this.db.exec(SCHEMA);
+    // Databases created before Phase 2 lack the results kind column.
+    const resultColumns = this.db.prepare('PRAGMA table_info(results)').all().map(c => c.name);
+    if (!resultColumns.includes('kind')) this.db.exec("ALTER TABLE results ADD COLUMN kind TEXT NOT NULL DEFAULT 'student'");
   }
 
   applySeed(data = loadSeed()) {
@@ -111,7 +139,7 @@ export class ContentStore {
     const stored = Object.fromEntries(this.db.prepare('SELECT key, value FROM settings').all().map(r => [r.key, JSON.parse(r.value)]));
     // Seed values stand in for any key missing at runtime, so one deleted setting cannot break every page.
     const settings = { ...defaultSettings(), ...stored };
-    return { ...settings, phone: phoneOrNull(settings.phone), whatsapp: phoneOrNull(settings.whatsapp) };
+    return { ...settings, phone: phoneOrNull(settings.phone), whatsapp: phoneOrNull(settings.whatsapp), phones: (settings.phones ?? []).map(phoneOrNull).filter(Boolean) };
   }
 
   stats() {
@@ -134,7 +162,33 @@ export class ContentStore {
 
   results({ featured = false } = {}) {
     const where = featured ? 'published = 1 AND featured = 1' : 'published = 1';
-    return this.db.prepare(`SELECT year, board, exam, headline, detail, poster, poster_alt AS posterAlt FROM results WHERE ${where} ORDER BY sort, id`).all();
+    return this.db.prepare(`SELECT year, board, exam, headline, detail, poster, poster_alt AS posterAlt, kind FROM results WHERE ${where} ORDER BY sort, id`).all();
+  }
+
+  faculty() {
+    return this.db.prepare('SELECT name, role, team, qualification, note, photo FROM faculty WHERE published = 1 ORDER BY sort, id').all();
+  }
+
+  events() {
+    return this.db.prepare('SELECT id, category, title, date_label AS dateLabel, summary, media, youtube_id AS youtubeId FROM events WHERE published = 1 ORDER BY sort, id').all()
+      .map(r => ({ ...r, media: parseList(r.media) }));
+  }
+
+  videos(category) {
+    const sql = 'SELECT youtube_id AS youtubeId, title, category, format FROM videos WHERE published = 1' + (category ? ' AND category = ?' : '') + ' ORDER BY sort, id';
+    return category ? this.db.prepare(sql).all(category) : this.db.prepare(sql).all();
+  }
+
+  posts() {
+    return this.db.prepare('SELECT slug, title, category, excerpt, author, published_at AS publishedAt FROM posts WHERE published = 1 ORDER BY published_at DESC, id DESC').all();
+  }
+
+  post(slug) {
+    return this.db.prepare('SELECT slug, title, category, excerpt, author, published_at AS publishedAt, body FROM posts WHERE published = 1 AND slug = ?').get(slug) ?? null;
+  }
+
+  faqs() {
+    return this.db.prepare('SELECT category, question, answer FROM faqs WHERE published = 1 ORDER BY sort, id').all();
   }
 
   testimonials(section) {
