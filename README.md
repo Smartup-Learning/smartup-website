@@ -11,6 +11,8 @@ Requires Node.js 24 (`nvm use 24`). Run `npm ci`, `npm run setup`, then `npm run
 - `npm run fonts` — re-create the Latin-subset Rubik fonts in `public/fonts/` (needs `pip install fonttools brotli`).
 - `npm run content:reset` — local only: clear content tables so `data-seed/content.json` is re-seeded on next start.
 
+After pulling Phase 2, run `npm run content:reset` once so local content picks up the new seed.
+
 ## Railway
 Live at [smartup-web-production.up.railway.app](https://smartup-web-production.up.railway.app), including the assessment and private admin workspace. See the [Railway deployment runbook](docs/railway.md) for the deployed version, project IDs, update command, secrets, persistent `/data` volume and backup status. Keep one replica for the SQLite database. The `.openai` folder configures the separate Sites review and does not affect Railway.
 
