@@ -3,6 +3,7 @@ import { createReadStream } from 'node:fs';
 import { stat } from 'node:fs/promises';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import compression from 'compression';
 import { AssessmentStore, createAssessmentHandler } from './server/assessment.mjs';
 import { ContentStore } from './server/content-store.mjs';
 
@@ -67,9 +68,13 @@ export function createSiteServer(options = {}) {
   const content = options.content ?? new ContentStore(store.db);
   content.applySeed();
   const api = createAssessmentHandler({ ...options, store });
+  const compress = compression();
   return http.createServer(async (req, res) => {
     const send = (status, body, headers = {}) => { res.writeHead(status, { 'Content-Type': 'text/plain; charset=utf-8', ...headers }); res.end(req.method === 'HEAD' ? undefined : body); };
+    // The API must start reading the request body in this same tick, so it is routed before anything else.
     if (req.url.startsWith('/api/')) return api(req, res, new URL(req.url, 'http://localhost'));
+    // gzip text responses (compression calls next synchronously); byte ranges for video seeking stay uncompressed.
+    if (!req.headers.range) compress(req, res, () => {});
     if (!['GET', 'HEAD'].includes(req.method)) return send(405, 'Method not allowed', { Allow: 'GET, HEAD' });
     try {
       const url = new URL(req.url, 'http://localhost');

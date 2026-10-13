@@ -34,3 +34,17 @@ test('every source has been built into public/seed', () => {
     else { assert.ok(existsSync(`public/seed/video/${s.name}.mp4`), s.name); assert.ok(existsSync(`public/seed/video/${s.name}-poster.webp`), s.name + ' poster'); }
   }
 });
+
+test('video posters stay small in total, since browsers fetch them before any tap', async () => {
+  const { statSync } = await import('node:fs');
+  const total = sources.filter(s => s.kind === 'video').reduce((sum, s) => sum + statSync(`public/seed/video/${s.name}-poster.webp`).size, 0);
+  assert.ok(total <= 120 * 1024, `posters total ${total} bytes`);
+});
+
+test('self-hosted Rubik fonts are subset to the Latin glyphs the site uses', async () => {
+  const { statSync } = await import('node:fs');
+  for (const weight of [400, 500, 600, 700, 800]) {
+    const size = statSync(`public/fonts/rubik-${weight}.woff2`).size;
+    assert.ok(size <= 30 * 1024, `rubik-${weight} is ${size} bytes`);
+  }
+});

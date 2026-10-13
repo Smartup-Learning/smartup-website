@@ -7,4 +7,6 @@ export default defineConfig({
   outDir: './build',
   adapter: node({ mode: 'middleware' }),
   devToolbar: { enabled: false },
+  // Inline page CSS so no stylesheet request delays the first paint on mobile data.
+  build: { inlineStylesheets: 'always' },
 });

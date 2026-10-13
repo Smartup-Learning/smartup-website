@@ -13,6 +13,7 @@
     "build": "npm run build:assets && astro build && node scripts/build-sites.mjs",
     "build:assets": "esbuild src/assessment/world.js src/assessment/companion.js --bundle --format=esm --minify --outdir=dist/assessment",
     "media": "node scripts/fetch-media.mjs && node scripts/build-media.mjs",
+    "fonts": "sh scripts/subset-fonts.sh",
     "setup": "node scripts/setup-local-admin.mjs",
     "content:reset": "node scripts/reset-content.mjs"
   },
@@ -22,6 +23,7 @@
   "dependencies": {
     "@astrojs/node": "11.1.7",
     "astro": "7.3.8",
+    "compression": "1.8.2",
     "motion": "14.1.0",
     "three": "0.186.0"
   },

@@ -45,3 +45,21 @@ test('Astro-built scripts are cached as immutable', async () => {
   assert.ok(src, 'homepage loads an /_astro/ script');
   assert.equal((await fetch(base + src)).headers.get('cache-control'), 'public, max-age=31536000, immutable');
 });
+
+test('pages and scripts are gzip-compressed for browsers that accept it', async () => {
+  const page = await fetch(base + '/', { headers: { 'accept-encoding': 'gzip' } });
+  assert.equal(page.headers.get('content-encoding'), 'gzip');
+  const src = (await page.text()).match(/src="(\/_astro\/[^"]+\.js)"/)?.[1];
+  assert.equal((await fetch(base + src, { headers: { 'accept-encoding': 'gzip' } })).headers.get('content-encoding'), 'gzip');
+});
+
+test('video byte ranges are served uncompressed so seeking works', async () => {
+  const r = await fetch(base + '/seed/video/video-story-7.mp4', { headers: { range: 'bytes=0-99', 'accept-encoding': 'gzip' } });
+  assert.equal(r.status, 206);
+  assert.equal(r.headers.get('content-encoding'), null);
+  assert.equal((await r.arrayBuffer()).byteLength, 100);
+});
+
+test('page styles are inlined, so no stylesheet blocks the first paint', async () => {
+  assert.doesNotMatch(await (await fetch(base + '/')).text(), /<link[^>]+rel="stylesheet"/);
+});

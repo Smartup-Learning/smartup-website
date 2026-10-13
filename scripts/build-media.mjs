@@ -38,8 +38,9 @@ for (const s of sources) {
       execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', input, '-vf', 'scale=480:-2', '-c:v', 'libx264', '-crf', '29', '-preset', 'slow', '-profile:v', 'high', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '96k', '-movflags', '+faststart', out]);
     }
     if (force || !(await exists(poster))) {
-      execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-ss', '2', '-i', input, '-frames:v', '1', '-vf', 'scale=480:-2', posterJpg]);
-      await sharp(posterJpg).webp({ quality: 75 }).toFile(poster);
+      execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-ss', '2', '-i', input, '-frames:v', '1', '-vf', 'scale=360:-2', posterJpg]);
+      // Browsers fetch posters before any tap, so keep the set small (tested: 120 KB total).
+      await sharp(posterJpg).webp({ quality: 50 }).toFile(poster);
     }
     bytes += (await stat(out)).size + (await stat(poster)).size;
   }
