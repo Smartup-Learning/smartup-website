@@ -17,3 +17,17 @@ test('HTML and unsafe links are escaped, never executed', () => {
   assert.equal(renderMarkdown('[x](javascript:alert(1))'), '<p>[x](javascript:alert(1))</p>');
   assert.equal(renderMarkdown('[x](https://a.b/"onmouseover="y)'), '<p><a href="https://a.b/&quot;onmouseover=&quot;y">x</a></p>');
 });
+
+test('Windows line endings from a form post render the same as Unix ones', () => {
+  assert.equal(renderMarkdown('## Plan\r\n\r\n- One\r\n- Two'), '<h2>Plan</h2>\n<ul><li>One</li><li>Two</li></ul>');
+});
+
+test('a heading followed directly by text becomes a heading and a paragraph', () => {
+  assert.equal(renderMarkdown('## Plan\nStart early.'), '<h2>Plan</h2>\n<p>Start early.</p>');
+  assert.equal(renderMarkdown('# Title'), '<h2>Title</h2>');
+});
+
+test('stars and brackets inside a link address stay part of the link', () => {
+  assert.equal(renderMarkdown('[guide](https://example.com/a*b*c)'), '<p><a href="https://example.com/a*b*c">guide</a></p>');
+  assert.equal(renderMarkdown('[Kerala](https://en.wikipedia.org/wiki/Kerala_(state))'), '<p><a href="https://en.wikipedia.org/wiki/Kerala_(state)">Kerala</a></p>');
+});
