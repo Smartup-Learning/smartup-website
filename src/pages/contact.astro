@@ -52,7 +52,7 @@ const centres = store.centres();
   .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
   .reach { display: grid; gap: 2rem; }
   .lines { list-style: none; padding: 0; display: grid; gap: 0.5rem; font-size: var(--step-1); font-weight: 600; }
-  .lines a { text-decoration: none; }
+  .lines a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; }
   address { font-style: normal; line-height: 1.7; }
   @media (min-width: 900px) { .reach { grid-template-columns: 1fr 1fr; } }
 </style>
