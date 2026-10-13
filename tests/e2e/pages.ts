@@ -1,1 +1,1 @@
-export const PAGES = ['/', '/story', '/founders', '/faculty', '/results', '/life', '/videos', '/testimonials', '/alumni', '/courses', '/does-not-exist'];
+export const PAGES = ['/', '/story', '/founders', '/faculty', '/results', '/life', '/videos', '/testimonials', '/alumni', '/courses', '/blog', '/blog/board-exam-90-day-plan', '/does-not-exist'];

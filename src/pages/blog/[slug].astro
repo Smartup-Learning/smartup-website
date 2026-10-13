@@ -1,0 +1,34 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getStore } from '../../lib/store';
+import { renderMarkdown } from '../../lib/markdown.mjs';
+const post = getStore(Astro.locals).post(Astro.params.slug ?? '');
+if (!post) return Astro.rewrite('/404');
+const date = new Date(`${post.publishedAt}T00:00:00Z`).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+const html = renderMarkdown(post.body);
+---
+<Base title={post.title} description={post.excerpt} page="post">
+  <article class="section">
+    <div class="container post">
+      <p class="eyebrow"><a href="/blog">Blog</a> · {post.category}</p>
+      <h1>{post.title}</h1>
+      <p class="meta"><time datetime={post.publishedAt}>{date}</time> · {post.author}</p>
+      <div class="body" set:html={html} />
+      <aside class="cta">
+        <p><strong>Want a plan for your child?</strong> Our teachers can help.</p>
+        <a class="btn btn--primary" href="/demo">Book a free demo class</a>
+      </aside>
+    </div>
+  </article>
+</Base>
+<style>
+  .post { display: grid; gap: 1rem; max-width: 44rem; }
+  .eyebrow a { color: inherit; }
+  h1 { font-size: var(--step-4); font-weight: 800; }
+  .meta { color: var(--ink-soft); font-size: var(--step--1); }
+  .body { display: grid; gap: 1rem; margin-top: 1rem; font-size: 1.125rem; line-height: 1.7; }
+  .body :global(h2) { font-size: var(--step-2); margin-top: 1rem; }
+  .body :global(ul), .body :global(ol) { padding-left: 1.25rem; display: grid; gap: 0.4rem; }
+  .body :global(a) { color: var(--purple); font-weight: 600; }
+  .cta { display: grid; gap: 1rem; justify-items: start; margin-top: 2rem; padding: 1.5rem; border-radius: var(--radius); background: var(--cream); }
+</style>

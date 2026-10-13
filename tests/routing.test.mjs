@@ -67,3 +67,9 @@ test('page styles are inlined, so no stylesheet blocks the first paint', async (
 test('a null byte in the URL is rejected as a bad request', async () => {
   assert.equal((await fetch(base + '/a%00b')).status, 400);
 });
+
+test('an unknown blog post returns the branded 404', async () => {
+  const r = await fetch(base + '/blog/no-such-post');
+  assert.equal(r.status, 404);
+  assert.match(await r.text(), /This page isn't here yet/);
+});

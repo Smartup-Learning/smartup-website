@@ -190,3 +190,28 @@ test('Courses explains every programme, class lengths and parent updates', async
   for (const text of ['Smartup Pro', 'Smartup Trio', 'Smartup Power', 'State Board programme', '1 hr 45 min', 'Monthly report', '1 mentor : 10 students', 'Previous Year Questions']) assert.match(page, new RegExp(text));
   assert.match(page, /9 centres/);
 });
+
+test('the blog lists posts newest first and each post renders its body', async t => {
+  const site = await start();
+  t.after(site.close);
+  const list = await site.html('/blog');
+  const slugs = [...list.matchAll(/href="\/blog\/([a-z0-9-]+)"/g)].map(m => m[1]);
+  assert.deepEqual([...new Set(slugs)], ['board-exam-90-day-plan', 'how-parents-can-help-in-exam-season', 'daily-practice-beats-cramming']);
+  const post = await site.html('/blog/board-exam-90-day-plan');
+  assert.match(post, /<h2>Days 1–30: finish the first round<\/h2>/);
+  assert.match(post, /<article/);
+});
+
+test('a post body cannot inject HTML', async t => {
+  const site = await start(content => content.db.prepare("UPDATE posts SET body = '<img src=x onerror=alert(1)>' WHERE slug = 'daily-practice-beats-cramming'").run());
+  t.after(site.close);
+  const post = await site.html('/blog/daily-practice-beats-cramming');
+  assert.doesNotMatch(post, /<img src=x/);
+  assert.match(post, /&lt;img src=x onerror=alert\(1\)&gt;/);
+});
+
+test('an empty blog shows a friendly message', async t => {
+  const site = await start(content => content.db.exec('UPDATE posts SET published = 0'));
+  t.after(site.close);
+  assert.match(await site.html('/blog'), /First articles are on their way/);
+});
