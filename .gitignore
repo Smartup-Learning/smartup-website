@@ -11,3 +11,9 @@ data/
 dist/client/
 dist/server/
 dist/.openai/
+
+build/
+.astro/
+content-source/
+test-results/
+playwright-report/

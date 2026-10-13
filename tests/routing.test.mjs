@@ -1,0 +1,32 @@
+import { test, before, after } from 'node:test';
+import assert from 'node:assert/strict';
+import { createSiteServer } from '../server.mjs';
+import { AssessmentStore } from '../server/assessment.mjs';
+
+const store = new AssessmentStore(':memory:');
+const server = createSiteServer({ store });
+let base;
+before(async () => { await new Promise(r => server.listen(0, '127.0.0.1', r)); base = `http://127.0.0.1:${server.address().port}`; });
+after(() => new Promise(r => server.close(() => { store.close(); r(); })));
+
+test('the homepage is rendered by Astro', async () => {
+  const r = await fetch(base + '/');
+  assert.equal(r.status, 200);
+  assert.match(r.headers.get('content-type'), /text\/html/);
+  assert.match(await r.text(), /data-astro-page="home"/);
+});
+
+test('Quest and v1 shared files are still served from dist', async () => {
+  for (const p of ['/assessment/', '/assessment', '/assets/owl.svg', '/privacy.html', '/robots.txt']) {
+    assert.equal((await fetch(base + p)).status, 200, p);
+  }
+});
+
+test('v1 homepage files are no longer public', async () => {
+  for (const p of ['/index.html', '/app.js', '/styles.css']) assert.equal((await fetch(base + p)).status, 404, p);
+});
+
+test('unknown pages return 404 and non-GET methods 405', async () => {
+  assert.equal((await fetch(base + '/no-such-page')).status, 404);
+  assert.equal((await fetch(base + '/', { method: 'POST' })).status, 405);
+});
