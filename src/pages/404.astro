@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Page not found" description="This page of the Smartup website isn't available yet." page="404">
+  <section class="section">
+    <div class="container notfound">
+      <p class="eyebrow">404</p>
+      <h1>This page isn't here yet</h1>
+      <p>We're still building parts of the new Smartup website. Start with our story, or call us and we'll help.</p>
+      <div class="actions"><a class="btn btn--primary" href="/">Go to the homepage</a><a class="btn btn--ghost" href="/story">Read our story</a></div>
+    </div>
+  </section>
+</Base>
+<style>
+  .notfound { display: grid; gap: 1rem; max-width: 40rem; }
+  h1 { font-size: var(--step-4); font-weight: 800; }
+  .actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem; }
+</style>

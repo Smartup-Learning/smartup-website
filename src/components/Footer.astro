@@ -1,0 +1,62 @@
+---
+import { navGroups } from '../lib/nav';
+import { formatPhone } from '../../server/content-store.mjs';
+import SocialIcon from './SocialIcon.astro';
+interface Props { settings: any; centres: { name: string; phone: string; mapUrl: string; hours: string }[] }
+const { settings, centres } = Astro.props;
+const year = new Date().getFullYear();
+---
+<footer class="site-footer section--cream">
+  <div class="container footer-grid">
+    <div class="brand">
+      <img src="/brand/logo.svg" alt="Smartup" width="150" height="33" />
+      <p>Tuitions for classes 8 to +2 in Kochi and online.</p>
+      <p><a href={`tel:${settings.phone}`}>{formatPhone(settings.phone)}</a><br /><a href={`mailto:${settings.email}`}>{settings.email}</a></p>
+      <ul class="social" aria-label="Smartup on social media">
+        {settings.social.map((s: any) => <li><a href={s.url} target="_blank" rel="noopener" aria-label={s.label}><SocialIcon network={s.network} /></a></li>)}
+      </ul>
+    </div>
+    <nav id="footer-nav" class="footer-nav" aria-label="Site">
+      {navGroups.map(group => (
+        <section>
+          <h2 class="eyebrow">{group.title}</h2>
+          <ul>{group.links.map(link => <li><a href={link.href}>{link.label}</a></li>)}</ul>
+        </section>
+      ))}
+    </nav>
+    <section class="centres" aria-labelledby="footer-centres">
+      <h2 class="eyebrow" id="footer-centres">Our centres</h2>
+      <ul>
+        {centres.map(c => (
+          <li><a href={c.mapUrl} target="_blank" rel="noopener">{c.name}</a><a class="tel" href={`tel:${c.phone}`}>{formatPhone(c.phone)}</a></li>
+        ))}
+      </ul>
+      <p class="hours">All centres open {settings.hours}</p>
+    </section>
+  </div>
+  <div class="container base">
+    <p>© {year} Smartup. All rights reserved.</p>
+    <a href="/privacy.html">Privacy</a>
+  </div>
+</footer>
+<style>
+  .site-footer { padding-block: clamp(3.5rem, 2.5rem + 4vw, 5.5rem) 1.5rem; }
+  .footer-grid { display: grid; gap: 2.5rem; }
+  .brand { display: grid; gap: 1rem; align-content: start; }
+  .brand img { width: 150px; height: auto; }
+  .brand a { text-decoration: none; font-weight: 500; }
+  .social { display: flex; gap: 0.5rem; list-style: none; padding: 0; flex-wrap: wrap; }
+  .social a { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--white); color: var(--purple); }
+  .footer-nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; }
+  .footer-nav ul, .centres ul { list-style: none; padding: 0; margin-top: 0.6rem; display: grid; gap: 0.15rem; }
+  .footer-nav a, .centres a { display: inline-block; padding: 0.3rem 0; text-decoration: none; }
+  .footer-nav a:hover, .centres a:hover { color: var(--purple); }
+  .centres li { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  .centres .tel { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .hours { margin-top: 0.75rem; color: var(--ink-soft); font-size: var(--step--1); }
+  .base { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-top: 3rem; padding-top: 1.25rem; border-top: 1px solid #ddd2c2; font-size: var(--step--1); color: var(--ink-soft); }
+  @media (min-width: 900px) {
+    .footer-grid { grid-template-columns: 1fr 2fr 1.2fr; }
+    .footer-nav { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+</style>

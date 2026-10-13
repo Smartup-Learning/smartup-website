@@ -1,0 +1,16 @@
+---
+import { srcset } from '../lib/media.mjs';
+interface Props { base: string; alt: string; sizes: string; priority?: boolean; class?: string }
+const { base, alt, sizes, priority = false, class: className } = Astro.props;
+---
+<img
+  class={className}
+  src={`${base}-960.webp`}
+  srcset={srcset(base)}
+  sizes={sizes}
+  alt={alt}
+  loading={priority ? 'eager' : 'lazy'}
+  decoding="async"
+  fetchpriority={priority ? 'high' : undefined}
+  data-priority={priority ? '' : undefined}
+/>

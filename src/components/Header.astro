@@ -1,0 +1,54 @@
+---
+import { navGroups, quickLinks } from '../lib/nav';
+---
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container bar">
+    <a href="/" class="logo"><img src="/brand/logo.svg" alt="Smartup" width="150" height="33" /></a>
+    <nav class="quick" aria-label="Quick links">
+      <ul>{quickLinks.map(link => <li><a href={link.href}>{link.label}</a></li>)}</ul>
+    </nav>
+    <a class="btn btn--primary header-cta" href="/demo">Book free demo</a>
+    <a class="menu-toggle" href="#footer-nav" data-menu-toggle>
+      <span class="menu-icon" aria-hidden="true"></span><span data-menu-label>Menu</span>
+    </a>
+  </div>
+  <div id="site-menu" class="menu-panel" hidden>
+    <nav class="container menu-grid" aria-label="Main">
+      {navGroups.map(group => (
+        <section>
+          <h2 class="eyebrow">{group.title}</h2>
+          <ul>{group.links.map(link => <li><a href={link.href}>{link.label}</a></li>)}</ul>
+        </section>
+      ))}
+    </nav>
+  </div>
+</header>
+<style>
+  .site-header { position: sticky; top: 0; z-index: 50; background: var(--white); border-bottom: 1px solid var(--line); }
+  .bar { display: flex; align-items: center; gap: 1.25rem; height: var(--header-h); }
+  .logo { margin-right: auto; display: block; }
+  .logo img { width: clamp(118px, 30vw, 150px); height: auto; }
+  .quick, .header-cta { display: none; }
+  .quick ul { display: flex; gap: 1.5rem; list-style: none; padding: 0; }
+  .quick a { text-decoration: none; font-weight: 500; }
+  .quick a:hover { color: var(--purple); }
+  .menu-toggle { display: inline-flex; align-items: center; gap: 0.6rem; min-height: 44px; min-width: 44px; padding: 0 0.25rem; font-weight: 600; text-decoration: none; }
+  .menu-icon { position: relative; width: 22px; height: 14px; }
+  .menu-icon::before, .menu-icon::after { content: ''; position: absolute; left: 0; right: 0; height: 2px; border-radius: 2px; background: currentColor; transition: transform 0.32s var(--ease-out); }
+  .menu-icon::before { top: 2px; }
+  .menu-icon::after { bottom: 2px; }
+  :global(.menu-open) .menu-icon::before { transform: translateY(4px) rotate(45deg); }
+  :global(.menu-open) .menu-icon::after { transform: translateY(-4px) rotate(-45deg); }
+  .menu-panel { position: fixed; inset: var(--header-h) 0 0; overflow-y: auto; background: var(--white); padding-block: 2rem 6rem; }
+  .menu-grid { display: grid; gap: 2rem; }
+  .menu-grid ul { list-style: none; padding: 0; margin-top: 0.75rem; display: grid; gap: 0.25rem; }
+  .menu-grid a { display: block; padding: 0.4rem 0; font-size: var(--step-2); font-weight: 600; text-decoration: none; }
+  .menu-grid a:hover { color: var(--purple); }
+  @media (min-width: 600px) { .menu-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 900px) {
+    .quick, .header-cta { display: block; }
+    .header-cta { display: inline-flex; min-height: 2.75rem; }
+    .menu-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+</style>
