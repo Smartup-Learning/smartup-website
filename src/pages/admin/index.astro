@@ -1,0 +1,26 @@
+---
+import Admin from '../../layouts/Admin.astro';
+---
+<Admin title="Smartup website admin">
+  <header class="bar">
+    <a href="/" class="brand"><img src="/brand/logo.svg" alt="Smartup" width="120" height="27" /></a>
+    <span>Website admin</span>
+    <button id="logout" type="button" class="link" hidden>Sign out</button>
+  </header>
+  <section id="login" class="login" hidden>
+    <h1>Sign in</h1>
+    <form id="login-form">
+      <label for="password">Admin password</label>
+      <input id="password" type="password" autocomplete="current-password" required />
+      <p id="login-error" class="error" role="alert"></p>
+      <button class="primary" type="submit">Sign in</button>
+    </form>
+  </section>
+  <div id="workspace" class="workspace" hidden>
+    <nav id="admin-nav" aria-label="Admin sections"></nav>
+    <main id="admin-main" tabindex="-1"></main>
+  </div>
+  <p id="admin-toast" class="toast" role="status" aria-live="polite"></p>
+  <noscript><p class="login">The admin panel needs JavaScript.</p></noscript>
+  <script>import '../../scripts/admin/app';</script>
+</Admin>
