@@ -1,9 +1,11 @@
 ---
-interface Props { label: string; target: string; options: { value: string; label: string }[] }
-const { label, target, options } = Astro.props;
+interface Props { label: string; target: string; options: { value: string; label: string }[]; allLabel?: string; owner?: 'filters' | 'faq' }
+const { label, target, options, allLabel = 'All', owner = 'filters' } = Astro.props;
+// Ask Smartup's chips are driven by its search script; every other bar by filters.ts.
+const hook = owner === 'faq' ? { 'data-faq-chips': '' } : { 'data-filter-for': target };
 ---
-<div class="chips" role="group" aria-label={label} data-filter-for={target} hidden>
-  <button type="button" data-filter="all" aria-pressed="true">Everyone</button>
+<div class="chips" role="group" aria-label={label} {...hook} hidden>
+  <button type="button" data-filter="all" aria-pressed="true">{allLabel}</button>
   {options.map(o => <button type="button" data-filter={o.value} aria-pressed="false">{o.label}</button>)}
 </div>
 <style>

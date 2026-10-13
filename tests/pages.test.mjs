@@ -369,3 +369,15 @@ test('the starter blog posts carry the sample label until approved', async t => 
   assert.match(await site.html('/blog'), /Sample — to be replaced/);
   assert.match(await site.html('/blog/board-exam-90-day-plan'), /Sample — to be replaced/);
 });
+
+test('Results headings nest: years are h3 and result headlines are h4, with board filters', async t => {
+  const site = await start();
+  t.after(site.close);
+  const page = await site.html('/results');
+  const years = [...page.matchAll(/<h3[^>]*class="year-title"/g)].length;
+  assert.ok(years >= 5);
+  assert.equal([...page.matchAll(/<h3[\s>]/g)].length, years);
+  assert.ok([...page.matchAll(/<h4[^>]*class="headline"/g)].length >= 60);
+  assert.match(page, /aria-label="Filter by board"/);
+  assert.match(page, /data-filter-tags="2026 state"/);
+});

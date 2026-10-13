@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import SmartForm from '../components/SmartForm.astro';
 import FormField from '../components/FormField.astro';
+import FilterChips from '../components/FilterChips.astro';
 import { formatPhone } from '../../server/content-store.mjs';
 import { getStore } from '../lib/store';
 const store = getStore(Astro.locals);
@@ -11,6 +12,7 @@ const faqs = store.faqs();
 const categories = [...new Set(faqs.map(f => f.category))];
 const mail = `mailto:${settings.email}?subject=${encodeURIComponent('A question for Smartup')}`;
 const error = Astro.url.searchParams.get('error');
+const topic = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 ---
 <Base title="Ask Smartup" description="Answers to common questions about Smartup classes, programmes, centres and admissions." page="ask">
   <PageHero eyebrow="Ask Smartup" title="Questions," highlight="answered" intro="Search the questions parents and students ask most. Can't find yours? Ask us directly.">
@@ -22,12 +24,13 @@ const error = Astro.url.searchParams.get('error');
   <section class="section" aria-labelledby="faq-title">
     <div class="container narrow">
       <h2 id="faq-title" class="sr-only">Frequently asked questions</h2>
+      {categories.length > 1 && <FilterChips label="Filter by topic" target="faq-list" owner="faq" allLabel="All topics" options={categories.map(c => ({ value: topic(c), label: c }))} />}
       {faqs.length === 0 && <p>Answers to common questions will appear here soon.</p>}
       {categories.map(category => (
         <div class="group" data-faq-group>
           <h3 class="eyebrow">{category}</h3>
           {faqs.filter(f => f.category === category).map(f => (
-            <div class="faq" data-faq>
+            <div class="faq" data-faq data-category={topic(category)}>
               <details><summary>{f.question}</summary><p>{f.answer}</p></details>
             </div>
           ))}

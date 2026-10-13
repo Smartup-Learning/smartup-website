@@ -10,6 +10,7 @@ const store = getStore(Astro.locals);
 const results = store.results();
 const years = [...new Set(results.map(r => r.year))].sort((a, b) => b.localeCompare(a));
 const byYear = years.map(year => ({ year, summaries: results.filter(r => r.year === year && r.kind === 'summary'), students: results.filter(r => r.year === year && r.kind !== 'summary') }));
+const boards = [{ value: 'state', label: 'State Board' }, { value: 'cbse', label: 'CBSE' }].filter(b => results.some(r => r.board.toLowerCase() === b.value));
 const toppers = store.videos('toppers');
 ---
 <Base title="Results" description="Smartup board exam results: SSLC, Plus One, Plus Two and CBSE Class 10, year by year." page="results">
@@ -19,12 +20,13 @@ const toppers = store.videos('toppers');
       <h2 id="results-title" class="sr-only">Results by year</h2>
       {years.length === 0 ? <p class="empty">Results will be published here soon.</p> : (
         <>
-          <FilterChips label="Filter by year" target="results-years" options={years.map(y => ({ value: y, label: y }))} />
+          <FilterChips label="Filter by year" target="results-years" options={years.map(y => ({ value: y, label: y }))} allLabel="All years" />
+          {boards.length > 1 && <FilterChips label="Filter by board" target="results-years" options={boards} allLabel="All boards" />}
           {byYear.map(group => (
-            <section class="year" data-year={group.year} data-filter-tags={group.year} aria-labelledby={`year-${group.year}`}>
+            <section class="year" data-year={group.year} data-filter-group aria-labelledby={`year-${group.year}`}>
               <h3 id={`year-${group.year}`} class="year-title">{group.year}</h3>
-              {group.summaries.length > 0 && <div class="summaries rail" data-reveal="group">{group.summaries.map(r => <ResultCard result={r} />)}</div>}
-              {group.students.length > 0 && <div class="students" data-reveal="group">{group.students.map(r => <ResultCard result={r} />)}</div>}
+              {group.summaries.length > 0 && <div class="summaries rail" data-reveal="group">{group.summaries.map(r => <ResultCard result={r} level={4} tags={`${r.year} ${r.board.toLowerCase()}`} />)}</div>}
+              {group.students.length > 0 && <div class="students" data-reveal="group">{group.students.map(r => <ResultCard result={r} level={4} tags={`${r.year} ${r.board.toLowerCase()}`} />)}</div>}
             </section>
           ))}
         </>

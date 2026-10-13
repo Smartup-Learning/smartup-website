@@ -19,7 +19,7 @@ const groups = [
       <h2 id="team-title" class="sr-only">Our team</h2>
       {team.length === 0 ? <p class="empty">Our team will be introduced here soon.</p> : (
         <>
-          <FilterChips label="Filter by subject" target="team-list" options={groups} />
+          <FilterChips label="Filter by subject" target="team-list" options={groups} allLabel="Everyone" />
           <ul id="team-list" class="team" data-reveal="group">
             {team.map(person => (
               <li class="person" data-filter-tags={person.team} data-reveal-item>

@@ -27,3 +27,14 @@ test('choosing a year on Results shows only that year', async ({ page }) => {
   await expect(page.locator('section[data-year]:visible')).toHaveCount(1);
   await expect(page.locator('section[data-year="2023"]')).toBeVisible();
 });
+
+test('choosing a board on Results narrows every year to that board', async ({ page }) => {
+  await page.goto('/results');
+  await page.getByRole('button', { name: 'CBSE', exact: true }).click();
+  const visible = await page.locator('[data-filter-tags]').evaluateAll(els => els.filter(e => !(e as HTMLElement).hidden).map(e => (e as HTMLElement).dataset.filterTags ?? ''));
+  expect(visible.length).toBeGreaterThan(0);
+  expect(visible.every(tags => tags.split(' ').includes('cbse'))).toBe(true);
+  await page.getByRole('button', { name: 'All boards' }).click();
+  await page.getByRole('button', { name: '2023' }).click();
+  await expect(page.locator('section[data-year]:visible')).toHaveCount(1);
+});

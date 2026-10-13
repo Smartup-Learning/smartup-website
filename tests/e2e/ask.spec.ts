@@ -25,3 +25,16 @@ test('a search hides category headings that have no matching questions', async (
   await page.getByLabel('Search questions').fill('');
   await expect(page.locator('.group h3').filter({ visible: true })).toHaveCount(await page.locator('.group').count());
 });
+
+test('topic chips and the search box narrow the questions together', async ({ page }) => {
+  await page.goto('/ask');
+  const items = page.locator('[data-faq]');
+  await page.getByRole('button', { name: 'Parents', exact: true }).click();
+  expect(await items.filter({ visible: true }).count()).toBeGreaterThan(0);
+  await expect(page.locator('.group h3').filter({ visible: true })).toHaveText(['Parents']);
+  await page.getByLabel('Search questions').fill('zzzz');
+  await expect(items.filter({ visible: true })).toHaveCount(0);
+  await page.getByLabel('Search questions').fill('');
+  await page.getByRole('button', { name: 'All topics' }).click();
+  await expect(items.filter({ visible: true })).toHaveCount(await items.count());
+});

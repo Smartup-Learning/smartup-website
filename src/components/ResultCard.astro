@@ -1,17 +1,18 @@
 ---
 import Picture from './Picture.astro';
-interface Props { result: { year: string; exam: string; headline: string; detail: string; poster: string; posterAlt: string; kind?: string } }
-const { result } = Astro.props;
+interface Props { result: { year: string; exam: string; headline: string; detail: string; poster: string; posterAlt: string; kind?: string }; level?: 3 | 4; tags?: string }
+const { result, level = 3, tags } = Astro.props;
+const Heading = level === 4 ? 'h4' : 'h3';
 const summary = result.kind === 'summary';
 ---
-<article class:list={['result', { summary }]} data-reveal-item>
+<article class:list={['result', { summary }]} data-reveal-item data-filter-tags={tags}>
   {result.poster && (
     <a class="poster" href={`${result.poster}-1600.webp`} target="_blank" rel="noopener" aria-label={`Open the result poster: ${result.posterAlt}`}>
       <Picture base={result.poster} alt={result.posterAlt} sizes="(min-width: 900px) 18rem, 78vw" />
     </a>
   )}
   <p class="meta">{result.exam} · {result.year}</p>
-  <h3>{result.headline}</h3>
+  <Heading class="headline">{result.headline}</Heading>
   {result.detail && <p class="detail">{result.detail}</p>}
 </article>
 <style>
@@ -19,10 +20,11 @@ const summary = result.kind === 'summary';
   .poster { display: block; margin-bottom: 0.6rem; border-radius: var(--radius-sm); overflow: hidden; background: var(--purple-tint); }
   .poster :global(img) { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: top; }
   .meta { padding-inline: 0.25rem; font-size: var(--step--1); font-weight: 600; color: var(--purple); }
-  h3 { padding-inline: 0.25rem; font-size: var(--step-1); font-weight: 700; }
+  .headline { padding-inline: 0.25rem; font-size: var(--step-1); font-weight: 700; }
   .detail { padding-inline: 0.25rem; color: var(--ink-soft); font-size: var(--step--1); }
   .summary { background: var(--purple); color: var(--cream); }
   .summary .meta { color: var(--on-purple-soft); }
-  .summary h3 { font-size: var(--step-2); color: var(--white); }
+  .summary .headline { font-size: var(--step-2); color: var(--white); }
   .summary .detail { color: var(--on-purple-soft); }
+  .result[hidden] { display: none; }
 </style>
