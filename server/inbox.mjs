@@ -91,8 +91,12 @@ export class InboxStore {
 
   csv(kind) {
     const { fields } = inbox(kind);
-    const columns = [{ name: 'created_at', label: 'Received' }, ...fields, { name: 'status', label: 'Status' }, { name: 'notes', label: 'Notes' }];
-    const rows = this.list(kind).map(row => columns.map(c => (c.name === 'phone' ? formatPhone(row.phone) : row[c.name])));
+    const columns = [{ name: 'created_at', label: 'Received (IST)' }, ...fields, { name: 'status', label: 'Status' }, { name: 'notes', label: 'Notes' }];
+    // Staff read times in Indian time, and phones without +91 so no cell starts like a formula.
+    const cell = (row, name) => (name === 'phone' ? formatPhone(row.phone).slice(4)
+      : name === 'created_at' ? new Date(row.created_at).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'medium', timeStyle: 'short' })
+      : row[name]);
+    const rows = this.list(kind).map(row => columns.map(c => cell(row, c.name)));
     // The byte-order mark makes Excel read the file as UTF-8.
     return '﻿' + [columns.map(c => c.label), ...rows].map(cells => cells.map(csvCell).join(',')).join('\r\n') + '\r\n';
   }

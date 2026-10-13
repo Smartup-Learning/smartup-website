@@ -78,13 +78,15 @@ test('inbox entries list newest first, change status and can be deleted', () => 
   assert.throws(() => inbox.list('nope'), /Unknown inbox/);
 });
 
-test('the CSV export has a header, readable phones and safe cells', () => {
+test('the CSV export shows Indian time, plain phone numbers and safe cells', () => {
   const { inbox } = setup();
-  inbox.add('demo', validateDemo({ ...demo, name: '=HYPERLINK("http://x")' }, { centres }).values);
+  const id = inbox.add('demo', validateDemo({ ...demo, name: '=HYPERLINK("http://x")' }, { centres }).values);
+  inbox.db.prepare('UPDATE demo_bookings SET created_at = ? WHERE id = ?').run('2026-10-13T08:54:00.000Z', id);
   const csv = inbox.csv('demo');
-  assert.ok(csv.startsWith('﻿Received,Student,Phone,Class,Board,Online or centre,Centre,Preferred time,Status,Notes\r\n'));
-  assert.match(csv, /,"'=HYPERLINK\(""http:\/\/x""\)",'\+91 98950 85731,9,CBSE,At a centre,Vennala,6 pm,new,\r\n$/);
+  assert.ok(csv.startsWith('\ufeffReceived (IST),Student,Phone,Class,Board,Online or centre,Centre,Preferred time,Status,Notes\r\n'));
+  assert.ok(csv.endsWith(`"13 Oct 2026, 2:24 pm","'=HYPERLINK(""http://x"")",98950 85731,9,CBSE,At a centre,Vennala,6 pm,new,\r\n`), csv);
 });
+
 
 test('an answered question is published to the FAQ and closed', () => {
   const { inbox, content } = setup();
