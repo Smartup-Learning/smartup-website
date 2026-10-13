@@ -1,0 +1,14 @@
+---
+interface Props { label: string; target: string; options: { value: string; label: string }[] }
+const { label, target, options } = Astro.props;
+---
+<div class="chips" role="group" aria-label={label} data-filter-for={target} hidden>
+  <button type="button" data-filter="all" aria-pressed="true">Everyone</button>
+  {options.map(o => <button type="button" data-filter={o.value} aria-pressed="false">{o.label}</button>)}
+</div>
+<style>
+  .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
+  .chips[hidden] { display: none; }
+  button { min-height: 44px; padding: 0.5rem 1.1rem; border: 1px solid var(--line); border-radius: 999px; background: var(--white); font: 600 0.95rem var(--font); color: var(--ink); cursor: pointer; }
+  button[aria-pressed='true'] { background: var(--purple); border-color: var(--purple); color: var(--white); }
+</style>

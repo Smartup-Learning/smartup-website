@@ -1,0 +1,51 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import FilterChips from '../components/FilterChips.astro';
+import Picture from '../components/Picture.astro';
+import { getStore } from '../lib/store';
+const team = getStore(Astro.locals).faculty();
+const groups = [
+  { value: 'mathematics', label: 'Mathematics' }, { value: 'physics', label: 'Physics' },
+  { value: 'chemistry', label: 'Chemistry' }, { value: 'biology', label: 'Biology' },
+  { value: 'commerce', label: 'Commerce' }, { value: 'humanities', label: 'Humanities' },
+  { value: 'team', label: 'Academic team' },
+].filter(g => team.some(p => p.team === g.value));
+---
+<Base title="Our team" description="Meet the Smartup teachers and academic team: qualified, experienced and focused on every student." page="faculty">
+  <PageHero eyebrow="Faculty" title="Teachers who know" highlight="your child" intro="Experienced, qualified teachers and an academic team that follows every student's progress." />
+  <section class="section" aria-labelledby="team-title">
+    <div class="container">
+      <h2 id="team-title" class="sr-only">Our team</h2>
+      {team.length === 0 ? <p class="empty">Our team will be introduced here soon.</p> : (
+        <>
+          <FilterChips label="Filter by subject" target="team-list" options={groups} />
+          <ul id="team-list" class="team" data-reveal="group">
+            {team.map(person => (
+              <li class="person" data-filter-tags={person.team} data-reveal-item>
+                {person.photo && <div class="photo"><Picture base={person.photo} alt={`Portrait of ${person.name}`} sizes="(min-width: 1200px) 14rem, (min-width: 600px) 30vw, 45vw" /></div>}
+                <h3>{person.name}</h3>
+                <p class="role">{person.role}</p>
+                {person.qualification && <p class="qual">{person.qualification}</p>}
+                {person.note && <p class="note">{person.note}</p>}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </div>
+  </section>
+</Base>
+<style>
+  .team { list-style: none; padding: 0; display: grid; gap: 1.75rem 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .person { display: grid; gap: 0.2rem; align-content: start; }
+  .person[hidden] { display: none; }
+  .photo { margin-bottom: 0.6rem; border-radius: var(--radius-sm); overflow: hidden; background: var(--purple-tint); }
+  .photo :global(img) { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: center 20%; }
+  h3 { font-size: var(--step-0); font-weight: 700; }
+  .role { font-weight: 600; color: var(--purple); font-size: var(--step--1); }
+  .qual, .note { font-size: var(--step--1); color: var(--ink-soft); }
+  .empty { font-size: var(--step-1); }
+  @media (min-width: 600px) { .team { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (min-width: 1200px) { .team { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+</style>

@@ -102,3 +102,20 @@ test('Founders lists all four leaders with full bios and Vision 2030', async t =
   assert.match(page, /Vision 2030/);
   assert.match(page, /The place where academic champions are born/);
 });
+
+test('Faculty lists every published team member with qualifications', async t => {
+  const site = await start();
+  t.after(site.close);
+  const page = await site.html('/faculty');
+  assert.equal([...page.matchAll(/data-filter-tags=/g)].length, 35);
+  assert.match(page, /Aflah K\. R\./);
+  assert.match(page, /MSc Botany/);
+});
+
+test('an empty faculty table shows a friendly message and no filter bar', async t => {
+  const site = await start(content => content.db.exec('UPDATE faculty SET published = 0'));
+  t.after(site.close);
+  const page = await site.html('/faculty');
+  assert.match(page, /Our team will be introduced here soon/);
+  assert.doesNotMatch(page, /data-filter-for/);
+});
