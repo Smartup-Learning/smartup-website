@@ -1,15 +1,16 @@
 ---
-interface Props { phone: string; whatsapp: string | null }
+interface Props { phone: string | null; whatsapp: string | null }
 const { phone, whatsapp } = Astro.props;
 ---
-<nav class="mobile-bar" aria-label="Quick actions">
+<nav class:list={['mobile-bar', { single: !whatsapp && !phone }]} aria-label="Quick actions">
   <a class="btn btn--primary" href="/demo">Book free demo</a>
   {whatsapp
     ? <a class="btn btn--ghost" href={`https://wa.me/${whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener">WhatsApp</a>
-    : <a class="btn btn--ghost" href={`tel:${phone}`}>Call us</a>}
+    : phone && <a class="btn btn--ghost" href={`tel:${phone}`}>Call us</a>}
 </nav>
 <style>
   .mobile-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; display: grid; grid-template-columns: 1.4fr 1fr; gap: 0.6rem; padding: 0.7rem var(--gutter) calc(0.7rem + env(safe-area-inset-bottom)); background: var(--white); border-top: 1px solid var(--line); box-shadow: 0 -6px 24px rgb(57 32 100 / 0.08); }
   .mobile-bar .btn--ghost { color: var(--purple); }
+  .mobile-bar.single { grid-template-columns: 1fr; }
   @media (min-width: 900px) { .mobile-bar { display: none; } }
 </style>

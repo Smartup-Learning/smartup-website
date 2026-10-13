@@ -1,0 +1,15 @@
+---
+interface Props { item: { title: string; person: string; quote: string } }
+const { item } = Astro.props;
+---
+<figure class="quote-card" data-reveal-item>
+  <blockquote>{item.quote}</blockquote>
+  <figcaption><strong>{item.title}</strong>{item.person && <span>{item.person}</span>}</figcaption>
+</figure>
+<style>
+  .quote-card { display: grid; gap: 1rem; align-content: space-between; padding: 1.5rem; border-radius: var(--radius); background: var(--cream); color: var(--ink); }
+  blockquote { margin: 0; font-size: var(--step-1); font-weight: 500; line-height: 1.45; }
+  blockquote::before { content: '“'; display: block; font-size: 3rem; line-height: 0.8; font-weight: 800; color: var(--purple); }
+  figcaption { display: grid; gap: 0.15rem; font-size: var(--step--1); }
+  figcaption span { color: var(--ink-soft); }
+</style>

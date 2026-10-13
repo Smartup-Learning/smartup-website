@@ -11,7 +11,7 @@ const year = new Date().getFullYear();
     <div class="brand">
       <img src="/brand/logo.svg" alt="Smartup" width="150" height="33" />
       <p>Tuitions for classes 8 to +2 in Kochi and online.</p>
-      <p><a href={`tel:${settings.phone}`}>{formatPhone(settings.phone)}</a><br /><a href={`mailto:${settings.email}`}>{settings.email}</a></p>
+      <p>{settings.phone && <><a href={`tel:${settings.phone}`}>{formatPhone(settings.phone)}</a><br /></>}<a href={`mailto:${settings.email}`}>{settings.email}</a></p>
       <ul class="social" aria-label="Smartup on social media">
         {settings.social.map((s: any) => <li><a href={s.url} target="_blank" rel="noopener" aria-label={s.label}><SocialIcon network={s.network} /></a></li>)}
       </ul>

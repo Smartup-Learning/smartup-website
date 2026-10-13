@@ -6,6 +6,7 @@ import Timeline from '../components/Timeline.astro';
 import FounderCard from '../components/FounderCard.astro';
 import ResultCard from '../components/ResultCard.astro';
 import VideoCard from '../components/VideoCard.astro';
+import QuoteCard from '../components/QuoteCard.astro';
 import CourseTabs from '../components/CourseTabs.astro';
 import JobsPreview from '../components/JobsPreview.astro';
 import DemoBand from '../components/DemoBand.astro';
@@ -57,8 +58,8 @@ const centres = store.centres();
     <section id="feedback" class="section" aria-labelledby="feedback-title">
       <div class="container">
         <SectionHead eyebrow="Student & parent feedback" title="In their own words" id="feedback-title" link={{ href: '/testimonials', label: 'More testimonials' }} />
-        <div class="rail videos" data-reveal="group" tabindex="0" role="region" aria-label="Student and parent videos">
-          {feedback.map(item => <VideoCard item={item} />)}
+        <div class="rail videos" data-reveal="group" tabindex="0" role="region" aria-label="Student and parent feedback">
+          {feedback.map(item => item.kind === 'video' ? <VideoCard item={item} /> : <QuoteCard item={item} />)}
         </div>
       </div>
     </section>
@@ -68,8 +69,8 @@ const centres = store.centres();
     <section id="alumni" class="section section--deep" aria-labelledby="alumni-title">
       <div class="container">
         <SectionHead eyebrow="Alumni" title="Where Smartup students go" id="alumni-title" link={{ href: '/alumni', label: 'Alumni journeys' }} />
-        <div class="rail videos" data-reveal="group" tabindex="0" role="region" aria-label="Alumni videos">
-          {alumni.map(item => <VideoCard item={item} />)}
+        <div class="rail videos" data-reveal="group" tabindex="0" role="region" aria-label="Alumni stories">
+          {alumni.map(item => item.kind === 'video' ? <VideoCard item={item} /> : <QuoteCard item={item} />)}
         </div>
       </div>
     </section>

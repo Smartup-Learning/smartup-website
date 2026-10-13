@@ -30,12 +30,16 @@ export function loadSeed(file = path.resolve('data-seed/content.json')) {
   return JSON.parse(readFileSync(file, 'utf8'));
 }
 
+let seedSettings;
+const defaultSettings = () => (seedSettings ??= loadSeed().settings ?? {});
+
+function phoneOrNull(raw) {
+  if (typeof raw !== 'string') return null;
+  try { return normalizePhone(raw); } catch { return null; }
+}
+
 const flag = value => (value ? 1 : 0);
 const SECTIONS = {
-  settings(db, data) {
-    const put = db.prepare('INSERT OR REPLACE INTO settings(key, value) VALUES(?, ?)');
-    for (const [key, value] of Object.entries(data)) put.run(key, JSON.stringify(value));
-  },
   stats(db, rows) {
     const put = db.prepare('INSERT INTO stats(value, label, source, sort) VALUES(?, ?, ?, ?)');
     rows.forEach((r, i) => put.run(r.value, r.label, r.source ?? '', i));
@@ -77,6 +81,11 @@ export class ContentStore {
   }
 
   applySeed(data = loadSeed()) {
+    // Settings are added key by key on every start, so keys introduced later reach existing databases; edited values are kept.
+    if (data.settings) {
+      const put = this.db.prepare('INSERT OR IGNORE INTO settings(key, value) VALUES(?, ?)');
+      for (const [key, value] of Object.entries(data.settings)) put.run(key, JSON.stringify(value));
+    }
     const done = new Set(this.db.prepare('SELECT section FROM seed_log').all().map(r => r.section));
     for (const [section, apply] of Object.entries(SECTIONS)) {
       if (done.has(section) || data[section] === undefined) continue;
@@ -93,7 +102,10 @@ export class ContentStore {
   }
 
   settings() {
-    return Object.fromEntries(this.db.prepare('SELECT key, value FROM settings').all().map(r => [r.key, JSON.parse(r.value)]));
+    const stored = Object.fromEntries(this.db.prepare('SELECT key, value FROM settings').all().map(r => [r.key, JSON.parse(r.value)]));
+    // Seed values stand in for any key missing at runtime, so one deleted setting cannot break every page.
+    const settings = { ...defaultSettings(), ...stored };
+    return { ...settings, phone: phoneOrNull(settings.phone), whatsapp: phoneOrNull(settings.whatsapp) };
   }
 
   stats() {

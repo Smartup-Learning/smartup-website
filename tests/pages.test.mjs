@@ -13,7 +13,7 @@ async function start(prepare = () => {}) {
   await new Promise(r => server.listen(0, '127.0.0.1', r));
   const base = `http://127.0.0.1:${server.address().port}`;
   const html = async path => { const r = await fetch(base + path); assert.equal(r.status, 200, path); return r.text(); };
-  return { html, close: () => new Promise(r => server.close(() => { store.close(); r(); })) };
+  return { html, content, close: () => new Promise(r => server.close(() => { store.close(); r(); })) };
 }
 
 test('Our Story lists every chapter in order, the growth data and the vision', async t => {
@@ -63,4 +63,19 @@ test('results always name exam and year', async t => {
   const page = await site.html('/');
   assert.match(page, /SSLC · 2026/);
   assert.match(page, /Class 10 · 2026/);
+});
+
+test('pages still render when settings keys go missing while running', async t => {
+  const site = await start();
+  t.after(site.close);
+  site.content.db.exec("DELETE FROM settings WHERE key IN ('social', 'phone', 'vision', 'heroHeadline')");
+  for (const path of ['/', '/story']) assert.doesNotMatch(await site.html(path), /Internal server error|undefined/, path);
+});
+
+test('written testimonials render as quotes, not empty video players', async t => {
+  const site = await start(content => content.db.prepare("INSERT INTO testimonials(kind, section, title, person, quote, sort) VALUES('written', 'feedback', 'A parent', 'Parent of a Class 10 student', 'Smartup changed how my son studies.', 9)").run());
+  t.after(site.close);
+  const page = await site.html('/');
+  assert.match(page, /<blockquote[^>]*>[\s\S]*Smartup changed how my son studies\.[\s\S]*<\/blockquote>/);
+  assert.doesNotMatch(page, /src=""/);
 });

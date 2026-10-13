@@ -69,3 +69,27 @@ test('phone numbers are stored tel-safe and display grouped', () => {
   assert.equal(formatPhone('+917907126725'), '+91 79071 26725');
   for (const c of seeded().centres()) assert.match(c.phone, /^\+91[6-9]\d{9}$/);
 });
+
+test('a settings key missing from an existing database is restored, and edited values are kept', () => {
+  const store = seeded();
+  store.db.exec("DELETE FROM settings WHERE key = 'social'; UPDATE settings SET value = '\"Edited\"' WHERE key = 'heroHeadline';");
+  store.applySeed();
+  assert.equal(store.settings().social.length, 6);
+  assert.equal(store.settings().heroHeadline, 'Edited');
+});
+
+test('settings fall back to seed defaults for keys missing at runtime', () => {
+  const store = seeded();
+  store.db.exec("DELETE FROM settings WHERE key IN ('social', 'vision', 'hours')");
+  const s = store.settings();
+  assert.equal(s.social.length, 6);
+  assert.equal(s.vision.priorities.length, 5);
+  assert.equal(s.hours, '5–9 pm');
+});
+
+test('main phone and WhatsApp settings are normalized, or dropped when invalid', () => {
+  const store = seeded();
+  store.db.exec(`UPDATE settings SET value = '"88919 10919"' WHERE key = 'phone'; UPDATE settings SET value = '"not a number"' WHERE key = 'whatsapp';`);
+  assert.equal(store.settings().phone, '+918891910919');
+  assert.equal(store.settings().whatsapp, null);
+});
