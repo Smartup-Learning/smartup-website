@@ -1,0 +1,50 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { formatPhone } from '../../server/content-store.mjs';
+import { getStore } from '../lib/store';
+const store = getStore(Astro.locals);
+const settings = store.settings();
+const jobs = store.jobs();
+const types = [...new Set(jobs.map(j => j.type))];
+const apply = (title: string) => `mailto:${settings.email}?subject=${encodeURIComponent(`Application: ${title}`)}`;
+---
+<Base title="Careers" description="Teach with Smartup: current openings for teachers, teaching assistants, counsellors and mentors in Kochi." page="careers">
+  <PageHero eyebrow="Careers" title="Teach with" highlight="Smartup" intro="Join a team of teachers and mentors helping thousands of students across Kochi." />
+  <section class="section" aria-label="Current openings">
+    <div class="container">
+      {jobs.length === 0 && <p class="empty">No openings right now — but we'd still like to hear from you.</p>}
+      {types.map(type => (
+        <div class="group">
+          <h2 class="type">{type}</h2>
+          <ul class="jobs" data-reveal="group">
+            {jobs.filter(j => j.type === type).map(job => (
+              <li class="job" data-reveal-item>
+                <div><h3>{job.title}</h3>{job.location && <p class="location">{job.location}</p>}</div>
+                <a class="btn btn--primary" href={apply(job.title)}>Apply by email</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+  <section class="section section--cream">
+    <div class="container how" data-reveal>
+      <h2>How to apply</h2>
+      <p>Email your CV to <a href={`mailto:${settings.email}`}>{settings.email}</a> with the role in the subject line{settings.phone && <>, or call <a href={`tel:${settings.phone}`}>{formatPhone(settings.phone)}</a></>}.</p>
+    </div>
+  </section>
+</Base>
+<style>
+  .group { display: grid; gap: 1rem; margin-bottom: 2.5rem; }
+  .type { font-size: var(--step-3); font-weight: 800; color: var(--purple); }
+  .jobs { list-style: none; padding: 0; display: grid; gap: 0.75rem; }
+  .job { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; padding: 1.25rem 1.5rem; border: 1px solid var(--line); border-radius: var(--radius); }
+  h3 { font-size: var(--step-1); }
+  .location { color: var(--ink-soft); font-size: var(--step--1); }
+  .empty { font-size: var(--step-1); margin-bottom: 2rem; }
+  .how { display: grid; gap: 0.75rem; max-width: 44rem; }
+  .how h2 { font-size: var(--step-3); font-weight: 800; }
+  .how a { color: var(--purple); font-weight: 600; }
+</style>

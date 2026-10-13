@@ -234,3 +234,43 @@ test('App and Community pages link to the stores and every social channel', asyn
   const community = await site.html('/community');
   assert.equal([...community.matchAll(/class="channel"/g)].length, 7);
 });
+
+test('Contact lists every centre, all phone numbers and the registered office', async t => {
+  const site = await start();
+  t.after(site.close);
+  const page = await site.html('/contact');
+  assert.equal([...page.matchAll(/class="centre"/g)].length, 9);
+  for (const tel of ['+918891910919', '+917356072079', '+917994436060']) assert.match(page, new RegExp(`href="tel:\\${tel}"`));
+  assert.match(page, /Smartup Eduventures Private Limited/);
+  assert.match(page, /Kadavanthra, Ernakulam 682020/);
+});
+
+test('Careers groups openings by type and each one has an email to apply', async t => {
+  const site = await start();
+  t.after(site.close);
+  const page = await site.html('/careers');
+  assert.equal([...page.matchAll(/mailto:info@smartupedu\.in\?subject=Application/g)].length, 12);
+  for (const type of ['Full time', 'Part time', 'Teaching assistant', 'Other']) assert.match(page, new RegExp(`<h2[^>]*>${type}`));
+});
+
+test('Careers without openings says so and still invites applications', async t => {
+  const site = await start(content => content.db.exec('UPDATE jobs SET published = 0'));
+  t.after(site.close);
+  assert.match(await site.html('/careers'), /No openings right now/);
+});
+
+test('the demo page explains how to book and lists centre phones', async t => {
+  const site = await start();
+  t.after(site.close);
+  const page = await site.html('/demo');
+  assert.match(page, /<h1[^>]*>Book a free/);
+  assert.ok([...page.matchAll(/href="tel:\+91/g)].length >= 10);
+});
+
+test('every menu link resolves to a page', async t => {
+  const site = await start();
+  t.after(site.close);
+  const { navGroups, quickLinks } = await import('../src/lib/nav.ts');
+  const links = new Set([...navGroups.flatMap(g => g.links), ...quickLinks].map(l => l.href));
+  for (const href of links) await site.html(href);
+});

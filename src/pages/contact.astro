@@ -1,0 +1,58 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { formatPhone } from '../../server/content-store.mjs';
+import { getStore } from '../lib/store';
+const store = getStore(Astro.locals);
+const settings = store.settings();
+const centres = store.centres();
+---
+<Base title="Centres & contact" description="Smartup centres in Kochi, phone numbers, email and our registered office." page="contact">
+  <PageHero eyebrow="Centres & contact" title="Visit us, call us," highlight="ask us anything" intro={`${centres.length} centres across Kochi, all open ${settings.hours}.`} />
+  <section class="section" aria-labelledby="centres-title">
+    <div class="container">
+      <h2 id="centres-title" class="title">Our centres</h2>
+      <ul class="centres" data-reveal="group">
+        {centres.map(c => (
+          <li class="centre" data-reveal-item>
+            <h3>{c.name}</h3>
+            <p class="hours">Open {c.hours}</p>
+            <div class="actions"><a class="btn btn--primary" href={`tel:${c.phone}`}>{formatPhone(c.phone)}</a><a class="link-arrow" href={c.mapUrl} target="_blank" rel="noopener">Directions</a></div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+  <section class="section section--cream" aria-labelledby="reach-title">
+    <div class="container reach" data-reveal>
+      <div>
+        <h2 id="reach-title" class="title">Talk to our team</h2>
+        <ul class="lines">
+          {settings.phones.map((p: string) => <li><a href={`tel:${p}`}>{formatPhone(p)}</a></li>)}
+          <li><a href={`mailto:${settings.email}`}>{settings.email}</a></li>
+          {settings.whatsapp && <li><a href={`https://wa.me/${settings.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener">WhatsApp us</a></li>}
+        </ul>
+      </div>
+      {settings.registeredOffice && (
+        <address>
+          <strong>{settings.legalName}</strong><br />
+          Registered office: {settings.registeredOffice.address}<br />
+          <a class="link-arrow" href={settings.registeredOffice.mapUrl} target="_blank" rel="noopener">Open in Maps</a>
+        </address>
+      )}
+    </div>
+  </section>
+</Base>
+<style>
+  .title { font-size: var(--step-4); font-weight: 800; margin-bottom: 2rem; }
+  .centres { list-style: none; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); }
+  .centre { display: grid; gap: 0.6rem; padding: 1.5rem; border: 1px solid var(--line); border-radius: var(--radius); }
+  h3 { font-size: var(--step-2); }
+  .hours { color: var(--ink-soft); }
+  .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+  .reach { display: grid; gap: 2rem; }
+  .lines { list-style: none; padding: 0; display: grid; gap: 0.5rem; font-size: var(--step-1); font-weight: 600; }
+  .lines a { text-decoration: none; }
+  address { font-style: normal; line-height: 1.7; }
+  @media (min-width: 900px) { .reach { grid-template-columns: 1fr 1fr; } }
+</style>
