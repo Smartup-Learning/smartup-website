@@ -1,0 +1,53 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import FilterChips from '../components/FilterChips.astro';
+import Picture from '../components/Picture.astro';
+import YouTube from '../components/YouTube.astro';
+import { getStore } from '../lib/store';
+const events = getStore(Astro.locals).events();
+const slug = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const categories = [...new Set(events.map(e => e.category))].map(c => ({ value: slug(c), label: c }));
+---
+<Base title="Life @ Smartup" description="Talent Eve, Shoot the Drugs, Coffee With Chairman, celebrations, trips and more — student life at Smartup." page="life">
+  <PageHero eyebrow="Life @ Smartup" title="Not just tuition —" highlight="the whole experience" intro="Award nights, sports, mentoring, festivals and trips: the moments students remember alongside their results." />
+  <section class="section" aria-labelledby="events-title">
+    <div class="container">
+      <h2 id="events-title" class="sr-only">Events and activities</h2>
+      {events.length === 0 ? <p class="empty">New photos and stories are on their way.</p> : (
+        <>
+          <FilterChips label="Filter by activity" target="event-list" options={categories} />
+          <div id="event-list" class="events">
+            {events.map(event => (
+              <article class="event" data-filter-tags={slug(event.category)} data-reveal>
+                <header>
+                  <p class="eyebrow">{event.category}{event.dateLabel && <> · {event.dateLabel}</>}</p>
+                  <h3>{event.title}</h3>
+                  {event.summary && <p class="summary">{event.summary}</p>}
+                </header>
+                {(event.media.length > 0 || event.youtubeId) && (
+                  <div class="gallery rail">
+                    {event.youtubeId && <YouTube id={event.youtubeId} title={`${event.title} on YouTube`} />}
+                    {event.media.map(m => <figure class="shot"><Picture base={m.src} alt={m.alt} sizes="(min-width: 900px) 22rem, 80vw" /></figure>)}
+                  </div>
+                )}
+              </article>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  </section>
+</Base>
+<style>
+  .events { display: grid; gap: clamp(3rem, 2.5rem + 3vw, 5rem); }
+  .event { display: grid; gap: 1.25rem; }
+  .event[hidden] { display: none; }
+  header { display: grid; gap: 0.5rem; max-width: 42rem; }
+  h3 { font-size: var(--step-3); font-weight: 800; }
+  .summary { color: var(--ink-soft); }
+  .gallery { grid-auto-columns: min(85%, 22rem); }
+  .shot { border-radius: var(--radius); overflow: hidden; background: var(--purple-tint); }
+  .shot :global(img) { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+  .empty { font-size: var(--step-1); }
+</style>

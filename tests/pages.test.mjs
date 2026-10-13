@@ -136,3 +136,26 @@ test('Results without any rows shows a friendly message', async t => {
   t.after(site.close);
   assert.match(await site.html('/results'), /Results will be published here soon/);
 });
+
+test('Life @ Smartup lists every event with its category', async t => {
+  const site = await start();
+  t.after(site.close);
+  const page = await site.html('/life');
+  for (const title of ['Talent Eve 7.0', 'Shoot the Drugs', 'Coffee With Chairman', 'Onam']) assert.match(page, new RegExp(title));
+  assert.match(page, /data-filter-tags="talent-eve"/);
+});
+
+test('Videos groups videos into their categories and links to the channels', async t => {
+  const site = await start();
+  t.after(site.close);
+  const page = await site.html('/videos');
+  for (const heading of ['Live classes', 'Exam preparation', 'Short lessons', 'Toppers Talk', 'From the Chairman', 'Events']) assert.match(page, new RegExp(heading));
+  assert.match(page, /youtube\.com\/@smartupeducations/);
+  assert.doesNotMatch(page, /<iframe/);
+});
+
+test('an empty events table shows a friendly message', async t => {
+  const site = await start(content => content.db.exec('UPDATE events SET published = 0'));
+  t.after(site.close);
+  assert.match(await site.html('/life'), /New photos and stories are on their way/);
+});
