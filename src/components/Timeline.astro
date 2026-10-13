@@ -1,0 +1,71 @@
+---
+import Picture from './Picture.astro';
+import Owl from './Owl.astro';
+type Chapter = { id: number; yearLabel: string; title: string; story: string; statValue: string; statLabel: string; media: { src: string; alt: string }[]; sourceUrl: string };
+interface Props { chapters: Chapter[]; variant: 'full' | 'teaser' }
+const { chapters, variant } = Astro.props;
+const full = variant === 'full';
+---
+<div class:list={['timeline', `timeline--${variant}`]} data-timeline={full ? '' : undefined}>
+  {full && <p class="timeline-now" data-timeline-now aria-hidden="true">{chapters[0]?.yearLabel}</p>}
+  <div class="timeline-rail" aria-hidden="true">
+    <div class="timeline-progress" data-timeline-progress></div>
+    {full && <div class="timeline-owl" data-timeline-owl><Owl size="100%" badge idle={false} /></div>}
+  </div>
+  <ol class="timeline-list" data-reveal={full ? undefined : 'group'}>
+    {chapters.map(chapter => (
+      <li class="chapter" data-year={chapter.yearLabel} data-reveal={full ? '' : undefined} data-reveal-item={full ? undefined : ''}>
+        <p class="chapter-year">{chapter.yearLabel}</p>
+        <h3 class="chapter-title">{chapter.title}</h3>
+        {full && chapter.story && <p class="chapter-story">{chapter.story}</p>}
+        {full && chapter.statValue && <p class="chapter-stat"><strong>{chapter.statValue}</strong> {chapter.statLabel}</p>}
+        {chapter.media.length > 0 && (
+          <div class="chapter-media">
+            {chapter.media.slice(0, full ? 3 : 1).map(m => <Picture base={m.src} alt={m.alt} sizes={full ? '(min-width: 900px) 18rem, 80vw' : '(min-width: 900px) 16rem, 80vw'} />)}
+          </div>
+        )}
+        {full && chapter.sourceUrl && <a class="link-arrow" href={chapter.sourceUrl} target="_blank" rel="noopener">Read the coverage</a>}
+      </li>
+    ))}
+  </ol>
+</div>
+<style>
+  .timeline { position: relative; --rail-x: 1.25rem; }
+  .timeline-rail { position: absolute; top: 0.5rem; bottom: 0; left: var(--rail-x); width: 4px; margin-left: -2px; border-radius: 4px; background: var(--line); }
+  .timeline-progress { position: absolute; inset: 0; border-radius: inherit; background: var(--purple); transform-origin: top; }
+  .timeline-owl { position: absolute; top: 0; left: 50%; width: 2.75rem; margin-left: -1.375rem; z-index: 2; will-change: transform; }
+  .timeline-now { display: none; }
+  .timeline-list { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(3rem, 2rem + 4vw, 6rem); }
+  .chapter { position: relative; padding-left: calc(var(--rail-x) + 2.25rem); }
+  .chapter::before { content: ''; position: absolute; left: calc(var(--rail-x) - 9px); top: 0.6rem; width: 18px; height: 18px; border-radius: 50%; background: var(--white); border: 4px solid var(--purple); }
+  .chapter-year { font-size: var(--step-3); font-weight: 800; line-height: 1; color: var(--purple); }
+  .chapter-title { margin-top: 0.5rem; font-size: var(--step-2); font-weight: 700; }
+  .chapter-story { margin-top: 0.75rem; max-width: 36rem; color: var(--ink-soft); }
+  .chapter-stat { display: inline-flex; align-items: baseline; gap: 0.4rem; margin-top: 0.9rem; padding: 0.35rem 0.9rem; border-radius: 999px; background: var(--purple-tint); }
+  .chapter-stat strong { font-size: var(--step-1); color: var(--purple); }
+  .chapter-media { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr)); gap: 0.75rem; margin-top: 1.25rem; }
+  .chapter-media :global(img) { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius-sm); background: var(--purple-tint); }
+  .chapter .link-arrow { margin-top: 0.5rem; }
+
+  .timeline--full .chapter:last-child .chapter-year { color: var(--purple-300); }
+  /* A full-width strip under the header, so the year never floats over chapter text. */
+  :global(.js) .timeline-now { display: block; position: sticky; top: var(--header-h); z-index: 3; margin: 0 calc(-1 * var(--gutter)) 1rem; padding: 0.45rem var(--gutter); background: var(--white); border-bottom: 1px solid var(--line); color: var(--purple); font-weight: 800; font-size: var(--step-1); }
+
+  .timeline--teaser .chapter-title { font-size: var(--step-1); }
+  .timeline--teaser .chapter-media :global(img) { aspect-ratio: 16 / 10; }
+
+  @media (min-width: 900px) {
+    :global(.js) .timeline-now { display: none; }
+    .timeline--full { --rail-x: 50%; }
+    .timeline--full .timeline-owl { width: 3.5rem; margin-left: -1.75rem; }
+    .timeline--full .chapter { width: 50%; padding-left: 0; padding-right: 4rem; }
+    .timeline--full .chapter::before { left: auto; right: -9px; }
+    .timeline--full .chapter:nth-child(even) { margin-left: 50%; padding-left: 4rem; padding-right: 0; }
+    .timeline--full .chapter:nth-child(even)::before { left: -9px; right: auto; }
+
+    .timeline--teaser .timeline-rail { top: 0.95rem; bottom: auto; left: 0; right: 0; width: auto; height: 4px; margin: 0; }
+    .timeline--teaser .timeline-list { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2rem; }
+    .timeline--teaser .chapter { padding: 3rem 0 0; }
+    .timeline--teaser .chapter::before { top: 0.4rem; left: 0; }
+  }
+</style>
