@@ -1,26 +1,28 @@
 import { inView, scroll } from 'motion';
 import { blink, glance, rollHead } from './motion';
 
-export function initTimelines() {
+export function initTimelines(reduceMotion: boolean) {
   document.querySelectorAll<HTMLElement>('[data-timeline]').forEach(timeline => {
     const rail = timeline.querySelector<HTMLElement>('.timeline-rail');
     const bar = timeline.querySelector<HTMLElement>('[data-timeline-progress]');
     const owl = timeline.querySelector<HTMLElement>('[data-timeline-owl]');
-    const owlSvg = owl?.querySelector('svg');
+    const owlSvg = reduceMotion ? null : owl?.querySelector('svg');
     const now = timeline.querySelector<HTMLElement>('[data-timeline-now]');
     if (!rail || !bar) return;
 
-    let travel = 0;
-    const measure = () => { travel = rail.clientHeight - (owl?.offsetHeight ?? 0); };
-    measure();
-    new ResizeObserver(measure).observe(timeline);
-    // Start undrawn; without this script the CSS default keeps the line fully drawn.
-    bar.style.transform = 'scaleY(0)';
-
-    scroll((progress: number) => {
-      bar.style.transform = `scaleY(${progress})`;
-      if (owl) owl.style.transform = `translateY(${progress * travel}px)`;
-    }, { target: timeline, offset: ['start 60%', 'end 60%'] });
+    // Reduced motion keeps the line fully drawn (CSS default) and the owl still; the year strip still updates.
+    if (!reduceMotion) {
+      let travel = 0;
+      const measure = () => { travel = rail.clientHeight - (owl?.offsetHeight ?? 0); };
+      measure();
+      new ResizeObserver(measure).observe(timeline);
+      // Start undrawn; without this script the CSS default keeps the line fully drawn.
+      bar.style.transform = 'scaleY(0)';
+      scroll((progress: number) => {
+        bar.style.transform = `scaleY(${progress})`;
+        if (owl) owl.style.transform = `translateY(${progress * travel}px)`;
+      }, { target: timeline, offset: ['start 60%', 'end 60%'] });
+    }
 
     const chapters = Array.from(timeline.querySelectorAll<HTMLElement>('li.chapter'));
     chapters.forEach((chapter, index) => {

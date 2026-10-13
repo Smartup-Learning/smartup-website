@@ -32,3 +32,11 @@ test('the sticky year follows the reader on phones', async ({ page }, info) => {
   await page.locator('li.chapter[data-year="2018"]').scrollIntoViewIfNeeded();
   await expect(page.locator('[data-timeline-now]')).toHaveText('2018', { timeout: 3000 });
 });
+
+test('with reduced motion the phone year strip still follows the reader', async ({ page }, info) => {
+  test.skip(info.project.name !== 'mobile', 'phone only');
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/story');
+  await page.locator('li.chapter[data-year="2020"]').scrollIntoViewIfNeeded();
+  await expect(page.locator('[data-timeline-now]')).toHaveText('2020', { timeout: 3000 });
+});

@@ -53,3 +53,27 @@ test('unknown pages show the branded 404 with status 404', async ({ page }) => {
   expect(response?.status()).toBe(404);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText("This page isn't here yet");
 });
+
+test('keyboard focus stays inside the open menu', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('[data-menu-toggle]').click();
+  for (let i = 0; i < 25; i++) {
+    await page.keyboard.press('Tab');
+    const inside = await page.evaluate(() => {
+      const el = document.activeElement;
+      return !!el && (!!el.closest('#site-menu') || el.matches('[data-menu-toggle]') || el.closest('.site-header') !== null);
+    });
+    expect(inside, `Tab ${i + 1} left the menu`).toBe(true);
+  }
+});
+
+test('proof numbers fit their boxes on a 360px phone', async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 780 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  const overflowing = await page.locator('.stat').evaluateAll(stats => stats.filter(s => {
+    const value = s.querySelector('.stat-value') as HTMLElement;
+    return value.scrollWidth > s.clientWidth;
+  }).length);
+  expect(overflowing).toBe(0);
+});
