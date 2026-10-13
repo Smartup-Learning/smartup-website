@@ -91,8 +91,8 @@ A separate service in the same project runs the v2 website for client review. Th
 | Service | `smartup-v2-preview` — `59675c15-342b-4e37-a977-fbcfd5460dc9` |
 | Environment | `production` — `189f0696-d13d-4d82-a448-468c54de72d4` |
 | Volume | `smartup-v2-preview-volume` — `f1b80719-549d-491c-b7b0-d48fd5dbbf79`, mounted at `/data` (database and `uploads/`) |
-| Deployments | `23bcfd2a-61df-4659-9b56-2eabf49d2273` (first), `e56dd0f4-f6eb-4e35-848e-c465e8035613` (redeploy that proved the volume keeps data) |
-| Source commit | `cd5ef45` (branch `v2-website`) |
+| Deployments | `23bcfd2a-61df-4659-9b56-2eabf49d2273` (first), `e56dd0f4-f6eb-4e35-848e-c465e8035613` (redeploy that proved the volume keeps data), `680abf01-d815-43b6-bfcd-814403843540` (current) |
+| Source commit | `a122d62` (branch `v2-website`) |
 | Variables | `NODE_ENV`, `DATA_DIR`, `PORT`, `TRUST_PROXY_HOPS`, `NOINDEX`, `SITE_URL`, `ADMIN_PASSWORD` |
 
 The admin password is in the git-ignored `.env.railway-preview` and in Railway; share it privately. `NOINDEX=1` keeps the preview out of search engines; remove it only when v2 becomes the main site. `SITE_URL` makes canonical links and the sitemap use the https address.
@@ -109,4 +109,4 @@ cd "$release_dir"
 railway up --project 2e278d8d-41ba-4dd4-a21e-5cd3a47ab81d --environment 189f0696-d13d-4d82-a448-468c54de72d4 --service 59675c15-342b-4e37-a977-fbcfd5460dc9 --detach --message 'Smartup v2 client preview'
 ```
 
-Then wait for `/health` to answer `ok` and check the pages and admin sign-in over HTTPS.
+Then wait for `/health` to answer `ok` (it only does once the pages can load) and check the pages and admin sign-in over HTTPS.
