@@ -1,6 +1,15 @@
 ---
 import Base from '../layouts/Base.astro';
+import Owl from '../components/Owl.astro';
+import Stats from '../components/Stats.astro';
+import { getStore } from '../lib/store';
+const store = getStore(Astro.locals);
 ---
 <Base description="Smartup tuitions in Kochi and online for CBSE and State Board students, classes 8 to +2." page="home">
-  <section class="section"><div class="container"><h1>Smartup</h1></div></section>
+  <section class="section section--purple">
+    <div class="container" style="display:grid;gap:2rem">
+      <Owl size="8rem" badge label="Smartup owl" />
+      <Stats stats={store.stats()} />
+    </div>
+  </section>
 </Base>

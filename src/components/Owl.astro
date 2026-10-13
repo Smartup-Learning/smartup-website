@@ -1,0 +1,22 @@
+---
+interface Props { size?: string; badge?: boolean; idle?: boolean; label?: string; class?: string }
+const { size = '6rem', badge = false, idle = true, label, class: className } = Astro.props;
+---
+<span class:list={['owl-wrap', { 'owl-badge': badge }, className]} style={`--owl-size:${size}`}>
+  <svg class="owl" viewBox="0 0 258 228" data-owl={idle ? 'idle' : 'still'} role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : 'true'}>
+    <g fill="#672aae">
+      <path transform="matrix(1,0,0,-1,181.28363,167.49811)" d="M0 0C-16.617-2.848-32.902 3.134-44.922 14.804-52.386-.205-65.76-11.269-82.376-14.117-111.717-19.145-140.039 3.338-145.635 36.101-151.231 68.864-131.981 99.499-102.641 104.527-86.024 107.375-69.738 101.393-57.718 89.723-50.255 104.732-36.881 115.797-20.264 118.644 9.077 123.672 37.398 101.189 42.994 68.426 48.59 35.664 29.341 5.028 0 0M62.68 84.761C53.587 137.996-4.446 164.393-68.594 153.4-132.742 142.407-178.714 98.186-169.621 44.951-157.698-24.854-98.551-57.778-34.403-46.785 29.745-35.791 74.602 14.956 62.68 84.761" />
+      <g class="owl-pupils">
+        <g class="owl-eye"><path transform="matrix(1,0,0,-1,155.487,110.86047)" d="M0 0C-1.691 9.902 4.739 19.266 14.363 20.916 23.987 22.565 33.16 15.875 34.851 5.972 36.542-3.93 30.112-13.294 20.488-14.943 10.864-16.592 1.691-9.902 0 0" /></g>
+        <g class="owl-eye"><path transform="matrix(1,0,0,-1,69.588809,125.58087)" d="M0 0C-1.691 9.902 4.739 19.266 14.363 20.916 23.987 22.565 33.16 15.875 34.851 5.972 36.542-3.93 30.112-13.294 20.488-14.943 10.864-16.592 1.691-9.902 0 0" /></g>
+      </g>
+      <path transform="matrix(1,0,0,-1,135.4701,147.47589)" d="M0 0-7.478 11.353C-9.853 13.794-9.998 17.639-7.813 20.252-5.728 22.746-2.147 23.36 .647 21.702 3.575 19.965 4.714 16.29 3.284 13.198Z" />
+    </g>
+  </svg>
+</span>
+<style>
+  .owl-wrap { display: inline-block; width: var(--owl-size); flex: none; }
+  .owl { width: 100%; height: auto; overflow: visible; }
+  .owl-badge { display: inline-grid; place-items: center; aspect-ratio: 1; padding: calc(var(--owl-size) * 0.18); border-radius: 50%; background: var(--cream); }
+  .owl-eye, .owl-pupils { transform-box: fill-box; transform-origin: center; }
+</style>

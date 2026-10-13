@@ -38,3 +38,10 @@ test('seed media, fonts and brand files are served with a day of caching', async
     assert.equal(r.headers.get('cache-control'), 'public, max-age=86400', p);
   }
 });
+
+test('Astro-built scripts are cached as immutable', async () => {
+  const html = await (await fetch(base + '/')).text();
+  const src = html.match(/src="(\/_astro\/[^"]+\.js)"/)?.[1];
+  assert.ok(src, 'homepage loads an /_astro/ script');
+  assert.equal((await fetch(base + src)).headers.get('cache-control'), 'public, max-age=31536000, immutable');
+});
