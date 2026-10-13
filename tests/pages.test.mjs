@@ -381,3 +381,11 @@ test('Results headings nest: years are h3 and result headlines are h4, with boar
   assert.match(page, /aria-label="Filter by board"/);
   assert.match(page, /data-filter-tags="2026 state"/);
 });
+
+test('the privacy page explains form data, cookies and YouTube, and the footer links to it', async t => {
+  const site = await start();
+  t.after(site.close);
+  const page = await site.html('/privacy');
+  for (const text of ['When you fill in a form', 'Smartup Quest', 'youtube-nocookie\\.com', 'i\\.ytimg\\.com', 'Continue on WhatsApp', 'does not use advertising or analytics cookies']) assert.match(page, new RegExp(text));
+  assert.match(await site.html('/'), /href="\/privacy"/);
+});

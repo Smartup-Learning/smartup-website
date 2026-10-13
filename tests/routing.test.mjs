@@ -17,7 +17,7 @@ test('the homepage is rendered by Astro', async () => {
 });
 
 test('Quest and v1 shared files are still served from dist', async () => {
-  for (const p of ['/assessment/', '/assessment', '/assets/owl.svg', '/privacy.html', '/robots.txt']) {
+  for (const p of ['/assessment/', '/assessment', '/assets/owl.svg', '/robots.txt']) {
     assert.equal((await fetch(base + p)).status, 200, p);
   }
 });
@@ -72,4 +72,10 @@ test('an unknown blog post returns the branded 404', async () => {
   const r = await fetch(base + '/blog/no-such-post');
   assert.equal(r.status, 404);
   assert.match(await r.text(), /This page isn't here yet/);
+});
+
+test('the old privacy address redirects to the new privacy page', async () => {
+  const r = await fetch(base + '/privacy.html', { redirect: 'manual' });
+  assert.equal(r.status, 301);
+  assert.equal(r.headers.get('location'), '/privacy');
 });

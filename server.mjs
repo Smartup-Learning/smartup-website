@@ -16,7 +16,7 @@ const legacyRoot = path.resolve('dist');
 const webRoot = path.resolve('build/client');
 const astroEntry = path.resolve('build/server/entry.mjs');
 const legacyPrefixes = ['/assessment/', '/assets/'];
-const legacyFiles = new Set(['/assessment', '/privacy.html', '/robots.txt']);
+const legacyFiles = new Set(['/assessment', '/robots.txt']);
 const types = {'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.mjs':'text/javascript; charset=utf-8','.json':'application/json; charset=utf-8','.svg':'image/svg+xml','.webp':'image/webp','.avif':'image/avif','.png':'image/png','.jpg':'image/jpeg','.woff2':'font/woff2','.ttf':'font/ttf','.txt':'text/plain; charset=utf-8','.xml':'application/xml; charset=utf-8','.ico':'image/x-icon','.mp4':'video/mp4','.webm':'video/webm','.vtt':'text/vtt; charset=utf-8'};
 
 let astroHandler;
@@ -97,6 +97,7 @@ export function createSiteServer(options = {}) {
         const found = await findFile(uploadsDir, pathname.slice('/media'.length));
         return found ? sendFile(req, res, found, 'public, max-age=31536000, immutable', send) : send(404, 'Page not found');
       }
+      if (pathname === '/privacy.html') { res.writeHead(301, { Location: '/privacy', 'Cache-Control': 'public, max-age=86400' }); return res.end(); }
       const legacy = legacyFiles.has(pathname) || legacyPrefixes.some(prefix => pathname.startsWith(prefix));
       const found = await findFile(legacy ? legacyRoot : webRoot, pathname);
       if (found) return sendFile(req, res, found, cacheFor(pathname), send);
