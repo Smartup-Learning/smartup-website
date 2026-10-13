@@ -96,8 +96,9 @@ export function createFormRoutes({ content, inbox }) {
       try { input = JSON.parse(raw); } catch { input = null; }
       if (!input || typeof input !== 'object' || Array.isArray(input)) return respond(400, { error: 'Send a valid JSON object.' });
     }
-    if (limited(`form:${kind}:${ip}`, 20, 600000)) return native ? back('busy') : respond(429, { error: 'Too many messages from this connection. Please try again later, or call us.' });
+    // Bots get a fake success before the limit is counted, so they cannot use up the limit real visitors share.
     if (isBot(input)) return native ? redirect(`/thanks?form=${kind}`) : respond(201, { ok: true });
+    if (limited(`form:${kind}:${ip}`, 20, 600000)) return native ? back('busy') : respond(429, { error: 'Too many messages from this connection. Please try again later, or call us.' });
     const { values, errors } = validate(input, content);
     if (Object.keys(errors).length) return native ? back('invalid') : respond(400, { error: 'Check the highlighted details.', fields: errors });
     inbox.add(kind, values);

@@ -67,3 +67,10 @@ test('oversized, wrongly typed, malformed and unknown form posts are refused', a
   assert.equal((await postJson(site, 'nope', booking)).status, 404);
   assert.equal((await site.call('/api/forms/demo', { signedIn: false })).status, 405);
 });
+
+test('bots that fill the honeypot do not use up the limit for real visitors', async t => {
+  const site = await startSite(t);
+  for (let i = 0; i < 25; i++) assert.equal((await postJson(site, 'demo', { ...booking, website: 'spam' })).status, 201);
+  assert.equal((await postJson(site, 'demo', booking)).status, 201);
+  assert.equal(new InboxStore(site.db).list('demo').length, 1);
+});
