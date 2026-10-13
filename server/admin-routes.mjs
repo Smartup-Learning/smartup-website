@@ -1,6 +1,7 @@
 import { publicSchema, SETTINGS } from './admin-schema.mjs';
 import { readBuffer } from './read-body.mjs';
 import { MAX_UPLOAD, MEDIA_TYPES } from './media-library.mjs';
+import { INBOXES } from './inbox.mjs';
 
 /** Staff API under /api/admin/. The Quest handler has already checked the session. */
 export function createAdminRoutes({ admin, media, inbox }) {
@@ -8,7 +9,10 @@ export function createAdminRoutes({ admin, media, inbox }) {
     const [area, key, id, action] = route.split('/').slice(3);
     const numeric = value => (/^\d+$/.test(value ?? '') ? Number(value) : null);
     try {
-      if (area === 'schema' && req.method === 'GET') return respond(200, { sections: publicSchema(), settings: SETTINGS });
+      if (area === 'schema' && req.method === 'GET') {
+        const inboxes = Object.fromEntries(Object.entries(INBOXES).map(([kind, box]) => [kind, { label: box.label, fields: box.fields }]));
+        return respond(200, { sections: publicSchema(), settings: SETTINGS, inboxes });
+      }
       if (area === 'content' && key) {
         if (req.method === 'GET' && id === undefined) return respond(200, { items: admin.list(key) });
         if (req.method === 'POST' && id === undefined) return respond(201, { id: admin.create(key, await body(req)) });
@@ -35,6 +39,24 @@ export function createAdminRoutes({ admin, media, inbox }) {
           if (used.length) return respond(409, { error: `This photo is used in: ${used.join(', ')}. Remove it there first.` });
           await media.remove(itemId);
           return respond(200, { ok: true });
+        }
+      }
+      if (area === 'inbox' && inbox) {
+        if (key === undefined && req.method === 'GET') return respond(200, { counts: inbox.counts() });
+        if (!Object.hasOwn(INBOXES, key)) return respond(404, { error: 'Not found.' });
+        if (req.method === 'GET' && id === undefined) return respond(200, { items: inbox.list(key) });
+        if (req.method === 'GET' && id === 'export') {
+          const date = new Date().toISOString().slice(0, 10);
+          res.writeHead(200, { 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': `attachment; filename="smartup-${key}-${date}.csv"`, 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' });
+          return res.end(inbox.csv(key));
+        }
+        const itemId = numeric(id);
+        const gone = () => respond(404, { error: 'This entry no longer exists.' });
+        if (itemId !== null && action === undefined && req.method === 'PUT') return inbox.update(key, itemId, await body(req)) ? respond(200, { ok: true }) : gone();
+        if (itemId !== null && action === undefined && req.method === 'DELETE') return inbox.remove(key, itemId) ? respond(200, { ok: true }) : gone();
+        if (itemId !== null && key === 'ask' && action === 'publish' && req.method === 'POST') {
+          const faqId = inbox.publishAnswer(itemId, await body(req));
+          return faqId ? respond(201, { faqId }) : gone();
         }
       }
       if (area === 'settings' && key === undefined) {
