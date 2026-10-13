@@ -1,5 +1,5 @@
 import { api, ApiError } from './api';
-import { h } from './dom';
+import { h, toast } from './dom';
 import type { Schema } from './fields';
 import { contentView } from './content-view';
 import { settingsView } from './settings-view';
@@ -18,7 +18,6 @@ const logout = document.getElementById('logout') as HTMLButtonElement;
 let schema: Schema | null = null;
 
 function showLogin() {
-  schema = null;
   workspace.hidden = true;
   logout.hidden = true;
   login.hidden = false;
@@ -72,13 +71,21 @@ loginForm.addEventListener('submit', async event => {
   try {
     await api('login', { method: 'POST', body: { password: password.value } });
     password.value = '';
-    await showWorkspace();
+    // If the session ended mid-edit, bring back the open screen so nothing typed is lost.
+    if (schema) {
+      login.hidden = true;
+      workspace.hidden = false;
+      logout.hidden = false;
+      toast('Signed in again. Press Save to finish.');
+    } else await showWorkspace();
   } catch (error) {
     loginError.textContent = error instanceof Error ? error.message : 'Sign-in failed.';
   }
 });
 logout.addEventListener('click', async () => {
   await api('logout', { method: 'POST' }).catch(() => {});
+  schema = null;
+  main.replaceChildren();
   showLogin();
 });
 window.addEventListener('admin:signed-out', showLogin);

@@ -95,6 +95,25 @@ test.describe('signed in', () => {
     }
   });
 
+  test('when the session ends mid-edit, signing in again keeps what was typed', async () => {
+    const question = unique('E2E: is the library open on Sundays?');
+    await page.goto('/admin#/content/faqs');
+    await page.getByRole('button', { name: 'Add new' }).click();
+    await page.getByLabel('Topic').fill('E2E');
+    await page.getByLabel('Question', { exact: true }).fill(question);
+    await page.getByLabel('Answer', { exact: true }).fill('Yes, from 10 am.');
+    // End the session on the server, as an 8-hour expiry would.
+    await page.request.post('/api/admin/logout', { headers: { 'X-Smartup-Request': '1' }, data: {} });
+    await page.getByRole('button', { name: 'Save' }).click();
+    await page.getByLabel('Admin password').fill(PASSWORD);
+    await page.getByRole('button', { name: 'Sign in' }).click();
+    await expect(page.getByLabel('Question', { exact: true })).toHaveValue(question);
+    await page.getByRole('button', { name: 'Save' }).click();
+    await expect(page.locator('#admin-toast')).toContainText('Saved');
+    await openRow(question);
+    await deleteOpenItem();
+  });
+
   test('a photo uploaded with an alumni story shows on the Alumni page, then both are removed', async () => {
     const name = unique('E2E Alumna');
     const png = await sharp({ create: { width: 800, height: 600, channels: 3, background: '#5f2ea8' } }).png().toBuffer();
