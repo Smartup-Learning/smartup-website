@@ -30,3 +30,11 @@ test('unknown pages return 404 and non-GET methods 405', async () => {
   assert.equal((await fetch(base + '/no-such-page')).status, 404);
   assert.equal((await fetch(base + '/', { method: 'POST' })).status, 405);
 });
+
+test('seed media, fonts and brand files are served with a day of caching', async () => {
+  for (const p of ['/seed/img/leader-mohamed-rayees-480.webp', '/fonts/rubik-400.woff2', '/brand/owl.svg']) {
+    const r = await fetch(base + p);
+    assert.equal(r.status, 200, p);
+    assert.equal(r.headers.get('cache-control'), 'public, max-age=86400', p);
+  }
+});

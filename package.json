@@ -12,6 +12,7 @@
     "test:e2e": "astro build && playwright test",
     "build": "npm run build:assets && astro build && node scripts/build-sites.mjs",
     "build:assets": "esbuild src/assessment/world.js src/assessment/companion.js --bundle --format=esm --minify --outdir=dist/assessment",
+    "media": "node scripts/fetch-media.mjs && node scripts/build-media.mjs",
     "setup": "node scripts/setup-local-admin.mjs",
     "content:reset": "node scripts/reset-content.mjs"
   },
