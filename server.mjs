@@ -4,6 +4,7 @@ import { stat } from 'node:fs/promises';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { AssessmentStore, createAssessmentHandler } from './server/assessment.mjs';
+import { ContentStore } from './server/content-store.mjs';
 
 const legacyRoot = path.resolve('dist');
 const webRoot = path.resolve('build/client');
@@ -63,6 +64,8 @@ function sendFile(req, res, { file, info }, cacheControl, send) {
 
 export function createSiteServer(options = {}) {
   const store = options.store ?? new AssessmentStore();
+  const content = options.content ?? new ContentStore(store.db);
+  content.applySeed();
   const api = createAssessmentHandler({ ...options, store });
   return http.createServer(async (req, res) => {
     const send = (status, body, headers = {}) => { res.writeHead(status, { 'Content-Type': 'text/plain; charset=utf-8', ...headers }); res.end(req.method === 'HEAD' ? undefined : body); };
@@ -81,7 +84,7 @@ export function createSiteServer(options = {}) {
       const astro = await loadAstro();
       if (!astro) return send(503, 'The website has not been built. Run npm run build.');
       // No `next` callback: Astro renders src/pages/404.astro for unknown routes.
-      return astro(req, res, undefined, {});
+      return astro(req, res, undefined, { store: content });
     } catch (error) {
       if (error.code === 'ENOENT' || error.code === 'ENOTDIR') return send(404, 'Page not found');
       send(500, 'Unable to serve this page');
