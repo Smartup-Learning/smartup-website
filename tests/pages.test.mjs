@@ -119,3 +119,20 @@ test('an empty faculty table shows a friendly message and no filter bar', async 
   assert.match(page, /Our team will be introduced here soon/);
   assert.doesNotMatch(page, /data-filter-for/);
 });
+
+test('Results groups every result by year, newest first, each naming its exam and year', async t => {
+  const site = await start();
+  t.after(site.close);
+  const page = await site.html('/results');
+  const years = [...page.matchAll(/<section[^>]*data-year="(\d{4})"/g)].map(m => m[1]);
+  assert.deepEqual(years, ['2026', '2025', '2024', '2023', '2020']);
+  assert.match(page, /127 students with Full A\+/);
+  assert.match(page, /SSLC · 2023/);
+  assert.match(page, /href="\/seed\/img\/result-2026-sslc-107-1600\.webp"/);
+});
+
+test('Results without any rows shows a friendly message', async t => {
+  const site = await start(content => content.db.exec('UPDATE results SET published = 0'));
+  t.after(site.close);
+  assert.match(await site.html('/results'), /Results will be published here soon/);
+});

@@ -1,0 +1,54 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import FilterChips from '../components/FilterChips.astro';
+import ResultCard from '../components/ResultCard.astro';
+import SectionHead from '../components/SectionHead.astro';
+import YouTube from '../components/YouTube.astro';
+import { getStore } from '../lib/store';
+const store = getStore(Astro.locals);
+const results = store.results();
+const years = [...new Set(results.map(r => r.year))].sort((a, b) => b.localeCompare(a));
+const byYear = years.map(year => ({ year, summaries: results.filter(r => r.year === year && r.kind === 'summary'), students: results.filter(r => r.year === year && r.kind !== 'summary') }));
+const toppers = store.videos('toppers');
+---
+<Base title="Results" description="Smartup board exam results: SSLC, Plus One, Plus Two and CBSE Class 10, year by year." page="results">
+  <PageHero eyebrow="Results" title="Results our students" highlight="earned" intro="Every result names its exam and year, as published by Smartup. Tap a poster to see it in full." />
+  <section class="section section--cream" aria-labelledby="results-title">
+    <div class="container" id="results-years">
+      <h2 id="results-title" class="sr-only">Results by year</h2>
+      {years.length === 0 ? <p class="empty">Results will be published here soon.</p> : (
+        <>
+          <FilterChips label="Filter by year" target="results-years" options={years.map(y => ({ value: y, label: y }))} />
+          {byYear.map(group => (
+            <section class="year" data-year={group.year} data-filter-tags={group.year} aria-labelledby={`year-${group.year}`}>
+              <h3 id={`year-${group.year}`} class="year-title">{group.year}</h3>
+              {group.summaries.length > 0 && <div class="summaries rail" data-reveal="group">{group.summaries.map(r => <ResultCard result={r} />)}</div>}
+              {group.students.length > 0 && <div class="students" data-reveal="group">{group.students.map(r => <ResultCard result={r} />)}</div>}
+            </section>
+          ))}
+        </>
+      )}
+    </div>
+  </section>
+  {toppers.length > 0 && (
+    <section class="section" aria-labelledby="toppers-title">
+      <div class="container">
+        <SectionHead eyebrow="Toppers Talk" title="Hear it from our toppers" id="toppers-title" />
+        <div class="rail toppers" data-reveal="group">{toppers.map(v => <YouTube id={v.youtubeId} title={v.title} format={v.format} />)}</div>
+      </div>
+    </section>
+  )}
+</Base>
+<style>
+  .year { display: grid; gap: 1.25rem; padding-bottom: clamp(2.5rem, 2rem + 3vw, 4rem); }
+  .year[hidden] { display: none; }
+  .year-title { font-size: var(--step-4); font-weight: 800; color: var(--purple); }
+  .students { display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* Summaries swipe on phones (.rail) and sit in a grid from 600px. */
+  @media (min-width: 600px) { .summaries { grid-auto-flow: row; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); overflow: visible; } }
+  .empty { font-size: var(--step-1); }
+  .toppers { grid-auto-columns: min(80%, 22rem); }
+  @media (min-width: 600px) { .students { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (min-width: 1200px) { .students { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+</style>

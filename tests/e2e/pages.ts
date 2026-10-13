@@ -1,1 +1,1 @@
-export const PAGES = ['/', '/story', '/founders', '/faculty', '/does-not-exist'];
+export const PAGES = ['/', '/story', '/founders', '/faculty', '/results', '/does-not-exist'];

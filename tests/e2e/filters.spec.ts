@@ -20,3 +20,10 @@ test('without JavaScript everyone is listed and the chips are hidden', async ({ 
   await expect(page.getByRole('button', { name: 'Chemistry' })).toBeHidden();
   await context.close();
 });
+
+test('choosing a year on Results shows only that year', async ({ page }) => {
+  await page.goto('/results');
+  await page.getByRole('button', { name: '2023' }).click();
+  await expect(page.locator('section[data-year]:visible')).toHaveCount(1);
+  await expect(page.locator('section[data-year="2023"]')).toBeVisible();
+});
