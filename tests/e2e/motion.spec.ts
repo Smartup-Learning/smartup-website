@@ -43,3 +43,18 @@ test('page JavaScript stays under 50 KB gzipped', async ({ page, request }) => {
   for (const url of scripts) total += gzipSync(await (await request.get(url)).body()).length;
   expect(total).toBeLessThan(50 * 1024);
 });
+
+for (const path of ['/faculty', '/results']) {
+  test(`every card in the longest grid on ${path} appears on a small phone`, async ({ browser }) => {
+    const context = await browser.newContext({ viewport: { width: 360, height: 640 } });
+    const page = await context.newPage();
+    await page.goto(`http://127.0.0.1:4173${path}`);
+    const groups = page.locator('[data-reveal="group"]');
+    const sizes = await groups.evaluateAll(els => els.map(e => e.querySelectorAll('[data-reveal-item]').length));
+    const items = groups.nth(sizes.indexOf(Math.max(...sizes))).locator('[data-reveal-item]');
+    const middle = items.nth(Math.floor(Math.max(...sizes) / 2));
+    await middle.scrollIntoViewIfNeeded();
+    await expect.poll(() => middle.evaluate(e => getComputedStyle(e).opacity), { timeout: 4000 }).toBe('1');
+    await context.close();
+  });
+}

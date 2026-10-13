@@ -47,7 +47,7 @@ a { color: inherit; }
 
 @media (prefers-reduced-motion: no-preference) {
   .js [data-reveal]:not([data-reveal='group']):not(.is-revealed),
-  .js [data-reveal='group']:not(.is-revealed) [data-reveal-item] { opacity: 0; }
+  .js [data-reveal='group'] [data-reveal-item]:not(.is-revealed) { opacity: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

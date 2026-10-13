@@ -17,13 +17,19 @@ export function rollHead(svg: Element) {
 }
 
 function initReveals() {
-  inView('[data-reveal]', element => {
-    const items = element.getAttribute('data-reveal') === 'group'
-      ? Array.from(element.querySelectorAll<HTMLElement>('[data-reveal-item]'))
-      : [element as HTMLElement];
+  // Group items are watched one by one: a long grid can be many screens tall, so 15% of the
+  // whole group may never fit on a phone. Items entering together still animate in sequence.
+  let batch: HTMLElement[] = [];
+  const reveal = (element: Element) => {
     element.classList.add('is-revealed');
-    animate(items, { opacity: [0, 1], y: [24, 0] }, { duration: 0.6, delay: stagger(0.07), ease: EASE });
-  }, { amount: 0.15 });
+    batch.push(element as HTMLElement);
+    if (batch.length > 1) return;
+    requestAnimationFrame(() => {
+      animate(batch, { opacity: [0, 1], y: [24, 0] }, { duration: 0.6, delay: stagger(0.07), ease: EASE });
+      batch = [];
+    });
+  };
+  inView('[data-reveal]:not([data-reveal="group"]), [data-reveal="group"] [data-reveal-item]', reveal, { amount: 0.15 });
 }
 
 function initCounters() {
