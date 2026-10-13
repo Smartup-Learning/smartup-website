@@ -1,4 +1,5 @@
 import { animate, inView, stagger } from 'motion';
+import { formatCount } from '../lib/count';
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -26,13 +27,13 @@ function initReveals() {
 }
 
 function initCounters() {
-  const format = new Intl.NumberFormat('en-IN');
   inView('[data-count-to]', element => {
     const el = element as HTMLElement;
     const to = Number(el.dataset.countTo);
     const suffix = el.dataset.countSuffix ?? '';
+    const grouped = el.dataset.countGroup !== undefined;
     if (!Number.isFinite(to)) return;
-    animate(0, to, { duration: 1.4, ease: EASE, onUpdate: v => { el.textContent = format.format(Math.round(v)) + suffix; } });
+    animate(0, to, { duration: 1.4, ease: EASE, onUpdate: v => { el.textContent = formatCount(Math.round(v), grouped) + suffix; } });
   }, { amount: 0.6 });
 }
 

@@ -63,3 +63,7 @@ test('video byte ranges are served uncompressed so seeking works', async () => {
 test('page styles are inlined, so no stylesheet blocks the first paint', async () => {
   assert.doesNotMatch(await (await fetch(base + '/')).text(), /<link[^>]+rel="stylesheet"/);
 });
+
+test('a null byte in the URL is rejected as a bad request', async () => {
+  assert.equal((await fetch(base + '/a%00b')).status, 400);
+});

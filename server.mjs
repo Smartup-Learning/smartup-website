@@ -81,6 +81,7 @@ export function createSiteServer(options = {}) {
       if (url.pathname === '/health') return send(200, 'ok');
       let pathname;
       try { pathname = decodeURIComponent(url.pathname); } catch { return send(400, 'Invalid URL'); }
+      if (pathname.includes('\0')) return send(400, 'Invalid URL');
       if (pathname.split('/').some(part => part.startsWith('.')) || /^\/(server|client)(\/|$)/.test(pathname)) return send(404, 'Page not found');
       const legacy = legacyFiles.has(pathname) || legacyPrefixes.some(prefix => pathname.startsWith(prefix));
       const found = await findFile(legacy ? legacyRoot : webRoot, pathname);

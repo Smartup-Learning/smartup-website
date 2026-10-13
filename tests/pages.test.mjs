@@ -79,3 +79,17 @@ test('written testimonials render as quotes, not empty video players', async t =
   assert.match(page, /<blockquote[^>]*>[\s\S]*Smartup changed how my son studies\.[\s\S]*<\/blockquote>/);
   assert.doesNotMatch(page, /src=""/);
 });
+
+test('Our Story stays tidy when chapters and growth data are empty', async t => {
+  const site = await start(content => content.db.exec('DELETE FROM timeline_entries; DELETE FROM growth_points;'));
+  t.after(site.close);
+  const page = await site.html('/story');
+  assert.doesNotMatch(page, /to\s+students/);
+  assert.doesNotMatch(page, /year by year/);
+});
+
+test('the homepage description is built from the live stats', async t => {
+  const site = await start(content => content.db.exec("UPDATE stats SET value = '10' WHERE label = 'Centres in Kochi'"));
+  t.after(site.close);
+  assert.match(await site.html('/'), /<meta name="description" content="[^"]*10 centres in kochi/i);
+});

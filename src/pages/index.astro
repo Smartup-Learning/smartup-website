@@ -21,8 +21,9 @@ const feedback = store.testimonials('feedback');
 const alumni = store.testimonials('alumni');
 const jobs = store.jobs();
 const centres = store.centres();
+const description = `Smartup tuitions in Kochi and online for CBSE and State Board students, classes 8 to +2. ${stats.map(s => `${s.value} ${s.label.toLowerCase()}`).join(', ')}.`;
 ---
-<Base description="Smartup tuitions in Kochi and online for CBSE and State Board students, classes 8 to +2. 12+ years, 9 centres, 30,000+ students." page="home">
+<Base description={description} page="home">
   <Hero headline={settings.heroHeadline} highlight={settings.heroHighlight} description={settings.heroDescription} stats={stats} />
 
   <section id="about" class="section section--cream" aria-labelledby="about-title">

@@ -26,6 +26,7 @@ const { centreCount, hours } = Astro.props;
   <p class="offline"><strong>Online or offline.</strong> Learn from home, or at one of our {centreCount} centres in Kochi, open {hours}.</p>
 </div>
 <style>
+  .tablist[hidden] { display: none; }
   .tablist { display: inline-flex; gap: 0.25rem; padding: 0.3rem; margin-bottom: 1.75rem; border-radius: 999px; background: var(--white); }
   [role='tab'] { min-height: 44px; padding: 0.5rem 1.25rem; border: 0; border-radius: 999px; background: transparent; font: 600 1rem var(--font); color: var(--ink); cursor: pointer; }
   [role='tab'][aria-selected='true'] { background: var(--purple); color: var(--white); }

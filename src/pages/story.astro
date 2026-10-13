@@ -10,22 +10,26 @@ const growth = store.growth();
 const vision = store.settings().vision;
 const first = growth[0];
 const latest = growth.at(-1);
+const firstYear = Number(chapters[0]?.yearLabel);
+const journeyTitle = Number.isFinite(firstYear) ? `${new Date().getFullYear() - firstYear} years, year by year` : 'Year by year';
 ---
 <Base title="Our Story" description="How Smartup grew from one classroom in Kochi in 2014 to more than 30,000 students — and where we're going next." page="story">
   <section class="section section--cream story-hero">
     <div class="container">
       <p class="eyebrow">Our Story</p>
-      <h1>From one classroom to <span class="marker">{latest?.studentsLabel} students</span></h1>
+      <h1>{latest ? <>From one classroom to <span class="marker">{latest.studentsLabel} students</span></> : 'Our story'}</h1>
       {first && latest && <p class="lead">Smartup began in {first.year} with {first.studentsLabel} students in a single centre in Kochi. Today {latest.studentsLabel} students have learned with us, online and at {latest.centres} centres.</p>}
     </div>
   </section>
 
-  <section class="section" aria-labelledby="journey">
-    <div class="container">
-      <SectionHead eyebrow="The journey" title="Twelve years, year by year" id="journey" />
-      <Timeline chapters={chapters} variant="full" />
-    </div>
-  </section>
+  {chapters.length > 0 && (
+    <section class="section" aria-labelledby="journey">
+      <div class="container">
+        <SectionHead eyebrow="The journey" title={journeyTitle} id="journey" />
+        <Timeline chapters={chapters} variant="full" />
+      </div>
+    </section>
+  )}
 
   {growth.length > 0 && (
     <section class="section section--cream" aria-labelledby="growth">

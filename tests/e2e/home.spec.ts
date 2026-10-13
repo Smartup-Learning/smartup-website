@@ -64,3 +64,11 @@ test('careers preview lists openings and links to all of them', async ({ page })
   await expect(page.locator('#careers .job')).toHaveCount(6);
   await expect(page.locator('#careers').getByRole('link', { name: 'See all 12 openings' })).toHaveAttribute('href', '/careers');
 });
+
+test('without JavaScript the course tab buttons are hidden', async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  const page = await context.newPage();
+  await page.goto('http://127.0.0.1:4173/');
+  await expect(page.getByRole('tab', { name: 'CBSE' })).toBeHidden();
+  await context.close();
+});

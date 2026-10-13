@@ -13,7 +13,7 @@ const parse = (value: string) => {
       <div class="stat" data-reveal-item>
         <dt class="stat-label">{stat.label}</dt>
         <dd class="stat-value">
-          <span aria-hidden="true" data-count-to={count?.to} data-count-suffix={count?.suffix}>{stat.value}</span>
+          <span aria-hidden="true" data-count-to={count?.to} data-count-suffix={count?.suffix} data-count-group={stat.value.includes(',') ? '' : undefined}>{stat.value}</span>
           <span class="sr-only">{stat.value}</span>
         </dd>
         {stat.source && <dd class="stat-source">{stat.source}</dd>}

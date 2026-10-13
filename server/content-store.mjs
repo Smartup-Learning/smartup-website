@@ -38,6 +38,10 @@ function phoneOrNull(raw) {
   try { return normalizePhone(raw); } catch { return null; }
 }
 
+function parseList(text) {
+  try { const value = JSON.parse(text); return Array.isArray(value) ? value : []; } catch { return []; }
+}
+
 const flag = value => (value ? 1 : 0);
 const SECTIONS = {
   stats(db, rows) {
@@ -91,6 +95,8 @@ export class ContentStore {
       if (done.has(section) || data[section] === undefined) continue;
       this.db.exec('BEGIN IMMEDIATE');
       try {
+        // Another process may have seeded this section since `done` was read.
+        if (this.db.prepare('SELECT 1 FROM seed_log WHERE section = ?').get(section)) { this.db.exec('COMMIT'); continue; }
         apply(this.db, data[section]);
         this.db.prepare('INSERT INTO seed_log(section, applied_at) VALUES(?, ?)').run(section, new Date().toISOString());
         this.db.exec('COMMIT');
@@ -115,7 +121,7 @@ export class ContentStore {
   timeline({ featured = false } = {}) {
     const where = featured ? 'published = 1 AND featured = 1' : 'published = 1';
     return this.db.prepare(`SELECT id, year_label AS yearLabel, title, story, stat_value AS statValue, stat_label AS statLabel, media, source_url AS sourceUrl, featured FROM timeline_entries WHERE ${where} ORDER BY sort, id`).all()
-      .map(r => ({ ...r, media: JSON.parse(r.media), featured: r.featured === 1 }));
+      .map(r => ({ ...r, media: parseList(r.media), featured: r.featured === 1 }));
   }
 
   growth() {

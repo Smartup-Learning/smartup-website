@@ -93,3 +93,24 @@ test('main phone and WhatsApp settings are normalized, or dropped when invalid',
   assert.equal(store.settings().phone, '+918891910919');
   assert.equal(store.settings().whatsapp, null);
 });
+
+test('a timeline chapter with malformed media still loads, with no photos', () => {
+  const store = seeded();
+  store.db.exec("UPDATE timeline_entries SET media = '' WHERE year_label = '2015'");
+  assert.deepEqual(store.timeline().find(c => c.yearLabel === '2015').media, []);
+});
+
+test('two stores seeding the same new database do not collide', async () => {
+  const { mkdtempSync } = await import('node:fs');
+  const { tmpdir } = await import('node:os');
+  const path = (await import('node:path')).default;
+  const file = path.join(mkdtempSync(path.join(tmpdir(), 'seed-')), 'db.sqlite');
+  const a = new ContentStore(new DatabaseSync(file));
+  const b = new ContentStore(new DatabaseSync(file));
+  const seed = (await import('../server/content-store.mjs')).loadSeed();
+  let raced = false;
+  // The first section b reads triggers a full seed by a, simulating a second process that wins the race.
+  const racing = new Proxy(seed, { get(target, key) { if (!raced && key === 'stats') { raced = true; a.applySeed(); } return target[key]; } });
+  assert.doesNotThrow(() => b.applySeed(racing));
+  assert.equal(b.stats().length, 4);
+});
