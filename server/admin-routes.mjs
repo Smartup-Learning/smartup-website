@@ -1,4 +1,6 @@
 import { publicSchema, SETTINGS } from './admin-schema.mjs';
+import { readBuffer } from './read-body.mjs';
+import { MAX_UPLOAD, MEDIA_TYPES } from './media-library.mjs';
 
 /** Staff API under /api/admin/. The Quest handler has already checked the session. */
 export function createAdminRoutes({ admin, media, inbox }) {
@@ -15,6 +17,24 @@ export function createAdminRoutes({ admin, media, inbox }) {
         if (itemId !== null && action === undefined) {
           if (req.method === 'PUT') { admin.update(key, itemId, await body(req)); return respond(200, { ok: true }); }
           if (req.method === 'DELETE') { admin.remove(key, itemId); return respond(200, { ok: true }); }
+        }
+      }
+      if (area === 'media' && media) {
+        if (req.method === 'GET' && key === undefined) return respond(200, { items: media.list() });
+        if (req.method === 'POST' && key === undefined) {
+          const type = (req.headers['content-type'] ?? '').split(';')[0].trim().toLowerCase();
+          if (!MEDIA_TYPES.includes(type)) return respond(415, { error: 'Upload a JPEG, PNG or WebP image.' });
+          const buffer = await readBuffer(req, MAX_UPLOAD);
+          return respond(201, await media.add(buffer, type, url.searchParams.get('alt')));
+        }
+        const itemId = numeric(key);
+        if (req.method === 'DELETE' && itemId !== null && id === undefined) {
+          const item = media.get(itemId);
+          if (!item) return respond(404, { error: 'This photo no longer exists.' });
+          const used = admin.references(item.base);
+          if (used.length) return respond(409, { error: `This photo is used in: ${used.join(', ')}. Remove it there first.` });
+          await media.remove(itemId);
+          return respond(200, { ok: true });
         }
       }
       if (area === 'settings' && key === undefined) {

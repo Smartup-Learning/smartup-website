@@ -10,6 +10,7 @@ import { InboxStore } from './server/inbox.mjs';
 import { createFormRoutes } from './server/forms.mjs';
 import { AdminContent } from './server/admin-content.mjs';
 import { createAdminRoutes } from './server/admin-routes.mjs';
+import { MediaLibrary } from './server/media-library.mjs';
 
 const legacyRoot = path.resolve('dist');
 const webRoot = path.resolve('build/client');
@@ -72,8 +73,10 @@ export function createSiteServer(options = {}) {
   const content = options.content ?? new ContentStore(store.db);
   content.applySeed();
   const inbox = options.inbox ?? new InboxStore(store.db);
+  const uploadsDir = path.resolve(options.uploadsDir ?? path.join(process.env.DATA_DIR || 'data', 'uploads'));
+  const media = new MediaLibrary(store.db, uploadsDir);
   const admin = new AdminContent(store.db);
-  const api = createAssessmentHandler({ ...options, store, routes: { forms: createFormRoutes({ content, inbox }), admin: createAdminRoutes({ admin, inbox }), ...options.routes } });
+  const api = createAssessmentHandler({ ...options, store, routes: { forms: createFormRoutes({ content, inbox }), admin: createAdminRoutes({ admin, media, inbox }), ...options.routes } });
   const compress = compression();
   return http.createServer(async (req, res) => {
     const send = (status, body, headers = {}) => { res.writeHead(status, { 'Content-Type': 'text/plain; charset=utf-8', ...headers }); res.end(req.method === 'HEAD' ? undefined : body); };
@@ -89,6 +92,11 @@ export function createSiteServer(options = {}) {
       try { pathname = decodeURIComponent(url.pathname); } catch { return send(400, 'Invalid URL'); }
       if (pathname.includes('\0')) return send(400, 'Invalid URL');
       if (pathname.split('/').some(part => part.startsWith('.')) || /^\/(server|client)(\/|$)/.test(pathname)) return send(404, 'Page not found');
+      // Staff uploads: unique names, so they never change and can be cached for a year.
+      if (pathname.startsWith('/media/')) {
+        const found = await findFile(uploadsDir, pathname.slice('/media'.length));
+        return found ? sendFile(req, res, found, 'public, max-age=31536000, immutable', send) : send(404, 'Page not found');
+      }
       const legacy = legacyFiles.has(pathname) || legacyPrefixes.some(prefix => pathname.startsWith(prefix));
       const found = await findFile(legacy ? legacyRoot : webRoot, pathname);
       if (found) return sendFile(req, res, found, cacheFor(pathname), send);
