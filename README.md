@@ -3,7 +3,13 @@
 A responsive marketing website for classes 8–12, with Smartup Quest: a gamified diagnostic page for Classes 5–10. The student app and LMS remain separate. See [the assessment editing and deployment guide](docs/assessment.md) for questions, admin access and saved results.
 
 ## Preview
-Requires Node.js 24 or newer. Run `npm ci`, `npm run setup`, then `npm start`; open http://localhost:3000. Quest is at `/assessment/` and its private editor at `/assessment/admin/`. The local admin password is saved in the ignored `.env` file. `npm run check` checks syntax; `npm test` verifies gameplay, storage, administration, static delivery and the Sites runtime. `npm run build` rebuilds the 3D scene and Sites publication bundle.
+Requires Node.js 24 (`nvm use 24`). Run `npm ci`, `npm run setup`, then `npm run build && npm start`; open http://localhost:3000. The v2 marketing site (Astro, `src/`) is served alongside Smartup Quest at `/assessment/` and its editor at `/assessment/admin/`.
+
+- `npm run dev` — Astro dev server with live reload (content comes from `data/smartup.sqlite`).
+- `npm test` — unit and server tests (builds first). `npm run test:e2e` — Playwright on phone and desktop.
+- `npm run media` — re-fetch and re-encode photos and videos listed in `data-seed/media-sources.json` into `public/seed/`.
+- `npm run fonts` — re-create the Latin-subset Rubik fonts in `public/fonts/` (needs `pip install fonttools brotli`).
+- `npm run content:reset` — local only: clear content tables so `data-seed/content.json` is re-seeded on next start.
 
 ## Railway
 Live at [smartup-web-production.up.railway.app](https://smartup-web-production.up.railway.app), including the assessment and private admin workspace. See the [Railway deployment runbook](docs/railway.md) for the deployed version, project IDs, update command, secrets, persistent `/data` volume and backup status. Keep one replica for the SQLite database. The `.openai` folder configures the separate Sites review and does not affect Railway.
