@@ -12,6 +12,8 @@ import CourseTabs from '../components/CourseTabs.astro';
 import JobsPreview from '../components/JobsPreview.astro';
 import DemoBand from '../components/DemoBand.astro';
 import { getStore } from '../lib/store';
+import { organisationJsonLd } from '../lib/structured-data';
+import { siteOrigin } from '../lib/site';
 const store = getStore(Astro.locals);
 const settings = store.settings();
 const stats = store.stats();
@@ -25,7 +27,7 @@ const jobs = store.jobs();
 const centres = store.centres();
 const description = `Smartup tuitions in Kochi and online for CBSE and State Board students, classes 8 to +2. ${stats.map(s => `${s.value} ${s.label.toLowerCase()}`).join(', ')}.`;
 ---
-<Base description={description} page="home">
+<Base description={description} page="home" structuredData={organisationJsonLd(settings, centres, siteOrigin(Astro.locals, Astro.url))}>
   <Hero headline={settings.heroHeadline} highlight={settings.heroHighlight} description={settings.heroDescription} stats={stats} />
 
   <section id="about" class="section section--cream" aria-labelledby="about-title">

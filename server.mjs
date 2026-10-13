@@ -16,7 +16,7 @@ const legacyRoot = path.resolve('dist');
 const webRoot = path.resolve('build/client');
 const astroEntry = path.resolve('build/server/entry.mjs');
 const legacyPrefixes = ['/assessment/', '/assets/'];
-const legacyFiles = new Set(['/assessment', '/robots.txt']);
+const legacyFiles = new Set(['/assessment']);
 const types = {'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.mjs':'text/javascript; charset=utf-8','.json':'application/json; charset=utf-8','.svg':'image/svg+xml','.webp':'image/webp','.avif':'image/avif','.png':'image/png','.jpg':'image/jpeg','.woff2':'font/woff2','.ttf':'font/ttf','.txt':'text/plain; charset=utf-8','.xml':'application/xml; charset=utf-8','.ico':'image/x-icon','.mp4':'video/mp4','.webm':'video/webm','.vtt':'text/vtt; charset=utf-8'};
 
 let astroHandler;
@@ -105,7 +105,8 @@ export function createSiteServer(options = {}) {
       const astro = await loadAstro();
       if (!astro) return send(503, 'The website has not been built. Run npm run build.');
       // No `next` callback: Astro renders src/pages/404.astro for unknown routes.
-      return astro(req, res, undefined, { store: content });
+      // Astro ignores the Host header by default; pages use this origin for canonical links unless SITE_URL is set.
+      return astro(req, res, undefined, { store: content, origin: req.headers.host ? `http://${req.headers.host}` : undefined });
     } catch (error) {
       if (error.code === 'ENOENT' || error.code === 'ENOTDIR') return send(404, 'Page not found');
       send(500, 'Unable to serve this page');

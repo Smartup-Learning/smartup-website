@@ -17,7 +17,7 @@ test('the homepage is rendered by Astro', async () => {
 });
 
 test('Quest and v1 shared files are still served from dist', async () => {
-  for (const p of ['/assessment/', '/assessment', '/assets/owl.svg', '/robots.txt']) {
+  for (const p of ['/assessment/', '/assessment', '/assets/owl.svg']) {
     assert.equal((await fetch(base + p)).status, 200, p);
   }
 });

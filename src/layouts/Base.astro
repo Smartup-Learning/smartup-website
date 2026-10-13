@@ -5,8 +5,11 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import MobileBar from '../components/MobileBar.astro';
 import { getStore } from '../lib/store';
-interface Props { title?: string; description: string; page: string; noindex?: boolean }
-const { title, description, page, noindex = false } = Astro.props;
+import { siteOrigin, hiddenFromSearch } from '../lib/site';
+interface Props { title?: string; description: string; page: string; noindex?: boolean; structuredData?: string }
+const { title, description, page, noindex = false, structuredData } = Astro.props;
+const origin = siteOrigin(Astro.locals, Astro.url);
+const canonical = `${origin}${Astro.url.pathname}`;
 const store = getStore(Astro.locals);
 const settings = store.settings();
 const centres = store.centres();
@@ -23,10 +26,16 @@ const fullTitle = title ? `${title} — Smartup` : 'Smartup — Tuitions in Koch
     <link rel="icon" href="/brand/owl.svg" type="image/svg+xml" />
     <link rel="preload" href="/fonts/rubik-400.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/rubik-800.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="canonical" href={canonical} />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Smartup" />
+    <meta property="og:url" content={canonical} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
-    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta property="og:image" content={`${origin}/brand/og.jpg`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    {(noindex || hiddenFromSearch()) && <meta name="robots" content="noindex, nofollow" />}
+    {structuredData && <script type="application/ld+json" is:inline set:html={structuredData} />}
     <!-- Hide reveal targets only while JS runs; if the bundle fails, show everything after 2.5s. -->
     <script is:inline>document.documentElement.classList.add('js');setTimeout(function(){if(!window.__siteReady)document.documentElement.classList.remove('js');},2500);</script>
   </head>
