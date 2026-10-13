@@ -1,0 +1,19 @@
+---
+import Picture from './Picture.astro';
+interface Props { result: { year: string; exam: string; headline: string; detail: string; poster: string; posterAlt: string } }
+const { result } = Astro.props;
+---
+<article class="result" data-reveal-item>
+  {result.poster && <div class="poster"><Picture base={result.poster} alt={result.posterAlt} sizes="(min-width: 900px) 18rem, 78vw" /></div>}
+  <p class="meta">{result.exam} · {result.year}</p>
+  <h3>{result.headline}</h3>
+  {result.detail && <p class="detail">{result.detail}</p>}
+</article>
+<style>
+  .result { display: grid; gap: 0.35rem; align-content: start; padding: 0.75rem 0.75rem 1.25rem; border-radius: var(--radius); background: var(--white); }
+  .poster { margin-bottom: 0.6rem; border-radius: var(--radius-sm); overflow: hidden; background: var(--purple-tint); }
+  .poster :global(img) { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: top; }
+  .meta { padding-inline: 0.25rem; font-size: var(--step--1); font-weight: 600; color: var(--purple); }
+  h3 { padding-inline: 0.25rem; font-size: var(--step-1); font-weight: 700; }
+  .detail { padding-inline: 0.25rem; color: var(--ink-soft); font-size: var(--step--1); }
+</style>

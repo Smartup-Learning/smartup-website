@@ -39,10 +39,28 @@ test('story intro does not double up "more than" with a plus sign', async t => {
   assert.doesNotMatch(await site.html('/story'), /more than \d[\d,]*\+/);
 });
 
-test('homepage sections follow the client order so far', async t => {
+test('homepage sections follow the client order', async t => {
   const site = await start();
   t.after(site.close);
   const page = await site.html('/');
   const ids = [...page.matchAll(/<section[^>]*\sid="([^"]+)"/g)].map(m => m[1]);
-  assert.deepEqual(ids.slice(0, 2), ['about', 'founders']);
+  assert.deepEqual(ids, ['about', 'founders', 'results', 'feedback', 'alumni', 'courses', 'careers']);
+});
+
+test('sections with no published content are left out, heading and all', async t => {
+  const site = await start(content => {
+    content.db.exec("UPDATE testimonials SET published = 0; UPDATE jobs SET published = 0; UPDATE results SET published = 0;");
+  });
+  t.after(site.close);
+  const page = await site.html('/');
+  for (const id of ['results', 'feedback', 'alumni', 'careers']) assert.doesNotMatch(page, new RegExp(`id="${id}"`), id);
+  assert.match(page, /id="courses"/);
+});
+
+test('results always name exam and year', async t => {
+  const site = await start();
+  t.after(site.close);
+  const page = await site.html('/');
+  assert.match(page, /SSLC · 2026/);
+  assert.match(page, /Class 10 · 2026/);
 });

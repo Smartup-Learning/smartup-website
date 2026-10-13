@@ -4,12 +4,22 @@ import Hero from '../components/Hero.astro';
 import SectionHead from '../components/SectionHead.astro';
 import Timeline from '../components/Timeline.astro';
 import FounderCard from '../components/FounderCard.astro';
+import ResultCard from '../components/ResultCard.astro';
+import VideoCard from '../components/VideoCard.astro';
+import CourseTabs from '../components/CourseTabs.astro';
+import JobsPreview from '../components/JobsPreview.astro';
+import DemoBand from '../components/DemoBand.astro';
 import { getStore } from '../lib/store';
 const store = getStore(Astro.locals);
 const settings = store.settings();
 const stats = store.stats();
 const chapters = store.timeline({ featured: true });
 const leaders = store.leaders();
+const results = store.results({ featured: true });
+const feedback = store.testimonials('feedback');
+const alumni = store.testimonials('alumni');
+const jobs = store.jobs();
+const centres = store.centres();
 ---
 <Base description="Smartup tuitions in Kochi and online for CBSE and State Board students, classes 8 to +2. 12+ years, 9 centres, 30,000+ students." page="home">
   <Hero headline={settings.heroHeadline} highlight={settings.heroHighlight} description={settings.heroDescription} stats={stats} />
@@ -32,9 +42,60 @@ const leaders = store.leaders();
       </div>
     </section>
   )}
+  {results.length > 0 && (
+    <section id="results" class="section section--cream" aria-labelledby="results-title">
+      <div class="container">
+        <SectionHead eyebrow="Results" title="Results our students earned" intro="Every figure names its exam and year." id="results-title" link={{ href: '/results', label: 'See all results' }} />
+        <div class="rail" data-reveal="group" tabindex="0" role="region" aria-label="Result highlights">
+          {results.map(result => <ResultCard result={result} />)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {feedback.length > 0 && (
+    <section id="feedback" class="section" aria-labelledby="feedback-title">
+      <div class="container">
+        <SectionHead eyebrow="Student & parent feedback" title="In their own words" id="feedback-title" link={{ href: '/testimonials', label: 'More testimonials' }} />
+        <div class="rail videos" data-reveal="group" tabindex="0" role="region" aria-label="Student and parent videos">
+          {feedback.map(item => <VideoCard item={item} />)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {alumni.length > 0 && (
+    <section id="alumni" class="section section--deep" aria-labelledby="alumni-title">
+      <div class="container">
+        <SectionHead eyebrow="Alumni" title="Where Smartup students go" id="alumni-title" link={{ href: '/alumni', label: 'Alumni journeys' }} />
+        <div class="rail videos" data-reveal="group" tabindex="0" role="region" aria-label="Alumni videos">
+          {alumni.map(item => <VideoCard item={item} />)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section id="courses" class="section section--cream" aria-labelledby="courses-title">
+    <div class="container">
+      <SectionHead eyebrow="Course details" title="Programmes for CBSE and State Board" id="courses-title" link={{ href: '/courses', label: 'All course details' }} />
+      <CourseTabs centreCount={centres.length} hours={settings.hours} />
+    </div>
+  </section>
+
+  {jobs.length > 0 && (
+    <section id="careers" class="section" aria-labelledby="careers-title">
+      <div class="container">
+        <SectionHead eyebrow="Career opportunities" title="Teach with Smartup" intro="We're hiring teachers, teaching assistants and mentors across our centres." id="careers-title" />
+        <JobsPreview jobs={jobs} />
+      </div>
+    </section>
+  )}
+
+  <DemoBand />
 </Base>
 <style>
   .more { margin-top: 2.5rem; }
+  .videos { grid-auto-columns: min(62%, 15rem); }
   @media (min-width: 900px) {
     .founders { grid-auto-flow: row; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: visible; gap: 1.75rem; }
   }
