@@ -1,0 +1,41 @@
+---
+import { formatPhone } from '../../server/content-store.mjs';
+interface Props { kind: 'demo' | 'careers' | 'ask'; submit: string; done: string; waText: string; whatsapp: string | null; phone: string | null; error?: string | null }
+const { kind, submit, done, waText, whatsapp, phone, error } = Astro.props;
+const errorText = error === 'busy' ? 'Too many attempts right now. Please try again later, or call us.'
+  : error ? 'Some details were missing or not valid. Please check them and send again.' : '';
+const wa = whatsapp ? whatsapp.replace(/\D/g, '') : '';
+---
+<div class="smart-form" data-form-wrap>
+  <form method="post" action={`/api/forms/${kind}`} data-smartup-form={kind} data-wa={wa} data-wa-text={waText}>
+    <p class="form-error" role="alert" data-form-error hidden={!errorText}>{errorText}</p>
+    <div class="fields"><slot /></div>
+    <div class="trap" aria-hidden="true">
+      <label for={`${kind}-website`}>Leave this empty</label>
+      <input id={`${kind}-website`} name="website" tabindex="-1" autocomplete="off" />
+    </div>
+    <p class="notice">We use these details only to reply to you. <a href="/privacy">How we handle your data</a>.</p>
+    <button class="btn btn--primary" type="submit">{submit}</button>
+  </form>
+  <div class="done" data-form-done hidden tabindex="-1">
+    <h3>Thank you!</h3>
+    <p>{done}</p>
+    {wa ? <a class="btn btn--primary" data-wa-link href={`https://wa.me/${wa}`} target="_blank" rel="noopener">Continue on WhatsApp</a>
+      : phone && <a class="btn btn--primary" href={`tel:${phone}`}>Call {formatPhone(phone)}</a>}
+  </div>
+</div>
+<style>
+  .smart-form { max-width: 40rem; }
+  form { display: grid; gap: 1.25rem; }
+  form[hidden] { display: none; }
+  .fields { display: grid; gap: 1.1rem; }
+  .form-error { padding: 0.9rem 1rem; border-radius: var(--radius-sm); background: #fde8e7; color: #8c1d18; font-weight: 600; }
+  .form-error[hidden] { display: none; }
+  .trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+  .notice { font-size: var(--step--1); color: var(--ink-soft); }
+  .notice a { color: var(--purple); font-weight: 600; }
+  button { justify-self: start; }
+  .done { display: grid; gap: 1rem; justify-items: start; padding: 1.75rem; border-radius: var(--radius); background: var(--purple-tint); color: var(--ink); }
+  .done[hidden] { display: none; }
+  .done h3 { font-size: var(--step-2); font-weight: 800; }
+</style>

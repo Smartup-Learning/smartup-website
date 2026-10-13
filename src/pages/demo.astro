@@ -1,39 +1,60 @@
 ---
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
+import SmartForm from '../components/SmartForm.astro';
+import FormField from '../components/FormField.astro';
 import { formatPhone } from '../../server/content-store.mjs';
+import { GRADES, BOARDS, MODES } from '../../server/forms.mjs';
 import { getStore } from '../lib/store';
 const store = getStore(Astro.locals);
 const settings = store.settings();
 const centres = store.centres();
-const steps = ['Call us or visit a centre between 5 and 9 pm', 'Tell us your class, board and subjects', 'Join a free demo class, online or at a centre'];
+const error = Astro.url.searchParams.get('error');
+const steps = [`Send the form, or call us (${settings.hours})`, 'We call you back to fix a time that suits you', 'Join a free demo class, online or at a centre'];
 ---
 <Base title="Book a free demo class" description="Book a free Smartup demo class online or at one of our centres in Kochi." page="demo">
-  <PageHero eyebrow="Free demo class" title="Book a free" highlight="demo class" intro="See how Smartup teaches before you decide. It takes one call." tone="purple">
+  <PageHero eyebrow="Free demo class" title="Book a free" highlight="demo class" intro="See how Smartup teaches before you decide. Fill in the form and we will call you back." tone="purple">
     <div class="actions">
-      {settings.phone && <a class="btn btn--yellow" href={`tel:${settings.phone}`}>Call {formatPhone(settings.phone)}</a>}
+      <a class="btn btn--yellow" href="#book">Book now</a>
+      {settings.phone && <a class="btn btn--ghost" href={`tel:${settings.phone}`}>Call {formatPhone(settings.phone)}</a>}
       {settings.whatsapp && <a class="btn btn--ghost" href={`https://wa.me/${settings.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent('Hi, I would like to book a free demo class.')}`} target="_blank" rel="noopener">WhatsApp us</a>}
     </div>
   </PageHero>
-  <section class="section" aria-labelledby="steps-title">
+  <section class="section" id="book" aria-labelledby="book-title">
+    <div class="container">
+      <h2 id="book-title" class="title">Tell us about the student</h2>
+      <SmartForm kind="demo" submit="Book my free demo" done="Our team will call you within a day to fix a time for the demo class." waText="Hi Smartup, I'm {name}. I just booked a free demo class for Class {grade} ({board})." whatsapp={settings.whatsapp} phone={settings.phone} error={error}>
+        <FormField name="name" label="Student's name" required maxlength={80} autocomplete="name" />
+        <FormField name="phone" label="Mobile number" type="tel" required maxlength={16} autocomplete="tel" inputmode="tel" hint="We call this number to fix the demo." />
+        <FormField name="grade" label="Class" as="select" required options={GRADES} />
+        <FormField name="board" label="Board" as="select" required options={BOARDS} />
+        <FormField name="mode" label="Online or at a centre?" as="select" required options={MODES} />
+        <FormField name="centre" label="Preferred centre" as="select" options={centres.map(c => c.name)} placeholder="Choose if learning at a centre" />
+        <FormField name="preferred_time" label="Preferred time" maxlength={60} placeholder="e.g. 6 pm on weekdays" />
+      </SmartForm>
+    </div>
+  </section>
+  <section class="section section--cream" aria-labelledby="steps-title">
     <div class="container">
       <h2 id="steps-title" class="title">How it works</h2>
       <ol class="steps" data-reveal="group">{steps.map((s, i) => <li data-reveal-item><span class="n">{i + 1}</span>{s}</li>)}</ol>
     </div>
   </section>
-  <section class="section section--cream" aria-labelledby="near-title">
-    <div class="container">
-      <h2 id="near-title" class="title">Or call your nearest centre</h2>
-      <ul class="near">{centres.map(c => <li><span>{c.name}</span><a href={`tel:${c.phone}`}>{formatPhone(c.phone)}</a></li>)}</ul>
-    </div>
-  </section>
+  {centres.length > 0 && (
+    <section class="section" aria-labelledby="near-title">
+      <div class="container">
+        <h2 id="near-title" class="title">Or call your nearest centre</h2>
+        <ul class="near">{centres.map(c => <li><span>{c.name}</span><a href={`tel:${c.phone}`}>{formatPhone(c.phone)}</a></li>)}</ul>
+      </div>
+    </section>
+  )}
 </Base>
 <style>
   .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem; }
   .actions .btn--ghost { color: var(--white); }
   .title { font-size: var(--step-3); font-weight: 800; margin-bottom: 1.5rem; }
   .steps { list-style: none; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); }
-  .steps li { display: grid; gap: 0.75rem; padding: 1.5rem; border: 1px solid var(--line); border-radius: var(--radius); font-weight: 600; }
+  .steps li { display: grid; gap: 0.75rem; padding: 1.5rem; border-radius: var(--radius); background: var(--white); font-weight: 600; }
   .n { display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: var(--purple); color: var(--white); font-weight: 800; }
   .near { list-style: none; padding: 0; display: grid; gap: 0.25rem; max-width: 32rem; }
   .near li { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.15rem 0; border-bottom: 1px solid #ddd2c2; }

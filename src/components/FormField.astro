@@ -1,0 +1,38 @@
+---
+type Option = string | { value: string; label: string };
+interface Props {
+  name: string; label: string; as?: 'input' | 'select' | 'textarea'; type?: string; required?: boolean; maxlength?: number;
+  options?: Option[]; placeholder?: string; autocomplete?: string; inputmode?: string; rows?: number; value?: string; hint?: string;
+}
+const { name, label, as = 'input', type = 'text', required = false, maxlength, options = [], placeholder, autocomplete, inputmode, rows = 4, value = '', hint } = Astro.props;
+const id = `f-${name}`;
+const choices = options.map(o => (typeof o === 'string' ? { value: o, label: o } : o));
+const describedBy = [hint ? `${id}-hint` : '', `${id}-error`].filter(Boolean).join(' ');
+---
+<div class="field">
+  <label for={id}>{label}{!required && <span class="optional"> (optional)</span>}</label>
+  {hint && <p class="hint" id={`${id}-hint`}>{hint}</p>}
+  {as === 'select' ? (
+    <select id={id} name={name} required={required} aria-describedby={describedBy}>
+      <option value="" selected={!value}>{placeholder ?? 'Choose…'}</option>
+      {choices.map(o => <option value={o.value} selected={o.value === value}>{o.label}</option>)}
+    </select>
+  ) : as === 'textarea' ? (
+    <textarea id={id} name={name} required={required} maxlength={maxlength} rows={rows} placeholder={placeholder} aria-describedby={describedBy}>{value}</textarea>
+  ) : (
+    <input id={id} name={name} type={type} required={required} maxlength={maxlength} placeholder={placeholder} autocomplete={autocomplete} inputmode={inputmode} value={value} aria-describedby={describedBy} />
+  )}
+  <p class="field-error" id={`${id}-error`} data-error-for={name} hidden></p>
+</div>
+<style>
+  .field { display: grid; gap: 0.35rem; }
+  label { font-weight: 600; }
+  .optional { font-weight: 400; color: var(--ink-soft); }
+  .hint { font-size: var(--step--1); color: var(--ink-soft); }
+  input, select, textarea { width: 100%; min-height: 3rem; padding: 0.7rem 0.9rem; border: 1px solid #cbbfdc; border-radius: var(--radius-sm); background: var(--white); font: 400 1rem/1.4 var(--font); color: var(--ink); }
+  textarea { min-height: 8rem; resize: vertical; }
+  input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid var(--purple-300); outline-offset: 1px; border-color: var(--purple); }
+  [aria-invalid='true'] { border-color: #b3261e; }
+  .field-error { color: #b3261e; font-size: var(--step--1); font-weight: 600; }
+  .field-error[hidden] { display: none; }
+</style>

@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import { formatPhone } from '../../server/content-store.mjs';
+import { getStore } from '../lib/store';
+const copy = {
+  demo: { title: 'Your demo class request is in', text: 'Our team will call you within a day to fix a time for the free demo class.', wa: 'Hi Smartup, I just booked a free demo class on your website.', back: { href: '/courses', label: 'Explore our courses' } },
+  careers: { title: 'Thank you for applying', text: 'Our team will review your application and contact you if there is a match.', wa: 'Hi Smartup, I just applied for a job on your website.', back: { href: '/story', label: 'Read our story' } },
+  ask: { title: 'Your question is with our team', text: 'We will reply by phone or email, usually within a day.', wa: 'Hi Smartup, I just sent a question on your website.', back: { href: '/ask', label: 'Back to the questions' } },
+};
+const kind = Astro.url.searchParams.get('form') ?? '';
+if (!Object.hasOwn(copy, kind)) return Astro.rewrite('/404');
+const page = copy[kind as keyof typeof copy];
+const settings = getStore(Astro.locals).settings();
+const wa = settings.whatsapp ? `https://wa.me/${settings.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(page.wa)}` : null;
+---
+<Base title="Thank you" description="Your message has reached the Smartup team." page="thanks" noindex>
+  <section class="section">
+    <div class="container done">
+      <p class="eyebrow">Sent</p>
+      <h1>{page.title}</h1>
+      <p class="text">{page.text}</p>
+      <div class="actions">
+        {wa ? <a class="btn btn--primary" href={wa} target="_blank" rel="noopener">Continue on WhatsApp</a>
+          : settings.phone && <a class="btn btn--primary" href={`tel:${settings.phone}`}>Call {formatPhone(settings.phone)}</a>}
+        <a class="link-arrow" href={page.back.href}>{page.back.label}</a>
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .done { display: grid; gap: 1rem; justify-items: start; max-width: 40rem; }
+  h1 { font-size: var(--step-4); font-weight: 800; }
+  .text { font-size: var(--step-1); color: var(--ink-soft); }
+  .actions { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+</style>

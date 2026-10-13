@@ -13,7 +13,7 @@ async function start(prepare = () => {}) {
   await new Promise(r => server.listen(0, '127.0.0.1', r));
   const base = `http://127.0.0.1:${server.address().port}`;
   const html = async path => { const r = await fetch(base + path); assert.equal(r.status, 200, path); return r.text(); };
-  return { html, content, close: () => new Promise(r => server.close(() => { store.close(); r(); })) };
+  return { html, base, content, close: () => new Promise(r => server.close(() => { store.close(); r(); })) };
 }
 
 test('Our Story lists every chapter in order, the growth data and the vision', async t => {
@@ -245,12 +245,13 @@ test('Contact lists every centre, all phone numbers and the registered office', 
   assert.match(page, /Kadavanthra, Ernakulam 682020/);
 });
 
-test('Careers groups openings by type and each one has an email to apply', async t => {
+test('Careers groups openings by type and each one links to the application form', async t => {
   const site = await start();
   t.after(site.close);
   const page = await site.html('/careers');
-  assert.equal([...page.matchAll(/mailto:info@smartupedu\.in\?subject=Application/g)].length, 12);
+  assert.equal([...page.matchAll(/href="\/careers\?role=[^"#]+#apply"/g)].length, 12);
   for (const type of ['Full time', 'Part time', 'Teaching assistant', 'Other']) assert.match(page, new RegExp(`<h2[^>]*>${type}`));
+  assert.match(page, /<form method="post" action="\/api\/forms\/careers"/);
 });
 
 test('Careers without openings says so and still invites applications', async t => {
@@ -286,4 +287,48 @@ test('a post shows its reading time, share links and the other posts', async t =
   assert.match(related, /href="\/blog\/how-parents-can-help-in-exam-season"/);
   assert.match(related, /href="\/blog\/daily-practice-beats-cramming"/);
   assert.doesNotMatch(related, /href="\/blog\/board-exam-90-day-plan"/);
+});
+
+test('the demo page has a booking form that works without JavaScript', async t => {
+  const site = await start();
+  t.after(site.close);
+  const page = await site.html('/demo');
+  assert.match(page, /<form method="post" action="\/api\/forms\/demo"/);
+  for (const name of ['name', 'phone', 'grade', 'board', 'mode', 'centre', 'preferred_time', 'website']) assert.match(page, new RegExp(`name="${name}"`));
+  assert.equal([...page.matchAll(/<option value="(Chullickal|Kadavanthra|Eraveli|Thoppumpady|Palluruthy|Moolamkuzhi|Fort Kochi|Vennala|Edappally)"/g)].length, 9);
+  assert.match(page, /We use these details only to reply to you/);
+  assert.match(page, /href="\/privacy"/);
+});
+
+test('a form that failed without JavaScript explains what to do', async t => {
+  const site = await start();
+  t.after(site.close);
+  assert.match(await site.html('/demo?error=invalid'), /Some details were missing or not valid/);
+  assert.match(await site.html('/ask?error=busy'), /Too many attempts right now/);
+  assert.doesNotMatch(await site.html('/demo'), /Some details were missing/);
+});
+
+test('Careers preselects the role named in the link', async t => {
+  const site = await start();
+  t.after(site.close);
+  assert.match(await site.html('/careers?role=Physics%20teacher'), /<option value="Physics teacher" selected/);
+});
+
+test('Ask Smartup has a question form', async t => {
+  const site = await start();
+  t.after(site.close);
+  const page = await site.html('/ask');
+  assert.match(page, /<form method="post" action="\/api\/forms\/ask"/);
+  assert.match(page, /name="question"/);
+});
+
+test('the thanks page confirms each form and stays out of search; an unknown form is not found', async t => {
+  const site = await start();
+  t.after(site.close);
+  const demo = await site.html('/thanks?form=demo');
+  assert.match(demo, /Your demo class request is in/);
+  assert.match(demo, /<meta name="robots" content="noindex, nofollow">/);
+  assert.match(await site.html('/thanks?form=careers'), /Thank you for applying/);
+  assert.match(await site.html('/thanks?form=ask'), /Your question is with our team/);
+  assert.equal((await fetch(`${site.base}/thanks?form=nope`)).status, 404);
 });

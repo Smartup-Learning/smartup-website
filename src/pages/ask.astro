@@ -1,6 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
+import SmartForm from '../components/SmartForm.astro';
+import FormField from '../components/FormField.astro';
 import { formatPhone } from '../../server/content-store.mjs';
 import { getStore } from '../lib/store';
 const store = getStore(Astro.locals);
@@ -8,6 +10,7 @@ const settings = store.settings();
 const faqs = store.faqs();
 const categories = [...new Set(faqs.map(f => f.category))];
 const mail = `mailto:${settings.email}?subject=${encodeURIComponent('A question for Smartup')}`;
+const error = Astro.url.searchParams.get('error');
 ---
 <Base title="Ask Smartup" description="Answers to common questions about Smartup classes, programmes, centres and admissions." page="ask">
   <PageHero eyebrow="Ask Smartup" title="Questions," highlight="answered" intro="Search the questions parents and students ask most. Can't find yours? Ask us directly.">
@@ -33,9 +36,21 @@ const mail = `mailto:${settings.email}?subject=${encodeURIComponent('A question 
       <p id="faq-none" class="none" hidden>No questions match. Ask us below.</p>
     </div>
   </section>
+  <section class="section section--cream" id="ask-form" aria-labelledby="ask-form-title">
+    <div class="container">
+      <h2 id="ask-form-title" class="form-title">Ask your question</h2>
+      <p class="form-intro">Our team replies by phone or email, usually within a day.</p>
+      <SmartForm kind="ask" submit="Send my question" done="Our team will reply by phone or email, usually within a day." waText="Hi Smartup, I'm {name}. I just sent a question on your website." whatsapp={settings.whatsapp} phone={settings.phone} error={error}>
+        <FormField name="name" label="Your name" required maxlength={80} autocomplete="name" />
+        <FormField name="phone" label="Mobile number" type="tel" required maxlength={16} autocomplete="tel" inputmode="tel" />
+        <FormField name="email" label="Email" type="email" maxlength={120} autocomplete="email" />
+        <FormField name="question" label="Your question" as="textarea" required maxlength={1500} rows={5} />
+      </SmartForm>
+    </div>
+  </section>
   <section class="section section--purple" aria-labelledby="ask-us">
     <div class="container ask" data-reveal>
-      <h2 id="ask-us">Still have a question?</h2>
+      <h2 id="ask-us">Prefer to talk?</h2>
       <p>Our team answers every day from 5 to 9 pm.</p>
       <div class="actions">
         {settings.phone && <a class="btn btn--yellow" href={`tel:${settings.phone}`}>Call {formatPhone(settings.phone)}</a>}
@@ -56,6 +71,8 @@ const mail = `mailto:${settings.email}?subject=${encodeURIComponent('A question 
   details { border-bottom: 1px solid var(--line); }
   summary { min-height: 44px; padding: 1rem 0; font-weight: 600; cursor: pointer; list-style-position: outside; }
   details p { padding-bottom: 1rem; color: var(--ink-soft); }
+  .form-title { font-size: var(--step-3); font-weight: 800; }
+  .form-intro { margin: 0.5rem 0 1.5rem; color: var(--ink-soft); }
   .ask { display: grid; gap: 1rem; justify-items: start; }
   .ask h2 { font-size: var(--step-4); font-weight: 800; color: var(--white); }
   .ask p { color: var(--on-purple-soft); }

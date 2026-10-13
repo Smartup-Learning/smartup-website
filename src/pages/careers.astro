@@ -1,13 +1,18 @@
 ---
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
+import SmartForm from '../components/SmartForm.astro';
+import FormField from '../components/FormField.astro';
 import { formatPhone } from '../../server/content-store.mjs';
 import { getStore } from '../lib/store';
 const store = getStore(Astro.locals);
 const settings = store.settings();
 const jobs = store.jobs();
 const types = [...new Set(jobs.map(j => j.type))];
-const apply = (title: string) => `mailto:${settings.email}?subject=${encodeURIComponent(`Application: ${title}`)}`;
+const roles = jobs.map(j => j.title);
+const asked = Astro.url.searchParams.get('role') ?? '';
+const chosen = roles.includes(asked) ? asked : '';
+const error = Astro.url.searchParams.get('error');
 ---
 <Base title="Careers" description="Teach with Smartup: current openings for teachers, teaching assistants, counsellors and mentors in Kochi." page="careers">
   <PageHero eyebrow="Careers" title="Teach with" highlight="Smartup" intro="Join a team of teachers and mentors helping thousands of students across Kochi." />
@@ -21,7 +26,7 @@ const apply = (title: string) => `mailto:${settings.email}?subject=${encodeURICo
             {jobs.filter(j => j.type === type).map(job => (
               <li class="job" data-reveal-item>
                 <div><h3>{job.title}</h3>{job.location && <p class="location">{job.location}</p>}</div>
-                <a class="btn btn--primary" href={apply(job.title)}>Apply by email</a>
+                <a class="btn btn--primary" href={`/careers?role=${encodeURIComponent(job.title)}#apply`}>Apply</a>
               </li>
             ))}
           </ul>
@@ -29,9 +34,23 @@ const apply = (title: string) => `mailto:${settings.email}?subject=${encodeURICo
       ))}
     </div>
   </section>
+  <section class="section section--cream" id="apply" aria-labelledby="apply-title">
+    <div class="container">
+      <h2 id="apply-title" class="apply-title">Apply for a role</h2>
+      <SmartForm kind="careers" submit="Send my application" done="Our team will review your application and contact you if there is a match." waText="Hi Smartup, I'm {name}. I just applied for {role}." whatsapp={settings.whatsapp} phone={settings.phone} error={error}>
+        <FormField name="name" label="Your name" required maxlength={80} autocomplete="name" />
+        <FormField name="phone" label="Mobile number" type="tel" required maxlength={16} autocomplete="tel" inputmode="tel" />
+        <FormField name="email" label="Email" type="email" required maxlength={120} autocomplete="email" />
+        <FormField name="role" label="Role" as="select" required options={[...roles, 'Other']} value={chosen} />
+        <FormField name="experience" label="Teaching experience" maxlength={200} placeholder="e.g. 3 years teaching Physics for Class 11 and 12" />
+        <FormField name="cv_url" label="Link to your CV" type="url" maxlength={300} hint="Share a Google Drive or LinkedIn link. We can't accept file uploads." />
+        <FormField name="message" label="Message" as="textarea" maxlength={1500} />
+      </SmartForm>
+    </div>
+  </section>
   <section class="section section--cream">
     <div class="container how" data-reveal>
-      <h2>How to apply</h2>
+      <h2>Prefer email?</h2>
       <p>Email your CV to <a href={`mailto:${settings.email}`}>{settings.email}</a> with the role in the subject line{settings.phone && <>, or call <a href={`tel:${settings.phone}`}>{formatPhone(settings.phone)}</a></>}.</p>
     </div>
   </section>
@@ -44,6 +63,7 @@ const apply = (title: string) => `mailto:${settings.email}?subject=${encodeURICo
   h3 { font-size: var(--step-1); }
   .location { color: var(--ink-soft); font-size: var(--step--1); }
   .empty { font-size: var(--step-1); margin-bottom: 2rem; }
+  .apply-title { font-size: var(--step-3); font-weight: 800; margin-bottom: 1.5rem; }
   .how { display: grid; gap: 0.75rem; max-width: 44rem; }
   .how h2 { font-size: var(--step-3); font-weight: 800; }
   .how a { color: var(--purple); font-weight: 600; }

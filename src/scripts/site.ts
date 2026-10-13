@@ -4,6 +4,7 @@ import { initTimelines } from './timeline';
 import { initTabs } from './tabs';
 import { initFilters } from './filters';
 import { initFaqSearch } from './faq-search';
+import { initForms } from './forms';
 import { initVideos } from './video';
 import { initYouTube } from './youtube';
 
@@ -12,6 +13,7 @@ initMenu(reduceMotion);
 initTabs();
 initFilters();
 initFaqSearch();
+initForms();
 initVideos();
 initYouTube();
 initMotion(reduceMotion);

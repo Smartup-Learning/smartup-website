@@ -5,8 +5,8 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import MobileBar from '../components/MobileBar.astro';
 import { getStore } from '../lib/store';
-interface Props { title?: string; description: string; page: string }
-const { title, description, page } = Astro.props;
+interface Props { title?: string; description: string; page: string; noindex?: boolean }
+const { title, description, page, noindex = false } = Astro.props;
 const store = getStore(Astro.locals);
 const settings = store.settings();
 const centres = store.centres();
@@ -26,6 +26,7 @@ const fullTitle = title ? `${title} — Smartup` : 'Smartup — Tuitions in Koch
     <meta property="og:type" content="website" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <!-- Hide reveal targets only while JS runs; if the bundle fails, show everything after 2.5s. -->
     <script is:inline>document.documentElement.classList.add('js');setTimeout(function(){if(!window.__siteReady)document.documentElement.classList.remove('js');},2500);</script>
   </head>
