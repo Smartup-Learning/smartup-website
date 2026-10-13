@@ -38,3 +38,11 @@ test('story intro does not double up "more than" with a plus sign', async t => {
   t.after(site.close);
   assert.doesNotMatch(await site.html('/story'), /more than \d[\d,]*\+/);
 });
+
+test('homepage sections follow the client order so far', async t => {
+  const site = await start();
+  t.after(site.close);
+  const page = await site.html('/');
+  const ids = [...page.matchAll(/<section[^>]*\sid="([^"]+)"/g)].map(m => m[1]);
+  assert.deepEqual(ids.slice(0, 2), ['about', 'founders']);
+});

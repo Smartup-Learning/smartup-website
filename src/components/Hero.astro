@@ -1,0 +1,38 @@
+---
+import Owl from './Owl.astro';
+import Stats from './Stats.astro';
+interface Props { headline: string; highlight: string; description: string; stats: { value: string; label: string; source: string }[] }
+const { headline, highlight, description, stats } = Astro.props;
+---
+<section class="hero section--purple" aria-labelledby="hero-title">
+  <div class="container hero-inner">
+    <div class="copy">
+      <h1 id="hero-title">{headline} <span class="marker">{highlight}</span></h1>
+      <p class="description">{description}</p>
+      <div class="actions">
+        <a class="btn btn--yellow" href="/demo">Book free demo</a>
+        <a class="btn btn--ghost" href="/story">Our story</a>
+      </div>
+    </div>
+    <Owl class="hero-owl" size="clamp(5rem, 3.5rem + 9vw, 12rem)" badge label="Smartup owl" />
+    <div class="proof"><Stats stats={stats} tone="dark" /></div>
+  </div>
+</section>
+<style>
+  .hero { position: relative; overflow: hidden; padding-block: clamp(3rem, 2rem + 5vw, 6.5rem) clamp(2.5rem, 2rem + 3vw, 4rem); }
+  .hero::before, .hero::after { content: ''; position: absolute; border-radius: 50%; pointer-events: none; }
+  .hero::before { width: min(70vw, 34rem); aspect-ratio: 1; right: -12%; top: -30%; background: var(--purple-600); }
+  .hero::after { width: min(40vw, 20rem); aspect-ratio: 1; left: 38%; bottom: -35%; background: var(--purple-900); }
+  .hero-inner { position: relative; z-index: 1; display: grid; gap: 2rem; grid-template-columns: 1fr auto; align-items: start; }
+  .copy { display: grid; gap: 1.25rem; grid-row: 1; grid-column: 1; }
+  h1 { font-size: var(--step-5); font-weight: 800; letter-spacing: -0.03em; color: var(--white); }
+  .description { font-size: var(--step-1); color: var(--on-purple-soft); }
+  .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .actions .btn--ghost { color: var(--white); }
+  :global(.hero-owl) { grid-row: 1; grid-column: 2; justify-self: end; }
+  .proof { grid-column: 1 / -1; margin-top: clamp(1rem, 0.5rem + 3vw, 3rem); padding-top: 1.75rem; border-top: 1px solid rgb(244 238 228 / 0.25); }
+  @media (max-width: 599px) {
+    :global(.hero-owl) { grid-row: 1; grid-column: 1 / -1; justify-self: start; }
+    .copy { grid-row: 2; grid-column: 1 / -1; }
+  }
+</style>

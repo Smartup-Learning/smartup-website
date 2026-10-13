@@ -1,0 +1,19 @@
+---
+import Picture from './Picture.astro';
+interface Props { leader: { name: string; role: string; summary: string; photo: string; photoAlt: string } }
+const { leader } = Astro.props;
+---
+<article class="founder" data-reveal-item>
+  {leader.photo && <div class="photo"><Picture base={leader.photo} alt={leader.photoAlt} sizes="(min-width: 900px) 17rem, 72vw" /></div>}
+  <h3 class="founder-name">{leader.name}</h3>
+  <p class="role">{leader.role}</p>
+  <p class="summary">{leader.summary}</p>
+</article>
+<style>
+  .founder { display: grid; gap: 0.4rem; align-content: start; }
+  .photo { margin-bottom: 0.75rem; border-radius: var(--radius); overflow: hidden; background: var(--purple-tint); }
+  .photo :global(img) { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: center 22%; }
+  .founder-name { font-size: var(--step-1); font-weight: 700; }
+  .role { font-weight: 600; color: var(--purple); }
+  .summary { color: var(--ink-soft); font-size: var(--step--1); }
+</style>

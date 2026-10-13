@@ -1,15 +1,41 @@
 ---
 import Base from '../layouts/Base.astro';
-import Owl from '../components/Owl.astro';
-import Stats from '../components/Stats.astro';
+import Hero from '../components/Hero.astro';
+import SectionHead from '../components/SectionHead.astro';
+import Timeline from '../components/Timeline.astro';
+import FounderCard from '../components/FounderCard.astro';
 import { getStore } from '../lib/store';
 const store = getStore(Astro.locals);
+const settings = store.settings();
+const stats = store.stats();
+const chapters = store.timeline({ featured: true });
+const leaders = store.leaders();
 ---
-<Base description="Smartup tuitions in Kochi and online for CBSE and State Board students, classes 8 to +2." page="home">
-  <section class="section section--purple">
-    <div class="container" style="display:grid;gap:2rem">
-      <Owl size="8rem" badge label="Smartup owl" />
-      <Stats stats={store.stats()} />
+<Base description="Smartup tuitions in Kochi and online for CBSE and State Board students, classes 8 to +2. 12+ years, 9 centres, 30,000+ students." page="home">
+  <Hero headline={settings.heroHeadline} highlight={settings.heroHighlight} description={settings.heroDescription} stats={stats} />
+
+  <section id="about" class="section section--cream" aria-labelledby="about-title">
+    <div class="container">
+      <SectionHead eyebrow="About Smartup" title={settings.aboutTitle} intro={settings.aboutText} id="about-title" />
+      {chapters.length > 0 && <Timeline chapters={chapters} variant="teaser" />}
+      <p class="more"><a class="link-arrow" href="/story">Read our story</a></p>
     </div>
   </section>
+
+  {leaders.length > 0 && (
+    <section id="founders" class="section" aria-labelledby="founders-title">
+      <div class="container">
+        <SectionHead eyebrow="The founders" title="The people behind Smartup" id="founders-title" link={{ href: '/founders', label: 'Meet the founders' }} />
+        <div class="founders rail" data-reveal="group">
+          {leaders.map(leader => <FounderCard leader={leader} />)}
+        </div>
+      </div>
+    </section>
+  )}
 </Base>
+<style>
+  .more { margin-top: 2.5rem; }
+  @media (min-width: 900px) {
+    .founders { grid-auto-flow: row; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: visible; gap: 1.75rem; }
+  }
+</style>
