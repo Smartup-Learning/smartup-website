@@ -17,7 +17,8 @@ CREATE TABLE IF NOT EXISTS faculty(id INTEGER PRIMARY KEY, name TEXT NOT NULL, r
 CREATE TABLE IF NOT EXISTS events(id INTEGER PRIMARY KEY, category TEXT NOT NULL, title TEXT NOT NULL, date_label TEXT NOT NULL DEFAULT '', summary TEXT NOT NULL DEFAULT '', media TEXT NOT NULL DEFAULT '[]', youtube_id TEXT NOT NULL DEFAULT '', sort INTEGER NOT NULL DEFAULT 0, published INTEGER NOT NULL DEFAULT 1);
 CREATE TABLE IF NOT EXISTS videos(id INTEGER PRIMARY KEY, youtube_id TEXT NOT NULL, title TEXT NOT NULL, category TEXT NOT NULL, format TEXT NOT NULL DEFAULT 'landscape' CHECK(format IN ('landscape','portrait')), sort INTEGER NOT NULL DEFAULT 0, published INTEGER NOT NULL DEFAULT 1);
 CREATE TABLE IF NOT EXISTS posts(id INTEGER PRIMARY KEY, slug TEXT NOT NULL UNIQUE, title TEXT NOT NULL, category TEXT NOT NULL, excerpt TEXT NOT NULL DEFAULT '', body TEXT NOT NULL, author TEXT NOT NULL DEFAULT 'Smartup Academic Team', published_at TEXT NOT NULL, published INTEGER NOT NULL DEFAULT 1);
-CREATE TABLE IF NOT EXISTS faqs(id INTEGER PRIMARY KEY, category TEXT NOT NULL, question TEXT NOT NULL, answer TEXT NOT NULL, sort INTEGER NOT NULL DEFAULT 0, published INTEGER NOT NULL DEFAULT 1);`;
+CREATE TABLE IF NOT EXISTS faqs(id INTEGER PRIMARY KEY, category TEXT NOT NULL, question TEXT NOT NULL, answer TEXT NOT NULL, sort INTEGER NOT NULL DEFAULT 0, published INTEGER NOT NULL DEFAULT 1);
+CREATE TABLE IF NOT EXISTS alumni(id INTEGER PRIMARY KEY, name TEXT NOT NULL, batch TEXT NOT NULL DEFAULT '', now_role TEXT NOT NULL DEFAULT '', story TEXT NOT NULL DEFAULT '', achievements TEXT NOT NULL DEFAULT '', photo TEXT NOT NULL DEFAULT '', photo_alt TEXT NOT NULL DEFAULT '', is_sample INTEGER NOT NULL DEFAULT 0, sort INTEGER NOT NULL DEFAULT 0, published INTEGER NOT NULL DEFAULT 1);`;
 
 export function normalizePhone(raw) {
   const digits = String(raw).replace(/\D/g, '');
@@ -35,8 +36,9 @@ export function loadSeed(file = path.resolve('data-seed/content.json')) {
   return JSON.parse(readFileSync(file, 'utf8'));
 }
 
-let seedSettings;
-const defaultSettings = () => (seedSettings ??= loadSeed().settings ?? {});
+let cachedSeedSettings;
+/** The seed's settings: defaults for any key missing from the database. */
+export const seedSettings = () => (cachedSeedSettings ??= loadSeed().settings ?? {});
 
 function phoneOrNull(raw) {
   if (typeof raw !== 'string') return null;
@@ -94,8 +96,8 @@ const SECTIONS = {
     rows.forEach((r, i) => put.run(r.youtubeId, r.title, r.category, r.format ?? 'landscape', i));
   },
   posts(db, rows) {
-    const put = db.prepare('INSERT INTO posts(slug, title, category, excerpt, body, author, published_at) VALUES(?, ?, ?, ?, ?, ?, ?)');
-    for (const r of rows) put.run(r.slug, r.title, r.category, r.excerpt ?? '', r.body, r.author ?? 'Smartup Academic Team', r.publishedAt);
+    const put = db.prepare('INSERT INTO posts(slug, title, category, excerpt, body, author, published_at, is_sample) VALUES(?, ?, ?, ?, ?, ?, ?, ?)');
+    for (const r of rows) put.run(r.slug, r.title, r.category, r.excerpt ?? '', r.body, r.author ?? 'Smartup Academic Team', r.publishedAt, flag(r.isSample));
   },
   faqs(db, rows) {
     const put = db.prepare('INSERT INTO faqs(category, question, answer, sort) VALUES(?, ?, ?, ?)');
@@ -103,13 +105,26 @@ const SECTIONS = {
   },
 };
 
+// Columns added after the first release; the constructor adds any that an existing database lacks.
+const ADDED_COLUMNS = [
+  ['results', 'kind', "TEXT NOT NULL DEFAULT 'student'"],
+  ['faculty', 'experience_years', 'INTEGER NOT NULL DEFAULT 0'],
+  ['faculty', 'expertise', "TEXT NOT NULL DEFAULT ''"],
+  ['faculty', 'intro', "TEXT NOT NULL DEFAULT ''"],
+  ['jobs', 'description', "TEXT NOT NULL DEFAULT ''"],
+  ['posts', 'is_sample', 'INTEGER NOT NULL DEFAULT 0'],
+  ['testimonials', 'is_sample', 'INTEGER NOT NULL DEFAULT 0'],
+  ['testimonials', 'image', "TEXT NOT NULL DEFAULT ''"],
+];
+
 export class ContentStore {
   constructor(db) {
     this.db = db;
     this.db.exec(SCHEMA);
-    // Databases created before Phase 2 lack the results kind column.
-    const resultColumns = this.db.prepare('PRAGMA table_info(results)').all().map(c => c.name);
-    if (!resultColumns.includes('kind')) this.db.exec("ALTER TABLE results ADD COLUMN kind TEXT NOT NULL DEFAULT 'student'");
+    for (const [table, column, ddl] of ADDED_COLUMNS) {
+      const existing = this.db.prepare(`PRAGMA table_info(${table})`).all().map(c => c.name);
+      if (!existing.includes(column)) this.db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${ddl}`);
+    }
   }
 
   applySeed(data = loadSeed()) {
@@ -138,7 +153,7 @@ export class ContentStore {
   settings() {
     const stored = Object.fromEntries(this.db.prepare('SELECT key, value FROM settings').all().map(r => [r.key, JSON.parse(r.value)]));
     // Seed values stand in for any key missing at runtime, so one deleted setting cannot break every page.
-    const settings = { ...defaultSettings(), ...stored };
+    const settings = { ...seedSettings(), ...stored };
     return { ...settings, phone: phoneOrNull(settings.phone), whatsapp: phoneOrNull(settings.whatsapp), phones: (settings.phones ?? []).map(phoneOrNull).filter(Boolean) };
   }
 
@@ -166,7 +181,7 @@ export class ContentStore {
   }
 
   faculty() {
-    return this.db.prepare('SELECT name, role, team, qualification, note, photo FROM faculty WHERE published = 1 ORDER BY sort, id').all();
+    return this.db.prepare('SELECT name, role, team, qualification, note, photo, experience_years AS experienceYears, expertise, intro FROM faculty WHERE published = 1 ORDER BY sort, id').all();
   }
 
   events() {
@@ -180,11 +195,13 @@ export class ContentStore {
   }
 
   posts() {
-    return this.db.prepare('SELECT slug, title, category, excerpt, author, published_at AS publishedAt FROM posts WHERE published = 1 ORDER BY published_at DESC, id DESC').all();
+    return this.db.prepare('SELECT slug, title, category, excerpt, author, published_at AS publishedAt, is_sample AS isSample FROM posts WHERE published = 1 ORDER BY published_at DESC, id DESC').all()
+      .map(r => ({ ...r, isSample: r.isSample === 1 }));
   }
 
   post(slug) {
-    return this.db.prepare('SELECT slug, title, category, excerpt, author, published_at AS publishedAt, body FROM posts WHERE published = 1 AND slug = ?').get(slug) ?? null;
+    const row = this.db.prepare('SELECT slug, title, category, excerpt, author, published_at AS publishedAt, body, is_sample AS isSample FROM posts WHERE published = 1 AND slug = ?').get(slug);
+    return row ? { ...row, isSample: row.isSample === 1 } : null;
   }
 
   faqs() {
@@ -192,11 +209,17 @@ export class ContentStore {
   }
 
   testimonials(section) {
-    return this.db.prepare('SELECT kind, section, title, person, quote, video, poster FROM testimonials WHERE published = 1 AND section = ? ORDER BY sort, id').all(section);
+    return this.db.prepare('SELECT kind, section, title, person, quote, video, poster, image, is_sample AS isSample FROM testimonials WHERE published = 1 AND section = ? ORDER BY sort, id').all(section)
+      .map(r => ({ ...r, isSample: r.isSample === 1 }));
   }
 
   jobs() {
-    return this.db.prepare('SELECT title, type, location FROM jobs WHERE published = 1 ORDER BY sort, id').all();
+    return this.db.prepare('SELECT title, type, location, description FROM jobs WHERE published = 1 ORDER BY sort, id').all();
+  }
+
+  alumni() {
+    return this.db.prepare('SELECT name, batch, now_role AS nowRole, story, achievements, photo, photo_alt AS photoAlt, is_sample AS isSample FROM alumni WHERE published = 1 ORDER BY sort, id').all()
+      .map(r => ({ ...r, isSample: r.isSample === 1 }));
   }
 
   centres() {

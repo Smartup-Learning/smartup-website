@@ -156,3 +156,37 @@ test('an older database without a results kind column is upgraded', () => {
   const store = new ContentStore(db);
   assert.equal(store.results()[0].kind, 'student');
 });
+
+test('an older database gains the Phase 3 columns with safe defaults', () => {
+  const db = new DatabaseSync(':memory:');
+  db.exec("CREATE TABLE faculty(id INTEGER PRIMARY KEY, name TEXT NOT NULL, role TEXT NOT NULL DEFAULT '', team TEXT NOT NULL DEFAULT 'team', qualification TEXT NOT NULL DEFAULT '', note TEXT NOT NULL DEFAULT '', photo TEXT NOT NULL DEFAULT '', sort INTEGER NOT NULL DEFAULT 0, published INTEGER NOT NULL DEFAULT 1)");
+  db.exec("INSERT INTO faculty(name) VALUES('Old teacher')");
+  db.exec("CREATE TABLE jobs(id INTEGER PRIMARY KEY, title TEXT NOT NULL, type TEXT NOT NULL, location TEXT NOT NULL DEFAULT '', sort INTEGER NOT NULL DEFAULT 0, published INTEGER NOT NULL DEFAULT 1)");
+  db.exec("INSERT INTO jobs(title, type) VALUES('Old job', 'Other')");
+  const store = new ContentStore(db);
+  assert.deepEqual({ ...store.faculty()[0] }, { name: 'Old teacher', role: '', team: 'team', qualification: '', note: '', photo: '', experienceYears: 0, expertise: '', intro: '' });
+  assert.equal(store.jobs()[0].description, '');
+});
+
+test('alumni stories come in order and unpublished ones stay hidden', () => {
+  const store = seeded();
+  store.db.exec("INSERT INTO alumni(name, batch, now_role, story, sort) VALUES('Second', 'SSLC 2019', 'Engineer', 'Story two', 2), ('First', 'Plus Two 2018', 'Doctor', 'Story one', 1), ('Hidden', '', '', '', 0)");
+  store.db.exec("UPDATE alumni SET published = 0 WHERE name = 'Hidden'");
+  assert.deepEqual(store.alumni().map(a => a.name), ['First', 'Second']);
+  assert.equal(store.alumni()[0].nowRole, 'Doctor');
+  assert.equal(store.alumni()[0].isSample, false);
+});
+
+test('the starter blog posts are marked as samples until the client approves them', () => {
+  const store = seeded();
+  assert.ok(store.posts().length > 0 && store.posts().every(p => p.isSample === true));
+  assert.equal(store.post(store.posts()[0].slug).isSample, true);
+});
+
+test('testimonials report a screenshot image and the sample flag', () => {
+  const store = seeded();
+  store.db.exec("UPDATE testimonials SET image = '/media/u-shot', is_sample = 1 WHERE rowid = (SELECT MIN(rowid) FROM testimonials WHERE section = 'feedback')");
+  const [first] = store.testimonials('feedback');
+  assert.equal(first.image, '/media/u-shot');
+  assert.equal(first.isSample, true);
+});
