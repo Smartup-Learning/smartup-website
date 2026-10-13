@@ -38,7 +38,7 @@ export class AssessmentStore {
  close(){this.db.close();}
 }
 function view(run){const q=run.question;return {profile:{name:run.profile.name,grade:run.profile.grade,subject:run.profile.subject},levels:run.levels,level:run.level,levelIndex:run.levelIndex,lives:run.lives,correct:run.correct,streak:run.streak,cleared:run.cleared,status:run.status,feedback:run.feedback,result:run.result(),history:run.history,question:q?{id:q.id,topic:q.topic,prompt:q.prompt,options:q.options}:null};}
-export function createAssessmentHandler({store=new AssessmentStore(),adminPassword=process.env.ADMIN_PASSWORD||'',secureCookies=process.env.NODE_ENV==='production',trustedProxyHops=Number(process.env.TRUST_PROXY_HOPS)||0}={}) {
+export function createAssessmentHandler({store=new AssessmentStore(),adminPassword=process.env.ADMIN_PASSWORD||'',secureCookies=process.env.NODE_ENV==='production',trustedProxyHops=Number(process.env.TRUST_PROXY_HOPS)||0,routes={}}={}) {
  if(process.env.NODE_ENV==='production'&&adminPassword.length<16)throw new Error('Set ADMIN_PASSWORD to at least 16 characters before launching.');
  const salt=randomBytes(16), passwordHash=adminPassword?scryptSync(adminPassword,salt,32):null;
  const attempts=new Map();
@@ -52,11 +52,15 @@ export function createAssessmentHandler({store=new AssessmentStore(),adminPasswo
    const route=url.pathname.replace(/\/$/,'');
    if(!['GET','POST','PUT','DELETE'].includes(req.method))return respond(405,{error:'Method not allowed.'});
    if(req.method!=='GET'){
-    if(req.headers['x-smartup-request']!=='1'||!req.headers['content-type']?.startsWith('application/json'))return respond(403,{error:'This request is not allowed.'});
-    if(req.headers.origin&&new URL(req.headers.origin).host!==req.headers.host)return respond(403,{error:'This request is not allowed.'});
+    // Public forms also accept plain HTML posts (the no-JS fallback); media uploads send image bytes.
+    const form=route.startsWith('/api/forms/'),upload=route==='/api/admin/media';
+    if(!form&&(req.headers['x-smartup-request']!=='1'||(!upload&&!req.headers['content-type']?.startsWith('application/json'))))return respond(403,{error:'This request is not allowed.'});
+    let originHost=null;try{originHost=req.headers.origin?new URL(req.headers.origin).host:null;}catch{return respond(403,{error:'This request is not allowed.'});}
+    if(originHost&&originHost!==req.headers.host)return respond(403,{error:'This request is not allowed.'});
     if(req.headers['sec-fetch-site']==='cross-site')return respond(403,{error:'This request is not allowed.'});
    }
    const ip=clientAddress(req);
+   if(route.startsWith('/api/forms/'))return routes.forms?await routes.forms({req,res,url,route,respond,ip,limited}):respond(404,{error:'Not found.'});
    const browserSecret=(req.headers.cookie||'').split(';').map(x=>x.trim()).find(x=>x.startsWith('smartup_learner='))?.slice(16)||'';
    const browserHash=browserSecret?hash(browserSecret):'';
    const learnerCookie=secret=>({'Set-Cookie':`smartup_learner=${secret}; Path=/api/assessment; HttpOnly; SameSite=Strict; Max-Age=31536000${secureCookies?'; Secure':''}`});
@@ -130,6 +134,7 @@ export function createAssessmentHandler({store=new AssessmentStore(),adminPasswo
      const t=(req.headers.cookie||'').split(';').map(x=>x.trim()).find(x=>x.startsWith('smartup_admin='))?.slice(14);if(t)store.db.prepare('DELETE FROM sessions WHERE token_hash=?').run(hash(t));
      return respond(200,{ok:true},{'Set-Cookie':`smartup_admin=; Path=/api/admin; HttpOnly; SameSite=Strict; Max-Age=0${secureCookies?'; Secure':''}`});
     }
+    if(route==='/api/admin/session'&&req.method==='GET')return respond(200,{ok:true});
     if(route==='/api/admin/questions'&&req.method==='GET')return respond(200,{questions:store.questions(),revision:hash(JSON.stringify(store.questions()))});
     if(route==='/api/admin/questions'&&req.method==='PUT'){
      const input=await body(req);if(input.revision!==hash(JSON.stringify(store.questions())))return respond(409,{error:'The bank changed in another session. Reload before saving.'});if(!Array.isArray(input.questions)||input.questions.length>10000)return respond(400,{error:'Upload an array of up to 10,000 questions.'});
@@ -143,6 +148,7 @@ export function createAssessmentHandler({store=new AssessmentStore(),adminPasswo
     }
     const deletion=route.match(/^\/api\/admin\/results\/([a-f0-9]{24})$/);
     if(deletion&&req.method==='DELETE'){store.db.prepare('DELETE FROM runs WHERE id=?').run(deletion[1]);return respond(200,{ok:true});}
+    if(routes.admin)return await routes.admin({req,res,url,route,respond,body});
    }
    return respond(404,{error:'Not found.'});
   } catch(error){return respond(error.status||500,{error:error.status?error.message:'Something went wrong. Please try again.'});}
