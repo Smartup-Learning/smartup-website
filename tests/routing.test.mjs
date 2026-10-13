@@ -79,3 +79,25 @@ test('the old privacy address redirects to the new privacy page', async () => {
   assert.equal(r.status, 301);
   assert.equal(r.headers.get('location'), '/privacy');
 });
+
+test('health is ok only when the pages can render, so a broken build is never promoted', async () => {
+  const { mkdtempSync, writeFileSync } = await import('node:fs');
+  const { tmpdir } = await import('node:os');
+  const path = (await import('node:path')).default;
+  const dir = mkdtempSync(path.join(tmpdir(), 'astro-entry-'));
+  const broken = path.join(dir, 'entry.mjs');
+  writeFileSync(broken, "import 'smartup-package-that-is-not-installed';\nexport const handler = () => {};\n");
+  for (const astroEntry of [broken, path.join(dir, 'missing.mjs')]) {
+    const store = new AssessmentStore(':memory:');
+    const site = createSiteServer({ store, astroEntry });
+    await new Promise(r => site.listen(0, '127.0.0.1', r));
+    try {
+      assert.equal((await fetch(`http://127.0.0.1:${site.address().port}/health`)).status, 503, astroEntry);
+    } finally {
+      site.closeAllConnections();
+      await new Promise(r => site.close(r));
+      store.close();
+    }
+  }
+  assert.equal(await (await fetch(base + '/health')).text(), 'ok');
+});

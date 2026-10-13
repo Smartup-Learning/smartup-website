@@ -14,17 +14,18 @@ import { MediaLibrary } from './server/media-library.mjs';
 
 const legacyRoot = path.resolve('dist');
 const webRoot = path.resolve('build/client');
-const astroEntry = path.resolve('build/server/entry.mjs');
+const defaultAstroEntry = path.resolve('build/server/entry.mjs');
 const legacyPrefixes = ['/assessment/', '/assets/'];
 const legacyFiles = new Set(['/assessment']);
 const types = {'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.mjs':'text/javascript; charset=utf-8','.json':'application/json; charset=utf-8','.svg':'image/svg+xml','.webp':'image/webp','.avif':'image/avif','.png':'image/png','.jpg':'image/jpeg','.woff2':'font/woff2','.ttf':'font/ttf','.txt':'text/plain; charset=utf-8','.xml':'application/xml; charset=utf-8','.ico':'image/x-icon','.mp4':'video/mp4','.webm':'video/webm','.vtt':'text/vtt; charset=utf-8'};
 
-let astroHandler;
-async function loadAstro() {
-  if (astroHandler !== undefined) return astroHandler;
-  try { await stat(astroEntry); } catch { astroHandler = null; return null; }
-  ({ handler: astroHandler } = await import(pathToFileURL(astroEntry).href));
-  return astroHandler;
+const astroHandlers = new Map();
+async function loadAstro(entry) {
+  if (astroHandlers.has(entry)) return astroHandlers.get(entry);
+  try { await stat(entry); } catch { astroHandlers.set(entry, null); return null; }
+  const { handler } = await import(pathToFileURL(entry).href);
+  astroHandlers.set(entry, handler);
+  return handler;
 }
 
 async function findFile(root, pathname) {
@@ -78,6 +79,7 @@ export function createSiteServer(options = {}) {
   const admin = new AdminContent(store.db);
   const api = createAssessmentHandler({ ...options, store, routes: { forms: createFormRoutes({ content, inbox }), admin: createAdminRoutes({ admin, media, inbox }), ...options.routes } });
   const compress = compression();
+  const astroEntry = path.resolve(options.astroEntry ?? defaultAstroEntry);
   return http.createServer(async (req, res) => {
     const send = (status, body, headers = {}) => { res.writeHead(status, { 'Content-Type': 'text/plain; charset=utf-8', ...headers }); res.end(req.method === 'HEAD' ? undefined : body); };
     // The API must start reading the request body in this same tick, so it is routed before anything else.
@@ -87,7 +89,11 @@ export function createSiteServer(options = {}) {
     if (!['GET', 'HEAD'].includes(req.method)) return send(405, 'Method not allowed', { Allow: 'GET, HEAD' });
     try {
       const url = new URL(req.url, 'http://localhost');
-      if (url.pathname === '/health') return send(200, 'ok');
+      if (url.pathname === '/health') {
+        // Healthy only when the pages can load, so Railway never promotes a broken build.
+        try { if (await loadAstro(astroEntry)) return send(200, 'ok'); } catch { /* reported below */ }
+        return send(503, 'The website is not ready.');
+      }
       let pathname;
       try { pathname = decodeURIComponent(url.pathname); } catch { return send(400, 'Invalid URL'); }
       if (pathname.includes('\0')) return send(400, 'Invalid URL');
@@ -102,7 +108,7 @@ export function createSiteServer(options = {}) {
       const found = await findFile(legacy ? legacyRoot : webRoot, pathname);
       if (found) return sendFile(req, res, found, cacheFor(pathname), send);
       if (legacy) return send(404, 'Page not found');
-      const astro = await loadAstro();
+      const astro = await loadAstro(astroEntry);
       if (!astro) return send(503, 'The website has not been built. Run npm run build.');
       // No `next` callback: Astro renders src/pages/404.astro for unknown routes.
       // Astro ignores the Host header by default; pages use this origin for canonical links unless SITE_URL is set.

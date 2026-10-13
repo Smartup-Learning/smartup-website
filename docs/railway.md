@@ -41,6 +41,8 @@ The persisted service settings use the Dockerfile builder, `/health` health chec
 
 ## Deploy an update
 
+> **For the live v1 site only.** These steps deploy the pre-v2 release (`main`, commit `fb71bed`) to `smartup-web`. On branch `v2-website` the Dockerfile builds the Astro site and needs more files, so this file list fails there. To deploy v2, use the "v2 client preview" section below, and never point v2 at `smartup-web` until the client approves the switch.
+
 Use Node 24 or newer. Run `npm run check`, `npm test` and `npm run build`, review the changes, and commit the intended runtime files before staging. The Dockerfile copies the committed `dist` assets; it does not run an asset build or install npm dependencies during deployment.
 
 From the repository root, create a new, empty release directory under ignored `tmp/` and extract only the runtime files:
