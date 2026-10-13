@@ -94,4 +94,96 @@ test.describe('signed in', () => {
       if (original) await page.setViewportSize(original);
     }
   });
+
+  test('a photo uploaded with an alumni story shows on the Alumni page, then both are removed', async () => {
+    const name = unique('E2E Alumna');
+    const png = await sharp({ create: { width: 800, height: 600, channels: 3, background: '#5f2ea8' } }).png().toBuffer();
+    await page.goto('/admin#/content/alumni');
+    await page.getByRole('button', { name: 'Add new' }).click();
+    await page.getByLabel('Name', { exact: true }).fill(name);
+    await page.getByLabel(/^Photo/).setInputFiles({ name: 'alumna.png', mimeType: 'image/png', buffer: png });
+    await page.getByLabel('Describe the new photo').fill(`Portrait for ${name}`);
+    await page.getByRole('button', { name: 'Upload', exact: true }).click();
+    await expect(page.locator('.field-image code')).toHaveText(/^\/media\/u-/);
+    await page.getByLabel(/^Describe the photo/).fill(`Portrait for ${name}`);
+    await page.getByRole('button', { name: 'Save' }).click();
+    await expect(page.locator('#admin-toast')).toContainText('Saved');
+    const alumni = await page.context().newPage();
+    await alumni.goto('/alumni');
+    await expect(alumni.getByRole('heading', { name })).toBeVisible();
+    const src = await alumni.locator(`img[alt="Portrait for ${name}"]`).getAttribute('src');
+    expect((await alumni.request.get(src!)).status()).toBe(200);
+    await alumni.close();
+    await openRow(name);
+    await deleteOpenItem();
+    await page.goto('/admin#/media');
+    const tile = page.locator('.media-grid li', { hasText: `Portrait for ${name}` });
+    page.once('dialog', dialog => dialog.accept());
+    await tile.getByRole('button', { name: 'Delete' }).click();
+    await expect(tile).toHaveCount(0);
+  });
+
+  test('a demo booking reaches the inbox, can be marked contacted, exported and deleted', async () => {
+    const name = unique('E2E Parent');
+    const site = await page.context().newPage();
+    await site.goto('/demo');
+    await site.getByLabel("Student's name").fill(name);
+    await site.getByLabel('Mobile number').fill('98950 85731');
+    await site.getByLabel('Class', { exact: true }).selectOption('9');
+    await site.getByLabel('Board').selectOption('CBSE');
+    await site.getByLabel('Online or at a centre?').selectOption('Online');
+    await site.getByRole('button', { name: 'Book my free demo' }).click();
+    await expect(site.getByRole('heading', { name: 'Thank you!' })).toBeVisible();
+    await site.close();
+    await page.goto('/admin#/inbox/demo');
+    const entry = page.locator('details.entry', { hasText: name });
+    await expect(page.locator('#admin-main')).not.toContainText('null');
+    await entry.locator('summary').click();
+    await entry.getByLabel('Status').selectOption('contacted');
+    await entry.getByLabel('Notes').fill('Called, demo on Monday');
+    await entry.getByRole('button', { name: 'Save' }).click();
+    await expect(page.locator('#admin-toast')).toContainText('Saved');
+    const csv = await page.request.get('/api/admin/inbox/demo/export');
+    expect(csv.status()).toBe(200);
+    expect(await csv.text()).toContain(name);
+    page.once('dialog', dialog => dialog.accept());
+    await entry.getByRole('button', { name: 'Delete' }).click();
+    await expect(page.locator('details.entry', { hasText: name })).toHaveCount(0);
+  });
+
+  test('visitor text in the inbox is shown as text, never as markup', async () => {
+    const name = '<img src=x onerror="document.title=1">';
+    const question = unique('E2E markup check');
+    expect((await page.request.post('/api/forms/ask', { data: { name, phone: '9895085731', question } })).status()).toBe(201);
+    await page.goto('/admin#/inbox/ask');
+    const entry = page.locator('details.entry', { hasText: question });
+    await expect(entry.locator('summary')).toContainText(name);
+    await expect(page.locator('#admin-main img[src="x"]')).toHaveCount(0);
+    expect(await page.title()).not.toBe('1');
+    await entry.locator('summary').click();
+    page.once('dialog', dialog => dialog.accept());
+    await entry.getByRole('button', { name: 'Delete' }).click();
+    await expect(entry).toHaveCount(0);
+  });
+
+  test('an answered question can be published to the FAQ', async () => {
+    const question = unique('E2E: do you run a crash course before exams?');
+    expect((await page.request.post('/api/forms/ask', { data: { name: 'E2E Student', phone: '9895085731', question } })).status()).toBe(201);
+    // The previous test left the page on this same address, so reload to fetch the new question.
+    await page.goto('/admin#/inbox/ask');
+    await page.reload();
+    const entry = page.locator('details.entry', { hasText: question });
+    await entry.locator('summary').click();
+    await entry.getByLabel('FAQ topic').fill('E2E');
+    await entry.getByLabel('Answer', { exact: true }).fill('Yes, every January.');
+    await entry.getByRole('button', { name: 'Publish to FAQ' }).click();
+    await expect(page.locator('#admin-toast')).toContainText('Published');
+    const ask = await page.context().newPage();
+    await ask.goto('/ask');
+    await expect(ask.getByText(question)).toBeVisible();
+    await ask.close();
+    await page.goto('/admin#/content/faqs');
+    await openRow(question);
+    await deleteOpenItem();
+  });
 });
