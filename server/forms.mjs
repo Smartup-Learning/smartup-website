@@ -1,5 +1,6 @@
 import { normalizePhone } from './content-store.mjs';
 import { line, block, isWebUrl, isEmail } from './validators.mjs';
+import { readBuffer } from './read-body.mjs';
 
 export const GRADES = [
   { value: '5', label: 'Class 5' }, { value: '6', label: 'Class 6' }, { value: '7', label: 'Class 7' },
@@ -66,3 +67,40 @@ export function validateAsk(input) {
 
 /** People never see the "website" field; only bots fill it in. */
 export const isBot = input => line(input.website) !== '';
+
+export const FORM_LIMIT = 20 * 1024;
+
+const FORMS = {
+  demo: { page: '/demo', anchor: 'book', validate: (input, content) => validateDemo(input, { centres: content.centres().map(c => c.name) }) },
+  careers: { page: '/careers', anchor: 'apply', validate: (input, content) => validateCareers(input, { roles: content.jobs().map(j => j.title) }) },
+  ask: { page: '/ask', anchor: 'ask-form', validate: input => validateAsk(input) },
+};
+
+/** POST /api/forms/:kind — JSON from the page script, or a plain HTML post when JavaScript is off. */
+export function createFormRoutes({ content, inbox }) {
+  return async ({ req, res, route, respond, ip, limited }) => {
+    const kind = route.slice('/api/forms/'.length);
+    if (!Object.hasOwn(FORMS, kind)) return respond(404, { error: 'Not found.' });
+    if (req.method !== 'POST') return respond(405, { error: 'Method not allowed.' });
+    const type = (req.headers['content-type'] ?? '').split(';')[0].trim().toLowerCase();
+    const native = type === 'application/x-www-form-urlencoded';
+    if (!native && type !== 'application/json') return respond(415, { error: 'Send the form as JSON.' });
+    const { page, anchor, validate } = FORMS[kind];
+    // Redirects carry only the form name and an error code, never what the visitor typed.
+    const redirect = location => { res.writeHead(303, { Location: location, 'Cache-Control': 'no-store' }); res.end(); };
+    const back = code => redirect(`${page}?error=${code}#${anchor}`);
+    const raw = (await readBuffer(req, FORM_LIMIT)).toString('utf8');
+    let input;
+    if (native) input = Object.fromEntries(new URLSearchParams(raw));
+    else {
+      try { input = JSON.parse(raw); } catch { input = null; }
+      if (!input || typeof input !== 'object' || Array.isArray(input)) return respond(400, { error: 'Send a valid JSON object.' });
+    }
+    if (limited(`form:${kind}:${ip}`, 20, 600000)) return native ? back('busy') : respond(429, { error: 'Too many messages from this connection. Please try again later, or call us.' });
+    if (isBot(input)) return native ? redirect(`/thanks?form=${kind}`) : respond(201, { ok: true });
+    const { values, errors } = validate(input, content);
+    if (Object.keys(errors).length) return native ? back('invalid') : respond(400, { error: 'Check the highlighted details.', fields: errors });
+    inbox.add(kind, values);
+    return native ? redirect(`/thanks?form=${kind}`) : respond(201, { ok: true });
+  };
+}

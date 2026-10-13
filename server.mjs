@@ -6,6 +6,8 @@ import { pathToFileURL } from 'node:url';
 import compression from 'compression';
 import { AssessmentStore, createAssessmentHandler } from './server/assessment.mjs';
 import { ContentStore } from './server/content-store.mjs';
+import { InboxStore } from './server/inbox.mjs';
+import { createFormRoutes } from './server/forms.mjs';
 
 const legacyRoot = path.resolve('dist');
 const webRoot = path.resolve('build/client');
@@ -67,7 +69,8 @@ export function createSiteServer(options = {}) {
   const store = options.store ?? new AssessmentStore();
   const content = options.content ?? new ContentStore(store.db);
   content.applySeed();
-  const api = createAssessmentHandler({ ...options, store, routes: { ...options.routes } });
+  const inbox = options.inbox ?? new InboxStore(store.db);
+  const api = createAssessmentHandler({ ...options, store, routes: { forms: createFormRoutes({ content, inbox }), ...options.routes } });
   const compress = compression();
   return http.createServer(async (req, res) => {
     const send = (status, body, headers = {}) => { res.writeHead(status, { 'Content-Type': 'text/plain; charset=utf-8', ...headers }); res.end(req.method === 'HEAD' ? undefined : body); };
