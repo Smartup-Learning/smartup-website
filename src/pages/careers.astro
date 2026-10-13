@@ -25,7 +25,7 @@ const error = Astro.url.searchParams.get('error');
           <ul class="jobs" data-reveal="group">
             {jobs.filter(j => j.type === type).map(job => (
               <li class="job" data-reveal-item>
-                <div><h3>{job.title}</h3>{job.location && <p class="location">{job.location}</p>}</div>
+                <div><h3>{job.title}</h3>{job.location && <p class="location">{job.location}</p>}{job.description && <p class="description">{job.description}</p>}</div>
                 <a class="btn btn--primary" href={`/careers?role=${encodeURIComponent(job.title)}#apply`}>Apply</a>
               </li>
             ))}
@@ -61,6 +61,7 @@ const error = Astro.url.searchParams.get('error');
   .jobs { list-style: none; padding: 0; display: grid; gap: 0.75rem; }
   .job { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; padding: 1.25rem 1.5rem; border: 1px solid var(--line); border-radius: var(--radius); }
   h3 { font-size: var(--step-1); }
+  .description { margin-top: 0.35rem; color: var(--ink-soft); font-size: var(--step--1); white-space: pre-line; }
   .location { color: var(--ink-soft); font-size: var(--step--1); }
   .empty { font-size: var(--step-1); margin-bottom: 2rem; }
   .apply-title { font-size: var(--step-3); font-weight: 800; margin-bottom: 1.5rem; }

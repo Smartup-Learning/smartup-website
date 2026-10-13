@@ -4,21 +4,34 @@ import PageHero from '../components/PageHero.astro';
 import SectionHead from '../components/SectionHead.astro';
 import VideoCard from '../components/VideoCard.astro';
 import QuoteCard from '../components/QuoteCard.astro';
+import AlumniCard from '../components/AlumniCard.astro';
 import { getStore } from '../lib/store';
 const store = getStore(Astro.locals);
 const settings = store.settings();
-const alumni = store.testimonials('alumni');
+const stories = store.alumni();
+const videos = store.testimonials('alumni');
 const mail = `mailto:${settings.email}?subject=${encodeURIComponent('My Smartup alumni story')}`;
 ---
 <Base title="Alumni" description="Smartup alumni share where their journey has taken them." page="alumni">
   <PageHero eyebrow="Alumni" title="Where Smartup" highlight="students go" intro="Our students carry Smartup with them into higher education and careers." tone="purple" />
-  {alumni.length > 0 && (
-    <section class="section" aria-labelledby="alumni-stories">
+  {stories.length > 0 && (
+    <section class="section" aria-labelledby="alumni-stories-title">
       <div class="container">
-        <SectionHead eyebrow="Stories" title="Alumni journeys" id="alumni-stories" />
-        <div class="rail tall" data-reveal="group">{alumni.map(item => item.kind === 'video' ? <VideoCard item={item} /> : <QuoteCard item={item} />)}</div>
+        <SectionHead eyebrow="Stories" title="Alumni journeys" id="alumni-stories-title" />
+        <div class="stories" data-reveal="group">{stories.map(story => <AlumniCard story={story} />)}</div>
       </div>
     </section>
+  )}
+  {videos.length > 0 && (
+    <section class="section" aria-labelledby="alumni-videos-title">
+      <div class="container">
+        <SectionHead eyebrow="Videos" title="In their own words" id="alumni-videos-title" />
+        <div class="rail tall" data-reveal="group">{videos.map(item => item.kind === 'video' ? <VideoCard item={item} /> : <QuoteCard item={item} />)}</div>
+      </div>
+    </section>
+  )}
+  {stories.length === 0 && videos.length === 0 && (
+    <section class="section"><div class="container"><p class="empty">Alumni stories will appear here soon.</p></div></section>
   )}
   <section class="section section--cream">
     <div class="container cta" data-reveal>
@@ -31,6 +44,8 @@ const mail = `mailto:${settings.email}?subject=${encodeURIComponent('My Smartup 
 </Base>
 <style>
   .tall { grid-auto-columns: min(60%, 15rem); }
+  .stories { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); }
+  .empty { font-size: var(--step-1); }
   .cta { display: grid; gap: 1rem; justify-items: start; max-width: 46rem; }
   .cta h2 { font-size: var(--step-3); font-weight: 800; }
 </style>

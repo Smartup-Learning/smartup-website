@@ -1,12 +1,13 @@
 ---
-interface Props { item: { title: string; video: string; poster: string } }
+import SampleBadge from './SampleBadge.astro';
+interface Props { item: { title: string; video: string; poster: string; isSample?: boolean } }
 const { item } = Astro.props;
 ---
 <figure class="video-card" data-reveal-item>
   <video controls playsinline preload="none" poster={item.poster} data-exclusive>
     <source src={item.video} type="video/mp4" />
   </video>
-  <figcaption>{item.title}</figcaption>
+  <figcaption>{item.isSample && <SampleBadge />} {item.title}</figcaption>
 </figure>
 <style>
   .video-card { display: grid; gap: 0.75rem; }

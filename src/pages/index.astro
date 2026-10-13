@@ -7,6 +7,7 @@ import FounderCard from '../components/FounderCard.astro';
 import ResultCard from '../components/ResultCard.astro';
 import VideoCard from '../components/VideoCard.astro';
 import QuoteCard from '../components/QuoteCard.astro';
+import AlumniCard from '../components/AlumniCard.astro';
 import CourseTabs from '../components/CourseTabs.astro';
 import JobsPreview from '../components/JobsPreview.astro';
 import DemoBand from '../components/DemoBand.astro';
@@ -19,6 +20,7 @@ const leaders = store.leaders();
 const results = store.results({ featured: true });
 const feedback = store.testimonials('feedback');
 const alumni = store.testimonials('alumni');
+const alumniStories = store.alumni().slice(0, 3);
 const jobs = store.jobs();
 const centres = store.centres();
 const description = `Smartup tuitions in Kochi and online for CBSE and State Board students, classes 8 to +2. ${stats.map(s => `${s.value} ${s.label.toLowerCase()}`).join(', ')}.`;
@@ -66,11 +68,12 @@ const description = `Smartup tuitions in Kochi and online for CBSE and State Boa
     </section>
   )}
 
-  {alumni.length > 0 && (
+  {(alumni.length > 0 || alumniStories.length > 0) && (
     <section id="alumni" class="section section--deep" aria-labelledby="alumni-title">
       <div class="container">
         <SectionHead eyebrow="Alumni" title="Where Smartup students go" id="alumni-title" link={{ href: '/alumni', label: 'Alumni journeys' }} />
         <div class="rail videos" data-reveal="group" tabindex="0" role="region" aria-label="Alumni stories">
+          {alumniStories.map(story => <AlumniCard story={story} />)}
           {alumni.map(item => item.kind === 'video' ? <VideoCard item={item} /> : <QuoteCard item={item} />)}
         </div>
       </div>

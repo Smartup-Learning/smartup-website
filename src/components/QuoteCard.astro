@@ -1,13 +1,23 @@
 ---
-interface Props { item: { title: string; person: string; quote: string } }
+import Picture from './Picture.astro';
+import SampleBadge from './SampleBadge.astro';
+interface Props { item: { title: string; person: string; quote: string; image?: string; isSample?: boolean } }
 const { item } = Astro.props;
 ---
 <figure class="quote-card" data-reveal-item>
-  <blockquote>{item.quote}</blockquote>
+  {item.isSample && <SampleBadge />}
+  {item.image && (
+    <a class="shot" href={`${item.image}-1600.webp`} target="_blank" rel="noopener" aria-label={`Open the screenshot: ${item.title}`}>
+      <Picture base={item.image} alt={`Screenshot of feedback: ${item.title}`} sizes="(min-width: 900px) 22rem, 80vw" />
+    </a>
+  )}
+  {item.quote && <blockquote>{item.quote}</blockquote>}
   <figcaption><strong>{item.title}</strong>{item.person && <span>{item.person}</span>}</figcaption>
 </figure>
 <style>
   .quote-card { display: grid; gap: 1rem; align-content: space-between; padding: 1.5rem; border-radius: var(--radius); background: var(--cream); color: var(--ink); }
+  .shot { display: block; border-radius: var(--radius-sm); overflow: hidden; background: var(--white); }
+  .shot :global(img) { width: 100%; max-height: 28rem; object-fit: contain; }
   blockquote { margin: 0; font-size: var(--step-1); font-weight: 500; line-height: 1.45; }
   blockquote::before { content: '“'; display: block; font-size: 3rem; line-height: 0.8; font-weight: 800; color: var(--purple); }
   figcaption { display: grid; gap: 0.15rem; font-size: var(--step--1); }

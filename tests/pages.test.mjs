@@ -332,3 +332,40 @@ test('the thanks page confirms each form and stays out of search; an unknown for
   assert.match(await site.html('/thanks?form=ask'), /Your question is with our team/);
   assert.equal((await fetch(`${site.base}/thanks?form=nope`)).status, 404);
 });
+
+test('alumni stories from the admin appear on the Alumni page and the homepage', async t => {
+  const site = await start(content => content.db.exec("INSERT INTO alumni(name, batch, now_role, story, achievements, is_sample) VALUES('Anjali R', 'SSLC 2016', 'Software engineer, Bengaluru', 'Joined in Class 8.', 'Full A+', 1)"));
+  t.after(site.close);
+  const alumni = await site.html('/alumni');
+  assert.match(alumni, /Anjali R/);
+  assert.match(alumni, /SSLC 2016 · Software engineer, Bengaluru/);
+  assert.match(alumni, /Sample — to be replaced/);
+  assert.match(await site.html('/'), /Anjali R/);
+});
+
+test('faculty details and job descriptions show once staff add them', async t => {
+  const site = await start(content => {
+    content.db.exec("UPDATE faculty SET experience_years = 12, expertise = 'Board exam problem solving' WHERE rowid = (SELECT MIN(rowid) FROM faculty)");
+    content.db.exec("UPDATE jobs SET description = 'Teach Physics to Classes 11 and 12.' WHERE rowid = (SELECT MIN(rowid) FROM jobs)");
+  });
+  t.after(site.close);
+  const faculty = await site.html('/faculty');
+  assert.match(faculty, /12 years of teaching/);
+  assert.match(faculty, /Board exam problem solving/);
+  assert.match(await site.html('/careers'), /Teach Physics to Classes 11 and 12\./);
+});
+
+test('a written review can be a screenshot, and sample reviews are labelled', async t => {
+  const site = await start(content => content.db.exec("INSERT INTO testimonials(kind, section, title, person, quote, image, is_sample, sort) VALUES('written', 'feedback', 'WhatsApp message from a parent', 'Parent', '', '/seed/img/faculty-abdul-ahad-ag', 1, 99)"));
+  t.after(site.close);
+  const page = await site.html('/testimonials');
+  assert.match(page, /srcset="\/seed\/img\/faculty-abdul-ahad-ag-480\.webp/);
+  assert.match(page, /Sample — to be replaced/);
+});
+
+test('the starter blog posts carry the sample label until approved', async t => {
+  const site = await start();
+  t.after(site.close);
+  assert.match(await site.html('/blog'), /Sample — to be replaced/);
+  assert.match(await site.html('/blog/board-exam-90-day-plan'), /Sample — to be replaced/);
+});

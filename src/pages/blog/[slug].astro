@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import SampleBadge from '../../components/SampleBadge.astro';
 import { getStore } from '../../lib/store';
 import { renderMarkdown } from '../../lib/markdown.mjs';
 const store = getStore(Astro.locals);
@@ -23,6 +24,7 @@ const related = store.posts().filter(p => p.slug !== post.slug)
       <p class="eyebrow"><a href="/blog">Blog</a> · {post.category}</p>
       <h1>{post.title}</h1>
       <p class="meta"><time datetime={post.publishedAt}>{date}</time> · {post.author} · {minutes} min read</p>
+      {post.isSample && <SampleBadge />}
       <div class="body" set:html={html} />
       <p class="share"><span>Share</span>{share.map(s => <a href={s.href} target="_blank" rel="noopener">{s.label}</a>)}</p>
       <aside class="cta">

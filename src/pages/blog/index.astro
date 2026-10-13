@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/PageHero.astro';
+import SampleBadge from '../../components/SampleBadge.astro';
 import { getStore } from '../../lib/store';
 const posts = getStore(Astro.locals).posts();
 const date = (iso: string) => new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
@@ -15,6 +16,7 @@ const date = (iso: string) => new Date(`${iso}T00:00:00Z`).toLocaleDateString('e
           {posts.map(p => (
             <li class="post" data-reveal-item>
               <p class="eyebrow">{p.category}</p>
+              {p.isSample && <SampleBadge />}
               <h3><a href={`/blog/${p.slug}`}>{p.title}</a></h3>
               <p class="excerpt">{p.excerpt}</p>
               <p class="meta"><time datetime={p.publishedAt}>{date(p.publishedAt)}</time> · {p.author}</p>
