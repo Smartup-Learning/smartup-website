@@ -31,5 +31,13 @@ const parse = (value: string) => {
   .stats--dark .stat-value { color: var(--white); }
   .stats--dark .stat-label, .stats--dark .stat-source { color: var(--cream); }
   .stats--light .stat-value { color: var(--purple); }
-  @media (min-width: 900px) { .stats { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  /* Wide screens: each figure takes its own width and the four spread evenly between thin dividers,
+     so a long figure like 30,000+ never crowds its neighbour. */
+  @media (min-width: 900px) {
+    .stats { grid-template-columns: repeat(4, auto); justify-content: space-between; column-gap: 0; }
+    .stat + .stat { padding-left: clamp(1.5rem, 0.5rem + 2.5vw, 3rem); border-left: 1px solid rgb(244 238 228 / 0.22); }
+    .stat:not(:last-child) { padding-right: clamp(1.5rem, 0.5rem + 2.5vw, 3rem); }
+    .stats--light .stat + .stat { border-left-color: var(--line); }
+    .stat-value { font-size: clamp(2.25rem, 0.6rem + 3.2vw, 4rem); }
+  }
 </style>

@@ -1,24 +1,26 @@
 ---
-import Picture from './Picture.astro';
-import { keepTogether } from '../lib/text.mjs';
+import MediaFrame from './MediaFrame.astro';
 import SampleBadge from './SampleBadge.astro';
+import { keepTogether } from '../lib/text.mjs';
 interface Props { story: { name: string; batch: string; nowRole: string; story: string; achievements: string; photo: string; photoAlt: string; isSample: boolean } }
 const { story } = Astro.props;
 const meta = keepTogether([story.batch, story.nowRole].filter(Boolean).join(' · '));
 ---
 <article class="alumni-card" data-reveal-item>
-  {story.photo && <div class="photo"><Picture base={story.photo} alt={story.photoAlt} sizes="(min-width: 900px) 22rem, 80vw" /></div>}
-  {story.isSample && <SampleBadge />}
-  <h3>{story.name}</h3>
-  {meta && <p class="meta">{meta}</p>}
-  {story.story && <p class="story">{keepTogether(story.story)}</p>}
-  {story.achievements && <p class="achievements"><strong>Achievements:</strong> {keepTogether(story.achievements)}</p>}
+  {story.photo && <MediaFrame class="photo" base={story.photo} alt={story.photoAlt} ratio={3 / 4} group="alumni" caption={`${story.name}${meta ? ` · ${meta}` : ''}`} sizes="(min-width: 900px) 24rem, 80vw" />}
+  <div class="body">
+    {story.isSample && <SampleBadge />}
+    <h3>{story.name}</h3>
+    {meta && <p class="meta">{meta}</p>}
+    {story.story && <p class="story">{keepTogether(story.story)}</p>}
+    {story.achievements && <p class="achievements"><strong>Achievements:</strong> {keepTogether(story.achievements)}</p>}
+  </div>
 </article>
 <style>
-  .alumni-card { display: grid; gap: 0.6rem; align-content: start; padding: 1.25rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); color: var(--ink); }
-  .photo { border-radius: var(--radius-sm); overflow: hidden; background: var(--purple-tint); }
-  /* Alumni photos are portraits; a portrait frame keeps faces and full-length shots whole. */
-  .photo :global(img) { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; object-position: center 30%; }
+  .alumni-card { display: grid; grid-template-rows: auto 1fr; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); color: var(--ink); }
+  /* The photo runs to the card's edges: one frame, not a frame inside a frame. */
+  .alumni-card :global(.photo) { border-radius: 0; }
+  .body { display: grid; gap: 0.5rem; align-content: start; padding: 1.1rem 1.25rem 1.4rem; }
   h3 { font-size: var(--step-2); }
   .meta { font-weight: 600; color: var(--purple); font-size: var(--step--1); }
   .story { white-space: pre-line; }

@@ -191,8 +191,10 @@ export const SECTIONS = {
 /** Site-wide settings, each stored as JSON under its name in the settings table. */
 export const SETTINGS = [
   { name: 'heroHeadline', label: 'Homepage headline', type: 'text', required: true, max: 60 },
-  { name: 'heroHighlight', label: 'Highlighted word (yellow marker)', type: 'text', required: true, max: 30 },
+  { name: 'heroHighlight', label: 'Highlighted word (underlined in yellow)', type: 'text', required: true, max: 30 },
   { name: 'heroDescription', label: 'Line under the headline', type: 'text', required: true, max: 120 },
+  { name: 'heroImage', label: 'Homepage photo', type: 'image', hint: 'Shown in a circle beside the headline. One or two people, close up, works best.' },
+  { name: 'heroImageAlt', label: 'Describe the homepage photo', type: 'text', max: 200 },
   { name: 'aboutTitle', label: 'About section title', type: 'text', required: true, max: 80 },
   { name: 'aboutText', label: 'About section text', type: 'textarea', required: true, max: 800 },
   { name: 'phone', label: 'Main phone number', type: 'phone', required: true },

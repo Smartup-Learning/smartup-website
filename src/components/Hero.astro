@@ -1,10 +1,11 @@
 ---
 import Owl from './Owl.astro';
 import Stats from './Stats.astro';
-interface Props { headline: string; highlight: string; description: string; stats: { value: string; label: string; source: string }[] }
-const { headline, highlight, description, stats } = Astro.props;
+import RingPhoto from './brand/RingPhoto.astro';
+interface Props { headline: string; highlight: string; description: string; image?: string; imageAlt?: string; stats: { value: string; label: string; source: string }[] }
+const { headline, highlight, description, image, imageAlt, stats } = Astro.props;
 ---
-<section class="hero section--purple" aria-labelledby="hero-title">
+<section class:list={['hero', 'section--purple', { 'has-photo': image }]} aria-labelledby="hero-title">
   <div class="container hero-inner">
     <div class="copy">
       <h1 id="hero-title">{headline} <span class="marker">{highlight}</span></h1>
@@ -14,25 +15,38 @@ const { headline, highlight, description, stats } = Astro.props;
         <a class="btn btn--ghost" href="/story">Our story</a>
       </div>
     </div>
-    <Owl class="hero-owl" size="clamp(5rem, 3.5rem + 9vw, 12rem)" badge label="Smartup owl" />
+    <div class="visual">
+      {image ? (
+        <>
+          <span class="arc" aria-hidden="true"></span>
+          <RingPhoto base={image} alt={imageAlt ?? ''} focus="40% 30%" sizes="(min-width: 900px) 26rem, 12rem" priority />
+          <Owl class="hero-badge" size="clamp(3.5rem, 2.5rem + 3vw, 6rem)" badge label="Smartup owl" />
+        </>
+      ) : <Owl class="hero-owl" size="clamp(5rem, 3.5rem + 9vw, 12rem)" badge label="Smartup owl" />}
+    </div>
     <div class="proof"><Stats stats={stats} tone="dark" /></div>
   </div>
 </section>
 <style>
-  .hero { position: relative; overflow: hidden; padding-block: clamp(3rem, 2rem + 5vw, 6.5rem) clamp(2.5rem, 2rem + 3vw, 4rem); }
-  .hero::before, .hero::after { content: ''; position: absolute; border-radius: 50%; pointer-events: none; }
-  .hero::before { width: min(70vw, 34rem); aspect-ratio: 1; right: -12%; top: -30%; background: var(--purple-600); }
-  .hero::after { width: min(40vw, 20rem); aspect-ratio: 1; left: 38%; bottom: -35%; background: var(--purple-900); }
-  .hero-inner { position: relative; z-index: 1; display: grid; gap: 2rem; grid-template-columns: 1fr auto; align-items: start; }
-  .copy { display: grid; gap: 1.25rem; grid-row: 1; grid-column: 1; }
+  .hero { position: relative; overflow: hidden; padding-block: clamp(2.5rem, 2rem + 4vw, 6rem) clamp(2.5rem, 2rem + 3vw, 4rem); }
+  .hero-inner { position: relative; display: grid; gap: 2rem; grid-template-columns: minmax(0, 1fr); align-items: center; }
+  .copy { display: grid; gap: 1.25rem; min-width: 0; }
   h1 { font-size: var(--step-5); font-weight: 700; letter-spacing: -0.02em; color: var(--white); }
   .description { font-size: var(--step-1); color: var(--on-purple-soft); }
   .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
   .actions .btn--ghost { color: var(--white); }
-  :global(.hero-owl) { grid-row: 1; grid-column: 2; justify-self: end; }
-  .proof { grid-column: 1 / -1; margin-top: clamp(1rem, 0.5rem + 3vw, 3rem); padding-top: 1.75rem; border-top: 1px solid rgb(244 238 228 / 0.25); }
-  @media (max-width: 599px) {
-    :global(.hero-owl) { grid-row: 1; grid-column: 1 / -1; justify-self: start; }
-    .copy { grid-row: 2; grid-column: 1 / -1; }
+  .visual { position: relative; grid-row: 1; justify-self: start; color: var(--cream); }
+  .has-photo .visual { width: clamp(9rem, 6rem + 16vw, 12rem); margin-left: 0.5rem; }
+  .arc { display: none; }
+  :global(.hero-badge) { position: absolute; left: -0.75rem; bottom: -0.5rem; z-index: 1; transform: rotate(-10deg); box-shadow: 0 8px 24px rgb(20 12 32 / 0.3); }
+  .proof { margin-top: clamp(0.5rem, 0.5rem + 2vw, 2.5rem); padding-top: 1.75rem; border-top: 1px solid rgb(244 238 228 / 0.25); }
+  @media (min-width: 900px) {
+    .hero-inner { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); column-gap: clamp(2rem, 5vw, 5rem); }
+    .visual { grid-row: 1; grid-column: 2; justify-self: center; }
+    .has-photo .visual { width: min(100%, 26rem); margin: 1.5rem 0; }
+    /* One large soft arc behind the photo, as in the brand collateral. */
+    .arc { display: block; position: absolute; inset: -22% -40% -22% -18%; border-radius: 50%; background: radial-gradient(circle at 35% 35%, rgb(255 255 255 / 0.07), transparent 60%), var(--purple-600); }
+    :global(.hero-badge) { left: -1.5rem; bottom: 0.5rem; }
+    .proof { grid-column: 1 / -1; }
   }
 </style>

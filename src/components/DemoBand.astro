@@ -1,4 +1,6 @@
 ---
+import IconBand from './brand/IconBand.astro';
+import PeekingOwl from './brand/PeekingOwl.astro';
 ---
 <section class="demo section--purple" aria-labelledby="demo-title">
   <div class="container inner" data-reveal>
@@ -6,12 +8,18 @@
     <p>Join a free demo class, online or at a centre near you.</p>
     <div class="actions"><a class="btn btn--yellow" href="/demo">Book a free demo class</a><a class="btn btn--ghost" href="/contact">Find a centre</a></div>
   </div>
+  <IconBand class="demo-band" />
+  <PeekingOwl class="demo-owl" />
 </section>
 <style>
-  .demo { padding-block: clamp(3.5rem, 2.5rem + 4vw, 6rem); }
-  .inner { display: grid; gap: 1rem; justify-items: start; }
-  h2 { font-size: var(--step-4); font-weight: 700; color: var(--white); }
+  .demo { position: relative; overflow: hidden; padding-block: clamp(3.5rem, 2.5rem + 4vw, 6rem) 0; --band-color: var(--purple-300); --peek-bg: var(--cream); }
+  .inner { position: relative; z-index: 1; display: grid; gap: 1rem; justify-items: start; }
+  h2 { font-size: var(--step-4); font-weight: 600; color: var(--white); }
   p { font-size: var(--step-1); color: var(--on-purple-soft); }
   .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem; }
   .actions .btn--ghost { color: var(--white); }
+  :global(.demo-band) { margin-top: clamp(2.5rem, 2rem + 3vw, 4rem); padding-block: 1.25rem 1.75rem; opacity: 0.55; }
+  /* Phones: a small owl in the bottom corner, clear of the buttons; wide screens: a large one beside the heading. */
+  :global(.demo-owl) { --peek-size: 9.5rem; }
+  @media (min-width: 900px) { :global(.demo-owl) { --peek-size: clamp(15rem, 8rem + 14vw, 24rem); bottom: auto; top: 18%; } }
 </style>

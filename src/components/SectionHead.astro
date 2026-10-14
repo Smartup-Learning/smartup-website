@@ -1,15 +1,15 @@
 ---
-interface Props { eyebrow?: string; title: string; intro?: string; id: string; link?: { href: string; label: string } }
-const { eyebrow, title, intro, id, link } = Astro.props;
+interface Props { eyebrow?: string; title: string; intro?: string; id: string; link?: { href: string; label: string }; stack?: boolean }
+const { eyebrow, title, intro, id, link, stack = false } = Astro.props;
 const aside = Boolean(intro || link);
 ---
-<header class:list={['section-head', { split: aside }]} data-reveal>
+<header class:list={['section-head', { split: aside && !stack }]} data-reveal>
   <div class="title-col">
     {eyebrow && <p class="eyebrow">{eyebrow}</p>}
     <h2 id={id}>{title}</h2>
   </div>
   {aside && (
-    <div class="aside-col">
+    <div class:list={['aside-col', { 'link-only': !intro }]}>
       {intro && <p class="intro">{intro}</p>}
       {link && <a class="link-arrow" href={link.href}>{link.label}</a>}
     </div>
@@ -26,5 +26,6 @@ const aside = Boolean(intro || link);
   @media (min-width: 900px) {
     .section-head.split { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); align-items: end; }
     .split .aside-col { padding-bottom: 0.35rem; }
+    .split .link-only { justify-self: end; }
   }
 </style>

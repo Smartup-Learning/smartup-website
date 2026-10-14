@@ -63,8 +63,11 @@ const full = variant === 'full';
     .timeline--full .chapter:nth-child(even)::before { left: -9px; right: auto; }
 
     .timeline--teaser .timeline-rail { top: 0.95rem; bottom: auto; left: 0; right: 0; width: auto; height: 4px; margin: 0; }
-    .timeline--teaser .timeline-list { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2rem; }
+    .timeline--teaser .timeline-list { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 2rem; }
     .timeline--teaser .chapter { padding: 3rem 0 0; }
+    /* The four chapters share rows (year, title, picture), so pictures line up even when one title wraps. */
+    .timeline--teaser .chapter { display: grid; grid-row: span 3; grid-template-rows: subgrid; align-content: start; }
+    @supports not (grid-template-rows: subgrid) { .timeline--teaser .chapter-title { min-height: 2.2em; } }
     .timeline--teaser .chapter::before { top: 0.4rem; left: 0; }
   }
 </style>

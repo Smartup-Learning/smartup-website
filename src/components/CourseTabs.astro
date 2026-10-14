@@ -15,7 +15,7 @@ const { centreCount, hours } = Astro.props;
         {board.programmes.map(p => (
           <article class="programme">
             <p class="eyebrow">{p.eyebrow}</p>
-            <p class="ratio">{p.ratio}</p>
+            <p class:list={['ratio', { 'ratio--word': !/^\d+:\d+$/.test(p.ratio) }]}>{p.ratio}</p>
             <h4>{p.name}</h4>
             <ul>{p.points.map(point => <li>{point}</li>)}</ul>
             <a class="link-arrow" href="/demo">{p.ask}</a>
@@ -24,7 +24,10 @@ const { centreCount, hours } = Astro.props;
       </div>
     </div>
   ))}
-  <p class="offline"><strong>Online or offline.</strong> Learn from home, or at one of our {centreCount} centres in Kochi, open {keepTogether(hours)}.</p>
+  <div class="where">
+    <p><strong>Online, or at one of our {centreCount} centres in Kochi.</strong> Every centre is open {keepTogether(hours)}.</p>
+    <a class="link-arrow" href="/contact">Find your nearest centre</a>
+  </div>
 </div>
 <style>
   .tablist[hidden] { display: none; }
@@ -38,6 +41,9 @@ const { centreCount, hours } = Astro.props;
   .ratio { font-size: var(--step-4); font-weight: 700; color: var(--purple); line-height: 1; }
   h4 { font-size: var(--step-1); }
   ul { padding-left: 1.1rem; display: grid; gap: 0.3rem; color: var(--ink-soft); }
-  .offline { margin-top: 2rem; max-width: 40rem; }
+  .ratio--word { font-size: var(--step-3); padding-block: 0.3rem; }
+  .where { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 2rem; margin-top: 2rem; padding: 1rem 1.5rem; border-radius: var(--radius); background: var(--white); }
+  /* Links sit at the foot of every card, level across the row. */
+  .programme { grid-template-rows: auto auto auto 1fr auto; }
   @media (min-width: 900px) { .programmes { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; } }
 </style>

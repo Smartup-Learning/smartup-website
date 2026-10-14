@@ -18,7 +18,7 @@ export const courseBoards: Board[] = [
         ask: 'Ask about Trio',
       },
       {
-        eyebrow: 'Shared momentum', ratio: 'Micro', name: 'Smartup Power',
+        eyebrow: 'Shared momentum', ratio: 'Micro batch', name: 'Smartup Power',
         points: ['Competency-based learning', 'Daily, weekly & monthly evaluations', 'Quarterly parent meetings'],
         features: ['AI-integrated learning app and LMS', 'Competency-based learning', 'Experienced teaching panel', 'Daily, weekly and monthly evaluations', 'Quarterly parent meeting', 'WhatsApp learning groups and resources'],
         ask: 'Ask about Power',

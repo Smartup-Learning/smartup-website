@@ -9,7 +9,6 @@ import VideoCard from '../components/VideoCard.astro';
 import QuoteCard from '../components/QuoteCard.astro';
 import AlumniCard from '../components/AlumniCard.astro';
 import CourseTabs from '../components/CourseTabs.astro';
-import JobsPreview from '../components/JobsPreview.astro';
 import DemoBand from '../components/DemoBand.astro';
 import { getStore } from '../lib/store';
 import { organisationJsonLd } from '../lib/structured-data';
@@ -28,7 +27,7 @@ const centres = store.centres();
 const description = `Smartup tuitions in Kochi and online for CBSE and State Board students, classes 8 to +2. ${stats.map(s => `${s.value} ${s.label.toLowerCase()}`).join(', ')}.`;
 ---
 <Base description={description} page="home" structuredData={organisationJsonLd(settings, centres, siteOrigin(Astro.locals, Astro.url))}>
-  <Hero headline={settings.heroHeadline} highlight={settings.heroHighlight} description={settings.heroDescription} stats={stats} />
+  <Hero headline={settings.heroHeadline} highlight={settings.heroHighlight} description={settings.heroDescription} image={settings.heroImage || undefined} imageAlt={settings.heroImageAlt} stats={stats} />
 
   <section id="about" class="section section--cream" aria-labelledby="about-title">
     <div class="container">
@@ -61,8 +60,8 @@ const description = `Smartup tuitions in Kochi and online for CBSE and State Boa
 
   {feedback.length > 0 && (
     <section id="feedback" class="section" aria-labelledby="feedback-title">
-      <div class="container">
-        <SectionHead eyebrow="Student & parent feedback" title="In their own words" id="feedback-title" link={{ href: '/testimonials', label: 'More testimonials' }} />
+      <div class="container media-split">
+        <SectionHead eyebrow="Student & parent feedback" title="In their own words" intro="Students and parents on what changed after joining Smartup." id="feedback-title" link={{ href: '/testimonials', label: 'More testimonials' }} stack />
         <div class="rail videos" data-reveal="group" tabindex="0" role="region" aria-label="Student and parent feedback">
           {feedback.map(item => item.kind === 'video' ? <VideoCard item={item} /> : <QuoteCard item={item} />)}
         </div>
@@ -73,11 +72,20 @@ const description = `Smartup tuitions in Kochi and online for CBSE and State Boa
   {(alumni.length > 0 || alumniStories.length > 0) && (
     <section id="alumni" class="section section--deep" aria-labelledby="alumni-title">
       <div class="container">
-        <SectionHead eyebrow="Alumni" title="Where Smartup students go" id="alumni-title" link={{ href: '/alumni', label: 'Alumni journeys' }} />
-        <div class="rail videos" data-reveal="group" tabindex="0" role="region" aria-label="Alumni stories">
-          {alumniStories.map(story => <AlumniCard story={story} />)}
-          {alumni.map(item => item.kind === 'video' ? <VideoCard item={item} /> : <QuoteCard item={item} />)}
-        </div>
+        <SectionHead eyebrow="Alumni" title="Where Smartup students go" id="alumni-title" link={{ href: '/alumni', label: 'All alumni journeys' }} />
+        {alumniStories.length > 0 && (
+          <div class="rail alumni-stories" data-reveal="group" tabindex="0" role="region" aria-label="Alumni stories">
+            {alumniStories.map(story => <AlumniCard story={story} />)}
+          </div>
+        )}
+        {alumni.length > 0 && (
+          <>
+            <h3 class="row-title">Alumni on video</h3>
+            <div class="rail videos" data-reveal="group" tabindex="0" role="region" aria-label="Alumni videos">
+              {alumni.map(item => item.kind === 'video' ? <VideoCard item={item} /> : <QuoteCard item={item} />)}
+            </div>
+          </>
+        )}
       </div>
     </section>
   )}
@@ -90,10 +98,11 @@ const description = `Smartup tuitions in Kochi and online for CBSE and State Boa
   </section>
 
   {jobs.length > 0 && (
-    <section id="careers" class="section" aria-labelledby="careers-title">
-      <div class="container">
-        <SectionHead title="Teach with Smartup" intro="We're hiring teachers, teaching assistants and mentors across our centres." id="careers-title" />
-        <JobsPreview jobs={jobs} />
+    <section id="careers" class="careers-band" aria-labelledby="careers-title">
+      <div class="container careers-inner">
+        <h2 id="careers-title">Teach with Smartup</h2>
+        <p>{jobs.length} {jobs.length === 1 ? 'opening' : 'openings'} for teachers, teaching assistants and mentors across our centres.</p>
+        <a class="link-arrow" href="/careers">See all {jobs.length} {jobs.length === 1 ? 'opening' : 'openings'}</a>
       </div>
     </section>
   )}
@@ -101,9 +110,22 @@ const description = `Smartup tuitions in Kochi and online for CBSE and State Boa
   <DemoBand />
 </Base>
 <style>
-  .more { margin-top: 2.5rem; }
+  .more { margin-top: 1.5rem; }
   .videos { grid-auto-columns: min(62%, 15rem); }
+  .alumni-stories { grid-auto-columns: min(80%, 20rem); }
+  .row-title { margin: 3rem 0 1.25rem; font-size: var(--step-2); font-weight: 600; color: var(--white); }
+  .careers-band { padding-block: clamp(2.5rem, 2rem + 2vw, 3.5rem); border-top: 1px solid var(--line); }
+  .careers-inner { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.5rem 1.5rem; }
+  .careers-inner h2 { font-size: var(--step-2); font-weight: 600; }
+  .careers-inner p { color: var(--ink-soft); flex: 1 1 20rem; }
   @media (min-width: 900px) {
     .founders { grid-auto-flow: row; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: visible; gap: 1.75rem; }
+    .alumni-stories { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; gap: 1.5rem; }
+  }
+  /* Feedback: the heading sits beside the videos instead of above a half-empty row. */
+  @media (min-width: 1100px) {
+    .media-split { display: grid; grid-template-columns: minmax(0, 19rem) minmax(0, 1fr); gap: 4rem; align-items: center; }
+    .media-split :global(.section-head) { margin-bottom: 0; }
+    .media-split .rail { margin-inline: 0; padding-inline: 0; scroll-padding-inline: 0; grid-auto-columns: calc((100% - 2rem) / 3); }
   }
 </style>

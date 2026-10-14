@@ -443,3 +443,14 @@ test('a YouTube video with a staff cover shows that cover instead of the YouTube
   assert.match(page, /srcset="\/seed\/img\/alumni-dylan-480\.webp 480w/);
   assert.match(page, /i\.ytimg\.com\/vi\/[\w-]{11}\/hqdefault\.jpg/);
 });
+
+test('the home hero shows the photo staff chose, and falls back to the owl without one', async t => {
+  const site = await start();
+  t.after(site.close);
+  assert.match(await site.html('/'), /class="hero[^"]*"[\s\S]*srcset="\/seed\/img\/life-talent-eve-award-480\.webp/);
+  const plain = await start(content => content.db.prepare("UPDATE settings SET value = '\"\"' WHERE key = 'heroImage'").run());
+  t.after(plain.close);
+  const page = await plain.html('/');
+  assert.doesNotMatch(page, /life-talent-eve-award/);
+  assert.match(page, /hero-owl/);
+});
