@@ -7,7 +7,7 @@ const { item } = Astro.props;
 <figure class="quote-card" data-reveal-item>
   {item.isSample && <SampleBadge />}
   {item.image && (
-    <a class="shot" href={`${item.image}-1600.webp`} target="_blank" rel="noopener" aria-label={`Open the screenshot: ${item.title}`}>
+    <a class="shot" href={`${item.image}-1600.webp`} data-lightbox="reviews" data-caption={item.title} aria-label={`Open the screenshot: ${item.title}`}>
       <Picture base={item.image} alt={`Screenshot of feedback: ${item.title}`} sizes="(min-width: 900px) 22rem, 80vw" />
     </a>
   )}

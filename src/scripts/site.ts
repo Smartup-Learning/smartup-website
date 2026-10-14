@@ -7,6 +7,7 @@ import { initFaqSearch } from './faq-search';
 import { initForms } from './forms';
 import { initVideos } from './video';
 import { initYouTube } from './youtube';
+import { initLightbox } from './lightbox';
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 initMenu(reduceMotion);
@@ -16,6 +17,7 @@ initFaqSearch();
 initForms();
 initVideos();
 initYouTube();
+initLightbox();
 initMotion(reduceMotion);
 initTimelines(reduceMotion);
 (window as unknown as { __siteReady: boolean }).__siteReady = true;

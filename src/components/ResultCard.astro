@@ -1,13 +1,13 @@
 ---
 import Picture from './Picture.astro';
-interface Props { result: { year: string; exam: string; headline: string; detail: string; poster: string; posterAlt: string; kind?: string }; level?: 3 | 4; tags?: string }
-const { result, level = 3, tags } = Astro.props;
+interface Props { result: { year: string; exam: string; headline: string; detail: string; poster: string; posterAlt: string; kind?: string }; level?: 3 | 4; tags?: string; group?: string }
+const { result, level = 3, tags, group = 'results' } = Astro.props;
 const Heading = level === 4 ? 'h4' : 'h3';
 const summary = result.kind === 'summary';
 ---
 <article class:list={['result', { summary }]} data-reveal-item data-filter-tags={tags}>
   {result.poster && (
-    <a class="poster" href={`${result.poster}-1600.webp`} target="_blank" rel="noopener" aria-label={`Open the result poster: ${result.posterAlt}`}>
+    <a class="poster" href={`${result.poster}-1600.webp`} data-lightbox={group} data-caption={`${result.headline} · ${result.exam} ${result.year}`} aria-label={`Open the result poster: ${result.posterAlt}`}>
       <Picture base={result.poster} alt={result.posterAlt} sizes="(min-width: 900px) 18rem, 78vw" />
     </a>
   )}

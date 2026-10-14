@@ -1,0 +1,46 @@
+---
+// One viewer for every picture on the site. Links marked data-lightbox open here; without JavaScript they open the image itself.
+---
+<dialog class="lightbox" aria-label="Picture viewer">
+  <figure class="lightbox-stage" data-lightbox-stage>
+    <img data-lightbox-img alt="" />
+    <figcaption>
+      <span data-lightbox-caption></span>
+      <span class="lightbox-count" data-lightbox-count aria-live="polite"></span>
+    </figcaption>
+  </figure>
+  <button type="button" class="lightbox-btn lightbox-close" data-lightbox-close aria-label="Close" autofocus>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+  </button>
+  <button type="button" class="lightbox-btn lightbox-prev" data-lightbox-prev aria-label="Previous">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+  </button>
+  <button type="button" class="lightbox-btn lightbox-next" data-lightbox-next aria-label="Next">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
+  </button>
+</dialog>
+<style>
+  .lightbox { width: 100vw; max-width: none; height: 100dvh; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; color: var(--cream); overflow: hidden; }
+  .lightbox::backdrop { background: rgb(20 12 32 / 0.94); }
+  .lightbox[open] { display: grid; place-items: center; }
+  .lightbox-stage { display: grid; gap: 0.75rem; justify-items: center; margin: 0; padding: 4.5rem 1rem 1.25rem; max-width: 100%; max-height: 100%; touch-action: pan-y pinch-zoom; }
+  .lightbox-stage img { max-width: min(100%, 72rem); max-height: calc(100dvh - 9rem); width: auto; height: auto; object-fit: contain; border-radius: 0.5rem; user-select: none; -webkit-user-drag: none; }
+  figcaption { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.25rem 1rem; max-width: 40rem; text-align: center; font-size: var(--step--1); line-height: 1.4; }
+  .lightbox-count { color: var(--on-purple-soft); font-variant-numeric: tabular-nums; }
+  .lightbox-btn { position: absolute; display: grid; place-items: center; width: 3rem; height: 3rem; border: 1px solid rgb(244 238 228 / 0.35); border-radius: 50%; background: rgb(57 32 100 / 0.6); color: var(--cream); cursor: pointer; }
+  .lightbox-btn:hover { background: var(--purple); }
+  .lightbox-btn svg { width: 1.4rem; height: 1.4rem; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .lightbox-btn[hidden] { display: none; }
+  .lightbox-close { top: max(1rem, env(safe-area-inset-top)); right: 1rem; }
+  .lightbox-prev, .lightbox-next { top: 50%; margin-top: -1.5rem; }
+  .lightbox-prev { left: 1rem; }
+  .lightbox-next { right: 1rem; }
+  .lightbox :focus-visible { outline-color: var(--cream); }
+  @media (max-width: 599px) {
+    /* On phones the arrows sit below the picture, clear of the thumb's swipe. */
+    .lightbox-prev, .lightbox-next { top: auto; bottom: max(1rem, env(safe-area-inset-bottom)); margin-top: 0; }
+    .lightbox-stage { padding-bottom: 5rem; }
+    .lightbox-stage img { max-height: calc(100dvh - 12rem); }
+  }
+  :global(html.lightbox-open) { overflow: hidden; }
+</style>
