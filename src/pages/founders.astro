@@ -3,21 +3,28 @@ import Base from '../layouts/Base.astro';
 import { keepTogether } from '../lib/text.mjs';
 import PageHero from '../components/PageHero.astro';
 import SectionHead from '../components/SectionHead.astro';
-import Picture from '../components/Picture.astro';
+import RingPhoto from '../components/brand/RingPhoto.astro';
+import MediaFrame from '../components/MediaFrame.astro';
+import DemoBand from '../components/DemoBand.astro';
+import PeekingOwl from '../components/brand/PeekingOwl.astro';
 import YouTube from '../components/YouTube.astro';
 import { getStore } from '../lib/store';
 const store = getStore(Astro.locals);
 const settings = store.settings();
 const leaders = store.leaders();
 const talks = store.videos('chairman');
+const events = store.events();
+// Each initiative shows the first photo of its own events on Life @ Smartup.
+const photoFor = (category: string) => events.find(e => e.category === category && e.media.length > 0)?.media[0];
 const initiatives = [
   { title: 'Coffee With Chairman', text: 'Mentoring sessions where students meet the Chairman to talk about goals, discipline and confidence.' },
   { title: 'Talent Eve', text: 'Our award ceremony and arts festival, recognising achievement and talent in every batch.' },
   { title: 'Shoot the Drugs', text: 'A sports tournament that carries an anti-drug message to students and their families.' },
-];
+].map(i => ({ ...i, photo: photoFor(i.title) }));
+const count = ['no', 'one', 'two', 'three', 'four', 'five', 'six'][leaders.length] ?? String(leaders.length);
 ---
 <Base title="Founders" description="Meet the founders of Smartup: Mohamed Rayees, Dhanesh Narayanan Achari, Mohamed Shihas K. Y. and Shanu K. Y." page="founders">
-  <PageHero eyebrow="Founders" title="The people behind" highlight="Smartup" intro={settings.positioning} />
+  <PageHero eyebrow="Founders" title="The people behind" highlight="Smartup" intro={`Meet the ${count} people who lead Smartup, from its first classroom in Kochi to the centres it runs today.`} />
 
   {leaders.length > 0 && (
     <section class="section" aria-labelledby="leaders-title">
@@ -26,7 +33,7 @@ const initiatives = [
         <div class="leaders">
           {leaders.map(leader => (
             <article class="leader" data-reveal>
-              {leader.photo && <div class="photo"><Picture base={leader.photo} alt={leader.photoAlt} sizes="(min-width: 900px) 24rem, 90vw" /></div>}
+              {leader.photo && <RingPhoto class="photo" base={leader.photo} alt={leader.photoAlt} focus="45% 30%" zoom={1.8} sizes="(min-width: 900px) 24rem, 18rem" />}
               <div class="text">
                 <p class="role">{leader.role}</p>
                 <h3>{leader.name}</h3>
@@ -43,17 +50,25 @@ const initiatives = [
     <div class="container">
       <SectionHead title="Initiatives led by our Chairman" id="initiatives-title" link={{ href: '/life', label: 'See Life @ Smartup' }} />
       <ul class="initiatives" data-reveal="group">
-        {initiatives.map(i => <li data-reveal-item><h3>{i.title}</h3><p>{i.text}</p></li>)}
+        {initiatives.map(i => (
+          <li data-reveal-item>
+            {i.photo && <MediaFrame base={i.photo.src} alt={i.photo.alt} ratio={3 / 2} sizes="(min-width: 900px) 24rem, 90vw" />}
+            <div class="initiative-text"><h3>{i.title}</h3><p>{i.text}</p></div>
+          </li>
+        ))}
       </ul>
     </div>
   </section>
 
-  <section class="section section--purple" aria-labelledby="vision-title">
-    <div class="container vision" data-reveal>
-      <p class="eyebrow">Vision 2030</p>
-      <h2 id="vision-title">Mentoring beyond Class 12</h2>
-      <p>{keepTogether(settings.vision?.vision2030)}</p>
-      <p class="mission"><strong>Our mission.</strong> {settings.mission}</p>
+  <section class="section section--purple vision-band" aria-labelledby="vision-title">
+    <PeekingOwl class="vision-owl" />
+    <div class="container">
+      <div class="vision" data-reveal>
+        <p class="eyebrow">Vision 2030</p>
+        <h2 id="vision-title">Mentoring beyond Class 12</h2>
+        <p>{keepTogether(settings.vision?.vision2030)}</p>
+        <p class="mission"><strong>Our mission.</strong> {settings.mission}</p>
+      </div>
     </div>
   </section>
 
@@ -65,26 +80,31 @@ const initiatives = [
       </div>
     </section>
   )}
+  <DemoBand />
 </Base>
 <style>
-  .leaders { display: grid; gap: clamp(2.5rem, 2rem + 3vw, 4.5rem); }
-  .leader { display: grid; gap: 1.5rem; align-items: center; }
-  .photo { border-radius: var(--radius); overflow: hidden; background: var(--purple-tint); }
-  .photo :global(img) { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: center 22%; }
-  .text { display: grid; gap: 0.6rem; max-width: 40rem; }
+  /* Two founders per row on wide screens, each with a ringed photo, instead of a long zig-zag. */
+  .leaders { display: grid; gap: clamp(2.5rem, 2rem + 3vw, 4rem) 4rem; }
+  .leader { display: grid; gap: 1.25rem; align-content: start; justify-items: start; }
+  .leader :global(.photo) { width: clamp(9rem, 7rem + 6vw, 12rem); color: var(--purple); }
+  .text { display: grid; gap: 0.5rem; max-width: 36rem; }
   .role { font-weight: 600; color: var(--purple); }
-  .bio { white-space: pre-line; }
-  .leader h3 { font-size: var(--step-3); font-weight: 700; }
-  .initiatives { list-style: none; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); }
-  .initiatives li { padding: 1.5rem; border-radius: var(--radius); background: var(--white); display: grid; gap: 0.5rem; }
+  .bio { white-space: pre-line; color: var(--ink-soft); }
+  .leader h3 { font-size: var(--step-3); font-weight: 600; }
+  .initiatives { list-style: none; padding: 0; display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); }
+  .initiatives li { display: grid; grid-template-rows: auto 1fr; overflow: hidden; border-radius: var(--radius); background: var(--white); }
+  .initiatives li :global(.media-frame) { border-radius: 0; }
+  .initiative-text { display: grid; gap: 0.5rem; align-content: start; padding: 1.25rem 1.5rem 1.5rem; }
   .initiatives h3 { font-size: var(--step-1); }
-  .vision { display: grid; gap: 1rem; max-width: 46rem; }
-  .vision h2 { font-size: var(--step-4); font-weight: 700; color: var(--white); }
+  .vision-band { position: relative; overflow: hidden; --peek-bg: var(--cream); }
+  .vision { position: relative; z-index: 1; display: grid; gap: 1rem; max-width: 46rem; }
+  :global(.vision-owl) { display: none; }
+  @media (min-width: 900px) { :global(.vision-owl) { display: grid; --peek-size: clamp(15rem, 8rem + 14vw, 24rem); } }
+  .vision h2 { font-size: var(--step-4); font-weight: 600; color: var(--white); }
   .vision p { font-size: var(--step-1); color: var(--on-purple-soft); }
   .talks { grid-auto-columns: min(80%, 22rem); }
   @media (min-width: 900px) {
-    .leader { grid-template-columns: 22rem 1fr; gap: 3rem; }
-    .leader:nth-child(even) { grid-template-columns: 1fr 22rem; }
-    .leader:nth-child(even) .photo { order: 2; }
+    .leaders { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .leader { grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: 2rem; }
   }
 </style>
