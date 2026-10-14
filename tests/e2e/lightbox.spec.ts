@@ -63,3 +63,13 @@ test('without JavaScript a poster link opens the full image in the same tab', as
   await expect(poster).not.toHaveAttribute('target', '_blank');
   await context.close();
 });
+
+test('a story picture shown whole on a blurred copy opens with its own description', async ({ page }) => {
+  await page.goto('/');
+  const frame = page.locator('#about a[data-lightbox][data-fit="whole"]').first();
+  await frame.scrollIntoViewIfNeeded();
+  const alt = await frame.locator('img:not(.media-backdrop)').getAttribute('alt');
+  await frame.click();
+  await expect(viewer(page).locator('img')).toHaveAttribute('alt', alt!);
+  expect(alt).not.toBe('');
+});
