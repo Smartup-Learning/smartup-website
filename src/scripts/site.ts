@@ -8,6 +8,7 @@ import { initForms } from './forms';
 import { initVideos } from './video';
 import { initYouTube } from './youtube';
 import { initLightbox } from './lightbox';
+import { initRails } from './rails';
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 initMenu(reduceMotion);
@@ -18,6 +19,7 @@ initForms();
 initVideos();
 initYouTube();
 initLightbox();
+initRails(reduceMotion);
 initMotion(reduceMotion);
 initTimelines(reduceMotion);
 (window as unknown as { __siteReady: boolean }).__siteReady = true;

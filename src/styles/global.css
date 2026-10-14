@@ -50,6 +50,20 @@ a { color: inherit; }
 /* Horizontal scroller with a visible next-card edge; never auto-advances. */
 .rail { display: grid; grid-auto-flow: column; grid-auto-columns: min(78%, 18rem); gap: 1rem; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; padding-bottom: 0.75rem; scrollbar-width: thin; }
 .rail > * { scroll-snap-align: start; }
+.rail-wrap { position: relative; }
+.rail-btn { display: none; }
+@media (min-width: 900px) {
+  /* Rows scroll out to the screen edge while the first card still lines up with the page. Clipping only from 900px
+     keeps real overflow visible to the 360px phone test. */
+  html { overflow-x: clip; }
+  .rail { --bleed: calc((100vw - 100%) / 2); margin-inline: calc(-1 * var(--bleed)); padding-inline: var(--bleed); scroll-padding-inline: max(var(--gutter), (100vw - var(--max)) / 2); }
+  /* (Scroll padding percentages measure the row itself, so it uses the page's own gutter maths.) */
+  .rail-wrap[data-overflow] > .rail-btn { position: absolute; top: calc(50% - 1.75rem); z-index: 2; display: grid; place-items: center; width: 3.25rem; height: 3.25rem; border: 0; border-radius: 50%; background: var(--white); color: var(--purple); box-shadow: 0 6px 20px rgb(57 32 100 / 0.22); cursor: pointer; transition: opacity 0.2s; }
+  .rail-btn--prev { left: -1.6rem; }
+  .rail-btn--next { right: -1.6rem; }
+  .rail-btn:disabled { opacity: 0; pointer-events: none; }
+  .rail-btn svg { width: 1.4rem; height: 1.4rem; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+}
 
 @media (prefers-reduced-motion: no-preference) {
   .js [data-reveal]:not([data-reveal='group']):not(.is-revealed),
