@@ -38,3 +38,12 @@ test('choosing a board on Results narrows every year to that board', async ({ pa
   await page.getByRole('button', { name: '2023' }).click();
   await expect(page.locator('section[data-year]:visible')).toHaveCount(1);
 });
+
+test('on a phone the filter buttons sit in one row that scrolls sideways', async ({ page }, info) => {
+  test.skip(info.project.name !== 'mobile', 'phone only');
+  for (const path of ['/life', '/faculty', '/results']) {
+    await page.goto(path);
+    const tops = await page.locator('[data-filter-for]').first().locator('button').evaluateAll(buttons => buttons.map(b => Math.round(b.getBoundingClientRect().top)));
+    expect(new Set(tops).size, path).toBe(1);
+  }
+});

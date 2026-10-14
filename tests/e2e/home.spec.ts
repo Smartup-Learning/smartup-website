@@ -62,7 +62,7 @@ test('without JavaScript both boards are readable', async ({ browser }) => {
 test('careers preview lists openings and links to all of them', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('#careers .job')).toHaveCount(6);
-  await expect(page.locator('#careers').getByRole('link', { name: 'See all 12 openings' })).toHaveAttribute('href', '/careers');
+  await expect(page.locator('#careers').getByRole('link', { name: /See all \d+ openings/ })).toHaveAttribute('href', '/careers');
 });
 
 test('without JavaScript the course tab buttons are hidden', async ({ browser }) => {

@@ -53,7 +53,7 @@ a { color: inherit; }
 /* Rows of mixed shapes: every card is the same height and its width follows its own shape. */
 .rail--shapes { grid-auto-columns: max-content; --row-h: clamp(15rem, 11rem + 10vw, 24rem); }
 .rail--shapes > * { width: min(calc(var(--row-h) * var(--ratio, 1)), 85vw); }
-.rail-wrap { position: relative; }
+.rail-wrap { position: relative; min-width: 0; }
 .rail-btn { display: none; }
 @media (min-width: 900px) {
   /* Rows scroll out to the screen edge while the first card still lines up with the page. Clipping only from 900px
