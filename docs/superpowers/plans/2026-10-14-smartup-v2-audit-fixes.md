@@ -22,7 +22,12 @@ Rules: branch `v2-website` only; TDD for behaviour (node tests in `tests/*.test.
 - [x] 14. Videos, Courses, Blog, Ask, App.
 - [x] 15. Demo, Careers, Contact, Community, Thanks, 404, Privacy, admin sign-in.
 - [x] 16. Header, menu, footer, sticky bar.
-- [ ] 17. Verify: both test suites, fresh screenshots, whole-branch review, fix pass.
+- [x] 17. Verify: both test suites, fresh screenshots, whole-branch review, fix pass.
 
 ## Needs the client (not code)
 Cut-out hero photo, sharper testimonial videos (720px+), Shorts covers, faculty photos on one background, real blog posts, Google Reviews link, WhatsApp number, fee range, class range (form offers 5–12, site says 8 to +2), app screenshots, centre addresses, labels for the three team phone numbers, names for alumni/feedback videos.
+
+## Result (14 Oct 2026)
+All 17 tasks done. 256 node tests and 166 browser tests pass. Lighthouse (phone): Home 98/100/100/100, Results 99/100/100/100, layout shift 0.
+A fresh code review (1 important, 14 minor) and a fresh visual review (owl over phone header text, row and layout details) were fixed in two passes, each with tests.
+Not checked automatically: swipe-down-to-close the picture viewer on a real touch screen.
