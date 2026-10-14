@@ -79,12 +79,15 @@ const description = `Smartup tuitions in Kochi and online for CBSE and State Boa
           </div>
         )}
         {alumni.length > 0 && (
-          <>
-            <h3 class="row-title">Alumni on video</h3>
+          <div class="media-split alumni-videos">
+            <div class="row-head">
+              <h3 class="row-title">Alumni on video</h3>
+              <p>Former students back on the Talent Eve stage.</p>
+            </div>
             <div class="rail videos" data-reveal="group" tabindex="0" role="region" aria-label="Alumni videos">
               {alumni.map(item => item.kind === 'video' ? <VideoCard item={item} /> : <QuoteCard item={item} />)}
             </div>
-          </>
+          </div>
         )}
       </div>
     </section>
@@ -114,7 +117,10 @@ const description = `Smartup tuitions in Kochi and online for CBSE and State Boa
   .videos { grid-auto-columns: min(62%, 15rem); }
   .alumni-stories { grid-auto-columns: min(80%, 20rem); }
   .results-row { gap: 1.5rem; padding-bottom: 1.5rem; }
-  .row-title { margin: 3rem 0 1.25rem; font-size: var(--step-2); font-weight: 600; color: var(--white); }
+  .alumni-videos { margin-top: 3.5rem; }
+  .row-head { display: grid; gap: 0.5rem; margin-bottom: 1.25rem; }
+  .row-head p { color: var(--on-purple-soft); }
+  .row-title { font-size: var(--step-2); font-weight: 600; color: var(--white); }
   .careers-band { padding-block: clamp(2.5rem, 2rem + 2vw, 3.5rem); border-top: 1px solid var(--line); }
   .careers-inner { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.5rem 1.5rem; }
   .careers-inner h2 { font-size: var(--step-2); font-weight: 600; }

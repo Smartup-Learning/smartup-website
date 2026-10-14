@@ -32,7 +32,7 @@ const onDemo = path === '/demo';
         </section>
       ))}
     </nav>
-    <PeekingOwl class="menu-owl" />
+    <PeekingOwl class="menu-owl" wide />
   </div>
 </header>
 <style>
@@ -61,7 +61,6 @@ const onDemo = path === '/demo';
   .menu-grid a { display: flex; align-items: center; min-height: 44px; font-size: var(--step-1); font-weight: 600; text-decoration: none; }
   .menu-grid a:hover, .menu-grid a[aria-current='page'] { color: var(--purple); }
   .menu-grid a[aria-current='page']::before { content: ''; width: 0.4rem; height: 0.4rem; margin-right: 0.5rem; border-radius: 50%; background: var(--purple); }
-  :global(.menu-owl) { display: none; }
   @media (min-width: 600px) { .menu-grid { grid-template-columns: repeat(2, 1fr); } }
   @media (min-width: 900px) {
     .quick, .header-cta { display: block; }
@@ -70,6 +69,6 @@ const onDemo = path === '/demo';
     .menu-actions { display: none; }
     .menu-grid { grid-template-columns: repeat(4, 1fr); }
     .menu-grid a { font-size: var(--step-2); }
-    :global(.menu-owl) { display: grid; position: fixed; --peek-size: clamp(16rem, 10rem + 12vw, 26rem); }
+    .menu-panel :global(.menu-owl) { position: fixed; --peek-size: clamp(16rem, 10rem + 12vw, 26rem); }
   }
 </style>

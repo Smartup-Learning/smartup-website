@@ -61,7 +61,7 @@ const count = ['no', 'one', 'two', 'three', 'four', 'five', 'six'][leaders.lengt
   </section>
 
   <section class="section section--purple vision-band" aria-labelledby="vision-title">
-    <PeekingOwl class="vision-owl" />
+    <PeekingOwl class="vision-owl" wide />
     <div class="container">
       <div class="vision" data-reveal>
         <p class="eyebrow">Vision 2030</p>
@@ -98,8 +98,7 @@ const count = ['no', 'one', 'two', 'three', 'four', 'five', 'six'][leaders.lengt
   .initiatives h3 { font-size: var(--step-1); }
   .vision-band { position: relative; overflow: hidden; --peek-bg: var(--cream); }
   .vision { position: relative; z-index: 1; display: grid; gap: 1rem; max-width: 46rem; }
-  :global(.vision-owl) { display: none; }
-  @media (min-width: 900px) { :global(.vision-owl) { display: grid; --peek-size: clamp(15rem, 8rem + 14vw, 24rem); } }
+  :global(.vision-owl) { --peek-size: clamp(15rem, 8rem + 14vw, 24rem); }
   .vision h2 { font-size: var(--step-4); font-weight: 600; color: var(--white); }
   .vision p { font-size: var(--step-1); color: var(--on-purple-soft); }
   .talks { grid-auto-columns: min(80%, 22rem); }

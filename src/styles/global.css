@@ -52,9 +52,11 @@ a { color: inherit; }
 /* Horizontal scroller with a visible next-card edge; never auto-advances. */
 .rail { display: grid; grid-auto-flow: column; grid-auto-columns: min(78%, 18rem); gap: 1rem; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; padding-bottom: 0.75rem; scrollbar-width: thin; }
 .rail > * { scroll-snap-align: start; }
+/* Phones: rows scroll out to the screen edge, so cut-off cards end at the edge rather than 16px short of it. */
+@media (max-width: 899px) { .rail { margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); scroll-padding-inline: var(--gutter); } }
 /* Rows of mixed shapes: every card is the same height and its width follows its own shape. */
 .rail--shapes { grid-auto-columns: max-content; --row-h: clamp(15rem, 11rem + 10vw, 24rem); }
-.rail--shapes > * { width: min(calc(var(--row-h) * var(--ratio, 1)), 85vw); }
+.rail--shapes > * { width: min(calc(var(--row-h) * var(--ratio, 1)), 78vw); }
 .rail-wrap { position: relative; min-width: 0; }
 .rail-btn { display: none; }
 @media (min-width: 900px) {
@@ -73,8 +75,9 @@ a { color: inherit; }
 /* A heading beside a short row of videos, instead of above a half-empty row. */
 @media (min-width: 1100px) {
   .media-split { display: grid; grid-template-columns: minmax(0, 19rem) minmax(0, 1fr); gap: 4rem; align-items: center; }
-  .media-split > .section-head { margin-bottom: 0; }
-  .media-split .rail { margin-inline: 0; padding-inline: 0; scroll-padding-inline: 0; grid-auto-columns: calc((100% - 2rem) / 3); }
+  .media-split > .section-head, .media-split > .row-head { margin-bottom: 0; }
+  /* Doubled class so it wins over a page's own column width for the same row. */
+  .media-split.media-split .rail { margin-inline: 0; padding-inline: 0; scroll-padding-inline: 0; grid-auto-columns: calc((100% - 2rem) / 3); }
 }
 
 @media (prefers-reduced-motion: no-preference) {

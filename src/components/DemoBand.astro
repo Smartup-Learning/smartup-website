@@ -21,5 +21,5 @@ import PeekingOwl from './brand/PeekingOwl.astro';
   :global(.demo-band) { margin-top: clamp(2.5rem, 2rem + 3vw, 4rem); padding-block: 1.25rem 1.75rem; opacity: 0.55; }
   /* Phones: a small owl in the bottom corner, clear of the buttons; wide screens: a large one beside the heading. */
   :global(.demo-owl) { --peek-size: 9.5rem; }
-  @media (min-width: 900px) { :global(.demo-owl) { --peek-size: clamp(15rem, 8rem + 14vw, 24rem); bottom: auto; top: 18%; } }
+  @media (min-width: 900px) { :global(.demo-owl) { --peek-size: clamp(15rem, 8rem + 14vw, 24rem); --peek-bottom: 12%; } }
 </style>

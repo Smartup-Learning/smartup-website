@@ -88,7 +88,9 @@ const toppers = store.videos('toppers');
   .year-figures li { display: grid; grid-template-columns: auto; max-width: 16rem; line-height: 1.3; }
   .year-figures strong { font-size: var(--step-3); font-weight: 700; line-height: 1; color: var(--purple); font-variant-numeric: tabular-nums; }
   .figure-exam { font-size: var(--step--1); color: var(--ink-soft); }
-  .highlights { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; align-items: start; max-width: 60rem; }
+  /* A short last row of highlight posters is centred rather than left half empty. */
+  .highlights { --cols: 2; display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 1.25rem; max-width: 60rem; }
+  .highlights > :global(*) { flex: 0 1 calc((100% - (var(--cols) - 1) * 1.25rem) / var(--cols)); }
   .exam { display: grid; gap: 0.25rem 1rem; grid-template-columns: auto 1fr; align-items: baseline; }
   .exam-title { font-size: var(--step-2); font-weight: 600; }
   .exam-count { color: var(--ink-soft); font-size: var(--step--1); }
@@ -102,7 +104,7 @@ const toppers = store.videos('toppers');
   .toppers { grid-auto-columns: min(80%, 22rem); }
   @media (min-width: 600px) {
     .posters { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .highlights { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .highlights { --cols: 3; }
   }
   @media (min-width: 900px) {
     .year-head { grid-template-columns: auto 1fr; }

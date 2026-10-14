@@ -36,7 +36,7 @@ const mail = `mailto:${settings.email}?subject=${encodeURIComponent('My Smartup 
     <section class="section"><div class="container"><p class="empty">Alumni stories will appear here soon.</p></div></section>
   )}
   <section class="section section--cream vision-band">
-    <PeekingOwl class="vision-owl" />
+    <PeekingOwl class="vision-owl" wide />
     <div class="container">
       <div class="cta" data-reveal>
         <p class="eyebrow">Vision 2030</p>
@@ -60,6 +60,5 @@ const mail = `mailto:${settings.email}?subject=${encodeURIComponent('My Smartup 
   .cta h2 { font-size: var(--step-3); font-weight: 600; }
   .vision-band { position: relative; overflow: hidden; --peek-bg: var(--white); }
   .cta { position: relative; z-index: 1; }
-  :global(.vision-owl) { display: none; }
-  @media (min-width: 900px) { :global(.vision-owl) { display: grid; --peek-size: clamp(15rem, 8rem + 14vw, 24rem); } }
+  :global(.vision-owl) { --peek-size: clamp(15rem, 8rem + 14vw, 24rem); }
 </style>

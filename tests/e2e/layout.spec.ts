@@ -146,3 +146,12 @@ test('a blog card shows a clear focus ring when its link has keyboard focus', as
   const outline = await page.locator('.post').first().evaluate(el => getComputedStyle(el).outlineStyle);
   expect(outline).not.toBe('none');
 });
+
+test('the decorative owl in page headers and side bands shows only on wide screens', async ({ page }, info) => {
+  for (const [path, selector] of [['/results', '.page-hero .peek-owl'], ['/founders', '.vision-band .peek-owl'], ['/alumni', '.vision-band .peek-owl'], ['/story', '.story-cta .peek-owl']]) {
+    await page.goto(path);
+    const owl = page.locator(selector).first();
+    if (info.project.name === 'mobile') await expect(owl, path).toBeHidden();
+    else await expect(owl, path).toBeVisible();
+  }
+});

@@ -8,7 +8,7 @@ const { chapters, variant } = Astro.props;
 const full = variant === 'full';
 ---
 <div class:list={['timeline', `timeline--${variant}`]} data-timeline={full ? '' : undefined}>
-  {full && <p class="timeline-now" data-timeline-now aria-hidden="true">{chapters[0]?.yearLabel}</p>}
+  {full && <p class="timeline-now" data-timeline-now aria-hidden="true"></p>}
   <div class="timeline-rail" aria-hidden="true">
     <div class="timeline-progress" data-timeline-progress></div>
     {full && <div class="timeline-owl" data-timeline-owl><Owl size="100%" badge idle={false} /></div>}
@@ -49,7 +49,11 @@ const full = variant === 'full';
 
   .timeline--full .chapter:last-child .chapter-year { color: var(--purple-300); }
   /* A full-width strip under the header, so the year never floats over chapter text. */
-  :global(.js) .timeline-now { display: block; position: sticky; top: var(--header-h); z-index: 3; margin: 0 calc(-1 * var(--gutter)) 1rem; padding: 0.45rem var(--gutter); background: var(--white); border-bottom: 1px solid var(--line); color: var(--purple); font-weight: 700; font-size: var(--step-1); }
+  :global(.js) .timeline-now { display: block; position: sticky; top: var(--header-h); z-index: 3; height: 2.75rem; margin: 0 calc(-1 * var(--gutter)) 1rem; padding: 0 var(--gutter); background: var(--white); border-bottom: 1px solid var(--line); color: var(--purple); font-weight: 700; font-size: var(--step-1); line-height: 2.75rem; }
+  /* Out of sight until it is pinned under the header (timeline.ts), so the first year is not shown twice. */
+  :global(.js) .timeline-now:not(.is-stuck) { visibility: hidden; }
+  /* Phones: the line and the owl start below the year strip, not underneath it. */
+  @media (max-width: 899px) { :global(.js) .timeline--full .timeline-rail { top: 4.25rem; } }
 
   .timeline--teaser .chapter-title { font-size: var(--step-1); }
 

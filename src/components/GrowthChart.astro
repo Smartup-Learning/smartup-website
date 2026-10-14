@@ -46,6 +46,7 @@ const maxCentres = Math.max(...points.map(p => p.centres), 1);
   .dots { display: inline-flex; gap: 0.3rem; }
   .dots i { width: 0.7rem; height: 0.7rem; border-radius: 50%; border: 1.5px solid var(--purple-300); }
   .dots i.on { background: var(--purple); border-color: var(--purple); }
+  .gap { grid-template-columns: auto minmax(0, 1fr); }
   .gap .year { color: var(--ink-soft); font-weight: 600; }
   .gap .rule { height: 0; border-top: 2px dotted var(--purple-300); }
   figcaption { margin-top: 1.25rem; font-size: var(--step--1); color: var(--ink-soft); }

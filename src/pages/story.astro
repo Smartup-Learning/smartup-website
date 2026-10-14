@@ -59,7 +59,7 @@ const journeyTitle = Number.isFinite(firstYear) ? `${new Date().getFullYear() - 
   </section>
 
   <section class="section story-cta">
-    <PeekingOwl class="cta-owl" />
+    <PeekingOwl class="cta-owl" wide />
     <div class="container cta">
       <h2>See where your story could start</h2>
       <div class="actions"><a class="btn btn--primary" href="/demo">Book a free demo class</a><a class="btn btn--ghost" href="/founders">Meet the founders</a></div>
@@ -81,7 +81,6 @@ const journeyTitle = Number.isFinite(firstYear) ? `${new Date().getFullYear() - 
   .story-cta { position: relative; overflow: hidden; --peek-bg: var(--purple-tint); }
   .cta { position: relative; z-index: 1; display: grid; gap: 1.5rem; justify-items: start; }
   .cta h2 { font-size: var(--step-4); font-weight: 600; max-width: 30rem; }
-  :global(.cta-owl) { display: none; }
-  @media (min-width: 900px) { :global(.cta-owl) { display: grid; --peek-size: clamp(15rem, 8rem + 14vw, 24rem); } }
+  :global(.cta-owl) { --peek-size: clamp(15rem, 8rem + 14vw, 24rem); }
   .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
 </style>

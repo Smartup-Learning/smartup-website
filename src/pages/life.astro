@@ -56,7 +56,7 @@ const cover = events.find(e => e.media.length > 0)?.media[0];
   h3 { font-size: var(--step-3); font-weight: 600; }
   .summary { color: var(--ink-soft); white-space: pre-line; }
   /* Photos keep their own shape at one row height; nothing stretches, so no empty strip appears under a photo. */
-  .gallery { align-items: start; --row-h: clamp(13rem, 9rem + 10vw, 19rem); }
+  .gallery { align-items: start; --row-h: clamp(11rem, 8rem + 10vw, 19rem); }
   .empty { font-size: var(--step-1); }
   /* Wide screens: the story on the left, its photos and video on the right, so a one-photo event leaves no empty row. */
   @media (min-width: 1000px) {

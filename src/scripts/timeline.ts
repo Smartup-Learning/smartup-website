@@ -10,6 +10,13 @@ export function initTimelines(reduceMotion: boolean) {
     const now = timeline.querySelector<HTMLElement>('[data-timeline-now]');
     if (!rail || !bar) return;
 
+    // The phone year strip shows only once it is pinned under the header, so it never repeats the year heading below it.
+    if (now) {
+      const pin = () => now.classList.toggle('is-stuck', now.getBoundingClientRect().top <= parseFloat(getComputedStyle(now).top) + 1);
+      window.addEventListener('scroll', pin, { passive: true });
+      pin();
+    }
+
     // Reduced motion keeps the line fully drawn (CSS default) and the owl still; the year strip still updates.
     if (!reduceMotion) {
       let travel = 0;

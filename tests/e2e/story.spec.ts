@@ -40,3 +40,12 @@ test('with reduced motion the phone year strip still follows the reader', async 
   await page.locator('li.chapter[data-year="2020"]').scrollIntoViewIfNeeded();
   await expect(page.locator('[data-timeline-now]')).toHaveText('2020', { timeout: 3000 });
 });
+
+test('on a phone the year strip stays hidden until it is pinned under the header', async ({ page }, info) => {
+  test.skip(info.project.name !== 'mobile', 'phone only');
+  await page.goto('/story');
+  const strip = page.locator('[data-timeline-now]');
+  await expect(strip).toBeHidden();
+  await page.locator('li.chapter[data-year="2018"]').scrollIntoViewIfNeeded();
+  await expect(strip).toBeVisible();
+});
