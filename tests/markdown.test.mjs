@@ -37,3 +37,13 @@ test('ranges in posts stay on one line, and link addresses are left untouched', 
   assert.ok(html.includes('1–⁠30'));
   assert.ok(html.includes('href="https://example.com/a–b"'));
 });
+
+test('Indian phone numbers in posts become tap-to-call links', () => {
+  assert.ok(renderMarkdown('Call +91 88919 10919 today').includes('<a href="tel:+918891910919">+91 88919 10919</a>'));
+});
+
+test('links to pages on this site are allowed, but not to other schemes', () => {
+  assert.ok(renderMarkdown('[Book a demo](/demo)').includes('<a href="/demo">Book a demo</a>'));
+  assert.ok(!renderMarkdown('[x](//evil.example)').includes('href'));
+  assert.ok(!renderMarkdown('[x](javascript:alert(1))').includes('href'));
+});

@@ -15,3 +15,9 @@ test('ordinary text and empty values are left alone', () => {
   assert.equal(keepTogether(''), '');
   assert.equal(keepTogether(undefined), '');
 });
+
+test('plain text becomes safe HTML with Indian mobile numbers as tap-to-call links', async () => {
+  const { linkPhones } = await import('../src/lib/phones.mjs');
+  assert.equal(linkPhones('Call +91 88919 10919 <today>'), 'Call <a href="tel:+918891910919">+91 88919 10919</a> &lt;today&gt;');
+  assert.equal(linkPhones('No number here'), 'No number here');
+});

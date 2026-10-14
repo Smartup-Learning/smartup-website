@@ -1,27 +1,31 @@
 ---
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
-import SectionHead from '../components/SectionHead.astro';
 import YouTube from '../components/YouTube.astro';
 import { getStore } from '../lib/store';
 const store = getStore(Astro.locals);
 const groups = [
-  { id: 'classes', eyebrow: 'Learn', title: 'Live classes' },
-  { id: 'exam-prep', eyebrow: 'Revise', title: 'Exam preparation' },
-  { id: 'short-lessons', eyebrow: 'One minute', title: 'Short lessons' },
-  { id: 'toppers', eyebrow: 'Inspire', title: 'Toppers Talk' },
-  { id: 'chairman', eyebrow: 'Mentor', title: 'From the Chairman' },
-  { id: 'events', eyebrow: 'Celebrate', title: 'Events' },
+  { id: 'classes', title: 'Live classes' },
+  { id: 'exam-prep', title: 'Exam preparation' },
+  { id: 'short-lessons', title: 'Short lessons' },
+  { id: 'toppers', title: 'Toppers Talk' },
+  { id: 'chairman', title: 'From the Chairman' },
+  { id: 'events', title: 'Events' },
 ].map(g => ({ ...g, videos: store.videos(g.id) })).filter(g => g.videos.length > 0);
 ---
 <Base title="YouTube classes" description="Free Smartup classes, question paper workouts, short lessons and Toppers Talk on YouTube." page="videos">
   <PageHero eyebrow="Videos" title="Learn with Smartup on" highlight="YouTube" intro="Live classes, question paper workouts and short lessons from our teachers — free for every student.">
     <p class="channels"><a class="btn btn--primary" href="https://www.youtube.com/@smartupeducations" target="_blank" rel="noopener">Smartup Educations channel</a><a class="btn btn--ghost" href="https://www.youtube.com/@smartup-cbse" target="_blank" rel="noopener">Smartup CBSE channel</a></p>
   </PageHero>
+  {groups.length > 1 && (
+    <nav class="topics" aria-label="Video topics">
+      <ul class="container">{groups.map(g => <li><a href={`#videos-${g.id}`}>{g.title} <span>{g.videos.length}</span></a></li>)}</ul>
+    </nav>
+  )}
   {groups.map((group, i) => (
-    <section class:list={['section', { 'section--cream': i % 2 === 1 }]} aria-labelledby={`videos-${group.id}`}>
+    <section class:list={['section', 'group', { 'section--cream': i % 2 === 1 }]} aria-labelledby={`videos-${group.id}`}>
       <div class="container">
-        <SectionHead title={group.title} id={`videos-${group.id}`} />
+        <h2 id={`videos-${group.id}`} class="group-title" data-reveal>{group.title} <span>{group.videos.length} {group.videos.length === 1 ? 'video' : 'videos'}</span></h2>
         <div class:list={['rail', 'videos', { portrait: group.videos.every(v => v.format === 'portrait') }]} data-reveal="group">
           {group.videos.map(v => <YouTube id={v.youtubeId} title={v.title} format={v.format} cover={v.cover} />)}
         </div>
@@ -34,6 +38,17 @@ const groups = [
 </Base>
 <style>
   .channels { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem; }
+  /* One row of topic links that stays under the header, instead of six identical section openings. */
+  .topics { position: sticky; top: var(--header-h); z-index: 20; background: var(--white); border-bottom: 1px solid var(--line); }
+  .topics ul { list-style: none; padding: 0; display: flex; gap: 0.5rem; overflow-x: auto; padding-block: 0.6rem; scrollbar-width: none; }
+  .topics ul::-webkit-scrollbar { display: none; }
+  .topics a { display: inline-flex; align-items: center; gap: 0.4rem; min-height: 44px; padding: 0.4rem 1rem; border: 1px solid var(--line); border-radius: 999px; white-space: nowrap; text-decoration: none; font-weight: 600; font-size: 0.95rem; }
+  .topics a:hover { border-color: var(--purple); color: var(--purple); }
+  .topics span { font-weight: 500; color: var(--ink-soft); }
+  .group { padding-block: clamp(3rem, 2.5rem + 3vw, 5rem); }
+  /* Clears the sticky topic row when a topic link jumps here. */
+  .group-title { margin-bottom: 1.5rem; font-size: var(--step-3); font-weight: 600; scroll-margin-top: 4.5rem; }
+  .group-title span { margin-left: 0.5rem; font-size: var(--step--1); font-weight: 500; color: var(--ink-soft); letter-spacing: 0; }
   .videos { grid-auto-columns: min(82%, 22rem); }
   .videos.portrait { grid-auto-columns: min(55%, 14rem); }
   .empty { font-size: var(--step-1); }

@@ -41,6 +41,9 @@ a { color: inherit; }
 .btn--primary { background: var(--purple); color: var(--white); }
 .btn--primary:hover { background: var(--purple-600); }
 .btn--yellow { background: var(--yellow); color: var(--ink); }
+/* A white button for secondary actions on purple, so yellow stays for the one main action. */
+.btn--light { background: var(--white); color: var(--purple); }
+.btn--light:hover { background: var(--cream); }
 .btn--ghost { border-color: currentColor; color: inherit; }
 .link-arrow { display: inline-flex; align-items: center; gap: 0.4rem; min-height: 44px; font-weight: 600; color: var(--purple); text-decoration: none; }
 .section--purple .link-arrow, .section--deep .link-arrow { color: var(--cream); }

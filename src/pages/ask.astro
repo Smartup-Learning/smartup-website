@@ -6,6 +6,8 @@ import FormField from '../components/FormField.astro';
 import FilterChips from '../components/FilterChips.astro';
 import { formatPhone } from '../../server/content-store.mjs';
 import { getStore } from '../lib/store';
+import { linkPhones } from '../lib/phones.mjs';
+import { keepTogether } from '../lib/text.mjs';
 const store = getStore(Astro.locals);
 const settings = store.settings();
 const faqs = store.faqs();
@@ -15,15 +17,14 @@ const error = Astro.url.searchParams.get('error');
 const topic = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 ---
 <Base title="Ask Smartup" description="Answers to common questions about Smartup classes, programmes, centres and admissions." page="ask">
-  <PageHero eyebrow="Ask Smartup" title="Questions," highlight="answered" intro="Search the questions parents and students ask most. Can't find yours? Ask us directly.">
-    <form class="search" role="search" hidden onsubmit="return false">
-      <label for="faq-search">Search questions</label>
-      <input id="faq-search" type="search" placeholder="Try “fees”, “mentor” or “online”" autocomplete="off" />
-    </form>
-  </PageHero>
-  <section class="section" aria-labelledby="faq-title">
-    <div class="container narrow">
+  <PageHero eyebrow="Ask Smartup" title="Questions," highlight="answered" intro="Search the questions parents and students ask most. Can't find yours? Ask us directly." />
+  <section class="section faq-section" aria-labelledby="faq-title">
+    <div class="container"><div class="narrow">
       <h2 id="faq-title" class="sr-only">Frequently asked questions</h2>
+      <form class="search" role="search" hidden onsubmit="return false">
+        <label for="faq-search">Search questions</label>
+        <input id="faq-search" type="search" placeholder="Try “mentor”, “online” or “centre”" autocomplete="off" />
+      </form>
       {categories.length > 1 && <FilterChips label="Filter by topic" target="faq-list" owner="faq" allLabel="All topics" options={categories.map(c => ({ value: topic(c), label: c }))} />}
       {faqs.length === 0 && <p>Answers to common questions will appear here soon.</p>}
       {categories.map(category => (
@@ -31,16 +32,17 @@ const topic = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').r
           <h3 class="eyebrow">{category}</h3>
           {faqs.filter(f => f.category === category).map(f => (
             <div class="faq" data-faq data-category={topic(category)}>
-              <details><summary>{f.question}</summary><p>{f.answer}</p></details>
+              <details><summary>{f.question}</summary><p set:html={linkPhones(keepTogether(f.answer))} /></details>
             </div>
           ))}
         </div>
       ))}
       <p id="faq-none" class="none" hidden>No questions match. Ask us below.</p>
-    </div>
+    </div></div>
   </section>
   <section class="section section--cream" id="ask-form" aria-labelledby="ask-form-title">
-    <div class="container">
+    <div class="container form-layout">
+      <div class="form-col">
       <h2 id="ask-form-title" class="form-title">Ask your question</h2>
       <p class="form-intro">Our team replies by phone or email, usually within a day.</p>
       <SmartForm kind="ask" submit="Send my question" done="Our team will reply by phone or email, usually within a day." waText="Hi Smartup, I'm {name}. I just sent a question on your website." whatsapp={settings.whatsapp} phone={settings.phone} error={error}>
@@ -49,14 +51,23 @@ const topic = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').r
         <FormField name="email" label="Email" type="email" maxlength={120} autocomplete="email" />
         <FormField name="question" label="Your question" as="textarea" required maxlength={1500} rows={5} />
       </SmartForm>
+      </div>
+      <aside class="next" aria-labelledby="next-title">
+        <h3 id="next-title">What happens next</h3>
+        <ol>
+          <li><strong>We read every question.</strong> A counsellor, not a bot.</li>
+          <li><strong>We reply within a day</strong> by phone, or by email if you prefer.</li>
+          <li><strong>Good questions help others.</strong> We may add common questions and our answers to this page, never with your name.</li>
+        </ol>
+      </aside>
     </div>
   </section>
   <section class="section section--purple" aria-labelledby="ask-us">
     <div class="container ask" data-reveal>
       <h2 id="ask-us">Prefer to talk?</h2>
-      <p>Our team answers every day from 5 to 9 pm.</p>
+      <p>Our team answers every day, {keepTogether(settings.hours)}.</p>
       <div class="actions">
-        {settings.phone && <a class="btn btn--yellow" href={`tel:${settings.phone}`}>Call {formatPhone(settings.phone)}</a>}
+        {settings.phone && <a class="btn btn--light" href={`tel:${settings.phone}`}>Call {formatPhone(settings.phone)}</a>}
         {settings.whatsapp && <a class="btn btn--ghost" href={`https://wa.me/${settings.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener">WhatsApp us</a>}
         <a class="btn btn--ghost" href={mail}>Email your question</a>
       </div>
@@ -64,11 +75,12 @@ const topic = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').r
   </section>
 </Base>
 <style>
-  .search { display: grid; gap: 0.4rem; max-width: 32rem; margin-top: 0.5rem; }
+  .faq-section { padding-top: clamp(2.5rem, 2rem + 2vw, 3.5rem); }
+  .search { display: grid; gap: 0.4rem; max-width: 32rem; margin-bottom: 1.25rem; }
   .search[hidden] { display: none; }
   label { font-weight: 600; }
   input { min-height: 3rem; padding: 0 1rem; border: 1px solid var(--line); border-radius: 999px; font: 1rem var(--font); }
-  .narrow { max-width: 48rem; }
+  .narrow { max-width: 58rem; }
   .group { display: grid; gap: 0.5rem; margin-bottom: 2rem; }
   .group[hidden], .faq[hidden] { display: none; }
   details { border-bottom: 1px solid var(--line); }
@@ -77,10 +89,18 @@ const topic = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').r
   summary::before { content: '+'; flex: none; width: 1rem; font-weight: 700; color: var(--purple); }
   details[open] summary::before { content: '−'; }
   details p { white-space: pre-line; padding: 0 0 1rem 1.75rem; color: var(--ink-soft); }
-  .form-title { font-size: var(--step-3); font-weight: 700; }
+  details p :global(a) { color: var(--purple); font-weight: 600; }
+  .form-layout { display: grid; gap: 2.5rem; }
+  .form-col { min-width: 0; }
+  .next { display: grid; gap: 1rem; align-content: start; padding: 1.5rem; border-radius: var(--radius); background: var(--white); }
+  .next h3 { font-size: var(--step-1); }
+  .next ol { padding-left: 1.25rem; display: grid; gap: 0.75rem; color: var(--ink-soft); }
+  .next strong { color: var(--ink); }
+  @media (min-width: 900px) { .form-layout { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 4rem; align-items: start; } .next { margin-top: 4.5rem; } }
+  .form-title { font-size: var(--step-3); font-weight: 600; }
   .form-intro { margin: 0.5rem 0 1.5rem; color: var(--ink-soft); }
   .ask { display: grid; gap: 1rem; justify-items: start; }
-  .ask h2 { font-size: var(--step-4); font-weight: 700; color: var(--white); }
+  .ask h2 { font-size: var(--step-4); font-weight: 600; color: var(--white); }
   .ask p { color: var(--on-purple-soft); }
   .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
   .actions .btn--ghost { color: var(--white); }

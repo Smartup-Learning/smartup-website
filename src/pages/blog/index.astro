@@ -2,9 +2,11 @@
 import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/PageHero.astro';
 import SampleBadge from '../../components/SampleBadge.astro';
+import { ICONS, iconFor } from '../../lib/icons';
 import { getStore } from '../../lib/store';
 const posts = getStore(Astro.locals).posts();
 const date = (iso: string) => new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+const tones = ['purple', 'deep', 'cream'];
 ---
 <Base title="Blog" description="Exam preparation, study tips and guidance for parents from the Smartup academic team." page="blog">
   <PageHero eyebrow="Blog" title="Ideas for better" highlight="exam days" intro="Exam preparation, study tips and guidance for parents from the Smartup academic team." />
@@ -13,13 +15,18 @@ const date = (iso: string) => new Date(`${iso}T00:00:00Z`).toLocaleDateString('e
       <h2 id="posts-title" class="sr-only">Articles</h2>
       {posts.length === 0 ? <p class="empty">First articles are on their way.</p> : (
         <ul class="posts" data-reveal="group">
-          {posts.map(p => (
-            <li class="post" data-reveal-item>
-              <p class="eyebrow">{p.category}</p>
-              {p.isSample && <SampleBadge />}
-              <h3><a href={`/blog/${p.slug}`}>{p.title}</a></h3>
-              <p class="excerpt">{p.excerpt}</p>
-              <p class="meta"><time datetime={p.publishedAt}>{date(p.publishedAt)}</time> · {p.author}</p>
+          {posts.map((p, i) => (
+            <li class:list={['post', { lead: i === 0 && posts.length > 2 }]} data-reveal-item>
+              <div class:list={['cover', `cover--${tones[i % tones.length]}`]} aria-hidden="true">
+                <svg viewBox="0 0 24 24" set:html={ICONS[iconFor(p.category)]} />
+              </div>
+              <div class="text">
+                <p class="eyebrow">{p.category}</p>
+                {p.isSample && <SampleBadge />}
+                <h3><a href={`/blog/${p.slug}`}>{p.title}</a></h3>
+                <p class="excerpt">{p.excerpt}</p>
+                <p class="meta"><time datetime={p.publishedAt}>{date(p.publishedAt)}</time> · {p.author}</p>
+              </div>
             </li>
           ))}
         </ul>
@@ -28,12 +35,30 @@ const date = (iso: string) => new Date(`${iso}T00:00:00Z`).toLocaleDateString('e
   </section>
 </Base>
 <style>
-  .posts { list-style: none; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); }
-  .post { display: grid; gap: 0.6rem; align-content: start; padding: 1.5rem; border: 1px solid var(--line); border-radius: var(--radius); }
-  h3 { font-size: var(--step-2); }
+  .posts { list-style: none; padding: 0; display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); }
+  /* The whole card is one link: the title's link stretches over it. */
+  .post { position: relative; display: grid; grid-template-rows: auto 1fr; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); transition: border-color 0.2s, transform 0.3s var(--ease-out); }
+  .post:hover { border-color: var(--purple-300); transform: translateY(-3px); }
+  .post:focus-within { border-color: var(--purple); }
+  .cover { display: grid; place-items: center; aspect-ratio: 16 / 7; }
+  .cover svg { width: clamp(3rem, 2rem + 3vw, 4.5rem); fill: none; stroke: currentColor; stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; }
+  .cover--purple { background: var(--purple); color: var(--on-purple-soft); }
+  .cover--deep { background: var(--purple-900); color: var(--purple-300); }
+  .cover--cream { background: var(--cream); color: var(--purple); }
+  .text { display: flex; flex-direction: column; gap: 0.6rem; padding: 1.4rem 1.5rem 1.5rem; }
+  h3 { font-size: var(--step-2); font-weight: 600; }
   h3 a { text-decoration: none; }
-  h3 a:hover { color: var(--purple); }
+  h3 a::after { content: ''; position: absolute; inset: 0; }
+  h3 a:focus-visible { outline: none; }
+  .post:hover h3 a { color: var(--purple); }
   .excerpt { color: var(--ink-soft); }
-  .meta { font-size: var(--step--1); color: var(--ink-soft); }
+  .meta { margin-top: auto; padding-top: 0.5rem; font-size: var(--step--1); color: var(--ink-soft); }
   .empty { font-size: var(--step-1); }
+  @media (min-width: 900px) {
+    .lead { grid-column: 1 / -1; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto; }
+    .lead .cover { aspect-ratio: auto; min-height: 16rem; }
+    .lead h3 { font-size: var(--step-3); }
+    .lead .text { padding: 2rem 2.25rem; justify-content: center; }
+  }
+  @media (prefers-reduced-motion: reduce) { .post:hover { transform: none; } }
 </style>

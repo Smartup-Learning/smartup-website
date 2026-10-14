@@ -19,7 +19,7 @@ Rules: branch `v2-website` only; TDD for behaviour (node tests in `tests/*.test.
 - [x] 11. Results wall: year stat strip, featured posters, exam groups, show all, landscape spans two columns.
 - [x] 12. Testimonials and Alumni.
 - [x] 13. Our Story, Founders, Faculty, Life (incl. rotating the sideways beach photo).
-- [ ] 14. Videos, Courses, Blog, Ask, App.
+- [x] 14. Videos, Courses, Blog, Ask, App.
 - [ ] 15. Demo, Careers, Contact, Community, Thanks, 404, Privacy, admin sign-in.
 - [ ] 16. Header, menu, footer, sticky bar.
 - [ ] 17. Verify: both test suites, fresh screenshots, whole-branch review, fix pass.

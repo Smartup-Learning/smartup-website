@@ -1,9 +1,10 @@
 import { keepTogether } from './text.mjs';
+import { PHONE, phoneAnchor } from './phones.mjs';
 
 const escapeHtml = text => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-// http(s) and mailto only; one level of balanced brackets is allowed inside the address.
-const LINK = /\[([^\]]+)\]\(((?:https?:\/\/|mailto:)(?:[^()\s]|\([^()\s]*\))+)\)/g;
+// http(s), mailto and paths on this site ("/demo", never "//other-site"); one level of balanced brackets is allowed inside the address.
+const LINK = /\[([^\]]+)\]\(((?:https?:\/\/|mailto:|\/(?!\/))(?:[^()\s]|\([^()\s]*\))*)\)/g;
 
 // Inline formatting runs on already-escaped text, so no HTML from the source can survive.
 // Links are swapped out before emphasis runs, so a * inside an address never becomes markup.
@@ -11,6 +12,7 @@ function inline(text) {
   const links = [];
   return escapeHtml(text)
     .replace(LINK, (_, label, href) => `\u0000${links.push(`<a href="${href}">${label}</a>`) - 1}\u0000`)
+    .replace(PHONE, (...match) => `\u0000${links.push(phoneAnchor(...match)) - 1}\u0000`)
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
     .replace(/\*([^*]+)\*/g, '<em>$1</em>')
     .replace(/[^\u0000]+/g, part => keepTogether(part))
