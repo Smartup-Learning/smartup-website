@@ -5,59 +5,79 @@ import PageHero from '../components/PageHero.astro';
 import SmartForm from '../components/SmartForm.astro';
 import FormField from '../components/FormField.astro';
 import { formatPhone } from '../../server/content-store.mjs';
-import { GRADES, BOARDS, MODES } from '../../server/forms.mjs';
+import { GRADES, BOARDS, MODES, PROGRAMMES } from '../../server/forms.mjs';
 import { getStore } from '../lib/store';
 const store = getStore(Astro.locals);
 const settings = store.settings();
 const centres = store.centres();
 const error = Astro.url.searchParams.get('error');
-const steps = [`Send the form, or call us (${keepTogether(settings.hours)})`, 'We call you back to fix a time that suits you', 'Join a free demo class, online or at a centre'];
+// "Ask about Pro" on Courses links here with the programme, which also tells us the board.
+const asked = PROGRAMMES.find(p => p.name === Astro.url.searchParams.get('programme'));
+const steps = [
+  { title: 'Send the form', text: `Or call us, ${keepTogether(settings.hours)}.` },
+  { title: 'We call you back', text: 'Within a day, to fix a time that suits you.' },
+  { title: 'Join the free class', text: 'Online or at a centre near you.' },
+];
 ---
 <Base title="Book a free demo class" description="Book a free Smartup demo class online or at one of our centres in Kochi." page="demo">
   <PageHero eyebrow="Free demo class" title="Book a free" highlight="demo class" intro="See how Smartup teaches before you decide. Fill in the form and we will call you back." tone="purple">
-    <div class="actions">
-      <a class="btn btn--yellow" href="#book">Book now</a>
-      {settings.phone && <a class="btn btn--ghost" href={`tel:${settings.phone}`}>Call {formatPhone(settings.phone)}</a>}
-      {settings.whatsapp && <a class="btn btn--ghost" href={`https://wa.me/${settings.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent('Hi, I would like to book a free demo class.')}`} target="_blank" rel="noopener">WhatsApp us</a>}
-    </div>
+    {(settings.phone || settings.whatsapp) && (
+      <div class="actions">
+        {settings.phone && <a class="btn btn--ghost" href={`tel:${settings.phone}`}>Call {formatPhone(settings.phone)}</a>}
+        {settings.whatsapp && <a class="btn btn--ghost" href={`https://wa.me/${settings.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent('Hi, I would like to book a free demo class.')}`} target="_blank" rel="noopener">WhatsApp us</a>}
+      </div>
+    )}
   </PageHero>
   <section class="section" id="book" aria-labelledby="book-title">
-    <div class="container">
-      <h2 id="book-title" class="title">Tell us about the student</h2>
-      <SmartForm kind="demo" submit="Book my free demo" done="Our team will call you within a day to fix a time for the demo class." waText="Hi Smartup, I'm {name}. I just booked a free demo class for Class {grade} ({board})." whatsapp={settings.whatsapp} phone={settings.phone} error={error}>
-        <FormField name="name" label="Student's name" required maxlength={80} autocomplete="name" />
-        <FormField name="phone" label="Mobile number" type="tel" required maxlength={16} autocomplete="tel" inputmode="tel" hint="We call this number to fix the demo." />
-        <FormField name="grade" label="Class" as="select" required options={GRADES} />
-        <FormField name="board" label="Board" as="select" required options={BOARDS} />
-        <FormField name="mode" label="Online or at a centre?" as="select" required options={MODES} />
-        <FormField name="centre" label="Preferred centre" as="select" options={centres.map(c => c.name)} placeholder="Choose if learning at a centre" />
-        <FormField name="preferred_time" label="Preferred time" maxlength={60} placeholder="e.g. 6 pm on weekdays" />
-      </SmartForm>
-    </div>
-  </section>
-  <section class="section section--cream" aria-labelledby="steps-title">
-    <div class="container">
-      <h2 id="steps-title" class="title">How it works</h2>
-      <ol class="steps" data-reveal="group">{steps.map((s, i) => <li data-reveal-item><span class="n">{i + 1}</span>{s}</li>)}</ol>
-    </div>
-  </section>
-  {centres.length > 0 && (
-    <section class="section" aria-labelledby="near-title">
-      <div class="container">
-        <h2 id="near-title" class="title">Or call your nearest centre</h2>
-        <ul class="near">{centres.map(c => <li><span>{c.name}</span><a href={`tel:${c.phone}`}>{formatPhone(c.phone)}</a></li>)}</ul>
+    <div class="container layout">
+      <aside class="side" aria-labelledby="steps-title">
+        <h2 id="steps-title" class="side-title">How it works</h2>
+        <ol class="steps">{steps.map((s, i) => <li><span class="n">{i + 1}</span><span><strong>{s.title}</strong> {s.text}</span></li>)}</ol>
+        {settings.phone && (
+          <div class="call near">
+            <p>Rather talk first?</p>
+            <a href={`tel:${settings.phone}`}>Call {formatPhone(settings.phone)}</a>
+            {centres.length > 0 && <a class="link-arrow" href="/contact">Or call your nearest centre</a>}
+          </div>
+        )}
+      </aside>
+      <div class="form-card">
+        <h2 id="book-title" class="title">Tell us about the student</h2>
+        <SmartForm kind="demo" submit="Book my free demo" done="Our team will call you within a day to fix a time for the demo class." waText="Hi Smartup, I'm {name}. I just booked a free demo class for Class {grade} ({board})." whatsapp={settings.whatsapp} phone={settings.phone} error={error}>
+          <FormField name="name" label="Student's name" required maxlength={80} autocomplete="name" />
+          <FormField name="phone" label="Mobile number" type="tel" required maxlength={16} autocomplete="tel" inputmode="tel" hint="We call this number to fix the demo." />
+          <FormField name="grade" label="Class" as="select" required options={GRADES} />
+          <FormField name="board" label="Board" as="select" required options={BOARDS} value={asked?.board} />
+          <FormField name="programme" label="Programme" as="select" options={PROGRAMMES.map(p => p.name)} value={asked?.name} placeholder="Not sure yet" />
+          <FormField name="mode" label="Online or at a centre?" as="select" required options={MODES} />
+          <FormField name="centre" label="Preferred centre" as="select" options={centres.map(c => c.name)} placeholder="Choose if learning at a centre" />
+          <FormField name="preferred_time" label="Preferred time" maxlength={60} placeholder="e.g. 6 pm on weekdays" />
+        </SmartForm>
       </div>
-    </section>
-  )}
+    </div>
+  </section>
 </Base>
 <style>
   .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem; }
   .actions .btn--ghost { color: var(--white); }
-  .title { font-size: var(--step-3); font-weight: 700; margin-bottom: 1.5rem; }
-  .steps { list-style: none; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); }
-  .steps li { display: grid; gap: 0.75rem; padding: 1.5rem; border-radius: var(--radius); background: var(--white); font-weight: 600; }
-  .n { display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: var(--purple); color: var(--white); font-weight: 700; }
-  .near { list-style: none; padding: 0; display: grid; gap: 0.25rem; max-width: 32rem; }
-  .near li { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.15rem 0; border-bottom: 1px solid #ddd2c2; }
-  .near a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; text-decoration: none; color: var(--purple); }
+  .layout { display: grid; gap: 2.5rem; }
+  .title { font-size: var(--step-3); font-weight: 600; margin-bottom: 1.5rem; }
+  .side { display: grid; gap: 1.25rem; align-content: start; }
+  .side-title { font-size: var(--step-1); font-weight: 600; }
+  /* The three steps as a short connected list, not three identical cards. */
+  .steps { list-style: none; padding: 0; display: grid; gap: 0.9rem; position: relative; }
+  .steps::before { content: ''; position: absolute; left: 1.05rem; top: 1rem; bottom: 1rem; width: 2px; background: var(--line); }
+  .steps li { position: relative; display: grid; grid-template-columns: 2.1rem 1fr; gap: 0.75rem; align-items: start; color: var(--ink-soft); }
+  .steps strong { display: block; color: var(--ink); }
+  .n { display: grid; place-items: center; width: 2.1rem; height: 2.1rem; border-radius: 50%; background: var(--purple); color: var(--white); font-weight: 700; }
+  .call { display: grid; gap: 0.15rem; justify-items: start; padding: 1.1rem 1.25rem; border-radius: var(--radius); background: var(--cream); }
+  .call p { color: var(--ink-soft); }
+  .call a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; text-decoration: none; color: var(--purple); }
+  .call a:first-of-type { font-size: var(--step-1); }
+  .form-card { min-width: 0; }
+  @media (min-width: 900px) {
+    .layout { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 4rem; align-items: start; }
+    .form-card { grid-column: 1; grid-row: 1; padding: 2rem 2.25rem; border: 1px solid var(--line); border-radius: var(--radius); }
+    .side { grid-column: 2; grid-row: 1; position: sticky; top: calc(var(--header-h) + 1.5rem); }
+  }
 </style>

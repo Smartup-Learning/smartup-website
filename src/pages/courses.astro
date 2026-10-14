@@ -3,30 +3,56 @@ import Base from '../layouts/Base.astro';
 import { keepTogether } from '../lib/text.mjs';
 import PageHero from '../components/PageHero.astro';
 import SectionHead from '../components/SectionHead.astro';
-import { courseBoards, classDurations, sessionPlan, mentorRatios, parentUpdates, stateProgramme, formatMinutes } from '../data/courses';
+import { courseBoards, classDurations, sessionPlan, mentorRatios, parentUpdates, stateProgramme, formatMinutes, cbseComparison } from '../data/courses';
+import IconBand from '../components/brand/IconBand.astro';
 import { getStore } from '../lib/store';
 const store = getStore(Astro.locals);
 const settings = store.settings();
 const centres = store.centres();
 const cbse = courseBoards.find(b => b.id === 'cbse')!;
 const state = courseBoards.find(b => b.id === 'state')!;
+const [pro, trio, power] = cbse.programmes;
+const columns = [{ key: 'pro', programme: pro }, { key: 'trio', programme: trio }, { key: 'power', programme: power }] as const;
+const askLink = (name: string) => `/demo?programme=${encodeURIComponent(name)}`;
+const planMinutes = sessionPlan.reduce((sum, s) => sum + s.minutes, 0);
+const heroPhoto = store.timeline()[0]?.media[0];
 ---
 <Base title="Courses" description={`Smartup programmes for CBSE and Kerala State Board: Pro, Trio, Power and the State Board programme, online${centres.length ? ` and at ${centres.length} centres in Kochi` : ''}.`} page="courses">
-  <PageHero eyebrow="Courses" title="Programmes built around" highlight="every student" intro="CBSE and Kerala State Board, classes 8 to 12 — online, or at one of our centres in Kochi." />
+  <PageHero eyebrow="Courses" title="Programmes built around" highlight="every student" intro="CBSE and Kerala State Board, classes 8 to 12 — online, or at one of our centres in Kochi." image={heroPhoto ? { base: heroPhoto.src, alt: heroPhoto.alt, focus: '55% 50%' } : undefined} />
 
   <section class="section" aria-labelledby="cbse-title">
     <div class="container">
-      <SectionHead title={cbse.heading} id="cbse-title" />
-      <div class="programmes" data-reveal="group">
-        {cbse.programmes.map(p => (
-          <article class="programme" data-reveal-item>
-            <p class="eyebrow">{p.eyebrow}</p>
-            <p class="ratio">{p.ratio}</p>
-            <h3>{p.name}</h3>
-            <ul>{p.features.map(f => <li>{f}</li>)}</ul>
-            <a class="link-arrow" href="/demo">{p.ask}</a>
-          </article>
-        ))}
+      <SectionHead title={cbse.heading} intro="Three ways to learn, compared line by line." id="cbse-title" />
+      <div class="compare-wrap" data-reveal>
+        <table class="compare">
+          <caption class="sr-only">CBSE programmes compared</caption>
+          <thead>
+            <tr>
+              <td></td>
+              {columns.map(({ programme }) => (
+                <th scope="col">
+                  <span class="col-eyebrow">{programme.eyebrow}</span>
+                  <span class="col-name">{programme.name}</span>
+                  <span class="col-ratio">{programme.ratio}</span>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {cbseComparison.map(row => (
+              <tr>
+                <th scope="row">{row.feature}</th>
+                {columns.map(({ key }) => {
+                  const cell = row[key];
+                  return <td>{cell === true ? <span class="tick" aria-label="Included">✓</span> : cell === false ? <span class="none" aria-label="Not included">–</span> : cell}</td>;
+                })}
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr><td></td>{columns.map(({ programme }) => <td><a class="link-arrow" href={askLink(programme.name)}>{programme.ask}</a></td>)}</tr>
+          </tfoot>
+        </table>
       </div>
     </div>
   </section>
@@ -34,15 +60,18 @@ const state = courseBoards.find(b => b.id === 'state')!;
   <section class="section section--cream" aria-labelledby="class-title">
     <div class="container two">
       <div data-reveal>
-        <SectionHead title="How long, and what happens" id="class-title" />
+        <SectionHead title="How long each class is" id="class-title" />
         <table>
           <caption class="sr-only">Class length by level</caption>
           <tbody>{classDurations.map(d => <tr><th scope="row">{d.level}</th><td>{formatMinutes(d.minutes)}</td></tr>)}</tbody>
         </table>
       </div>
-      <ol class="steps" data-reveal="group">
-        {sessionPlan.map(s => <li data-reveal-item><strong>{s.step}</strong><span>{formatMinutes(s.minutes)}</span></li>)}
-      </ol>
+      <div data-reveal>
+        <h3 class="plan-title">A {formatMinutes(planMinutes)} class, step by step</h3>
+        <ol class="steps">
+          {sessionPlan.map(s => <li><strong>{s.step}</strong><span>{formatMinutes(s.minutes)}</span></li>)}
+        </ol>
+      </div>
     </div>
   </section>
 
@@ -65,28 +94,57 @@ const state = courseBoards.find(b => b.id === 'state')!;
         <article data-reveal-item><h3>Daily practice</h3><ul>{stateProgramme.practice.map(m => <li>{m}</li>)}</ul></article>
         <article data-reveal-item><h3>Before the exams</h3><ul>{stateProgramme.examPrep.map(m => <li>{m}</li>)}</ul></article>
       </div>
+      <a class="btn btn--yellow state-ask" href={askLink(state.programmes[0].name)}>{state.programmes[0].ask}</a>
     </div>
+    <IconBand class="courses-band" />
   </section>
 
   <section class="section" aria-labelledby="where-title">
-    <div class="container" data-reveal>
-      <SectionHead title={centres.length ? `Learn from home, or at ${centres.length} centres` : 'Learn from home'} intro={centres.length ? `Every centre is open ${keepTogether(settings.hours)}.` : undefined} id="where-title" link={{ href: '/contact', label: 'Find your nearest centre' }} />
-      <a class="btn btn--primary" href="/demo">Book a free demo class</a>
+    <div class="container where" data-reveal>
+      <div class="where-text">
+        <SectionHead title={centres.length ? `Learn from home, or at ${centres.length} centres` : 'Learn from home'} intro={centres.length ? `Every centre is open ${keepTogether(settings.hours)}.` : undefined} id="where-title" stack />
+        <div class="actions"><a class="btn btn--primary" href="/demo">Book a free demo class</a><a class="link-arrow" href="/contact">Find your nearest centre</a></div>
+      </div>
+      {centres.length > 0 && <ul class="centre-chips" aria-label="Our centres">{centres.map(c => <li><a href={c.mapUrl} target="_blank" rel="noopener">{c.name}</a></li>)}</ul>}
     </div>
   </section>
 </Base>
 <style>
-  .programmes { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); }
-  .programme { display: grid; gap: 0.6rem; align-content: start; padding: 1.5rem; border: 1px solid var(--line); border-radius: var(--radius); }
-  .ratio { font-size: var(--step-4); font-weight: 700; color: var(--purple); line-height: 1; }
+  .compare-wrap { overflow-x: auto; margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); }
+  .compare { width: 100%; min-width: 34rem; border-collapse: separate; border-spacing: 0; font-size: var(--step--1); }
+  .compare th, .compare td { padding: 0.85rem 0.75rem; border-bottom: 1px solid var(--line); text-align: center; vertical-align: middle; }
+  .compare tbody th { text-align: left; font-weight: 500; color: var(--ink); width: 40%; }
+  .compare thead th { vertical-align: bottom; border-bottom: 2px solid var(--purple); }
+  .compare tfoot td { border-bottom: 0; padding-top: 1rem; }
+  .col-eyebrow { display: block; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); }
+  .col-name { display: block; font-size: var(--step-2); font-weight: 600; }
+  .col-ratio { display: block; font-size: var(--step-1); font-weight: 700; color: var(--purple); }
+  .tick { font-size: var(--step-1); font-weight: 700; color: var(--purple); }
+  .none { color: #b9aec7; }
+  /* Phones: each feature on its own line with the three values in a row beneath, so nothing scrolls sideways. */
+  @media (max-width: 599px) {
+    .compare-wrap { overflow: visible; margin-inline: 0; padding-inline: 0; }
+    .compare { min-width: 0; }
+    .compare thead, .compare tbody, .compare tfoot { display: block; }
+    .compare tr { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-bottom: 1px solid var(--line); }
+    .compare th, .compare td { border-bottom: 0; padding: 0.55rem 0.35rem; }
+    .compare thead tr { border-bottom: 2px solid var(--purple); }
+    .compare thead td:first-child, .compare tfoot td:first-child { display: none; }
+    .compare thead th { border-bottom: 0; }
+    .compare tbody th { grid-column: 1 / -1; width: auto; padding-bottom: 0; font-weight: 600; }
+    .col-name { font-size: var(--step-0); }
+    .compare tfoot tr { border-bottom: 0; }
+    .compare tfoot .link-arrow { font-size: var(--step--1); }
+  }
   h3 { font-size: var(--step-1); }
   ul { padding-left: 1.1rem; display: grid; gap: 0.3rem; }
-  .programme ul, .update ul { color: var(--ink-soft); }
+  .update ul { color: var(--ink-soft); }
   .two { display: grid; gap: 2rem; }
-  table { width: 100%; border-collapse: collapse; font-size: var(--step-1); }
-  th, td { padding: 0.75rem 0; border-bottom: 1px solid #ddd2c2; text-align: left; }
-  td { text-align: right; font-weight: 700; color: var(--purple); }
-  .steps { list-style: none; padding: 0; display: grid; gap: 0.75rem; counter-reset: s; }
+  table:not(.compare) { width: 100%; border-collapse: collapse; font-size: var(--step-1); }
+  table:not(.compare) th, table:not(.compare) td { padding: 0.75rem 0; border-bottom: 1px solid #ddd2c2; text-align: left; }
+  table:not(.compare) td { text-align: right; font-weight: 700; color: var(--purple); }
+  .plan-title { margin-bottom: 1rem; font-size: var(--step-1); font-weight: 600; }
+  .steps { list-style: none; padding: 0; display: grid; gap: 0.75rem; }
   .steps li { display: flex; justify-content: space-between; gap: 1rem; padding: 1rem 1.25rem; border-radius: var(--radius-sm); background: var(--white); }
   .updates, .state { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); }
   .update { padding: 1.5rem; border-radius: var(--radius); background: var(--cream); display: grid; gap: 0.5rem; align-content: start; }
@@ -94,5 +152,17 @@ const state = courseBoards.find(b => b.id === 'state')!;
   .state article { padding: 1.5rem; border-radius: var(--radius); background: var(--purple-600); display: grid; gap: 0.6rem; align-content: start; }
   .state h3 { color: var(--white); }
   .state ul { color: var(--on-purple-soft); }
-  @media (min-width: 900px) { .two { grid-template-columns: 1fr 1fr; align-items: end; } }
+  .state-ask { margin-top: 2rem; }
+  .section--deep { position: relative; overflow: hidden; padding-bottom: 0; --band-color: var(--purple-300); }
+  :global(.courses-band) { margin-top: clamp(3rem, 2rem + 3vw, 4.5rem); padding-block: 1.25rem 1.75rem; opacity: 0.5; }
+  .where { display: grid; gap: 2rem; align-items: center; }
+  .where-text { display: grid; gap: 1.25rem; }
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.5rem; }
+  .centre-chips { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .centre-chips a { display: inline-flex; align-items: center; min-height: 44px; padding: 0.4rem 1rem; border: 1px solid var(--line); border-radius: 999px; text-decoration: none; font-weight: 500; }
+  .centre-chips a:hover { border-color: var(--purple); color: var(--purple); }
+  @media (min-width: 900px) {
+    .two { grid-template-columns: 1fr 1fr; align-items: start; gap: 4rem; }
+    .where { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 4rem; }
+  }
 </style>

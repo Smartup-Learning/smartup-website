@@ -11,7 +11,20 @@ const demo = { name: '  Asha   K ', phone: '98950 85731', grade: '9', board: 'CB
 test('a demo booking is cleaned: name trimmed, phone in +91 form', () => {
   const { values, errors } = validateDemo(demo, { centres });
   assert.deepEqual(errors, {});
-  assert.deepEqual(values, { name: 'Asha K', phone: '+919895085731', grade: '9', board: 'CBSE', mode: 'At a centre', centre: 'Vennala', preferred_time: '6 pm' });
+  assert.deepEqual(values, { name: 'Asha K', phone: '+919895085731', grade: '9', board: 'CBSE', programme: '', mode: 'At a centre', centre: 'Vennala', preferred_time: '6 pm' });
+});
+
+test('a demo booking may name a programme, but only one Smartup offers', () => {
+  assert.equal(validateDemo({ ...demo, programme: 'Smartup Trio' }, { centres }).values.programme, 'Smartup Trio');
+  assert.ok(validateDemo({ ...demo, programme: 'Smartup Gold' }, { centres }).errors.programme);
+});
+
+test('an older inbox gains the programme column, and bookings keep it', () => {
+  const db = new DatabaseSync(':memory:');
+  db.exec("CREATE TABLE demo_bookings(id INTEGER PRIMARY KEY, created_at TEXT NOT NULL, name TEXT NOT NULL, phone TEXT NOT NULL, grade TEXT NOT NULL, board TEXT NOT NULL, mode TEXT NOT NULL, centre TEXT NOT NULL DEFAULT '', preferred_time TEXT NOT NULL DEFAULT '', status TEXT NOT NULL DEFAULT 'new', notes TEXT NOT NULL DEFAULT '')");
+  const store = new InboxStore(db);
+  store.add('demo', { name: 'Asha', phone: '+919895085731', grade: '9', board: 'CBSE', programme: 'Smartup Pro', mode: 'Online', centre: '', preferred_time: '' });
+  assert.equal(store.list('demo')[0].programme, 'Smartup Pro');
 });
 
 test('an online booking drops any centre, and a centre booking needs a real centre', () => {
@@ -83,8 +96,8 @@ test('the CSV export shows Indian time, plain phone numbers and safe cells', () 
   const id = inbox.add('demo', validateDemo({ ...demo, name: '=HYPERLINK("http://x")' }, { centres }).values);
   inbox.db.prepare('UPDATE demo_bookings SET created_at = ? WHERE id = ?').run('2026-10-13T08:54:00.000Z', id);
   const csv = inbox.csv('demo');
-  assert.ok(csv.startsWith('\ufeffReceived (IST),Student,Phone,Class,Board,Online or centre,Centre,Preferred time,Status,Notes\r\n'));
-  assert.ok(csv.endsWith(`"13 Oct 2026, 2:24 pm","'=HYPERLINK(""http://x"")",98950 85731,9,CBSE,At a centre,Vennala,6 pm,new,\r\n`), csv);
+  assert.ok(csv.startsWith('\ufeffReceived (IST),Student,Phone,Class,Board,Programme,Online or centre,Centre,Preferred time,Status,Notes\r\n'));
+  assert.ok(csv.endsWith(`"13 Oct 2026, 2:24 pm","'=HYPERLINK(""http://x"")",98950 85731,9,CBSE,,At a centre,Vennala,6 pm,new,\r\n`), csv);
 });
 
 

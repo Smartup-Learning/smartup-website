@@ -13,7 +13,7 @@ export const STATUSES = ['new', 'contacted', 'closed'];
 export const INBOXES = {
   demo: { table: 'demo_bookings', label: 'Demo bookings', fields: [
     { name: 'name', label: 'Student' }, { name: 'phone', label: 'Phone' }, { name: 'grade', label: 'Class' },
-    { name: 'board', label: 'Board' }, { name: 'mode', label: 'Online or centre' }, { name: 'centre', label: 'Centre' },
+    { name: 'board', label: 'Board' }, { name: 'programme', label: 'Programme' }, { name: 'mode', label: 'Online or centre' }, { name: 'centre', label: 'Centre' },
     { name: 'preferred_time', label: 'Preferred time' },
   ] },
   careers: { table: 'job_applications', label: 'Job applications', fields: [
@@ -43,6 +43,9 @@ export class InboxStore {
   constructor(db) {
     this.db = db;
     this.db.exec(SCHEMA);
+    // Added after launch: older databases gain the column with an empty default.
+    const demoColumns = this.db.prepare('PRAGMA table_info(demo_bookings)').all().map(c => c.name);
+    if (!demoColumns.includes('programme')) this.db.exec("ALTER TABLE demo_bookings ADD COLUMN programme TEXT NOT NULL DEFAULT ''");
   }
 
   add(kind, values) {

@@ -74,3 +74,20 @@ export const stateProgramme = {
 };
 
 export const formatMinutes = (m: number) => (m >= 60 ? `${Math.floor(m / 60)} hr${m % 60 ? ` ${m % 60} min` : ''}` : `${m} min`);
+
+/** The CBSE programmes side by side, taken from each programme's own feature list above. */
+export type Cell = boolean | string;
+export const cbseComparison: { feature: string; pro: Cell; trio: Cell; power: Cell }[] = [
+  { feature: 'Group size', pro: 'One student', trio: 'Three students', power: 'Micro batch' },
+  { feature: 'Student diagnosis and personalised learning plan', pro: true, trio: false, power: false },
+  { feature: 'Strictly follows your school syllabus', pro: true, trio: true, power: false },
+  { feature: 'Competency-based learning', pro: true, trio: true, power: true },
+  { feature: 'Experienced teaching panel', pro: 'In-house panel', trio: true, power: true },
+  { feature: 'AI-integrated learning app and LMS', pro: true, trio: true, power: true },
+  { feature: 'Daily, weekly and monthly evaluations', pro: true, trio: true, power: true },
+  { feature: 'Academic counselling panel', pro: true, trio: false, power: false },
+  { feature: 'Mentorship and support', pro: true, trio: true, power: false },
+  { feature: 'Mentor ratio', pro: '1 mentor : 10', trio: '1 mentor : 20', power: false },
+  { feature: 'Parent meetings', pro: 'Monthly', trio: 'Every two months', power: 'Quarterly' },
+  { feature: 'WhatsApp learning groups and resources', pro: true, trio: true, power: true },
+];

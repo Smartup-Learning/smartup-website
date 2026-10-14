@@ -472,3 +472,14 @@ test('the home hero shows the photo staff chose, and falls back to the owl witho
   assert.doesNotMatch(page, /life-talent-eve-award/);
   assert.match(page, /hero-owl/);
 });
+
+test('asking about a programme on Courses opens the demo form with it chosen', async t => {
+  const site = await start();
+  t.after(site.close);
+  const courses = await site.html('/courses');
+  assert.match(courses, /href="\/demo\?programme=Smartup%20Pro"/);
+  const demo = await site.html('/demo?programme=Smartup%20Pro');
+  assert.match(demo, /<option value="Smartup Pro" selected[^>]*>Smartup Pro<\/option>/);
+  assert.match(demo, /<option value="CBSE" selected[^>]*>CBSE<\/option>/);
+  assert.doesNotMatch(await site.html('/demo?programme=Nonsense'), /<option value="[^"]+" selected/);
+});

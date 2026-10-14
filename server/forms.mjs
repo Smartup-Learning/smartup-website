@@ -8,6 +8,11 @@ export const GRADES = [
   { value: '11', label: 'Plus One (Class 11)' }, { value: '12', label: 'Plus Two (Class 12)' },
 ];
 export const BOARDS = ['CBSE', 'State Board', 'Other'];
+// The programmes on the Courses page, with the board each one belongs to.
+export const PROGRAMMES = [
+  { name: 'Smartup Pro', board: 'CBSE' }, { name: 'Smartup Trio', board: 'CBSE' }, { name: 'Smartup Power', board: 'CBSE' },
+  { name: 'State Board programme', board: 'State Board' },
+];
 export const MODES = ['Online', 'At a centre'];
 
 function check(errors, key, ok, message) {
@@ -27,16 +32,18 @@ export function validateDemo(input, { centres }) {
   const { name, phone } = person(input, errors);
   const grade = line(input.grade);
   const board = line(input.board);
+  const programme = line(input.programme);
   const mode = line(input.mode);
   const preferred_time = line(input.preferred_time);
   let centre = line(input.centre);
   check(errors, 'grade', GRADES.some(g => g.value === grade), 'Choose a class from 5 to 12.');
   check(errors, 'board', BOARDS.includes(board), 'Choose a board.');
+  check(errors, 'programme', !programme || PROGRAMMES.some(p => p.name === programme), 'Choose a programme from the list, or leave it empty.');
   check(errors, 'mode', MODES.includes(mode), 'Choose online or at a centre.');
   if (mode === 'At a centre') check(errors, 'centre', centres.includes(centre), 'Choose a centre.');
   else centre = '';
   check(errors, 'preferred_time', preferred_time.length <= 60, 'Keep this under 60 characters.');
-  return { values: { name, phone, grade, board, mode, centre, preferred_time }, errors };
+  return { values: { name, phone, grade, board, programme, mode, centre, preferred_time }, errors };
 }
 
 export function validateCareers(input, { roles }) {
