@@ -23,7 +23,7 @@ const groups = [
       <div class="container">
         <SectionHead title={group.title} id={`videos-${group.id}`} />
         <div class:list={['rail', 'videos', { portrait: group.videos.every(v => v.format === 'portrait') }]} data-reveal="group">
-          {group.videos.map(v => <YouTube id={v.youtubeId} title={v.title} format={v.format} />)}
+          {group.videos.map(v => <YouTube id={v.youtubeId} title={v.title} format={v.format} cover={v.cover} />)}
         </div>
       </div>
     </section>

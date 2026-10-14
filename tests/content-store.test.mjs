@@ -220,3 +220,10 @@ test('media sizes come from the seed list and from staff uploads', () => {
   assert.equal(store.mediaSize('/seed/img/not-a-real-image'), null);
   assert.equal(store.mediaSize(''), null);
 });
+
+test('YouTube videos can carry a cover image, empty until staff add one', () => {
+  const store = seeded();
+  assert.ok(store.videos().every(v => v.cover === ''));
+  store.db.prepare("UPDATE videos SET cover = '/media/u-cover' WHERE id = (SELECT min(id) FROM videos)").run();
+  assert.equal(store.videos()[0].cover, '/media/u-cover');
+});

@@ -18,7 +18,8 @@ test('without JavaScript a video opens on YouTube', async ({ browser }) => {
   await context.close();
 });
 
-test('a tapped video plays at the size of its thumbnail and takes focus', async ({ page }) => {
+test('on a wide screen a tapped video plays at the size of its thumbnail and takes focus', async ({ page }, info) => {
+  test.skip(info.project.name !== 'desktop', 'phones open a larger player');
   await page.goto('/testimonials');
   for (const format of ['landscape', 'portrait']) {
     const figure = page.locator(`.yt--${format}`).first();
@@ -30,4 +31,37 @@ test('a tapped video plays at the size of its thumbnail and takes focus', async 
     expect(Math.abs(after!.height - before!.height)).toBeLessThanOrEqual(1);
     await expect(iframe).toBeFocused();
   }
+});
+
+test('starting a second video stops the first one', async ({ page }, info) => {
+  test.skip(info.project.name !== 'desktop', 'phones play one video at a time in the player');
+  await page.goto('/videos');
+  const links = page.locator('[data-yt] a.yt-frame');
+  await links.nth(0).click();
+  await expect(page.locator('[data-yt] iframe')).toHaveCount(1);
+  await page.locator('[data-yt] a.yt-frame').nth(1).click();
+  await expect(page.locator('[data-yt] iframe')).toHaveCount(1);
+  await expect(page.locator('[data-yt]').nth(0).locator('a.yt-frame')).toBeVisible();
+});
+
+test('on a phone a tapped video opens large in a player that closes again', async ({ page }, info) => {
+  test.skip(info.project.name !== 'mobile', 'phone only');
+  await page.goto('/videos');
+  await page.locator('[data-yt] a.yt-frame').first().click();
+  const player = page.locator('dialog.video-player');
+  await expect(player).toBeVisible();
+  const frame = (await player.locator('iframe').boundingBox())!;
+  const width = await page.evaluate(() => document.documentElement.clientWidth);
+  expect(frame.width).toBeGreaterThanOrEqual(width * 0.9);
+  await player.getByRole('button', { name: 'Close' }).click();
+  await expect(player).toBeHidden();
+  await expect(page.locator('iframe')).toHaveCount(0);
+});
+
+test('the play badge sits in the corner, clear of the title printed on the thumbnail', async ({ page }) => {
+  await page.goto('/videos');
+  const frame = (await page.locator('[data-yt] .yt-frame').first().boundingBox())!;
+  const badge = (await page.locator('[data-yt] .yt-play').first().boundingBox())!;
+  expect(badge.x - frame.x).toBeLessThan(frame.width * 0.2);
+  expect(frame.y + frame.height - (badge.y + badge.height)).toBeLessThan(frame.height * 0.2);
 });

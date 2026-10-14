@@ -37,7 +37,7 @@ const toppers = store.videos('toppers');
     <section class="section" aria-labelledby="toppers-title">
       <div class="container">
         <SectionHead eyebrow="Toppers Talk" title="Hear it from our toppers" id="toppers-title" />
-        <div class="rail toppers" data-reveal="group">{toppers.map(v => <YouTube id={v.youtubeId} title={v.title} format={v.format} />)}</div>
+        <div class="rail toppers" data-reveal="group">{toppers.map(v => <YouTube id={v.youtubeId} title={v.title} format={v.format} cover={v.cover} />)}</div>
       </div>
     </section>
   )}

@@ -61,7 +61,7 @@ const initiatives = [
     <section class="section" aria-labelledby="talks-title">
       <div class="container">
         <SectionHead eyebrow="From the Chairman" title="Talks and messages" id="talks-title" />
-        <div class="rail talks" data-reveal="group">{talks.map(v => <YouTube id={v.youtubeId} title={v.title} format={v.format} />)}</div>
+        <div class="rail talks" data-reveal="group">{talks.map(v => <YouTube id={v.youtubeId} title={v.title} format={v.format} cover={v.cover} />)}</div>
       </div>
     </section>
   )}

@@ -87,3 +87,9 @@ test('the schema sent to the admin page has no table names or server checks', ()
   assert.equal(schema.faqs.sortable, true);
   assert.equal(SETTINGS.find(f => f.name === 'whatsapp').nullable, true);
 });
+
+test('staff can give a YouTube video its own cover image', () => {
+  const cover = SECTIONS.videos.fields.find(f => f.name === 'cover');
+  assert.equal(cover?.type, 'image');
+  assert.ok(!cover.required);
+});

@@ -124,6 +124,7 @@ const ADDED_COLUMNS = [
   ['posts', 'is_sample', 'INTEGER NOT NULL DEFAULT 0'],
   ['testimonials', 'is_sample', 'INTEGER NOT NULL DEFAULT 0'],
   ['testimonials', 'image', "TEXT NOT NULL DEFAULT ''"],
+  ['videos', 'cover', "TEXT NOT NULL DEFAULT ''"],
 ];
 
 export class ContentStore {
@@ -215,7 +216,7 @@ export class ContentStore {
   }
 
   videos(category) {
-    const sql = 'SELECT youtube_id AS youtubeId, title, category, format FROM videos WHERE published = 1' + (category ? ' AND category = ?' : '') + ' ORDER BY sort, id';
+    const sql = 'SELECT youtube_id AS youtubeId, title, category, format, cover FROM videos WHERE published = 1' + (category ? ' AND category = ?' : '') + ' ORDER BY sort, id';
     return category ? this.db.prepare(sql).all(category) : this.db.prepare(sql).all();
   }
 

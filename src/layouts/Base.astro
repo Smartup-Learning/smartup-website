@@ -5,6 +5,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import MobileBar from '../components/MobileBar.astro';
 import Lightbox from '../components/Lightbox.astro';
+import VideoDialog from '../components/VideoDialog.astro';
 import { getStore } from '../lib/store';
 import { siteOrigin, hiddenFromSearch } from '../lib/site';
 interface Props { title?: string; description: string; page: string; noindex?: boolean; structuredData?: string }
@@ -46,6 +47,7 @@ const fullTitle = title ? `${title} — Smartup` : 'Smartup — Tuitions in Koch
     <Footer settings={settings} centres={centres} />
     <MobileBar phone={settings.phone} whatsapp={settings.whatsapp} />
     <Lightbox />
+    <VideoDialog />
     <script>import '../scripts/site';</script>
   </body>
 </html>

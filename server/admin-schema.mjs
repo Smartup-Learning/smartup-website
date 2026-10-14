@@ -127,6 +127,7 @@ export const SECTIONS = {
       { name: 'title', label: 'Title', type: 'text', required: true, max: 120 },
       { name: 'category', label: 'Group', type: 'select', required: true, options: options(['classes', 'Live classes'], ['exam-prep', 'Exam preparation'], ['short-lessons', 'Short lessons'], ['toppers', 'Toppers Talk'], ['chairman', 'From the Chairman'], ['events', 'Events'], ['parents', 'Parent feedback (Testimonials page)']) },
       { name: 'format', label: 'Shape', type: 'select', required: true, options: options(['landscape', 'Landscape (16:9)'], ['portrait', 'Portrait (Shorts)']) },
+      { name: 'cover', label: 'Cover image', type: 'image', hint: 'Optional. YouTube’s own picture for Shorts is small and blurry; a portrait cover looks sharper.' },
       published,
     ],
   },

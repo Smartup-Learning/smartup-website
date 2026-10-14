@@ -435,3 +435,11 @@ test('time and class ranges are glued so a line never breaks inside them', async
     assert.equal(loose, null, `${path} has an unglued range: ${loose?.[0]}`);
   }
 });
+
+test('a YouTube video with a staff cover shows that cover instead of the YouTube thumbnail', async t => {
+  const site = await start(content => content.db.prepare("UPDATE videos SET cover = '/seed/img/alumni-dylan' WHERE category = 'short-lessons'").run());
+  t.after(site.close);
+  const page = await site.html('/videos');
+  assert.match(page, /srcset="\/seed\/img\/alumni-dylan-480\.webp 480w/);
+  assert.match(page, /i\.ytimg\.com\/vi\/[\w-]{11}\/hqdefault\.jpg/);
+});

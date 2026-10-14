@@ -27,7 +27,7 @@ const parentClips = store.videos('parents');
     <section class="section section--cream" aria-labelledby="parent-videos">
       <div class="container">
         <SectionHead title="What parents say" id="parent-videos" />
-        <div class="rail tall" data-reveal="group">{parentClips.map(v => <YouTube id={v.youtubeId} title={v.title} format={v.format} />)}</div>
+        <div class="rail rail--shapes" data-reveal="group">{parentClips.map(v => <YouTube id={v.youtubeId} title={v.title} format={v.format} cover={v.cover} />)}</div>
       </div>
     </section>
   )}
