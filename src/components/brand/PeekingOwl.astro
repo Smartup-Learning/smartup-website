@@ -1,0 +1,14 @@
+---
+import Owl from '../Owl.astro';
+// The owl mark, large and cut off by the edge of its section, as on the brand's tote bag and business card.
+interface Props { side?: 'right' | 'left'; class?: string; label?: string }
+const { side = 'right', class: className, label } = Astro.props;
+---
+<div class:list={['peek-owl', `peek-owl--${side}`, className]} aria-hidden={label ? undefined : 'true'}>
+  <Owl size="72%" label={label} />
+</div>
+<style>
+  .peek-owl { position: absolute; z-index: 0; display: grid; place-items: center; width: var(--peek-size, clamp(11rem, 8rem + 14vw, 22rem)); aspect-ratio: 1; border-radius: 50%; background: var(--peek-bg, var(--cream)); pointer-events: none; }
+  .peek-owl--right { right: calc(var(--peek-size, clamp(11rem, 8rem + 14vw, 22rem)) * -0.32); bottom: calc(var(--peek-size, clamp(11rem, 8rem + 14vw, 22rem)) * -0.22); transform: rotate(-12deg); }
+  .peek-owl--left { left: calc(var(--peek-size, clamp(11rem, 8rem + 14vw, 22rem)) * -0.32); bottom: calc(var(--peek-size, clamp(11rem, 8rem + 14vw, 22rem)) * -0.22); transform: rotate(12deg); }
+</style>

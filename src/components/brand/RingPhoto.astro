@@ -1,0 +1,14 @@
+---
+import Picture from '../Picture.astro';
+// A circular photo with a thin, slightly offset outline ring, as on the Smartup ID cards.
+interface Props { base: string; alt: string; sizes: string; focus?: string; priority?: boolean; class?: string }
+const { base, alt, sizes, focus = '50% 35%', priority = false, class: className } = Astro.props;
+---
+<figure class:list={['ring-photo', className]} style={`--focus: ${focus}`}>
+  <Picture base={base} alt={alt} sizes={sizes} priority={priority} />
+</figure>
+<style>
+  .ring-photo { position: relative; margin: 0; aspect-ratio: 1; width: 100%; }
+  .ring-photo :global(img) { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; object-position: var(--focus); background: var(--purple-tint); }
+  .ring-photo::after { content: ''; position: absolute; inset: -5% -2% -2% -5%; border: 2px solid currentColor; border-radius: 50%; opacity: 0.55; pointer-events: none; }
+</style>

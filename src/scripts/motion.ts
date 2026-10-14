@@ -16,6 +16,11 @@ export function rollHead(svg: Element) {
   animate(svg, { rotate: [0, 360] }, { duration: 1.2, ease: EASE });
 }
 
+/** The owl's smile from the animation guide: eyes curve up into happy arcs, then open again. */
+export function smile(svg: Element) {
+  animate(svg.querySelectorAll('.owl-eye'), { scaleY: [1, 0.35, 0.35, 1], y: [0, -3, -3, 0] }, { duration: 1.6, times: [0, 0.15, 0.8, 1], ease: EASE });
+}
+
 function initReveals() {
   // Group items are watched one by one: a long grid can be many screens tall, so 15% of the
   // whole group may never fit on a phone. Items entering together still animate in sequence.
@@ -43,6 +48,14 @@ function initCounters() {
   }, { amount: 0.6 });
 }
 
+// Owls marked happy smile and roll their head once when they come into view, as on the thanks page.
+function initHappyOwls() {
+  inView('svg[data-owl="happy"]', svg => {
+    const timer = window.setTimeout(() => { smile(svg); window.setTimeout(() => rollHead(svg), 1800); }, 400);
+    return () => window.clearTimeout(timer);
+  }, { amount: 0.6 });
+}
+
 function initIdleOwls() {
   inView('svg[data-owl="idle"]', svg => {
     let timer = 0;
@@ -61,4 +74,5 @@ export function initMotion(reduceMotion: boolean) {
   initReveals();
   initCounters();
   initIdleOwls();
+  initHappyOwls();
 }

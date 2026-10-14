@@ -1,9 +1,9 @@
 ---
-interface Props { size?: string; badge?: boolean; idle?: boolean; label?: string; class?: string }
-const { size = '6rem', badge = false, idle = true, label, class: className } = Astro.props;
+interface Props { size?: string; badge?: boolean; idle?: boolean; happy?: boolean; label?: string; class?: string }
+const { size = '6rem', badge = false, idle = true, happy = false, label, class: className } = Astro.props;
 ---
 <span class:list={['owl-wrap', { 'owl-badge': badge }, className]} style={`--owl-size:${size}`}>
-  <svg class="owl" viewBox="0 0 258 228" data-owl={idle ? 'idle' : 'still'} role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : 'true'}>
+  <svg class="owl" viewBox="0 0 258 228" data-owl={happy ? 'happy' : idle ? 'idle' : 'still'} role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : 'true'}>
     <g fill="#672aae">
       <path transform="matrix(1,0,0,-1,181.28363,167.49811)" d="M0 0C-16.617-2.848-32.902 3.134-44.922 14.804-52.386-.205-65.76-11.269-82.376-14.117-111.717-19.145-140.039 3.338-145.635 36.101-151.231 68.864-131.981 99.499-102.641 104.527-86.024 107.375-69.738 101.393-57.718 89.723-50.255 104.732-36.881 115.797-20.264 118.644 9.077 123.672 37.398 101.189 42.994 68.426 48.59 35.664 29.341 5.028 0 0M62.68 84.761C53.587 137.996-4.446 164.393-68.594 153.4-132.742 142.407-178.714 98.186-169.621 44.951-157.698-24.854-98.551-57.778-34.403-46.785 29.745-35.791 74.602 14.956 62.68 84.761" />
       <g class="owl-pupils">

@@ -1,20 +1,45 @@
 ---
-interface Props { eyebrow: string; title: string; highlight?: string; intro?: string; tone?: 'cream' | 'purple' }
-const { eyebrow, title, highlight, intro, tone = 'cream' } = Astro.props;
+import RingPhoto from './brand/RingPhoto.astro';
+import PeekingOwl from './brand/PeekingOwl.astro';
+interface Props { eyebrow: string; title: string; highlight?: string; intro?: string; tone?: 'cream' | 'purple'; image?: { base: string; alt: string; focus?: string } }
+const { eyebrow, title, highlight, intro, tone = 'cream', image } = Astro.props;
 ---
-<section class:list={['page-hero', tone === 'purple' ? 'section--purple' : 'section--cream']}>
-  <div class="container">
-    <p class="eyebrow">{eyebrow}</p>
-    <h1>{title}{highlight && <> <span class="highlight">{highlight}</span></>}</h1>
-    {intro && <p class="intro">{intro}</p>}
-    <slot />
+<section class:list={['page-hero', tone === 'purple' ? 'section--purple' : 'section--cream', { 'has-image': image }]}>
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow">{eyebrow}</p>
+      <h1>{title}{highlight && <> <span class="highlight">{highlight}</span></>}</h1>
+      {intro && <p class="intro">{intro}</p>}
+      <slot />
+    </div>
+    {image && (
+      <div class="hero-visual">
+        <span class="arc" aria-hidden="true"></span>
+        <RingPhoto base={image.base} alt={image.alt} focus={image.focus} sizes="(min-width: 900px) 24rem, 1px" priority />
+      </div>
+    )}
   </div>
+  {!image && <PeekingOwl class="hero-owl" />}
 </section>
 <style>
-  .page-hero { padding-block: clamp(3rem, 2rem + 4vw, 5.5rem); }
-  .container { display: grid; gap: 1rem; }
-  h1 { font-size: var(--step-5); font-weight: 700; letter-spacing: -0.02em; max-width: 16ch; }
+  .page-hero { position: relative; overflow: hidden; padding-block: clamp(3rem, 2rem + 4vw, 5.5rem); }
+  .hero-grid { position: relative; z-index: 1; display: grid; gap: 2rem; align-items: center; }
+  .hero-copy { display: grid; gap: 1rem; min-width: 0; }
+  h1 { font-size: var(--step-5); font-weight: 600; letter-spacing: -0.02em; max-width: 16ch; }
   .section--purple h1 { color: var(--white); }
   .intro { font-size: var(--step-1); color: var(--ink-soft); max-width: 42rem; }
   .section--purple .intro { color: var(--on-purple-soft); }
+  .hero-visual { display: none; }
+  :global(.hero-owl) { display: none; }
+  .section--purple { --peek-bg: var(--cream); }
+  .section--cream { --peek-bg: var(--white); }
+  @media (min-width: 900px) {
+    .has-image .hero-grid { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); }
+    .hero-visual { position: relative; display: block; width: min(100%, 24rem); justify-self: center; color: var(--purple); }
+    .section--purple .hero-visual { color: var(--cream); }
+    /* A soft arc behind the photo, as in the brand collateral. */
+    .arc { position: absolute; inset: -18% -30% -18% -14%; border-radius: 50%; background: radial-gradient(circle at 35% 40%, rgb(255 255 255 / 0.55), transparent 62%), var(--purple-tint); }
+    .section--purple .arc { background: radial-gradient(circle at 35% 40%, rgb(255 255 255 / 0.08), transparent 62%), var(--purple-600); }
+    :global(.hero-owl) { display: grid; --peek-size: clamp(16rem, 8rem + 16vw, 27rem); }
+  }
 </style>
