@@ -30,7 +30,7 @@ test('without JavaScript numbers and content are visible', async ({ browser }) =
 
 test('the owl renders with two animatable eyes', async ({ page }) => {
   await page.goto('/');
-  const owl = page.locator('svg.owl').first();
+  const owl = page.locator('.hero svg.owl').first();
   await expect(owl).toBeVisible();
   await expect(owl.locator('g.owl-eye')).toHaveCount(2);
 });

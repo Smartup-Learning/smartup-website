@@ -1,63 +1,77 @@
 ---
-import { navGroups } from '../lib/nav';
+import { navGroups, isCurrent } from '../lib/nav';
 import { formatPhone } from '../../server/content-store.mjs';
 import SocialIcon from './SocialIcon.astro';
 import { keepTogether } from '../lib/text.mjs';
-interface Props { settings: any; centres: { name: string; phone: string; mapUrl: string; hours: string }[] }
-const { settings, centres } = Astro.props;
+interface Props { settings: any; centres: { name: string; phone: string; mapUrl: string; hours: string }[]; path: string }
+const { settings, centres, path } = Astro.props;
 const year = new Date().getFullYear();
+// One icon per network, the main account's; Community lists every account.
+const social = settings.social.filter((s: any, i: number, all: any[]) => all.findIndex(o => o.network === s.network) === i);
+const networkName = { facebook: 'Facebook', instagram: 'Instagram', youtube: 'YouTube', linkedin: 'LinkedIn' } as Record<string, string>;
 ---
 <footer class="site-footer section--cream">
-  <div class="container footer-grid">
+  <div class="container footer-top">
     <div class="brand">
       <img src="/brand/logo.svg" alt="Smartup" width="150" height="33" />
       <p>Tuitions for classes 8 to +2 in Kochi and online.</p>
-      <p>{settings.phone && <><a href={`tel:${settings.phone}`}>{formatPhone(settings.phone)}</a><br /></>}<a href={`mailto:${settings.email}`}>{settings.email}</a></p>
+      <p class="contact">{settings.phone && <a href={`tel:${settings.phone}`}>{formatPhone(settings.phone)}</a>}<a href={`mailto:${settings.email}`}>{settings.email}</a></p>
       <ul class="social" aria-label="Smartup on social media">
-        {settings.social.map((s: any) => <li><a href={s.url} target="_blank" rel="noopener" aria-label={s.label}><SocialIcon network={s.network} /></a></li>)}
+        {social.map((s: any) => <li><a href={s.url} target="_blank" rel="noopener" aria-label={`Smartup on ${networkName[s.network] ?? s.network}`}><SocialIcon network={s.network} /></a></li>)}
+        <li class="more"><a href="/community">All channels</a></li>
       </ul>
     </div>
     <nav id="footer-nav" class="footer-nav" aria-label="Site">
       {navGroups.map(group => (
         <section>
           <h2 class="eyebrow">{group.title}</h2>
-          <ul>{group.links.map(link => <li><a href={link.href}>{link.label}</a></li>)}</ul>
+          <ul>{group.links.map(link => <li><a href={link.href} aria-current={isCurrent(link.href, path) ? 'page' : undefined}>{link.label}</a></li>)}</ul>
         </section>
       ))}
     </nav>
-    <section class="centres" aria-labelledby="footer-centres">
-      <h2 class="eyebrow" id="footer-centres">Our centres</h2>
+  </div>
+  {centres.length > 0 && (
+    <section class="container centres" aria-labelledby="footer-centres">
+      <h2 class="eyebrow" id="footer-centres">Our centres <span>· all open {keepTogether(settings.hours)}</span></h2>
       <ul>
         {centres.map(c => (
           <li><a href={c.mapUrl} target="_blank" rel="noopener">{c.name}</a><a class="tel" href={`tel:${c.phone}`}>{formatPhone(c.phone)}</a></li>
         ))}
       </ul>
-      <p class="hours">All centres open {keepTogether(settings.hours)}</p>
     </section>
-  </div>
+  )}
   <div class="container base">
     <p>© {year} Smartup. All rights reserved.</p>
     <a href="/privacy">Privacy</a>
   </div>
 </footer>
 <style>
-  .site-footer { padding-block: clamp(3.5rem, 2.5rem + 4vw, 5.5rem) 1.5rem; }
-  .footer-grid { display: grid; gap: 2.5rem; }
-  .brand { display: grid; gap: 1rem; align-content: start; }
+  /* On phones the footer also covers the space kept for the sticky bar, so no white strip shows under it. */
+  .site-footer { padding-block: clamp(3.5rem, 2.5rem + 4vw, 5.5rem) calc(1rem + var(--bar-h) + env(safe-area-inset-bottom)); }
+  .footer-top { display: grid; gap: 2.5rem; }
+  .brand { display: grid; gap: 0.75rem; align-content: start; }
   .brand img { width: 150px; height: auto; }
-  .brand a { text-decoration: none; font-weight: 500; }
-  .social { display: flex; gap: 0.5rem; list-style: none; padding: 0; flex-wrap: wrap; }
-  .social a { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--white); color: var(--purple); }
+  .contact { display: grid; justify-items: start; }
+  .brand a, .footer-nav a, .centres a, .base a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; }
+  .contact a { font-weight: 600; }
+  .social { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; list-style: none; padding: 0; }
+  .social a { justify-content: center; width: 44px; height: 44px; border-radius: 50%; background: var(--white); color: var(--purple); }
+  .social .more a { width: auto; height: auto; padding-inline: 0.25rem; border-radius: 0; background: none; font-size: var(--step--1); font-weight: 600; color: var(--purple); }
   .footer-nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; }
-  .footer-nav ul, .centres ul { list-style: none; padding: 0; margin-top: 0.6rem; display: grid; gap: 0.15rem; }
-  .footer-nav a, .centres a { display: inline-block; padding: 0.3rem 0; text-decoration: none; }
-  .footer-nav a:hover, .centres a:hover { color: var(--purple); }
-  .centres li { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  .footer-nav ul, .centres ul { list-style: none; padding: 0; margin-top: 0.4rem; display: grid; }
+  .footer-nav a:hover, .centres a:hover, .footer-nav a[aria-current='page'] { color: var(--purple); }
+  .footer-nav a[aria-current='page'] { font-weight: 600; }
+  .centres { margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid #ddd2c2; }
+  .centres h2 span { text-transform: none; letter-spacing: 0; font-weight: 500; color: var(--ink-soft); }
+  .centres ul { grid-template-columns: minmax(0, 1fr); column-gap: 3rem; }
+  .centres li { display: flex; justify-content: space-between; gap: 1rem; border-bottom: 1px solid #e9e0d2; }
   .centres .tel { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
-  .hours { margin-top: 0.75rem; color: var(--ink-soft); font-size: var(--step--1); }
-  .base { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-top: 3rem; padding-top: 1.25rem; border-top: 1px solid #ddd2c2; font-size: var(--step--1); color: var(--ink-soft); }
+  .base { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; padding-top: 0.75rem; border-top: 1px solid #ddd2c2; font-size: var(--step--1); color: var(--ink-soft); }
+  @media (min-width: 600px) { .centres ul { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (min-width: 900px) {
-    .footer-grid { grid-template-columns: 1fr 2fr 1.2fr; }
+    .site-footer { padding-bottom: 1.5rem; }
+    .footer-top { grid-template-columns: minmax(0, 1fr) minmax(0, 2.6fr); gap: 4rem; }
     .footer-nav { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .centres ul { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   }
 </style>

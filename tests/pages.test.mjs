@@ -483,3 +483,12 @@ test('asking about a programme on Courses opens the demo form with it chosen', a
   assert.match(demo, /<option value="CBSE" selected[^>]*>CBSE<\/option>/);
   assert.doesNotMatch(await site.html('/demo?programme=Nonsense'), /<option value="[^"]+" selected/);
 });
+
+test('the footer shows one icon per social network, and Community lists every account', async t => {
+  const site = await start();
+  t.after(site.close);
+  const footer = (await site.html('/')).split('class="site-footer')[1];
+  const icons = [...footer.matchAll(/aria-label="Smartup on (\w+)"/g)].map(m => m[1]);
+  assert.deepEqual(icons, ['Facebook', 'Instagram', 'YouTube', 'LinkedIn']);
+  assert.equal([...(await site.html('/community')).matchAll(/class="channel"/g)].length, 7);
+});

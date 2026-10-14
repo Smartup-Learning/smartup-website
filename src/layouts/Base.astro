@@ -42,10 +42,10 @@ const fullTitle = title ? `${title} — Smartup` : 'Smartup — Tuitions in Koch
     <script is:inline>document.documentElement.classList.add('js');setTimeout(function(){if(!window.__siteReady)document.documentElement.classList.remove('js');},2500);</script>
   </head>
   <body data-astro-page={page}>
-    <Header />
+    <Header path={Astro.url.pathname} phone={settings.phone} />
     <main id="main"><slot /></main>
-    <Footer settings={settings} centres={centres} />
-    <MobileBar phone={settings.phone} whatsapp={settings.whatsapp} />
+    <Footer settings={settings} centres={centres} path={Astro.url.pathname} />
+    <MobileBar phone={settings.phone} whatsapp={settings.whatsapp} bookingDone={['demo', 'thanks'].includes(page)} />
     <Lightbox />
     <VideoDialog />
     <script>import '../scripts/site';</script>

@@ -17,7 +17,7 @@ test('menu opens, lists all four groups and closes with Escape', async ({ page }
   await expect(toggle).toHaveAttribute('aria-expanded', 'true');
   const menu = page.locator('#site-menu');
   await expect(menu).toBeVisible();
-  for (const group of ['About us', 'Learn', 'Proof', 'Join']) await expect(menu.getByRole('heading', { name: group })).toBeVisible();
+  for (const group of ['About us', 'Learn', 'Results and reviews', 'Get started']) await expect(menu.getByRole('heading', { name: group })).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(menu).toBeHidden();
   await expect(toggle).toBeFocused();
@@ -92,4 +92,42 @@ test('long text staff type keeps its line breaks on the website', async ({ page 
     await page.goto(path);
     expect(await page.locator(selector).first().evaluate(el => getComputedStyle(el).whiteSpace), `${path} ${selector}`).toBe('pre-line');
   }
+});
+
+test('on a phone the menu offers booking a demo and calling before the page links', async ({ page }, info) => {
+  test.skip(info.project.name !== 'mobile', 'wide screens keep these in the header');
+  await page.goto('/');
+  await page.locator('[data-menu-toggle]').click();
+  const menu = page.locator('#site-menu');
+  await expect(menu.getByRole('link', { name: 'Book a free demo' })).toBeVisible();
+  await expect(menu.locator('a[href^="tel:"]')).toBeVisible();
+});
+
+test('the current page is marked in the header and the menu', async ({ page }, info) => {
+  await page.goto('/results');
+  if (info.project.name === 'desktop') await expect(page.locator('.quick a[href="/results"]')).toHaveAttribute('aria-current', 'page');
+  await page.locator('[data-menu-toggle]').click();
+  await expect(page.locator('#site-menu a[href="/results"]')).toHaveAttribute('aria-current', 'page');
+});
+
+test('on the demo page the phone bar offers a call, not another booking', async ({ page }, info) => {
+  test.skip(info.project.name !== 'mobile', 'phone only');
+  await page.goto('/demo');
+  const bar = page.locator('.mobile-bar');
+  await expect(bar.getByRole('link', { name: 'Book free demo' })).toHaveCount(0);
+  await expect(bar.locator('a[href^="tel:"]')).toBeVisible();
+});
+
+test('the footer ends the page on phones, with no blank strip under it', async ({ page }, info) => {
+  test.skip(info.project.name !== 'mobile', 'phone only');
+  await page.goto('/contact');
+  const gap = await page.evaluate(() => document.documentElement.scrollHeight - (document.querySelector('.site-footer')!.getBoundingClientRect().bottom + scrollY));
+  expect(gap).toBeLessThanOrEqual(1);
+});
+
+test('footer links are big enough to tap', async ({ page }, info) => {
+  test.skip(info.project.name !== 'mobile', 'phone only');
+  await page.goto('/');
+  const heights = await page.locator('.site-footer a').evaluateAll(links => links.map(a => Math.round(a.getBoundingClientRect().height)));
+  expect(Math.min(...heights)).toBeGreaterThanOrEqual(44);
 });

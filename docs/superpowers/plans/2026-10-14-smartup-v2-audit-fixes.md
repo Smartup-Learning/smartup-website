@@ -21,7 +21,7 @@ Rules: branch `v2-website` only; TDD for behaviour (node tests in `tests/*.test.
 - [x] 13. Our Story, Founders, Faculty, Life (incl. rotating the sideways beach photo).
 - [x] 14. Videos, Courses, Blog, Ask, App.
 - [x] 15. Demo, Careers, Contact, Community, Thanks, 404, Privacy, admin sign-in.
-- [ ] 16. Header, menu, footer, sticky bar.
+- [x] 16. Header, menu, footer, sticky bar.
 - [ ] 17. Verify: both test suites, fresh screenshots, whole-branch review, fix pass.
 
 ## Needs the client (not code)

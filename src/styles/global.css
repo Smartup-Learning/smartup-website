@@ -86,5 +86,5 @@ a { color: inherit; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: 0.01ms !important; }
 }
-@media (max-width: 899px) { body { padding-bottom: calc(var(--bar-h) + env(safe-area-inset-bottom)); } }
+/* The footer reserves the sticky phone bar's space itself (Footer.astro), so the page ends in footer colour. */
 html.menu-open { overflow: hidden; }

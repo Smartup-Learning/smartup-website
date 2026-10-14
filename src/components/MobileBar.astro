@@ -1,12 +1,14 @@
 ---
-interface Props { phone: string | null; whatsapp: string | null }
-const { phone, whatsapp } = Astro.props;
+interface Props { phone: string | null; whatsapp: string | null; bookingDone?: boolean }
+const { phone, whatsapp, bookingDone = false } = Astro.props;
+// On the demo form and after booking, the bar offers only a call or WhatsApp, not another booking.
+const contact = whatsapp
+  ? { href: `https://wa.me/${whatsapp.replace(/\D/g, '')}`, label: 'WhatsApp', external: true }
+  : phone ? { href: `tel:${phone}`, label: 'Call us', external: false } : null;
 ---
-<nav class:list={['mobile-bar', { single: !whatsapp && !phone }]} aria-label="Quick actions">
-  <a class="btn btn--primary" href="/demo">Book free demo</a>
-  {whatsapp
-    ? <a class="btn btn--ghost" href={`https://wa.me/${whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener">WhatsApp</a>
-    : phone && <a class="btn btn--ghost" href={`tel:${phone}`}>Call us</a>}
+<nav class:list={['mobile-bar', { single: bookingDone || !contact }]} aria-label="Quick actions">
+  {!bookingDone && <a class="btn btn--primary" href="/demo">Book free demo</a>}
+  {contact && <a class:list={['btn', bookingDone ? 'btn--primary' : 'btn--ghost']} href={contact.href} target={contact.external ? '_blank' : undefined} rel={contact.external ? 'noopener' : undefined}>{contact.label}</a>}
 </nav>
 <style>
   .mobile-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; display: grid; grid-template-columns: 1.4fr 1fr; gap: 0.6rem; padding: 0.7rem var(--gutter) calc(0.7rem + env(safe-area-inset-bottom)); background: var(--white); border-top: 1px solid var(--line); box-shadow: 0 -6px 24px rgb(57 32 100 / 0.08); }
