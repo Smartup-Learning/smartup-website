@@ -100,7 +100,7 @@ test('Founders lists all four leaders with full bios and Vision 2030', async t =
   const page = await site.html('/founders');
   for (const name of ['Mohamed Rayees', 'Dhanesh Narayanan Achari', 'Mohamed Shihas K. Y.', 'Shanu K. Y.']) assert.match(page, new RegExp(name.replace(/\./g, '\\.')));
   assert.match(page, /Vision 2030/);
-  assert.match(page, /The place where academic champions are born/);
+  assert.match(page, /Meet the four people who lead Smartup/);
 });
 
 test('Faculty lists every published team member with qualifications', async t => {

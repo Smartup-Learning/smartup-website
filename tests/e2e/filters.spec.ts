@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test('choosing a subject shows only that group', async ({ page }) => {
   await page.goto('/faculty');
-  const people = page.locator('#team-list > li');
+  const people = page.locator('#team-list li.person');
   const total = await people.count();
   await page.getByRole('button', { name: 'Chemistry' }).click();
   await expect(page.getByRole('button', { name: 'Chemistry' })).toHaveAttribute('aria-pressed', 'true');
@@ -16,7 +16,7 @@ test('without JavaScript everyone is listed and the chips are hidden', async ({ 
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   await page.goto('http://127.0.0.1:4173/faculty');
-  await expect(page.locator('#team-list > li')).toHaveCount(35);
+  await expect(page.locator('#team-list li.person')).toHaveCount(35);
   await expect(page.getByRole('button', { name: 'Chemistry' })).toBeHidden();
   await context.close();
 });

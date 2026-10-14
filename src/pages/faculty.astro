@@ -2,7 +2,8 @@
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import FilterChips from '../components/FilterChips.astro';
-import Picture from '../components/Picture.astro';
+import RingPhoto from '../components/brand/RingPhoto.astro';
+import DemoBand from '../components/DemoBand.astro';
 import { getStore } from '../lib/store';
 const team = getStore(Astro.locals).faculty();
 const groups = [
@@ -11,45 +12,62 @@ const groups = [
   { value: 'commerce', label: 'Commerce' }, { value: 'humanities', label: 'Humanities' },
   { value: 'team', label: 'Academic team' },
 ].filter(g => team.some(p => p.team === g.value));
+// The academic team leads, then each subject, so the page reads as a staff list with a structure.
+const sections = [...groups.filter(g => g.value === 'team'), ...groups.filter(g => g.value !== 'team')]
+  .map(g => ({ ...g, people: team.filter(p => p.team === g.value) }));
 ---
 <Base title="Our team" description="Meet the Smartup teachers and academic team: qualified, experienced and focused on every student." page="faculty">
   <PageHero eyebrow="Faculty" title="Teachers who know" highlight="your child" intro="Experienced, qualified teachers and an academic team that follows every student's progress." />
   <section class="section" aria-labelledby="team-title">
-    <div class="container">
+    <div class="container" id="team-list">
       <h2 id="team-title" class="sr-only">Our team</h2>
       {team.length === 0 ? <p class="empty">Our team will be introduced here soon.</p> : (
         <>
-          <FilterChips label="Filter by subject" target="team-list" options={groups} allLabel="Everyone" />
-          <ul id="team-list" class="team" data-reveal="group">
-            {team.map(person => (
-              <li class="person" data-filter-tags={person.team} data-reveal-item>
-                {person.photo && <div class="photo"><Picture base={person.photo} alt={`Portrait of ${person.name}`} sizes="(min-width: 1200px) 14rem, (min-width: 600px) 30vw, 45vw" /></div>}
-                <h3>{person.name}</h3>
-                <p class="role">{person.role}</p>
-                {person.qualification && <p class="qual">{person.qualification}</p>}
-                {person.experienceYears > 0 && <p class="qual">{person.experienceYears} {person.experienceYears === 1 ? 'year' : 'years'} of teaching</p>}
-                {person.expertise && <p class="note">{person.expertise}</p>}
-                {person.intro && <p class="intro">{person.intro}</p>}
-                {person.note && <p class="note">{person.note}</p>}
-              </li>
-            ))}
-          </ul>
+          <FilterChips label="Filter by subject" target="team-list" options={sections} allLabel="Everyone" />
+          {sections.map(group => (
+            <section class="group" data-filter-group aria-labelledby={`group-${group.value}`}>
+              <h3 id={`group-${group.value}`} class="group-title">{group.label} <span>{group.people.length}</span></h3>
+              <ul class="team" data-reveal="group">
+                {group.people.map(person => (
+                  <li class="person" data-filter-tags={person.team} data-reveal-item>
+                    {person.photo
+                      ? <RingPhoto class="photo" base={person.photo} alt={`Portrait of ${person.name}`} focus="50% 30%" zoom={1.12} sizes="(min-width: 900px) 9rem, 7rem" />
+                      : <span class="photo initials" aria-hidden="true">{person.name.split(/\s+/).map((w: string) => w[0]).slice(0, 2).join('')}</span>}
+                    <h4>{person.name}</h4>
+                    {person.role && <p class="role">{person.role}</p>}
+                    {person.qualification && <p class="qual">{person.qualification}</p>}
+                    {person.experienceYears > 0 && <p class="qual">{person.experienceYears} {person.experienceYears === 1 ? 'year' : 'years'} of teaching</p>}
+                    {person.expertise && <p class="note">{person.expertise}</p>}
+                    {person.intro && <p class="intro">{person.intro}</p>}
+                    {person.note && <p class="note">{person.note}</p>}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
         </>
       )}
     </div>
   </section>
+  <DemoBand />
 </Base>
 <style>
-  .team { list-style: none; padding: 0; display: grid; gap: 1.75rem 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .person { display: grid; gap: 0.2rem; align-content: start; }
+  .group { display: grid; gap: 1.5rem; padding-block: 2rem; border-top: 1px solid var(--line); }
+  .group[hidden] { display: none; }
+  .group-title { font-size: var(--step-2); font-weight: 600; }
+  .group-title span { margin-left: 0.4rem; font-size: var(--step--1); font-weight: 600; color: var(--ink-soft); }
+  /* One size of card per group, with a short last row centred instead of one card left alone. */
+  .team { --cols: 2; --gap: 1rem; list-style: none; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem var(--gap); }
+  .person { flex: 0 1 calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols)); display: grid; gap: 0.2rem; justify-items: center; align-content: start; text-align: center; min-width: 0; }
   .person[hidden] { display: none; }
-  .photo { margin-bottom: 0.6rem; border-radius: var(--radius-sm); overflow: hidden; background: var(--purple-tint); }
-  .photo :global(img) { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: center 20%; }
-  h3 { font-size: var(--step-0); font-weight: 700; }
+  .person :global(.photo) { width: clamp(6.5rem, 5rem + 4vw, 9rem); margin-bottom: 0.75rem; color: var(--purple-300); }
+  .initials { display: grid; place-items: center; aspect-ratio: 1; border-radius: 50%; background: var(--purple-tint); color: var(--purple); font-size: var(--step-2); font-weight: 600; }
+  h4 { font-size: var(--step-0); font-weight: 600; }
   .role { font-weight: 600; color: var(--purple); font-size: var(--step--1); }
   .qual, .note { font-size: var(--step--1); color: var(--ink-soft); }
   .intro { font-size: var(--step--1); margin-top: 0.25rem; white-space: pre-line; }
   .empty { font-size: var(--step-1); }
-  @media (min-width: 600px) { .team { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-  @media (min-width: 1200px) { .team { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+  @media (min-width: 600px) { .team { --cols: 3; } }
+  @media (min-width: 900px) { .team { --cols: 4; --gap: 1.5rem; row-gap: 2.5rem; } }
+  @media (min-width: 1200px) { .team { --cols: 5; } }
 </style>
