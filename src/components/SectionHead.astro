@@ -1,16 +1,30 @@
 ---
-interface Props { eyebrow: string; title: string; intro?: string; id: string; link?: { href: string; label: string } }
+interface Props { eyebrow?: string; title: string; intro?: string; id: string; link?: { href: string; label: string } }
 const { eyebrow, title, intro, id, link } = Astro.props;
+const aside = Boolean(intro || link);
 ---
-<header class="section-head" data-reveal>
-  <p class="eyebrow">{eyebrow}</p>
-  <h2 id={id}>{title}</h2>
-  {intro && <p class="intro">{intro}</p>}
-  {link && <a class="link-arrow" href={link.href}>{link.label}</a>}
+<header class:list={['section-head', { split: aside }]} data-reveal>
+  <div class="title-col">
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h2 id={id}>{title}</h2>
+  </div>
+  {aside && (
+    <div class="aside-col">
+      {intro && <p class="intro">{intro}</p>}
+      {link && <a class="link-arrow" href={link.href}>{link.label}</a>}
+    </div>
+  )}
 </header>
 <style>
-  .section-head { display: grid; gap: 0.75rem; margin-bottom: clamp(2rem, 1.5rem + 2vw, 3.25rem); max-width: 46rem; }
-  h2 { font-size: var(--step-4); font-weight: 800; }
+  .section-head { display: grid; gap: 1rem 3rem; margin-bottom: clamp(2rem, 1.5rem + 2vw, 3.25rem); }
+  .title-col { display: grid; gap: 0.75rem; max-width: 46rem; }
+  .aside-col { display: grid; gap: 0.5rem; justify-items: start; max-width: 36rem; }
+  h2 { font-size: clamp(2rem, 1.45rem + 2.4vw, 3.5rem); font-weight: 700; }
   .intro { font-size: var(--step-1); color: var(--ink-soft); }
   :global(.section--purple) .intro, :global(.section--deep) .intro { color: var(--on-purple-soft); }
+  /* On wide screens the title takes the left and the intro and link the right, so the section head spans the page. */
+  @media (min-width: 900px) {
+    .section-head.split { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); align-items: end; }
+    .split .aside-col { padding-bottom: 0.35rem; }
+  }
 </style>

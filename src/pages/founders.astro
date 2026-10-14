@@ -41,7 +41,7 @@ const initiatives = [
 
   <section class="section section--cream" aria-labelledby="initiatives-title">
     <div class="container">
-      <SectionHead eyebrow="Beyond the classroom" title="Initiatives led by our Chairman" id="initiatives-title" link={{ href: '/life', label: 'See Life @ Smartup' }} />
+      <SectionHead title="Initiatives led by our Chairman" id="initiatives-title" link={{ href: '/life', label: 'See Life @ Smartup' }} />
       <ul class="initiatives" data-reveal="group">
         {initiatives.map(i => <li data-reveal-item><h3>{i.title}</h3><p>{i.text}</p></li>)}
       </ul>
@@ -74,12 +74,12 @@ const initiatives = [
   .text { display: grid; gap: 0.6rem; max-width: 40rem; }
   .role { font-weight: 600; color: var(--purple); }
   .bio { white-space: pre-line; }
-  .leader h3 { font-size: var(--step-3); font-weight: 800; }
+  .leader h3 { font-size: var(--step-3); font-weight: 700; }
   .initiatives { list-style: none; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); }
   .initiatives li { padding: 1.5rem; border-radius: var(--radius); background: var(--white); display: grid; gap: 0.5rem; }
   .initiatives h3 { font-size: var(--step-1); }
   .vision { display: grid; gap: 1rem; max-width: 46rem; }
-  .vision h2 { font-size: var(--step-4); font-weight: 800; color: var(--white); }
+  .vision h2 { font-size: var(--step-4); font-weight: 700; color: var(--white); }
   .vision p { font-size: var(--step-1); color: var(--on-purple-soft); }
   .talks { grid-auto-columns: min(80%, 22rem); }
   @media (min-width: 900px) {

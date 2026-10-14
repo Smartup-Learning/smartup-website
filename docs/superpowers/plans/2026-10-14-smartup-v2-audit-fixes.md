@@ -10,7 +10,7 @@ Rules: branch `v2-website` only; TDD for behaviour (node tests in `tests/*.test.
 - [x] 2. Lightbox: one `<dialog>` in Base, `data-lightbox` links, swipe, arrows, Esc, back button.
 - [x] 3. MediaFrame: frames that fill with photos and show creatives whole on a blurred copy; used by timeline, Life, alumni.
 - [x] 4. Ranges never break (`5–9 pm`, `8–12`, `K–12`): one text helper, used wherever settings text is shown.
-- [ ] 5. Type and colour: lighter headings, no yellow slab in page heroes, cream focus ring on purple, split section heads, fewer eyebrows, top-aligned cards.
+- [x] 5. Type and colour: lighter headings, no yellow slab in page heroes, cream focus ring on purple, split section heads, fewer eyebrows, top-aligned cards.
 - [ ] 6. Brand devices: arc, ringed circle photo, peeking owl, line-icon band; owl smile.
 - [ ] 7. Rails: run to the screen edge on desktop, arrows from 900px, a plain grid when items fit.
 - [ ] 8. Video: poster + yellow play button, controls after play, full screen shows the whole frame, frame from the poster's shape; YouTube: corner play badge, one player at a time, mixed rows at one height.

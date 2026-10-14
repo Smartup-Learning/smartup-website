@@ -21,7 +21,7 @@ const groups = [
   {groups.map((group, i) => (
     <section class:list={['section', { 'section--cream': i % 2 === 1 }]} aria-labelledby={`videos-${group.id}`}>
       <div class="container">
-        <SectionHead eyebrow={group.eyebrow} title={group.title} id={`videos-${group.id}`} />
+        <SectionHead title={group.title} id={`videos-${group.id}`} />
         <div class:list={['rail', 'videos', { portrait: group.videos.every(v => v.format === 'portrait') }]} data-reveal="group">
           {group.videos.map(v => <YouTube id={v.youtubeId} title={v.title} format={v.format} />)}
         </div>

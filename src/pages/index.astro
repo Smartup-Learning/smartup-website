@@ -41,7 +41,7 @@ const description = `Smartup tuitions in Kochi and online for CBSE and State Boa
   {leaders.length > 0 && (
     <section id="founders" class="section" aria-labelledby="founders-title">
       <div class="container">
-        <SectionHead eyebrow="The founders" title="The people behind Smartup" id="founders-title" link={{ href: '/founders', label: 'Meet the founders' }} />
+        <SectionHead title="The people behind Smartup" id="founders-title" link={{ href: '/founders', label: 'Meet the founders' }} />
         <div class="founders rail" data-reveal="group">
           {leaders.map(leader => <FounderCard leader={leader} />)}
         </div>
@@ -51,7 +51,7 @@ const description = `Smartup tuitions in Kochi and online for CBSE and State Boa
   {results.length > 0 && (
     <section id="results" class="section section--cream" aria-labelledby="results-title">
       <div class="container">
-        <SectionHead eyebrow="Results" title="Results our students earned" intro="Every figure names its exam and year." id="results-title" link={{ href: '/results', label: 'See all results' }} />
+        <SectionHead title="Results our students earned" intro="Every figure names its exam and year." id="results-title" link={{ href: '/results', label: 'See all results' }} />
         <div class="rail" data-reveal="group" tabindex="0" role="region" aria-label="Result highlights">
           {results.map(result => <ResultCard result={result} />)}
         </div>
@@ -84,7 +84,7 @@ const description = `Smartup tuitions in Kochi and online for CBSE and State Boa
 
   <section id="courses" class="section section--cream" aria-labelledby="courses-title">
     <div class="container">
-      <SectionHead eyebrow="Course details" title="Programmes for CBSE and State Board" id="courses-title" link={{ href: '/courses', label: 'All course details' }} />
+      <SectionHead title="Programmes for CBSE and State Board" id="courses-title" link={{ href: '/courses', label: 'All course details' }} />
       <CourseTabs centreCount={centres.length} hours={settings.hours} />
     </div>
   </section>
@@ -92,7 +92,7 @@ const description = `Smartup tuitions in Kochi and online for CBSE and State Boa
   {jobs.length > 0 && (
     <section id="careers" class="section" aria-labelledby="careers-title">
       <div class="container">
-        <SectionHead eyebrow="Career opportunities" title="Teach with Smartup" intro="We're hiring teachers, teaching assistants and mentors across our centres." id="careers-title" />
+        <SectionHead title="Teach with Smartup" intro="We're hiring teachers, teaching assistants and mentors across our centres." id="careers-title" />
         <JobsPreview jobs={jobs} />
       </div>
     </section>

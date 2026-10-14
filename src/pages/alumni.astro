@@ -18,7 +18,7 @@ const mail = `mailto:${settings.email}?subject=${encodeURIComponent('My Smartup 
   {stories.length > 0 && (
     <section class="section" aria-labelledby="alumni-stories-title">
       <div class="container">
-        <SectionHead eyebrow="Stories" title="Alumni journeys" id="alumni-stories-title" />
+        <SectionHead title="Alumni journeys" id="alumni-stories-title" />
         <div class="stories" data-reveal="group">{stories.map(story => <AlumniCard story={story} />)}</div>
       </div>
     </section>
@@ -26,7 +26,7 @@ const mail = `mailto:${settings.email}?subject=${encodeURIComponent('My Smartup 
   {videos.length > 0 && (
     <section class="section" aria-labelledby="alumni-videos-title">
       <div class="container">
-        <SectionHead eyebrow="Videos" title="In their own words" id="alumni-videos-title" />
+        <SectionHead title="Alumni on video" id="alumni-videos-title" />
         <div class="rail tall" data-reveal="group">{videos.map(item => item.kind === 'video' ? <VideoCard item={item} /> : <QuoteCard item={item} />)}</div>
       </div>
     </section>
@@ -48,5 +48,5 @@ const mail = `mailto:${settings.email}?subject=${encodeURIComponent('My Smartup 
   .stories { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); }
   .empty { font-size: var(--step-1); }
   .cta { display: grid; gap: 1rem; justify-items: start; max-width: 46rem; }
-  .cta h2 { font-size: var(--step-3); font-weight: 800; }
+  .cta h2 { font-size: var(--step-3); font-weight: 700; }
 </style>

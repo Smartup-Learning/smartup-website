@@ -25,10 +25,10 @@ const parse = (value: string) => {
   .stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem 1rem; }
   .stat { display: flex; flex-direction: column; gap: 0.2rem; min-width: 0; }
   /* Slightly smaller than --step-4 on narrow phones so "30,000+" fits a half-width cell at 360px. */
-  .stat-value { order: -1; font-size: clamp(1.9rem, 1.2rem + 3.2vw, 4rem); font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+  .stat-value { order: -1; font-size: clamp(1.9rem, 1.2rem + 3.2vw, 4rem); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
   .stat-label { font-weight: 600; }
   .stat-source { font-size: var(--step--1); opacity: 0.8; }
-  .stats--dark .stat-value { color: var(--yellow); }
+  .stats--dark .stat-value { color: var(--white); }
   .stats--dark .stat-label, .stats--dark .stat-source { color: var(--cream); }
   .stats--light .stat-value { color: var(--purple); }
   @media (min-width: 900px) { .stats { grid-template-columns: repeat(4, minmax(0, 1fr)); } }

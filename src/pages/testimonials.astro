@@ -18,7 +18,7 @@ const parentClips = store.videos('parents');
   {videos.length > 0 && (
     <section class="section" aria-labelledby="student-videos">
       <div class="container">
-        <SectionHead eyebrow="Students" title="Student stories" id="student-videos" />
+        <SectionHead title="Student stories" id="student-videos" />
         <div class="rail tall" data-reveal="group">{videos.map(item => <VideoCard item={item} />)}</div>
       </div>
     </section>
@@ -26,7 +26,7 @@ const parentClips = store.videos('parents');
   {parentClips.length > 0 && (
     <section class="section section--cream" aria-labelledby="parent-videos">
       <div class="container">
-        <SectionHead eyebrow="Parents" title="What parents say" id="parent-videos" />
+        <SectionHead title="What parents say" id="parent-videos" />
         <div class="rail tall" data-reveal="group">{parentClips.map(v => <YouTube id={v.youtubeId} title={v.title} format={v.format} />)}</div>
       </div>
     </section>
@@ -34,7 +34,7 @@ const parentClips = store.videos('parents');
   {written.length > 0 && (
     <section class="section" aria-labelledby="written-reviews">
       <div class="container">
-        <SectionHead eyebrow="Reviews" title="Written reviews" id="written-reviews" />
+        <SectionHead title="Written reviews" id="written-reviews" />
         <div class="quotes" data-reveal="group">{written.map(item => <QuoteCard item={item} />)}</div>
       </div>
     </section>
@@ -55,6 +55,6 @@ const parentClips = store.videos('parents');
   .tall { grid-auto-columns: min(60%, 15rem); }
   .quotes { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr)); }
   .cta { display: grid; gap: 1rem; justify-items: start; }
-  .cta h2 { font-size: var(--step-3); font-weight: 800; color: var(--white); }
+  .cta h2 { font-size: var(--step-3); font-weight: 700; color: var(--white); }
   .empty { font-size: var(--step-1); }
 </style>

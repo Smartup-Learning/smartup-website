@@ -16,7 +16,7 @@ const state = courseBoards.find(b => b.id === 'state')!;
 
   <section class="section" aria-labelledby="cbse-title">
     <div class="container">
-      <SectionHead eyebrow="CBSE" title={cbse.heading} id="cbse-title" />
+      <SectionHead title={cbse.heading} id="cbse-title" />
       <div class="programmes" data-reveal="group">
         {cbse.programmes.map(p => (
           <article class="programme" data-reveal-item>
@@ -34,7 +34,7 @@ const state = courseBoards.find(b => b.id === 'state')!;
   <section class="section section--cream" aria-labelledby="class-title">
     <div class="container two">
       <div data-reveal>
-        <SectionHead eyebrow="Every class" title="How long, and what happens" id="class-title" />
+        <SectionHead title="How long, and what happens" id="class-title" />
         <table>
           <caption class="sr-only">Class length by level</caption>
           <tbody>{classDurations.map(d => <tr><th scope="row">{d.level}</th><td>{formatMinutes(d.minutes)}</td></tr>)}</tbody>
@@ -58,7 +58,7 @@ const state = courseBoards.find(b => b.id === 'state')!;
 
   <section class="section section--deep" aria-labelledby="state-title">
     <div class="container">
-      <SectionHead eyebrow="Kerala State Board" title={state.heading} intro={state.programmes[0].features[0]} id="state-title" />
+      <SectionHead title={state.heading} intro={state.programmes[0].features[0]} id="state-title" />
       <div class="state" data-reveal="group">
         <article data-reveal-item><h3>Teaching method</h3><ul>{stateProgramme.method.map(m => <li>{m}</li>)}</ul></article>
         <article data-reveal-item><h3>Each class, about 2 hours</h3><ul>{stateProgramme.session.map(s => <li>{s.step}: {formatMinutes(s.minutes)}</li>)}</ul></article>
@@ -70,7 +70,7 @@ const state = courseBoards.find(b => b.id === 'state')!;
 
   <section class="section" aria-labelledby="where-title">
     <div class="container" data-reveal>
-      <SectionHead eyebrow="Online or offline" title={centres.length ? `Learn from home, or at ${centres.length} centres` : 'Learn from home'} intro={centres.length ? `Every centre is open ${keepTogether(settings.hours)}.` : undefined} id="where-title" link={{ href: '/contact', label: 'Find your nearest centre' }} />
+      <SectionHead title={centres.length ? `Learn from home, or at ${centres.length} centres` : 'Learn from home'} intro={centres.length ? `Every centre is open ${keepTogether(settings.hours)}.` : undefined} id="where-title" link={{ href: '/contact', label: 'Find your nearest centre' }} />
       <a class="btn btn--primary" href="/demo">Book a free demo class</a>
     </div>
   </section>
@@ -78,7 +78,7 @@ const state = courseBoards.find(b => b.id === 'state')!;
 <style>
   .programmes { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); }
   .programme { display: grid; gap: 0.6rem; align-content: start; padding: 1.5rem; border: 1px solid var(--line); border-radius: var(--radius); }
-  .ratio { font-size: var(--step-4); font-weight: 800; color: var(--purple); line-height: 1; }
+  .ratio { font-size: var(--step-4); font-weight: 700; color: var(--purple); line-height: 1; }
   h3 { font-size: var(--step-1); }
   ul { padding-left: 1.1rem; display: grid; gap: 0.3rem; }
   .programme ul, .update ul { color: var(--ink-soft); }

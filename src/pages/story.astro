@@ -18,7 +18,7 @@ const journeyTitle = Number.isFinite(firstYear) ? `${new Date().getFullYear() - 
   <section class="section section--cream story-hero">
     <div class="container">
       <p class="eyebrow">Our Story</p>
-      <h1>{latest ? <>From one classroom to <span class="marker">{latest.studentsLabel} students</span></> : 'Our story'}</h1>
+      <h1>{latest ? <>From one classroom to <span class="highlight">{latest.studentsLabel} students</span></> : 'Our story'}</h1>
       {first && latest && <p class="lead">Smartup began in {first.year} with {first.studentsLabel} students in a single centre in Kochi. Today {latest.studentsLabel} students have learned with us, online and at {latest.centres} centres.</p>}
     </div>
   </section>
@@ -26,7 +26,7 @@ const journeyTitle = Number.isFinite(firstYear) ? `${new Date().getFullYear() - 
   {chapters.length > 0 && (
     <section class="section" aria-labelledby="journey">
       <div class="container">
-        <SectionHead eyebrow="The journey" title={journeyTitle} id="journey" />
+        <SectionHead title={journeyTitle} id="journey" />
         <Timeline chapters={chapters} variant="full" />
       </div>
     </section>
@@ -35,7 +35,7 @@ const journeyTitle = Number.isFinite(firstYear) ? `${new Date().getFullYear() - 
   {growth.length > 0 && (
     <section class="section section--cream" aria-labelledby="growth">
       <div class="container narrow">
-        <SectionHead eyebrow="Growth" title="Growth in students and centres" id="growth" />
+        <SectionHead title="Growth in students and centres" id="growth" />
         <GrowthChart points={growth} />
       </div>
     </section>
@@ -61,7 +61,7 @@ const journeyTitle = Number.isFinite(firstYear) ? `${new Date().getFullYear() - 
 </Base>
 <style>
   .story-hero .container { display: grid; gap: 1.25rem; max-width: 56rem; margin-inline: auto; }
-  h1 { font-size: var(--step-5); font-weight: 800; letter-spacing: -0.03em; }
+  h1 { font-size: var(--step-5); font-weight: 700; letter-spacing: -0.03em; }
   .lead { font-size: var(--step-1); color: var(--ink-soft); max-width: 40rem; }
   .narrow { max-width: 48rem; }
   .vision-text { display: grid; gap: 1rem; max-width: 46rem; font-size: var(--step-1); color: var(--on-purple-soft); }
@@ -71,6 +71,6 @@ const journeyTitle = Number.isFinite(firstYear) ? `${new Date().getFullYear() - 
   .priorities p { margin-top: 0.5rem; color: var(--on-purple-soft); }
   .vision-2030 { margin-top: 2.5rem; padding-left: 1rem; border-left: 4px solid var(--yellow); font-size: var(--step-1); font-weight: 600; color: var(--white); max-width: 46rem; }
   .cta { display: grid; gap: 1.5rem; justify-items: start; }
-  .cta h2 { font-size: var(--step-4); font-weight: 800; max-width: 30rem; }
+  .cta h2 { font-size: var(--step-4); font-weight: 700; max-width: 30rem; }
   .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
 </style>
