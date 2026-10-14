@@ -1,8 +1,18 @@
 ---
+import { keepTogether } from '../lib/text.mjs';
 type GrowthPoint = { year: number; students: number; studentsLabel: string; centres: number };
 interface Props { points: GrowthPoint[] }
 const { points } = Astro.props;
-const max = Math.max(...points.map(p => p.students), 1);
+// Student numbers run from 63 to 30,000+, so bars would make the early years invisible; the figures are printed
+// instead, with each year's centres as dots. Years without published figures are marked as a gap, not hidden.
+type Row = GrowthPoint | { gap: string };
+const rows: Row[] = points.flatMap((p, i): Row[] => {
+  const prev = points[i - 1];
+  if (!prev || p.year - prev.year <= 1) return [p];
+  const gap = p.year - prev.year === 2 ? `${prev.year + 1}` : `${prev.year + 1}–${p.year - 1}`;
+  return [{ gap }, p];
+});
+const maxCentres = Math.max(...points.map(p => p.centres), 1);
 ---
 <figure class="growth">
   <table class="sr-only">
@@ -10,25 +20,37 @@ const max = Math.max(...points.map(p => p.students), 1);
     <thead><tr><th scope="col">Year</th><th scope="col">Students</th><th scope="col">Centres</th></tr></thead>
     <tbody>{points.map(p => <tr><th scope="row">{p.year}</th><td>{p.studentsLabel}</td><td>{p.centres}</td></tr>)}</tbody>
   </table>
-  <ol class="bars" aria-hidden="true" data-reveal="group">
-    {points.map(p => (
+  <ol class="rows" aria-hidden="true" data-reveal="group">
+    {rows.map(row => 'gap' in row ? (
+      <li class="gap" data-reveal-item><span class="year">{keepTogether(row.gap)}</span><span class="rule"></span></li>
+    ) : (
       <li class="row" data-reveal-item>
-        <span class="year">{p.year}</span>
-        <span class="track"><span class="bar" style={`width:${Math.max((p.students / max) * 100, 1.5)}%`}></span></span>
-        <span class="value">{p.studentsLabel}</span>
-        <span class="centres">{p.centres} {p.centres === 1 ? 'centre' : 'centres'}</span>
+        <span class="year">{row.year}</span>
+        <span class="students"><strong>{row.studentsLabel}</strong> students</span>
+        <span class="centres">
+          <span class="dots">{Array.from({ length: maxCentres }, (_, i) => <i class:list={[{ on: i < row.centres }]}></i>)}</span>
+          {row.centres} {row.centres === 1 ? 'centre' : 'centres'}
+        </span>
       </li>
     ))}
   </ol>
-  <figcaption>Students as reported by Smartup. From 2020, branches were consolidated into 9 centres.</figcaption>
+  <figcaption>Students and centres as reported by Smartup.</figcaption>
 </figure>
 <style>
-  .bars { list-style: none; padding: 0; display: grid; gap: 1rem; }
-  .row { display: grid; grid-template-columns: 3.25rem 1fr auto; align-items: center; column-gap: 0.75rem; }
+  .rows { list-style: none; padding: 0; display: grid; }
+  .row, .gap { display: grid; grid-template-columns: 4.5rem minmax(0, 1fr); align-items: center; column-gap: 1rem; padding-block: 0.85rem; border-bottom: 1px solid #e3d8c6; }
   .year { font-weight: 700; color: var(--purple); font-variant-numeric: tabular-nums; }
-  .track { height: 0.9rem; border-radius: 999px; background: var(--purple-tint); overflow: hidden; }
-  .bar { display: block; height: 100%; border-radius: inherit; background: var(--purple); }
-  .value { font-weight: 700; font-variant-numeric: tabular-nums; }
-  .centres { grid-column: 2 / -1; font-size: var(--step--1); color: var(--ink-soft); }
-  figcaption { margin-top: 1.5rem; font-size: var(--step--1); color: var(--ink-soft); }
+  .students { font-size: var(--step-1); }
+  .students strong { font-size: var(--step-3); font-weight: 700; font-variant-numeric: tabular-nums; margin-right: 0.3rem; }
+  .centres { grid-column: 2; display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem 0.75rem; font-size: var(--step--1); color: var(--ink-soft); }
+  .dots { display: inline-flex; gap: 0.3rem; }
+  .dots i { width: 0.7rem; height: 0.7rem; border-radius: 50%; border: 1.5px solid var(--purple-300); }
+  .dots i.on { background: var(--purple); border-color: var(--purple); }
+  .gap .year { color: var(--ink-soft); font-weight: 600; }
+  .gap .rule { height: 0; border-top: 2px dotted var(--purple-300); }
+  figcaption { margin-top: 1.25rem; font-size: var(--step--1); color: var(--ink-soft); }
+  @media (min-width: 700px) {
+    .row { grid-template-columns: 4.5rem minmax(0, 1fr) auto; }
+    .centres { grid-column: 3; justify-content: end; }
+  }
 </style>

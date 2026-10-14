@@ -68,3 +68,9 @@ test('every seed image and video poster has its real size recorded', async () =>
     assert.ok(Math.abs(size[0] / size[1] - meta.width / meta.height) < 0.01, `${key} size does not match the built file`);
   }
 });
+
+test('a source can be turned a quarter, half or three-quarter turn, and nothing else', () => {
+  assert.doesNotThrow(() => validateSources([{ name: 'a', kind: 'image', from: 'drive', id: 'x', rotate: 270 }]));
+  assert.throws(() => validateSources([{ name: 'a', kind: 'image', from: 'drive', id: 'x', rotate: 45 }]), /rotate/);
+  assert.equal(sources.find(s => s.name === 'timeline-2025-tour').rotate, 270);
+});

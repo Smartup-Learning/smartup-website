@@ -27,7 +27,8 @@ for (const s of sources) {
       const out = path.join(imgDir, file);
       if (force || !(await exists(out))) {
         // failOn: 'none' accepts slightly truncated phone JPEGs; rotate first so crops match what people see.
-        const { data, info } = await sharp(input, { failOn: 'none' }).rotate().toBuffer({ resolveWithObject: true });
+        const upright = await sharp(input, { failOn: 'none' }).rotate().toBuffer();
+        const { data, info } = await sharp(upright).rotate(s.rotate ?? 0).toBuffer({ resolveWithObject: true });
         const base = s.crop ? sharp(data).extract(cropBox(info.width, info.height, s.crop)) : sharp(data);
         await base.resize({ width, withoutEnlargement: true }).webp({ quality: 78 }).toFile(out);
       }

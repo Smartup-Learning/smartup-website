@@ -20,6 +20,8 @@ export function validateSources(list) {
     if (s.from === 'drive' && !s.id) throw new Error(`${s.name}: drive source needs an id`);
     if (s.from === 'local' && !s.path) throw new Error(`${s.name}: local source needs a path`);
     if (!['drive', 'local'].includes(s.from)) throw new Error(`${s.name}: from must be drive or local`);
+    // For photos whose pixels are stored sideways without an orientation tag.
+    if (s.rotate !== undefined && ![90, 180, 270].includes(s.rotate)) throw new Error(`${s.name}: rotate must be 90, 180 or 270`);
     if (s.crop) {
       const { x, y, w, h } = s.crop;
       const ok = [x, y, w, h].every(v => typeof v === 'number' && v >= 0 && v <= 1) && w > 0 && h > 0 && x + w <= 1 && y + h <= 1;

@@ -14,8 +14,8 @@ const full = variant === 'full';
     {full && <div class="timeline-owl" data-timeline-owl><Owl size="100%" badge idle={false} /></div>}
   </div>
   <ol class="timeline-list" data-reveal={full ? undefined : 'group'}>
-    {chapters.map(chapter => (
-      <li class="chapter" data-year={chapter.yearLabel} data-reveal={full ? '' : undefined} data-reveal-item={full ? undefined : ''}>
+    {chapters.map((chapter, i) => (
+      <li class="chapter" style={full ? `--row: ${i + 1}` : undefined} data-year={chapter.yearLabel} data-reveal={full ? '' : undefined} data-reveal-item={full ? undefined : ''}>
         <p class="chapter-year">{chapter.yearLabel}</p>
         <h3 class="chapter-title">{keepTogether(chapter.title)}</h3>
         {full && chapter.story && <p class="chapter-story">{keepTogether(chapter.story)}</p>}
@@ -57,9 +57,12 @@ const full = variant === 'full';
     :global(.js) .timeline-now { display: none; }
     .timeline--full { --rail-x: 50%; }
     .timeline--full .timeline-owl { width: 3.5rem; margin-left: -1.75rem; }
-    .timeline--full .chapter { width: 50%; padding-left: 0; padding-right: 4rem; }
+    /* Chapters alternate sides and each starts halfway down the one before it, so neither half of the page sits
+       empty beside a chapter. Each chapter spans two rows; the next one begins on the second. */
+    .timeline--full .timeline-list { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0; }
+    .timeline--full .chapter { grid-column: 1; grid-row: var(--row) / span 2; padding: 0 4rem 3.5rem 0; }
     .timeline--full .chapter::before { left: auto; right: -9px; }
-    .timeline--full .chapter:nth-child(even) { margin-left: 50%; padding-left: 4rem; padding-right: 0; }
+    .timeline--full .chapter:nth-child(even) { grid-column: 2; padding: 0 0 3.5rem 4rem; }
     .timeline--full .chapter:nth-child(even)::before { left: -9px; right: auto; }
 
     .timeline--teaser .timeline-rail { top: 0.95rem; bottom: auto; left: 0; right: 0; width: auto; height: 4px; margin: 0; }

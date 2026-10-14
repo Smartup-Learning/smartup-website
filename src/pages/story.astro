@@ -2,6 +2,8 @@
 import Base from '../layouts/Base.astro';
 import { keepTogether } from '../lib/text.mjs';
 import SectionHead from '../components/SectionHead.astro';
+import PageHero from '../components/PageHero.astro';
+import PeekingOwl from '../components/brand/PeekingOwl.astro';
 import Timeline from '../components/Timeline.astro';
 import GrowthChart from '../components/GrowthChart.astro';
 import { getStore } from '../lib/store';
@@ -12,16 +14,18 @@ const vision = store.settings().vision;
 const first = growth[0];
 const latest = growth.at(-1);
 const firstYear = Number(chapters[0]?.yearLabel);
+// The first chapter's first photo (the 2014 classroom) opens the page.
+const heroPhoto = chapters[0]?.media[0];
 const journeyTitle = Number.isFinite(firstYear) ? `${new Date().getFullYear() - firstYear} years, year by year` : 'Year by year';
 ---
 <Base title="Our Story" description="How Smartup grew from one classroom in Kochi in 2014 to more than 30,000 students — and where we're going next." page="story">
-  <section class="section section--cream story-hero">
-    <div class="container">
-      <p class="eyebrow">Our Story</p>
-      <h1>{latest ? <>From one classroom to <span class="highlight">{latest.studentsLabel} students</span></> : 'Our story'}</h1>
-      {first && latest && <p class="lead">Smartup began in {first.year} with {first.studentsLabel} students in a single centre in Kochi. Today {latest.studentsLabel} students have learned with us, online and at {latest.centres} centres.</p>}
-    </div>
-  </section>
+  <PageHero
+    eyebrow="Our Story"
+    title={latest ? 'From one classroom to' : 'Our story'}
+    highlight={latest ? `${latest.studentsLabel} students` : undefined}
+    intro={first && latest ? `Smartup began in ${first.year} with ${first.studentsLabel} students in a single centre in Kochi. Today ${latest.studentsLabel} students have learned with us, online and at ${latest.centres} centres.` : undefined}
+    image={heroPhoto ? { base: heroPhoto.src, alt: heroPhoto.alt, focus: '55% 50%' } : undefined}
+  />
 
   {chapters.length > 0 && (
     <section class="section" aria-labelledby="journey">
@@ -34,9 +38,11 @@ const journeyTitle = Number.isFinite(firstYear) ? `${new Date().getFullYear() - 
 
   {growth.length > 0 && (
     <section class="section section--cream" aria-labelledby="growth">
-      <div class="container narrow">
-        <SectionHead title="Growth in students and centres" id="growth" />
-        <GrowthChart points={growth} />
+      <div class="container">
+        <div class="narrow">
+          <SectionHead title="Growth in students and centres" id="growth" />
+          <GrowthChart points={growth} />
+        </div>
       </div>
     </section>
   )}
@@ -52,7 +58,8 @@ const journeyTitle = Number.isFinite(firstYear) ? `${new Date().getFullYear() - 
     </div>
   </section>
 
-  <section class="section">
+  <section class="section story-cta">
+    <PeekingOwl class="cta-owl" />
     <div class="container cta">
       <h2>See where your story could start</h2>
       <div class="actions"><a class="btn btn--primary" href="/demo">Book a free demo class</a><a class="btn btn--ghost" href="/founders">Meet the founders</a></div>
@@ -60,17 +67,21 @@ const journeyTitle = Number.isFinite(firstYear) ? `${new Date().getFullYear() - 
   </section>
 </Base>
 <style>
-  .story-hero .container { display: grid; gap: 1.25rem; max-width: 56rem; margin-inline: auto; }
-  h1 { font-size: var(--step-5); font-weight: 700; letter-spacing: -0.03em; }
-  .lead { font-size: var(--step-1); color: var(--ink-soft); max-width: 40rem; }
-  .narrow { max-width: 48rem; }
+  .narrow { max-width: 52rem; }
   .vision-text { display: grid; gap: 1rem; max-width: 46rem; font-size: var(--step-1); color: var(--on-purple-soft); }
-  .priorities { list-style: none; padding: 0; margin-top: 2.5rem; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
+  /* Cards keep one size and a short last row is centred, so five priorities read as three and two. */
+  .priorities { --cols: 1; list-style: none; padding: 0; margin-top: 2.5rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; }
+  .priorities li { flex: 0 1 calc((100% - (var(--cols) - 1) * 1rem) / var(--cols)); }
+  @media (min-width: 600px) { .priorities { --cols: 2; } }
+  @media (min-width: 900px) { .priorities { --cols: 3; } }
   .priorities li { padding: 1.4rem; border-radius: var(--radius); background: var(--purple-600); }
   .priorities h3 { font-size: var(--step-1); color: var(--white); }
   .priorities p { margin-top: 0.5rem; color: var(--on-purple-soft); }
   .vision-2030 { margin-top: 2.5rem; padding-left: 1rem; border-left: 4px solid var(--yellow); font-size: var(--step-1); font-weight: 600; color: var(--white); max-width: 46rem; }
-  .cta { display: grid; gap: 1.5rem; justify-items: start; }
-  .cta h2 { font-size: var(--step-4); font-weight: 700; max-width: 30rem; }
+  .story-cta { position: relative; overflow: hidden; --peek-bg: var(--purple-tint); }
+  .cta { position: relative; z-index: 1; display: grid; gap: 1.5rem; justify-items: start; }
+  .cta h2 { font-size: var(--step-4); font-weight: 600; max-width: 30rem; }
+  :global(.cta-owl) { display: none; }
+  @media (min-width: 900px) { :global(.cta-owl) { display: grid; --peek-size: clamp(15rem, 8rem + 14vw, 24rem); } }
   .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
 </style>
