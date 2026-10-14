@@ -18,7 +18,7 @@ const { centreCount, hours } = Astro.props;
             <p class:list={['ratio', { 'ratio--word': !/^\d+:\d+$/.test(p.ratio) }]}>{p.ratio}</p>
             <h4>{p.name}</h4>
             <ul>{p.points.map(point => <li>{point}</li>)}</ul>
-            <a class="link-arrow" href="/demo">{p.ask}</a>
+            <a class="link-arrow" href={`/demo?programme=${encodeURIComponent(p.name)}`}>{p.ask}</a>
           </article>
         ))}
       </div>

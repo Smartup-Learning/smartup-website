@@ -3,6 +3,11 @@ type Control = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 
 const controls = (form: HTMLFormElement) => Array.from(form.querySelectorAll<Control>('.fields input, .fields select, .fields textarea')).filter(c => c.name);
 
+// The same test the server uses (server/validators.mjs).
+function isWebUrl(value: string) {
+  try { return ['http:', 'https:'].includes(new URL(value).protocol); } catch { return false; }
+}
+
 /** The message for a field's current value, or '' when it is fine. Mirrors the server's own checks. */
 function problemWith(form: HTMLFormElement, control: Control) {
   const value = control.value.trim();
@@ -14,9 +19,10 @@ function problemWith(form: HTMLFormElement, control: Control) {
     const digits = value.replace(/\D/g, '').replace(/^91(?=\d{10}$)/, '');
     if (!/^[6-9]\d{9}$/.test(digits)) return 'Enter a 10-digit Indian mobile number.';
   }
-  if (control.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'Enter a valid email address.';
+  if (control.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return control.dataset.invalidMessage ?? 'Enter a valid email address.';
+  if (control.type === 'url' && !isWebUrl(value)) return control.dataset.invalidMessage ?? 'Use a full link starting with https://';
   const min = Number(control.dataset.minlength);
-  if (min && value.length < min) return `Write at least ${min} characters.`;
+  if (min && value.length < min) return control.dataset.invalidMessage ?? `Write at least ${min} characters.`;
   return '';
 }
 
@@ -36,8 +42,18 @@ export function initForms() {
     form.addEventListener('focusout', event => {
       const control = event.target as Control;
       if (!control.name || !(control.value || control.getAttribute('aria-invalid'))) return;
-      const message = problemWith(form, control);
-      setFieldError(form, control, message);
+      // A message from the server stays until the visitor changes the value it was about.
+      if (control.dataset.serverValue !== undefined) {
+        if (control.value === control.dataset.serverValue) return;
+        delete control.dataset.serverValue;
+      }
+      setFieldError(form, control, problemWith(form, control));
+    });
+    // Fields that depend on another (the centre on "At a centre") are re-checked when it changes.
+    form.addEventListener('change', event => {
+      const changed = event.target as Control;
+      controls(form).filter(c => c.dataset.requiredIf?.startsWith(`${changed.name}=`) && c.getAttribute('aria-invalid'))
+        .forEach(c => setFieldError(form, c, problemWith(form, c)));
     });
     form.addEventListener('submit', async event => {
       event.preventDefault();
@@ -70,7 +86,7 @@ export function initForms() {
 
 function clearErrors(form: HTMLFormElement, banner: HTMLElement | null) {
   form.querySelectorAll<HTMLElement>('[data-error-for]').forEach(el => { el.textContent = ''; el.hidden = true; });
-  form.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
+  form.querySelectorAll<HTMLElement>('[aria-invalid]').forEach(el => { el.removeAttribute('aria-invalid'); delete el.dataset.serverValue; });
   if (banner) banner.hidden = true;
 }
 
@@ -86,7 +102,7 @@ function showErrors(form: HTMLFormElement, fields: Values) {
     const slot = form.querySelector<HTMLElement>(`[data-error-for="${CSS.escape(name)}"]`);
     const control = form.querySelector<HTMLElement>(`[name="${CSS.escape(name)}"]`);
     if (slot) { slot.textContent = message; slot.hidden = false; }
-    if (control) { control.setAttribute('aria-invalid', 'true'); first ??= control; }
+    if (control) { control.setAttribute('aria-invalid', 'true'); control.dataset.serverValue = (control as Control).value; first ??= control; }
   }
   first?.focus();
 }

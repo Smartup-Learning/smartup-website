@@ -356,6 +356,7 @@ export function validateSettings(input) {
   for (const field of SETTINGS) {
     try { values[field.name] = field.nullable && empty(input[field.name]) ? null : cleanValue(field, input[field.name]); } catch (error) { errors[field.name] = error.message; }
   }
+  if (values.heroImage && !values.heroImageAlt && !errors.heroImageAlt) errors.heroImageAlt = 'Describe the photo for people who cannot see it.';
   return { values, errors };
 }
 

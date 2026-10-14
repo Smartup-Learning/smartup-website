@@ -43,7 +43,7 @@ test('video posters stay small in total, since browsers fetch them before any ta
 
 test('self-hosted Rubik fonts are subset to the Latin glyphs the site uses', async () => {
   const { statSync } = await import('node:fs');
-  for (const weight of [400, 500, 600, 700, 800]) {
+  for (const weight of [400, 500, 600, 700]) {
     const size = statSync(`public/fonts/rubik-${weight}.woff2`).size;
     assert.ok(size <= 30 * 1024, `rubik-${weight} is ${size} bytes`);
   }
@@ -73,4 +73,10 @@ test('a source can be turned a quarter, half or three-quarter turn, and nothing 
   assert.doesNotThrow(() => validateSources([{ name: 'a', kind: 'image', from: 'drive', id: 'x', rotate: 270 }]));
   assert.throws(() => validateSources([{ name: 'a', kind: 'image', from: 'drive', id: 'x', rotate: 45 }]), /rotate/);
   assert.equal(sources.find(s => s.name === 'timeline-2025-tour').rotate, 270);
+});
+
+test('no unused font weight is shipped', async () => {
+  const { existsSync: exists } = await import('node:fs');
+  assert.equal(exists('public/fonts/rubik-800.woff2'), false);
+  assert.doesNotMatch(readFileSync('src/styles/global.css', 'utf8'), /rubik-800/);
 });

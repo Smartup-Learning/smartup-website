@@ -45,5 +45,6 @@ test('Indian phone numbers in posts become tap-to-call links', () => {
 test('links to pages on this site are allowed, but not to other schemes', () => {
   assert.ok(renderMarkdown('[Book a demo](/demo)').includes('<a href="/demo">Book a demo</a>'));
   assert.ok(!renderMarkdown('[x](//evil.example)').includes('href'));
+  assert.ok(!renderMarkdown('[x](/\\evil.example)').includes('href'));
   assert.ok(!renderMarkdown('[x](javascript:alert(1))').includes('href'));
 });

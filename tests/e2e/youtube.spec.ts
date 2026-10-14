@@ -65,3 +65,13 @@ test('the play badge sits in the corner, clear of the title printed on the thumb
   expect(badge.x - frame.x).toBeLessThan(frame.width * 0.2);
   expect(frame.y + frame.height - (badge.y + badge.height)).toBeLessThan(frame.height * 0.2);
 });
+
+test('on a phone Escape closes the video player', async ({ page }, info) => {
+  test.skip(info.project.name !== 'mobile', 'phone only');
+  await page.goto('/videos');
+  await page.locator('[data-yt] a.yt-frame').first().click();
+  const player = page.locator('dialog.video-player');
+  await expect(player).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(player).toBeHidden();
+});

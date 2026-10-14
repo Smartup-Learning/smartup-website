@@ -492,3 +492,23 @@ test('the footer shows one icon per social network, and Community lists every ac
   assert.deepEqual(icons, ['Facebook', 'Instagram', 'YouTube', 'LinkedIn']);
   assert.equal([...(await site.html('/community')).matchAll(/class="channel"/g)].length, 7);
 });
+
+test('event videos on Life keep their own names for screen readers', async t => {
+  const site = await start();
+  t.after(site.close);
+  assert.match(await site.html('/life'), /Play “Talent Eve 7\.0” \(YouTube\)/);
+});
+
+test('a page header photo, hidden on phones, is not downloaded ahead of everything else', async t => {
+  const site = await start();
+  t.after(site.close);
+  const visual = (await site.html('/life')).split('class="hero-visual')[1].split('</figure>')[0];
+  assert.match(visual, /loading="lazy"/);
+  assert.doesNotMatch(visual, /fetchpriority/);
+});
+
+test('"Ask about" links on the home page also open the demo form with that programme', async t => {
+  const site = await start();
+  t.after(site.close);
+  assert.match(await site.html('/'), /href="\/demo\?programme=Smartup%20Pro"/);
+});

@@ -116,6 +116,12 @@ export class AdminContent {
       const hit = this.db.prepare(`SELECT 1 FROM ${section.table} WHERE ${columns.map(c => `instr(${c}, ?) > 0`).join(' OR ')} LIMIT 1`).get(...columns.map(() => base));
       if (hit) used.push(section.label);
     }
+    // Settings can use photos too, such as the homepage photo.
+    const imageSettings = SETTINGS.filter(f => f.type === 'image').map(f => f.name);
+    if (imageSettings.length) {
+      const hit = this.db.prepare(`SELECT 1 FROM settings WHERE key IN (${imageSettings.map(() => '?').join(', ')}) AND instr(value, ?) > 0 LIMIT 1`).get(...imageSettings, base);
+      if (hit) used.push('Settings');
+    }
     return used;
   }
 }

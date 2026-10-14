@@ -5,9 +5,11 @@ interface Props {
   options?: Option[]; placeholder?: string; autocomplete?: string; inputmode?: string; rows?: number; value?: string; hint?: string;
   /** Shown when a required field is left empty; checked in the browser before anything is sent. */
   requiredMessage?: string; minlength?: number; requiredIf?: string;
+  /** Shown when the value is too short or not in the right form; matches the server's message. */
+  invalidMessage?: string;
 }
-const { name, label, as = 'input', type = 'text', required = false, maxlength, options = [], placeholder, autocomplete, inputmode, rows = 4, value = '', hint, requiredMessage, minlength, requiredIf } = Astro.props;
-const checks = { 'data-required-message': requiredMessage, 'data-minlength': minlength, 'data-required-if': requiredIf, 'data-label': label };
+const { name, label, as = 'input', type = 'text', required = false, maxlength, options = [], placeholder, autocomplete, inputmode, rows = 4, value = '', hint, requiredMessage, minlength, requiredIf, invalidMessage } = Astro.props;
+const checks = { 'data-required-message': requiredMessage, 'data-invalid-message': invalidMessage, 'data-minlength': minlength, 'data-required-if': requiredIf, 'data-label': label };
 const id = `f-${name}`;
 const choices = options.map(o => (typeof o === 'string' ? { value: o, label: o } : o));
 const describedBy = [hint ? `${id}-hint` : '', `${id}-error`].filter(Boolean).join(' ');

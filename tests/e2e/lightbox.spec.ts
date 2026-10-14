@@ -73,3 +73,10 @@ test('a story picture shown whole on a blurred copy opens with its own descripti
   await expect(viewer(page).locator('img')).toHaveAttribute('alt', alt!);
   expect(alt).not.toBe('');
 });
+
+test('a double click on a poster leaves the viewer open', async ({ page }) => {
+  await page.goto('/results');
+  await page.locator('main a[data-lightbox]').first().dblclick();
+  await page.waitForTimeout(400);
+  await expect(viewer(page)).toBeVisible();
+});

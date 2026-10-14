@@ -23,7 +23,7 @@
   .lightbox { width: 100vw; max-width: none; height: 100dvh; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; color: var(--cream); overflow: hidden; }
   .lightbox::backdrop { background: rgb(20 12 32 / 0.94); }
   .lightbox[open] { display: grid; place-items: center; }
-  .lightbox-stage { display: grid; gap: 0.75rem; justify-items: center; margin: 0; padding: 4.5rem 1rem 1.25rem; max-width: 100%; max-height: 100%; touch-action: pan-y pinch-zoom; }
+  .lightbox-stage { display: grid; gap: 0.75rem; justify-items: center; margin: 0; padding: 4.5rem 1rem 1.25rem; max-width: 100%; max-height: 100%; touch-action: pinch-zoom; }
   .lightbox-stage img { max-width: min(100%, 72rem); max-height: calc(100dvh - 9rem); width: auto; height: auto; object-fit: contain; border-radius: 0.5rem; user-select: none; -webkit-user-drag: none; }
   figcaption { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.25rem 1rem; max-width: 40rem; text-align: center; font-size: var(--step--1); line-height: 1.4; }
   .lightbox-count { color: var(--on-purple-soft); font-variant-numeric: tabular-nums; }

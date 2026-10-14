@@ -18,7 +18,7 @@ const visual = Astro.slots.has('visual');
     {!visual && image && (
       <div class="hero-visual">
         <span class="arc" aria-hidden="true"></span>
-        <RingPhoto base={image.base} alt={image.alt} focus={image.focus} sizes="(min-width: 900px) 24rem, 1px" priority />
+        <RingPhoto base={image.base} alt={image.alt} focus={image.focus} sizes="(min-width: 900px) 24rem, 1px" />
       </div>
     )}
   </div>

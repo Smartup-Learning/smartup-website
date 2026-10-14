@@ -4,7 +4,7 @@ import { PHONE, phoneAnchor } from './phones.mjs';
 const escapeHtml = text => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 // http(s), mailto and paths on this site ("/demo", never "//other-site"); one level of balanced brackets is allowed inside the address.
-const LINK = /\[([^\]]+)\]\(((?:https?:\/\/|mailto:|\/(?!\/))(?:[^()\s]|\([^()\s]*\))*)\)/g;
+const LINK = /\[([^\]]+)\]\(((?:https?:\/\/|mailto:|\/(?![\/\\]))(?:[^()\s]|\([^()\s]*\))*)\)/g;
 
 // Inline formatting runs on already-escaped text, so no HTML from the source can survive.
 // Links are swapped out before emphasis runs, so a * inside an address never becomes markup.

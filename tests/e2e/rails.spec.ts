@@ -25,3 +25,18 @@ test('rows that fit have no arrows, and phones swipe without them', async ({ pag
     for (const wrap of await page.locator('.rail-wrap:not([data-overflow])').all()) await expect(wrap.locator('button:visible')).toHaveCount(0);
   }
 });
+
+test('keyboard focus stays on the arrows when a row reaches its end', async ({ page }, info) => {
+  test.skip(info.project.name !== 'desktop', 'arrows show from 900px');
+  await page.goto('/videos');
+  const wrap = page.locator('.rail-wrap[data-overflow]').first();
+  await wrap.scrollIntoViewIfNeeded();
+  const next = wrap.getByRole('button', { name: 'Next' });
+  await next.focus();
+  for (let i = 0; i < 8 && (await next.getAttribute('aria-disabled')) !== 'true'; i++) {
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(450);
+  }
+  await expect(next).toHaveAttribute('aria-disabled', 'true');
+  expect(await page.evaluate(() => document.activeElement?.classList.contains('rail-btn'))).toBe(true);
+});

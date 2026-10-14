@@ -31,7 +31,7 @@ const cover = events.find(e => e.media.length > 0)?.media[0];
                 </header>
                 {(event.media.length > 0 || event.youtubeId) && (
                   <div class="gallery rail rail--shapes">
-                    {event.youtubeId && <YouTube id={event.youtubeId} title="Watch on YouTube" />}
+                    {event.youtubeId && <YouTube id={event.youtubeId} title={event.title} caption="Watch on YouTube" />}
                     {event.media.map(m => {
                       const size = store.mediaSize(m.src);
                       const ratio = size ? size.width / size.height : 4 / 3;

@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
 import { ContentStore } from '../server/content-store.mjs';
+import { AdminContent } from '../server/admin-content.mjs';
 import { SECTIONS, SETTINGS, cleanValue, validateRow, validateSettings, youtubeId, publicSchema } from '../server/admin-schema.mjs';
 
 const field = (type, extra = {}) => ({ name: 'f', label: 'Field', type, ...extra });
@@ -92,4 +93,20 @@ test('staff can give a YouTube video its own cover image', () => {
   const cover = SECTIONS.videos.fields.find(f => f.name === 'cover');
   assert.equal(cover?.type, 'image');
   assert.ok(!cover.required);
+});
+
+test('a photo used as the homepage photo counts as in use, so it cannot be deleted', () => {
+  const store = new ContentStore(new DatabaseSync(':memory:'));
+  store.applySeed();
+  store.db.prepare("UPDATE settings SET value = ? WHERE key = 'heroImage'").run(JSON.stringify('/media/u-hero1'));
+  assert.ok(new AdminContent(store.db).references('/media/u-hero1').includes('Settings'));
+  assert.deepEqual(new AdminContent(store.db).references('/media/u-unused'), []);
+});
+
+test('a homepage photo needs a description', () => {
+  const store = new ContentStore(new DatabaseSync(':memory:'));
+  store.applySeed();
+  const settings = store.settings();
+  assert.ok(validateSettings({ ...settings, heroImage: '/media/u-hero1', heroImageAlt: '' }).errors.heroImageAlt);
+  assert.equal(validateSettings({ ...settings, heroImage: '', heroImageAlt: '' }).errors.heroImageAlt, undefined);
 });

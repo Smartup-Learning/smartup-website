@@ -29,3 +29,11 @@ test('the home results row shows whole posters at one height', async ({ page }, 
   expect(heights.length).toBeGreaterThan(2);
   expect(Math.max(...heights) - Math.min(...heights)).toBeLessThanOrEqual(1);
 });
+
+test('a Show all button counts only the results the filters leave', async ({ page }, info) => {
+  test.skip(info.project.name !== 'mobile', 'two rows of two on a phone');
+  await page.goto('/results');
+  const group = page.locator('section[data-year="2026"] .exam').filter({ hasText: 'Plus Two' });
+  await group.locator('.result').evaluateAll(items => { items.slice(0, 3).forEach(item => { (item as HTMLElement).hidden = true; }); document.dispatchEvent(new CustomEvent('smartup:filtered')); });
+  await expect(group.getByRole('button', { name: /^Show all/ })).toHaveText('Show all 6 Plus Two results');
+});

@@ -58,7 +58,7 @@ const toppers = store.videos('toppers');
                   <div class="posters" data-collapse-grid data-reveal="group">
                     {rows.map(r => <ResultCard result={r} tags={tagsFor(r)} group={`results-${group.year}-${slug(exam)}`} />)}
                   </div>
-                  <button type="button" class="show-all" data-show-all hidden>Show all {rows.length} {exam} results</button>
+                  <button type="button" class="show-all" data-show-all hidden>Show all <span data-show-count>{rows.length}</span> {exam} results</button>
                 </div>
               ))}
             </section>

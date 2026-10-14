@@ -131,3 +131,18 @@ test('footer links are big enough to tap', async ({ page }, info) => {
   const heights = await page.locator('.site-footer a').evaluateAll(links => links.map(a => Math.round(a.getBoundingClientRect().height)));
   expect(Math.min(...heights)).toBeGreaterThanOrEqual(44);
 });
+
+test('on a wide screen opening the menu moves focus to its first page link', async ({ page }, info) => {
+  test.skip(info.project.name !== 'desktop', 'wide screens hide the menu buttons');
+  await page.goto('/');
+  await page.locator('[data-menu-toggle]').click();
+  await expect(page.locator('#site-menu .menu-grid a').first()).toBeFocused();
+});
+
+test('a blog card shows a clear focus ring when its link has keyboard focus', async ({ page }) => {
+  await page.goto('/blog');
+  await page.keyboard.press('Tab');
+  await page.locator('.post h3 a').first().focus();
+  const outline = await page.locator('.post').first().evaluate(el => getComputedStyle(el).outlineStyle);
+  expect(outline).not.toBe('none');
+});

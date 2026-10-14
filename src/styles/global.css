@@ -2,7 +2,6 @@
 @font-face { font-family: 'Rubik'; font-weight: 500; font-style: normal; font-display: swap; src: url('/fonts/rubik-500.woff2') format('woff2'); }
 @font-face { font-family: 'Rubik'; font-weight: 600; font-style: normal; font-display: swap; src: url('/fonts/rubik-600.woff2') format('woff2'); }
 @font-face { font-family: 'Rubik'; font-weight: 700; font-style: normal; font-display: swap; src: url('/fonts/rubik-700.woff2') format('woff2'); }
-@font-face { font-family: 'Rubik'; font-weight: 800; font-style: normal; font-display: swap; src: url('/fonts/rubik-800.woff2') format('woff2'); }
 
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: calc(var(--header-h) + 1rem); }
@@ -67,7 +66,7 @@ a { color: inherit; }
   .rail-wrap[data-overflow] > .rail-btn { position: absolute; top: calc(50% - 1.75rem); z-index: 2; display: grid; place-items: center; width: 3.25rem; height: 3.25rem; border: 0; border-radius: 50%; background: var(--white); color: var(--purple); box-shadow: 0 6px 20px rgb(57 32 100 / 0.22); cursor: pointer; transition: opacity 0.2s; }
   .rail-btn--prev { left: -1.6rem; }
   .rail-btn--next { right: -1.6rem; }
-  .rail-btn:disabled { opacity: 0; pointer-events: none; }
+  .rail-btn[aria-disabled='true'] { opacity: 0.35; cursor: default; box-shadow: none; }
   .rail-btn svg { width: 1.4rem; height: 1.4rem; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 }
 

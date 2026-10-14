@@ -1,8 +1,9 @@
 ---
 import Picture from './Picture.astro';
 import { keepTogether } from '../lib/text.mjs';
-interface Props { id: string; title: string; format?: 'landscape' | 'portrait'; cover?: string }
-const { id, title, format = 'landscape', cover } = Astro.props;
+// `caption` replaces the visible caption only; the player and screen readers keep the full title.
+interface Props { id: string; title: string; format?: 'landscape' | 'portrait'; cover?: string; caption?: string }
+const { id, title, format = 'landscape', cover, caption } = Astro.props;
 const ratio = format === 'portrait' ? 9 / 16 : 16 / 9;
 ---
 <figure class:list={['yt', `yt--${format}`]} data-yt={id} data-format={format} data-reveal-item style={`--ratio: ${ratio.toFixed(4)}`}>
@@ -13,7 +14,7 @@ const ratio = format === 'portrait' ? 9 / 16 : 16 / 9;
     <span class="yt-play" aria-hidden="true"></span>
     <span class="sr-only">Play “{keepTogether(title)}” (YouTube)</span>
   </a>
-  <figcaption>{keepTogether(title)}</figcaption>
+  <figcaption aria-hidden={caption ? 'true' : undefined}>{keepTogether(caption ?? title)}</figcaption>
 </figure>
 <style>
   .yt { display: grid; gap: 0.6rem; align-content: start; }

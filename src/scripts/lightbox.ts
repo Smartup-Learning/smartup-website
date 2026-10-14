@@ -14,6 +14,7 @@ export function initLightbox() {
   let items: HTMLAnchorElement[] = [];
   let index = 0;
   let opener: HTMLAnchorElement | null = null;
+  let openedAt = 0;
 
   const preload = (i: number) => { const link = items[i]; if (link) new Image().src = link.href; };
   const show = (i: number) => {
@@ -40,6 +41,7 @@ export function initLightbox() {
     if (!items.includes(link)) items = [link];
     opener = link;
     show(items.indexOf(link));
+    openedAt = performance.now();
     dialog.showModal();
     document.documentElement.classList.add('lightbox-open');
     // A history entry lets the phone's back button close the viewer instead of leaving the page.
@@ -64,7 +66,8 @@ export function initLightbox() {
   prev.addEventListener('click', () => show(index - 1));
   next.addEventListener('click', () => show(index + 1));
   // A tap on the dark area around the picture closes the viewer.
-  dialog.addEventListener('click', event => { if (event.target === dialog || event.target === stage) dialog.close(); });
+  // The second click of a double click lands on the dark area; clicks just after opening are ignored.
+  dialog.addEventListener('click', event => { if ((event.target === dialog || event.target === stage) && performance.now() - openedAt > 400) dialog.close(); });
   dialog.addEventListener('keydown', event => {
     if (items.length < 2) return;
     if (event.key === 'ArrowRight') show(index + 1);

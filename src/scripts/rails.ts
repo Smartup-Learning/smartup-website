@@ -14,7 +14,7 @@ export function initRails(reduceMotion: boolean) {
       b.className = `rail-btn rail-btn--${direction > 0 ? 'next' : 'prev'}`;
       b.setAttribute('aria-label', label);
       b.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${path}"/></svg>`;
-      b.addEventListener('click', () => rail.scrollBy({ left: direction * rail.clientWidth * 0.8, behavior: reduceMotion ? 'auto' : 'smooth' }));
+      b.addEventListener('click', () => { if (b.getAttribute('aria-disabled') !== 'true') rail.scrollBy({ left: direction * rail.clientWidth * 0.8, behavior: reduceMotion ? 'auto' : 'smooth' }); });
       wrap.append(b);
       return b;
     };
@@ -24,8 +24,9 @@ export function initRails(reduceMotion: boolean) {
       const room = rail.scrollWidth - rail.clientWidth;
       // A few pixels of slack: a classic scrollbar can shift the first card's resting place slightly.
       wrap.toggleAttribute('data-overflow', room > 12);
-      prev.disabled = rail.scrollLeft <= 12;
-      next.disabled = rail.scrollLeft >= room - 12;
+      // aria-disabled rather than disabled, so a keyboard user's focus stays on the arrow at the end of a row.
+      prev.setAttribute('aria-disabled', String(rail.scrollLeft <= 12));
+      next.setAttribute('aria-disabled', String(rail.scrollLeft >= room - 12));
     };
     rail.addEventListener('scroll', update, { passive: true });
     new ResizeObserver(update).observe(rail);

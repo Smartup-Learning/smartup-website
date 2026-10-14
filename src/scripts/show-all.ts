@@ -19,6 +19,8 @@ export function initShowAll() {
         item.classList.toggle('is-collapsed', !open && used > columns * (columns >= 4 ? 1 : 2));
       });
       button.hidden = !items.some(item => item.classList.contains('is-collapsed'));
+      const count = button.querySelector('[data-show-count]');
+      if (count) count.textContent = String(items.filter(item => !item.hidden).length);
     };
     button.addEventListener('click', () => {
       open = true;

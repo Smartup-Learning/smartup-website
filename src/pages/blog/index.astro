@@ -40,6 +40,7 @@ const tones = ['purple', 'deep', 'cream'];
   .post { position: relative; display: grid; grid-template-rows: auto 1fr; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); transition: border-color 0.2s, transform 0.3s var(--ease-out); }
   .post:hover { border-color: var(--purple-300); transform: translateY(-3px); }
   .post:focus-within { border-color: var(--purple); }
+  .post:has(a:focus-visible) { outline: 3px solid var(--purple-300); outline-offset: 3px; }
   .cover { display: grid; place-items: center; aspect-ratio: 16 / 7; }
   .cover svg { width: clamp(3rem, 2rem + 3vw, 4.5rem); fill: none; stroke: currentColor; stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; }
   .cover--purple { background: var(--purple); color: var(--on-purple-soft); }

@@ -11,7 +11,9 @@ export function initMenu(reduceMotion: boolean) {
 
   // While the full-screen menu is open, the page behind it is inert and Tab cycles between the toggle and the menu links.
   const behind = () => document.querySelectorAll<HTMLElement>('main, footer, .mobile-bar, .skip-link');
-  const cycle = () => [toggle as HTMLElement, ...panel.querySelectorAll<HTMLElement>('a')];
+  // Links hidden at this screen width (the phone-only buttons on wide screens) are left out.
+  const links = () => Array.from(panel.querySelectorAll<HTMLElement>('a')).filter(a => a.offsetParent !== null);
+  const cycle = () => [toggle as HTMLElement, ...links()];
 
   const setOpen = (open: boolean) => {
     panel.hidden = !open;
@@ -21,7 +23,7 @@ export function initMenu(reduceMotion: boolean) {
     document.documentElement.classList.toggle('menu-open', open);
     if (open) {
       if (!reduceMotion) animate(panel, { opacity: [0, 1], y: [-8, 0] }, { duration: 0.42, ease: [0.22, 1, 0.36, 1] });
-      panel.querySelector<HTMLElement>('a')?.focus();
+      links()[0]?.focus();
     }
   };
 
