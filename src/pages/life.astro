@@ -3,15 +3,18 @@ import Base from '../layouts/Base.astro';
 import { keepTogether } from '../lib/text.mjs';
 import PageHero from '../components/PageHero.astro';
 import FilterChips from '../components/FilterChips.astro';
-import Picture from '../components/Picture.astro';
+import MediaFrame from '../components/MediaFrame.astro';
 import YouTube from '../components/YouTube.astro';
+import DemoBand from '../components/DemoBand.astro';
 import { getStore } from '../lib/store';
-const events = getStore(Astro.locals).events();
+const store = getStore(Astro.locals);
+const events = store.events();
 const slug = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const categories = [...new Set(events.map(e => e.category))].map(c => ({ value: slug(c), label: c }));
+const cover = events.find(e => e.media.length > 0)?.media[0];
 ---
 <Base title="Life @ Smartup" description="Talent Eve, Shoot the Drugs, Coffee With Chairman, celebrations, trips and more — student life at Smartup." page="life">
-  <PageHero eyebrow="Life @ Smartup" title="Not just tuition —" highlight="the whole experience" intro="Award nights, sports, mentoring, festivals and trips: the moments students remember alongside their results." />
+  <PageHero eyebrow="Life @ Smartup" title="Not just tuition —" highlight="the whole experience" intro="Award nights, sports, mentoring, festivals and trips: the moments students remember alongside their results." image={cover ? { base: cover.src, alt: cover.alt, focus: '50% 40%' } : undefined} />
   <section class="section" aria-labelledby="events-title">
     <div class="container">
       <h2 id="events-title" class="sr-only">Events and activities</h2>
@@ -19,7 +22,7 @@ const categories = [...new Set(events.map(e => e.category))].map(c => ({ value: 
         <>
           <FilterChips label="Filter by activity" target="event-list" options={categories} />
           <div id="event-list" class="events">
-            {events.map(event => (
+            {events.map((event, i) => (
               <article class="event" data-filter-tags={slug(event.category)} data-reveal>
                 <header>
                   <p class="eyebrow">{event.category}{event.dateLabel && <> · {keepTogether(event.dateLabel)}</>}</p>
@@ -27,9 +30,13 @@ const categories = [...new Set(events.map(e => e.category))].map(c => ({ value: 
                   {event.summary && <p class="summary">{keepTogether(event.summary)}</p>}
                 </header>
                 {(event.media.length > 0 || event.youtubeId) && (
-                  <div class="gallery rail">
-                    {event.youtubeId && <YouTube id={event.youtubeId} title={`${event.title} on YouTube`} />}
-                    {event.media.map(m => <figure class="shot"><Picture base={m.src} alt={m.alt} sizes="(min-width: 900px) 22rem, 80vw" /></figure>)}
+                  <div class="gallery rail rail--shapes">
+                    {event.youtubeId && <YouTube id={event.youtubeId} title="Watch on YouTube" />}
+                    {event.media.map(m => {
+                      const size = store.mediaSize(m.src);
+                      const ratio = size ? size.width / size.height : 4 / 3;
+                      return <div class="shot" style={`--ratio: ${ratio.toFixed(4)}`}><MediaFrame base={m.src} alt={m.alt} group={`event-${i}`} caption={`${event.title}: ${m.alt}`} sizes="(min-width: 900px) 26rem, 80vw" /></div>;
+                    })}
                   </div>
                 )}
               </article>
@@ -39,16 +46,21 @@ const categories = [...new Set(events.map(e => e.category))].map(c => ({ value: 
       )}
     </div>
   </section>
+  <DemoBand />
 </Base>
 <style>
   .events { display: grid; gap: clamp(3rem, 2.5rem + 3vw, 5rem); }
-  .event { display: grid; gap: 1.25rem; }
+  .event { display: grid; gap: 1.25rem; min-width: 0; }
   .event[hidden] { display: none; }
-  header { display: grid; gap: 0.5rem; max-width: 42rem; }
-  h3 { font-size: var(--step-3); font-weight: 700; }
+  header { display: grid; gap: 0.5rem; max-width: 42rem; align-content: start; }
+  h3 { font-size: var(--step-3); font-weight: 600; }
   .summary { color: var(--ink-soft); white-space: pre-line; }
-  .gallery { grid-auto-columns: min(85%, 22rem); }
-  .shot { border-radius: var(--radius); overflow: hidden; background: var(--purple-tint); }
-  .shot :global(img) { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+  /* Photos keep their own shape at one row height; nothing stretches, so no empty strip appears under a photo. */
+  .gallery { align-items: start; --row-h: clamp(13rem, 9rem + 10vw, 19rem); }
   .empty { font-size: var(--step-1); }
+  /* Wide screens: the story on the left, its photos and video on the right, so a one-photo event leaves no empty row. */
+  @media (min-width: 1000px) {
+    .event { grid-template-columns: minmax(0, 20rem) minmax(0, 1fr); gap: 3rem; align-items: start; }
+    .gallery { margin-inline: 0; padding-inline: 0; scroll-padding-inline: 0; }
+  }
 </style>

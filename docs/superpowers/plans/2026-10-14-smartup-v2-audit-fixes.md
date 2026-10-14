@@ -18,7 +18,7 @@ Rules: branch `v2-website` only; TDD for behaviour (node tests in `tests/*.test.
 - [x] 10. Home: hero (photo, arc, owl), even stats, no stray circle, aligned story teaser, poster-style results row, feedback/alumni rows, hours strip, slim careers.
 - [x] 11. Results wall: year stat strip, featured posters, exam groups, show all, landscape spans two columns.
 - [x] 12. Testimonials and Alumni.
-- [ ] 13. Our Story, Founders, Faculty, Life (incl. rotating the sideways beach photo).
+- [x] 13. Our Story, Founders, Faculty, Life (incl. rotating the sideways beach photo).
 - [ ] 14. Videos, Courses, Blog, Ask, App.
 - [ ] 15. Demo, Careers, Contact, Community, Thanks, 404, Privacy, admin sign-in.
 - [ ] 16. Header, menu, footer, sticky bar.
