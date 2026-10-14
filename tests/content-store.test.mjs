@@ -227,3 +227,21 @@ test('YouTube videos can carry a cover image, empty until staff add one', () => 
   store.db.prepare("UPDATE videos SET cover = '/media/u-cover' WHERE id = (SELECT min(id) FROM videos)").run();
   assert.equal(store.videos()[0].cover, '/media/u-cover');
 });
+
+test('a database seeded with EDX before JWALA is put newest first once, and a later staff order is kept', () => {
+  const store = seeded();
+  const sortOf = title => store.db.prepare('SELECT sort FROM events WHERE title LIKE ?').get(`${title}%`).sort;
+  const order = () => store.events().map(e => e.title).filter(t => /^(EDX|JWALA)/.test(t)).map(t => t.slice(0, 4));
+  // An older database: EDX listed before JWALA, and the correction not yet applied.
+  const [edx, jwala] = [sortOf('EDX'), sortOf('JWALA')];
+  store.db.prepare("UPDATE events SET sort = ? WHERE title LIKE 'EDX%'").run(Math.min(edx, jwala));
+  store.db.prepare("UPDATE events SET sort = ? WHERE title LIKE 'JWALA%'").run(Math.max(edx, jwala));
+  store.db.prepare("DELETE FROM seed_log WHERE section LIKE 'fix:%'").run();
+  assert.deepEqual(order(), ['EDX:', 'JWAL']);
+  store.applySeed();
+  assert.deepEqual(order(), ['JWAL', 'EDX:']);
+  // Staff move EDX back up; a restart must not undo that.
+  store.db.prepare("UPDATE events SET sort = -1 WHERE title LIKE 'EDX%'").run();
+  store.applySeed();
+  assert.deepEqual(order(), ['EDX:', 'JWAL']);
+});

@@ -123,6 +123,21 @@ const SECTIONS = {
 };
 
 // Columns added after the first release; the constructor adds any that an existing database lacks.
+// One-time corrections to content seeded by an earlier version, each applied once per database and recorded in
+// seed_log as "fix:<name>", so anything staff change afterwards is never undone.
+const CORRECTIONS = {
+  // Workshops & academics listed EDX 2024 before JWALA 2025; newest comes first.
+  'events-newest-first'(db) {
+    const find = pattern => db.prepare('SELECT id, sort FROM events WHERE title LIKE ?').get(pattern);
+    const edx = find('EDX:%'), jwala = find('JWALA 2025%');
+    if (!edx || !jwala || jwala.sort < edx.sort || (jwala.sort === edx.sort && jwala.id < edx.id)) return;
+    const put = db.prepare('UPDATE events SET sort = ? WHERE id = ?');
+    put.run(jwala.sort, edx.id);
+    put.run(edx.sort, jwala.id);
+    if (edx.sort === jwala.sort) put.run(edx.sort - 1, jwala.id);
+  },
+};
+
 const ADDED_COLUMNS = [
   ['results', 'kind', "TEXT NOT NULL DEFAULT 'student'"],
   ['faculty', 'experience_years', 'INTEGER NOT NULL DEFAULT 0'],
@@ -160,6 +175,20 @@ export class ContentStore {
         if (this.db.prepare('SELECT 1 FROM seed_log WHERE section = ?').get(section)) { this.db.exec('COMMIT'); continue; }
         apply(this.db, data[section]);
         this.db.prepare('INSERT INTO seed_log(section, applied_at) VALUES(?, ?)').run(section, new Date().toISOString());
+        this.db.exec('COMMIT');
+      } catch (error) {
+        this.db.exec('ROLLBACK');
+        throw error;
+      }
+    }
+    for (const [name, fix] of Object.entries(CORRECTIONS)) {
+      const key = `fix:${name}`;
+      this.db.exec('BEGIN IMMEDIATE');
+      try {
+        if (!this.db.prepare('SELECT 1 FROM seed_log WHERE section = ?').get(key)) {
+          fix(this.db);
+          this.db.prepare('INSERT INTO seed_log(section, applied_at) VALUES(?, ?)').run(key, new Date().toISOString());
+        }
         this.db.exec('COMMIT');
       } catch (error) {
         this.db.exec('ROLLBACK');
