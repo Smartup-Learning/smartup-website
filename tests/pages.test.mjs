@@ -120,15 +120,33 @@ test('an empty faculty table shows a friendly message and no filter bar', async 
   assert.doesNotMatch(page, /data-filter-for/);
 });
 
-test('Results groups every result by year, newest first, each naming its exam and year', async t => {
+test('Results groups every result by year, newest first, then by exam, with a figure strip and whole posters', async t => {
   const site = await start();
   t.after(site.close);
   const page = await site.html('/results');
   const years = [...page.matchAll(/<section[^>]*data-year="(\d{4})"/g)].map(m => m[1]);
   assert.deepEqual(years, ['2026', '2025', '2024', '2023', '2020']);
-  assert.match(page, /127 students with Full A\+/);
-  assert.match(page, /SSLC · 2023/);
+  assert.match(page, /<strong[^>]*>127<\/strong> students with Full A\+/);
+  const year2026 = page.slice(page.indexOf('data-year="2026"'), page.indexOf('data-year="2025"'));
+  const exams = [...year2026.matchAll(/<h4[^>]*class="exam-title"[^>]*>([^<]+)/g)].map(m => m[1].trim());
+  assert.deepEqual(exams.sort(), ['Class 10', 'Plus One', 'Plus Two', 'SSLC']);
   assert.match(page, /href="\/seed\/img\/result-2026-sslc-107-1600\.webp"/);
+  assert.match(page, /<span class="name"[^>]*>Afna Navas<\/span>/);
+  assert.match(page, /<span class="score"[^>]*>1108\/1200<\/span>/);
+});
+
+test('result detail that only repeats the exam and year is not printed again, but a centre or Full A+ is', async t => {
+  const site = await start();
+  t.after(site.close);
+  const page = await site.html('/results');
+  assert.doesNotMatch(page, /CBSE Class 10, 2025–\u206026/);
+  assert.match(page, /<span class="extra"[^>]*>Chullickal<\/span>/);
+});
+
+test('a landscape result poster spans two columns', async t => {
+  const site = await start();
+  t.after(site.close);
+  assert.match(await site.html('/results'), /<figure[^>]*class="result[^"]*\bwide\b[^"]*"[^>]*>(?:(?!<\/figure>)[\s\S])*timeline-2020-results/);
 });
 
 test('Results without any rows shows a friendly message', async t => {
@@ -370,14 +388,14 @@ test('the starter blog posts carry the sample label until approved', async t => 
   assert.match(await site.html('/blog/board-exam-90-day-plan'), /Sample — to be replaced/);
 });
 
-test('Results headings nest: years are h3 and result headlines are h4, with board filters', async t => {
+test('Results headings nest: years are h3 and exam groups are h4, with board filters', async t => {
   const site = await start();
   t.after(site.close);
   const page = await site.html('/results');
   const years = [...page.matchAll(/<h3[^>]*class="year-title"/g)].length;
   assert.ok(years >= 5);
   assert.equal([...page.matchAll(/<h3[\s>]/g)].length, years);
-  assert.ok([...page.matchAll(/<h4[^>]*class="headline"/g)].length >= 60);
+  assert.ok([...page.matchAll(/<h4[^>]*class="exam-title"/g)].length >= 9);
   assert.match(page, /aria-label="Filter by board"/);
   assert.match(page, /data-filter-tags="2026 state"/);
 });

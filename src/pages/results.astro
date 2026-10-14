@@ -5,28 +5,62 @@ import FilterChips from '../components/FilterChips.astro';
 import ResultCard from '../components/ResultCard.astro';
 import SectionHead from '../components/SectionHead.astro';
 import YouTube from '../components/YouTube.astro';
+import { leadFigure } from '../lib/results.mjs';
+import { keepTogether } from '../lib/text.mjs';
 import { getStore } from '../lib/store';
 const store = getStore(Astro.locals);
 const results = store.results();
 const years = [...new Set(results.map(r => r.year))].sort((a, b) => b.localeCompare(a));
-const byYear = years.map(year => ({ year, summaries: results.filter(r => r.year === year && r.kind === 'summary'), students: results.filter(r => r.year === year && r.kind !== 'summary') }));
+const slug = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const tagsFor = (r: { year: string; board: string }) => `${r.year} ${r.board.toLowerCase()}`;
+const byYear = years.map(year => {
+  const rows = results.filter(r => r.year === year);
+  const summaries = rows.filter(r => r.kind === 'summary');
+  const students = rows.filter(r => r.kind !== 'summary');
+  const exams = [...new Set(students.map(r => r.exam))].map(exam => ({ exam, rows: students.filter(r => r.exam === exam) }));
+  // Summaries that lead with a number make the year's figure strip; ones with a poster are also shown whole.
+  const figures = summaries.map(r => ({ r, ...leadFigure(r.headline) })).filter(f => f.figure);
+  return { year, figures, highlights: summaries.filter(r => r.poster), exams };
+});
 const boards = [{ value: 'state', label: 'State Board' }, { value: 'cbse', label: 'CBSE' }].filter(b => results.some(r => r.board.toLowerCase() === b.value));
 const toppers = store.videos('toppers');
 ---
 <Base title="Results" description="Smartup board exam results: SSLC, Plus One, Plus Two and CBSE Class 10, year by year." page="results">
   <PageHero eyebrow="Results" title="Results our students" highlight="earned" intro="Every result names its exam and year, as published by Smartup. Tap a poster to see it in full." />
-  <section class="section section--cream" aria-labelledby="results-title">
+  <section class="section section--cream results" aria-labelledby="results-title">
     <div class="container" id="results-years">
       <h2 id="results-title" class="sr-only">Results by year</h2>
       {years.length === 0 ? <p class="empty">Results will be published here soon.</p> : (
         <>
-          <FilterChips label="Filter by year" target="results-years" options={years.map(y => ({ value: y, label: y }))} allLabel="All years" />
-          {boards.length > 1 && <FilterChips label="Filter by board" target="results-years" options={boards} allLabel="All boards" />}
+          <div class="filters">
+            <FilterChips label="Filter by year" target="results-years" options={years.map(y => ({ value: y, label: y }))} allLabel="All years" />
+            {boards.length > 1 && <FilterChips label="Filter by board" target="results-years" options={boards} allLabel="All boards" />}
+          </div>
           {byYear.map(group => (
             <section class="year" data-year={group.year} data-filter-group aria-labelledby={`year-${group.year}`}>
-              <h3 id={`year-${group.year}`} class="year-title">{group.year}</h3>
-              {group.summaries.length > 0 && <div class="summaries rail" data-reveal="group">{group.summaries.map(r => <ResultCard result={r} level={4} tags={`${r.year} ${r.board.toLowerCase()}`} />)}</div>}
-              {group.students.length > 0 && <div class="students" data-reveal="group">{group.students.map(r => <ResultCard result={r} level={4} tags={`${r.year} ${r.board.toLowerCase()}`} />)}</div>}
+              <header class="year-head">
+                <h3 id={`year-${group.year}`} class="year-title">{group.year}</h3>
+                {group.figures.length > 0 && (
+                  <ul class="year-figures" data-filter-group>
+                    {group.figures.map(({ r, figure, rest }) => <li data-filter-tags={tagsFor(r)}><strong>{figure}</strong> {keepTogether(rest)}<span class="figure-exam">{r.exam}</span></li>)}
+                  </ul>
+                )}
+              </header>
+              {group.highlights.length > 0 && (
+                <div class="highlights" data-filter-group data-reveal="group">
+                  {group.highlights.map(r => <ResultCard result={r} tags={tagsFor(r)} group={`results-${group.year}-highlights`} sizes="(min-width: 900px) 17rem, 46vw" />)}
+                </div>
+              )}
+              {group.exams.map(({ exam, rows }) => (
+                <div class="exam" data-filter-group data-collapse>
+                  <h4 class="exam-title">{exam}<span class="sr-only"> · {group.year}</span></h4>
+                  <p class="exam-count">{rows.length} {rows.length === 1 ? 'student' : 'students'}</p>
+                  <div class="posters" data-collapse-grid data-reveal="group">
+                    {rows.map(r => <ResultCard result={r} tags={tagsFor(r)} group={`results-${group.year}-${slug(exam)}`} />)}
+                  </div>
+                  <button type="button" class="show-all" data-show-all hidden>Show all {rows.length} {exam} results</button>
+                </div>
+              ))}
             </section>
           ))}
         </>
@@ -43,14 +77,36 @@ const toppers = store.videos('toppers');
   )}
 </Base>
 <style>
-  .year { display: grid; gap: 1.25rem; padding-bottom: clamp(2.5rem, 2rem + 3vw, 4rem); }
-  .year[hidden] { display: none; }
-  .year-title { font-size: var(--step-4); font-weight: 700; color: var(--purple); }
-  .students { display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  /* Summaries swipe on phones (.rail) and sit in a grid from 600px. */
-  @media (min-width: 600px) { .summaries { grid-auto-flow: row; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); overflow: visible; } }
+  .results { padding-top: clamp(2rem, 1.5rem + 2vw, 3rem); }
+  .filters { display: grid; gap: 0; }
+  .year { display: grid; gap: clamp(1.75rem, 1.5rem + 1vw, 2.5rem); padding-block: clamp(2rem, 1.5rem + 2vw, 3rem); border-top: 1px solid #e3d8c6; }
+  .year[hidden], .exam[hidden], .highlights[hidden], .year-figures[hidden], .year-figures li[hidden] { display: none; }
+  .year-head { display: grid; gap: 1rem 3rem; align-items: end; }
+  .year-title { font-size: var(--step-5); font-weight: 700; line-height: 0.9; color: var(--purple); }
+  /* The year's headline figures in one line, instead of tall purple cards. */
+  .year-figures { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.75rem 2.25rem; }
+  .year-figures li { display: grid; grid-template-columns: auto; max-width: 16rem; line-height: 1.3; }
+  .year-figures strong { font-size: var(--step-3); font-weight: 700; line-height: 1; color: var(--purple); font-variant-numeric: tabular-nums; }
+  .figure-exam { font-size: var(--step--1); color: var(--ink-soft); }
+  .highlights { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; align-items: start; max-width: 60rem; }
+  .exam { display: grid; gap: 0.25rem 1rem; grid-template-columns: auto 1fr; align-items: baseline; }
+  .exam-title { font-size: var(--step-2); font-weight: 600; }
+  .exam-count { color: var(--ink-soft); font-size: var(--step--1); }
+  .posters { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem 1rem; align-items: start; margin-top: 0.75rem; }
+  /* A landscape poster takes two columns so its text stays readable. */
+  .posters > :global(.wide) { grid-column: span 2; }
+  .show-all { grid-column: 1 / -1; justify-self: start; min-height: 44px; margin-top: 0.75rem; padding: 0.5rem 1.25rem; border: 1.5px solid var(--purple); border-radius: 999px; background: transparent; color: var(--purple); font: 600 0.95rem var(--font); cursor: pointer; }
+  .show-all:hover { background: var(--purple); color: var(--white); }
+  .show-all[hidden] { display: none; }
   .empty { font-size: var(--step-1); }
   .toppers { grid-auto-columns: min(80%, 22rem); }
-  @media (min-width: 600px) { .students { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-  @media (min-width: 1200px) { .students { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+  @media (min-width: 600px) {
+    .posters { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .highlights { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (min-width: 900px) {
+    .year-head { grid-template-columns: auto 1fr; }
+    .posters { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2rem 1.5rem; }
+  }
+  @media (min-width: 1200px) { .posters { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
 </style>

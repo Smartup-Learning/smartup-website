@@ -16,7 +16,7 @@ Rules: branch `v2-website` only; TDD for behaviour (node tests in `tests/*.test.
 - [x] 8. Video: poster + yellow play button, controls after play, full screen shows the whole frame, frame from the poster's shape; YouTube: corner play badge, one player at a time, mixed rows at one height.
 - [x] 9. Filter chips: one sideways-scrolling row on phones.
 - [x] 10. Home: hero (photo, arc, owl), even stats, no stray circle, aligned story teaser, poster-style results row, feedback/alumni rows, hours strip, slim careers.
-- [ ] 11. Results wall: year stat strip, featured posters, exam groups, show all, landscape spans two columns.
+- [x] 11. Results wall: year stat strip, featured posters, exam groups, show all, landscape spans two columns.
 - [ ] 12. Testimonials and Alumni.
 - [ ] 13. Our Story, Founders, Faculty, Life (incl. rotating the sideways beach photo).
 - [ ] 14. Videos, Courses, Blog, Ask, App.

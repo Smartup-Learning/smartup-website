@@ -19,6 +19,7 @@ export function initFilters() {
         item.hidden = !chosen.every(value => tags.includes(value));
       });
       groups.forEach(group => { group.hidden = !group.querySelector('[data-filter-tags]:not([hidden])'); });
+      document.dispatchEvent(new CustomEvent('smartup:filtered'));
     };
     bars.forEach(bar => {
       bar.hidden = false;

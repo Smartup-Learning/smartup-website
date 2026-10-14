@@ -51,8 +51,8 @@ const description = `Smartup tuitions in Kochi and online for CBSE and State Boa
     <section id="results" class="section section--cream" aria-labelledby="results-title">
       <div class="container">
         <SectionHead title="Results our students earned" intro="Every figure names its exam and year." id="results-title" link={{ href: '/results', label: 'See all results' }} />
-        <div class="rail" data-reveal="group" tabindex="0" role="region" aria-label="Result highlights">
-          {results.map(result => <ResultCard result={result} />)}
+        <div class="rail rail--shapes results-row" data-reveal="group" tabindex="0" role="region" aria-label="Result highlights">
+          {results.map(result => <ResultCard result={result} group="home-results" showExam sizes="(min-width: 900px) 18rem, 60vw" />)}
         </div>
       </div>
     </section>
@@ -113,6 +113,7 @@ const description = `Smartup tuitions in Kochi and online for CBSE and State Boa
   .more { margin-top: 1.5rem; }
   .videos { grid-auto-columns: min(62%, 15rem); }
   .alumni-stories { grid-auto-columns: min(80%, 20rem); }
+  .results-row { gap: 1.5rem; padding-bottom: 1.5rem; }
   .row-title { margin: 3rem 0 1.25rem; font-size: var(--step-2); font-weight: 600; color: var(--white); }
   .careers-band { padding-block: clamp(2.5rem, 2rem + 2vw, 3.5rem); border-top: 1px solid var(--line); }
   .careers-inner { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.5rem 1.5rem; }

@@ -1,31 +1,45 @@
 ---
 import Picture from './Picture.astro';
 import { keepTogether } from '../lib/text.mjs';
-interface Props { result: { year: string; exam: string; headline: string; detail: string; poster: string; posterAlt: string; kind?: string }; level?: 3 | 4; tags?: string; group?: string }
-const { result, level = 3, tags, group = 'results' } = Astro.props;
-const Heading = level === 4 ? 'h4' : 'h3';
+import { splitHeadline, extraDetail } from '../lib/results.mjs';
+import { getStore } from '../lib/store';
+interface Props {
+  result: { year: string; board?: string; exam: string; headline: string; detail: string; poster: string; posterAlt: string; kind?: string };
+  tags?: string; group?: string; showExam?: boolean; sizes?: string;
+}
+const { result, tags, group = 'results', showExam = false, sizes = '(min-width: 1200px) 15rem, (min-width: 900px) 22vw, (min-width: 600px) 30vw, 46vw' } = Astro.props;
 const summary = result.kind === 'summary';
+const { name, score } = summary ? { name: result.headline, score: '' } : splitHeadline(result.headline);
+// Exam and year usually sit in the heading above, so only details that add something are printed.
+const extra = summary ? result.detail : extraDetail(result.detail, result.exam, result.year, result.board);
+const size = result.poster ? getStore(Astro.locals).mediaSize(result.poster) : null;
+const ratio = size ? size.width / size.height : 3 / 4;
 ---
-<article class:list={['result', { summary }]} data-reveal-item data-filter-tags={tags}>
+<figure class:list={['result', { summary, wide: ratio > 1.2 }]} data-filter-tags={tags} data-reveal-item style={`--ratio: ${ratio.toFixed(4)}`}>
   {result.poster && (
     <a class="poster" href={`${result.poster}-1600.webp`} data-lightbox={group} data-caption={`${result.headline} · ${result.exam} ${result.year}`} aria-label={`Open the result poster: ${result.posterAlt}`}>
-      <Picture base={result.poster} alt={result.posterAlt} sizes="(min-width: 900px) 18rem, 78vw" />
+      <Picture base={result.poster} alt={result.posterAlt} sizes={sizes} />
     </a>
   )}
-  <p class="meta">{result.exam} · {keepTogether(result.year)}</p>
-  <Heading class="headline">{keepTogether(result.headline)}</Heading>
-  {result.detail && <p class="detail">{keepTogether(result.detail)}</p>}
-</article>
+  <figcaption>
+    {showExam && <span class="meta">{result.exam} · {keepTogether(result.year)}</span>}
+    <span class="name">{keepTogether(name)}</span>
+    {score && <span class="score">{keepTogether(score)}</span>}
+    {extra && <span class="extra">{keepTogether(extra)}</span>}
+  </figcaption>
+</figure>
 <style>
-  .result { display: grid; gap: 0.35rem; align-content: start; padding: 0.75rem 0.75rem 1.25rem; border-radius: var(--radius); background: var(--white); }
-  .poster { display: block; margin-bottom: 0.6rem; border-radius: var(--radius-sm); overflow: hidden; background: var(--purple-tint); }
-  .poster :global(img) { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: top; }
-  .meta { padding-inline: 0.25rem; font-size: var(--step--1); font-weight: 600; color: var(--purple); }
-  .headline { padding-inline: 0.25rem; font-size: var(--step-1); font-weight: 700; }
-  .detail { padding-inline: 0.25rem; color: var(--ink-soft); font-size: var(--step--1); }
-  .summary { background: var(--purple); color: var(--cream); }
-  .summary .meta { color: var(--on-purple-soft); }
-  .summary .headline { font-size: var(--step-2); color: var(--white); }
-  .summary .detail { color: var(--on-purple-soft); }
-  .result[hidden] { display: none; }
+  .result { display: grid; gap: 0.65rem; align-content: start; margin: 0; min-width: 0; }
+  .result[hidden], .result:global(.is-collapsed) { display: none; }
+  /* The poster is the card: its own shape, a small radius and a soft shadow, no frame around it. */
+  .poster { display: block; overflow: hidden; border-radius: 0.5rem; background: var(--purple-tint); box-shadow: 0 1px 2px rgb(30 30 30 / 0.1), 0 12px 26px -14px rgb(57 32 100 / 0.5); transition: transform 0.3s var(--ease-out), box-shadow 0.3s; }
+  .poster:hover { transform: translateY(-3px); box-shadow: 0 1px 2px rgb(30 30 30 / 0.1), 0 18px 32px -14px rgb(57 32 100 / 0.55); }
+  .poster :global(img) { width: 100%; height: auto; }
+  figcaption { display: grid; gap: 0.1rem; line-height: 1.3; }
+  .meta { font-size: var(--step--1); font-weight: 600; color: var(--purple); }
+  .name { font-weight: 600; }
+  .score { font-weight: 700; color: var(--purple); font-variant-numeric: tabular-nums; }
+  .extra { font-size: var(--step--1); color: var(--ink-soft); }
+  .summary .name { font-weight: 700; }
+  @media (prefers-reduced-motion: reduce) { .poster, .poster:hover { transition: none; transform: none; } }
 </style>
