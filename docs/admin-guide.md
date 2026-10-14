@@ -4,6 +4,7 @@ Open **/admin** on the website and sign in with the admin password. (Ask your de
 
 ## Enquiries (Inbox)
 - **Demo bookings**, **Job applications** and **Questions** arrive here from the website forms. The number next to each shows how many are new.
+- A demo booking shows the **Programme** when the parent chose one, for example after pressing "Ask about Pro" on the Courses page.
 - Open an entry to see the details. Tap the phone number to call.
 - Set the status to **Contacted** or **Closed** and add notes, then press **Save**.
 - **Download CSV** gives you a spreadsheet of every entry.
@@ -21,12 +22,16 @@ Open **/admin** on the website and sign in with the admin password. (Ask your de
 - In a photo field, choose a file, describe what the photo shows, and press **Upload**, or pick one you uploaded before.
 - Photos can be JPEG, PNG or WebP, up to 10 MB. The website makes smaller copies for phones automatically.
 - **Media library** lists every uploaded photo. A photo still in use cannot be deleted; remove it from the item first.
+- The website shows every photo at its own shape. Posters and press cuttings are never cut off; photos fill their frames.
+- **YouTube videos** can have a **Cover image**. Use it for Shorts: YouTube's own picture for a Short is small and blurry, so upload a tall (portrait) cover instead.
 
 ## Settings
 - Phone numbers, email, centre hours, social media links, app links and the homepage headline.
+- **Homepage photo**: shown in a circle beside the headline. Choose a close photo of one or two people, and describe it. Leave it empty to show the owl instead.
 - **WhatsApp number**: leave it empty to hide every WhatsApp button; the website shows the phone number instead.
 
 ## Blog posts
 - Write in the Article box. A preview appears below it.
-- Use `##` at the start of a line for a heading, `-` for a list, `**bold**` and `*italic*`, and `[link text](https://…)` for a link.
+- Use `##` at the start of a line for a heading, `-` for a list, `**bold**` and `*italic*`, and `[link text](https://…)` for a link. A link to a page on this website can be short, for example `[Book a free demo class](/demo)`.
+- Phone numbers written like `+91 88919 10919` become tap-to-call links on their own.
 - The **Web address** becomes the post's link, for example `board-exam-tips` gives `/blog/board-exam-tips`.
