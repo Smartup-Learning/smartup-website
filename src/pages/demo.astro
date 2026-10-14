@@ -44,13 +44,13 @@ const steps = [
       <div class="form-card">
         <h2 id="book-title" class="title">Tell us about the student</h2>
         <SmartForm kind="demo" submit="Book my free demo" done="Our team will call you within a day to fix a time for the demo class." waText="Hi Smartup, I'm {name}. I just booked a free demo class for Class {grade} ({board})." whatsapp={settings.whatsapp} phone={settings.phone} error={error}>
-          <FormField name="name" label="Student's name" required maxlength={80} autocomplete="name" />
-          <FormField name="phone" label="Mobile number" type="tel" required maxlength={16} autocomplete="tel" inputmode="tel" hint="We call this number to fix the demo." />
-          <FormField name="grade" label="Class" as="select" required options={GRADES} />
-          <FormField name="board" label="Board" as="select" required options={BOARDS} value={asked?.board} />
+          <FormField name="name" label="Student's name" required maxlength={80} autocomplete="name" requiredMessage="Enter the student's name." />
+          <FormField name="phone" label="Mobile number" type="tel" required maxlength={16} autocomplete="tel" inputmode="tel" hint="We call this number to fix the demo." requiredMessage="Enter a 10-digit Indian mobile number." />
+          <FormField name="grade" label="Class" as="select" required options={GRADES} requiredMessage="Choose a class." />
+          <FormField name="board" label="Board" as="select" required options={BOARDS} value={asked?.board} requiredMessage="Choose a board." />
           <FormField name="programme" label="Programme" as="select" options={PROGRAMMES.map(p => p.name)} value={asked?.name} placeholder="Not sure yet" />
-          <FormField name="mode" label="Online or at a centre?" as="select" required options={MODES} />
-          <FormField name="centre" label="Preferred centre" as="select" options={centres.map(c => c.name)} placeholder="Choose if learning at a centre" />
+          <FormField name="mode" label="Online or at a centre?" as="select" required options={MODES} requiredMessage="Choose online or at a centre." />
+          <FormField name="centre" label="Preferred centre" as="select" options={centres.map(c => c.name)} placeholder="Choose if learning at a centre" requiredIf="mode=At a centre" requiredMessage="Choose a centre." />
           <FormField name="preferred_time" label="Preferred time" maxlength={60} placeholder="e.g. 6 pm on weekdays" />
         </SmartForm>
       </div>

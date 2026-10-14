@@ -46,10 +46,10 @@ const topic = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').r
       <h2 id="ask-form-title" class="form-title">Ask your question</h2>
       <p class="form-intro">Our team replies by phone or email, usually within a day.</p>
       <SmartForm kind="ask" submit="Send my question" done="Our team will reply by phone or email, usually within a day." waText="Hi Smartup, I'm {name}. I just sent a question on your website." whatsapp={settings.whatsapp} phone={settings.phone} error={error}>
-        <FormField name="name" label="Your name" required maxlength={80} autocomplete="name" />
-        <FormField name="phone" label="Mobile number" type="tel" required maxlength={16} autocomplete="tel" inputmode="tel" />
+        <FormField name="name" label="Your name" required maxlength={80} autocomplete="name" requiredMessage="Enter your name." />
+        <FormField name="phone" label="Mobile number" type="tel" required maxlength={16} autocomplete="tel" inputmode="tel" requiredMessage="Enter a 10-digit Indian mobile number." />
         <FormField name="email" label="Email" type="email" maxlength={120} autocomplete="email" />
-        <FormField name="question" label="Your question" as="textarea" required maxlength={1500} rows={5} />
+        <FormField name="question" label="Your question" as="textarea" required maxlength={1500} minlength={10} rows={5} requiredMessage="Write your question." />
       </SmartForm>
       </div>
       <aside class="next" aria-labelledby="next-title">

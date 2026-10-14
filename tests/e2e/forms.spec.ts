@@ -35,3 +35,36 @@ test('without JavaScript the form posts and lands on the thanks page', async ({ 
   await expect(page.getByRole('heading', { name: 'Your demo class request is in' })).toBeVisible();
   await context.close();
 });
+
+test('an empty demo form lists every missing detail at once, without sending anything', async ({ page }) => {
+  const posts: string[] = [];
+  page.on('request', r => { if (r.method() === 'POST') posts.push(r.url()); });
+  await page.goto('/demo');
+  await page.getByRole('button', { name: 'Book my free demo' }).click();
+  await expect(page.locator('[data-form-error]')).toContainText(/Please check 5 details/);
+  await expect(page.getByLabel("Student's name")).toHaveAttribute('aria-invalid', 'true');
+  await expect(page.getByLabel("Student's name")).toBeFocused();
+  await expect(page.locator('[data-error-for="board"]')).toHaveText('Choose a board.');
+  expect(posts).toEqual([]);
+});
+
+test('a field explains its problem as soon as you leave it, and clears once fixed', async ({ page }) => {
+  await page.goto('/demo');
+  const phone = page.getByLabel('Mobile number');
+  await phone.fill('12345');
+  await phone.blur();
+  await expect(page.locator('[data-error-for="phone"]')).toHaveText('Enter a 10-digit Indian mobile number.');
+  await expect(phone).toHaveAttribute('aria-invalid', 'true');
+  await phone.fill('98950 85731');
+  await phone.blur();
+  await expect(page.locator('[data-error-for="phone"]')).toBeHidden();
+  await expect(phone).not.toHaveAttribute('aria-invalid', 'true');
+});
+
+test('choosing a centre is needed only for learning at a centre', async ({ page }) => {
+  await page.goto('/demo');
+  await fillDemo(page);
+  await page.getByLabel('Online or at a centre?').selectOption('At a centre');
+  await page.getByRole('button', { name: 'Book my free demo' }).click();
+  await expect(page.locator('[data-error-for="centre"]')).toHaveText('Choose a centre.');
+});

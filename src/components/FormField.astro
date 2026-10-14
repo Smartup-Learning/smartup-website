@@ -3,8 +3,11 @@ type Option = string | { value: string; label: string };
 interface Props {
   name: string; label: string; as?: 'input' | 'select' | 'textarea'; type?: string; required?: boolean; maxlength?: number;
   options?: Option[]; placeholder?: string; autocomplete?: string; inputmode?: string; rows?: number; value?: string; hint?: string;
+  /** Shown when a required field is left empty; checked in the browser before anything is sent. */
+  requiredMessage?: string; minlength?: number; requiredIf?: string;
 }
-const { name, label, as = 'input', type = 'text', required = false, maxlength, options = [], placeholder, autocomplete, inputmode, rows = 4, value = '', hint } = Astro.props;
+const { name, label, as = 'input', type = 'text', required = false, maxlength, options = [], placeholder, autocomplete, inputmode, rows = 4, value = '', hint, requiredMessage, minlength, requiredIf } = Astro.props;
+const checks = { 'data-required-message': requiredMessage, 'data-minlength': minlength, 'data-required-if': requiredIf, 'data-label': label };
 const id = `f-${name}`;
 const choices = options.map(o => (typeof o === 'string' ? { value: o, label: o } : o));
 const describedBy = [hint ? `${id}-hint` : '', `${id}-error`].filter(Boolean).join(' ');
@@ -13,14 +16,14 @@ const describedBy = [hint ? `${id}-hint` : '', `${id}-error`].filter(Boolean).jo
   <label for={id}>{label}{!required && <span class="optional"> (optional)</span>}</label>
   {hint && <p class="hint" id={`${id}-hint`}>{hint}</p>}
   {as === 'select' ? (
-    <select id={id} name={name} required={required} aria-describedby={describedBy}>
+    <select id={id} name={name} required={required} aria-describedby={describedBy} {...checks}>
       <option value="" selected={!value}>{placeholder ?? 'Choose…'}</option>
       {choices.map(o => <option value={o.value} selected={o.value === value}>{o.label}</option>)}
     </select>
   ) : as === 'textarea' ? (
-    <textarea id={id} name={name} required={required} maxlength={maxlength} rows={rows} placeholder={placeholder} aria-describedby={describedBy}>{value}</textarea>
+    <textarea id={id} name={name} required={required} maxlength={maxlength} rows={rows} placeholder={placeholder} aria-describedby={describedBy} {...checks}>{value}</textarea>
   ) : (
-    <input id={id} name={name} type={type} required={required} maxlength={maxlength} placeholder={placeholder} autocomplete={autocomplete} inputmode={inputmode} value={value} aria-describedby={describedBy} />
+    <input id={id} name={name} type={type} required={required} maxlength={maxlength} placeholder={placeholder} autocomplete={autocomplete} inputmode={inputmode} value={value} aria-describedby={describedBy} {...checks} />
   )}
   <p class="field-error" id={`${id}-error`} data-error-for={name} hidden></p>
 </div>
@@ -33,6 +36,8 @@ const describedBy = [hint ? `${id}-hint` : '', `${id}-error`].filter(Boolean).jo
   textarea { min-height: 8rem; resize: vertical; }
   input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid var(--purple-300); outline-offset: 1px; border-color: var(--purple); }
   [aria-invalid='true'] { border-color: #b3261e; }
+  /* A field with a problem keeps a red ring while focused, not the usual purple one. */
+  [aria-invalid='true']:focus-visible { outline-color: #e8908a; border-color: #b3261e; }
   .field-error { color: #b3261e; font-size: var(--step--1); font-weight: 600; }
   .field-error[hidden] { display: none; }
 </style>
