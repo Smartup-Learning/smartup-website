@@ -49,7 +49,7 @@ test('homepage sections follow the client order', async t => {
 
 test('sections with no published content are left out, heading and all', async t => {
   const site = await start(content => {
-    content.db.exec("UPDATE testimonials SET published = 0; UPDATE jobs SET published = 0; UPDATE results SET published = 0;");
+    content.db.exec("UPDATE testimonials SET published = 0; UPDATE alumni SET published = 0; UPDATE jobs SET published = 0; UPDATE results SET published = 0;");
   });
   t.after(site.close);
   const page = await site.html('/');
@@ -400,4 +400,13 @@ test('pages without content say so instead of showing empty sections', async t =
   assert.doesNotMatch(contact, /0 centres/);
   assert.doesNotMatch(await site.html('/courses'), /0 centres/);
   assert.doesNotMatch(await site.html('/demo'), /id="near-title"/);
+});
+
+test('the Alumni page shows each former student with their batch and where they are now', async t => {
+  const site = await start();
+  t.after(site.close);
+  const page = await site.html('/alumni');
+  assert.match(page, /Batch of 2020–21 · Marine engineer/);
+  assert.match(page, /Batch of 2018–19 · Freelance safety consultant/);
+  assert.match(page, /alt="Mufeedha in a white coat at her medical college"/);
 });

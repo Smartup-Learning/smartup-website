@@ -138,5 +138,10 @@
   {"name": "result-2023-plus-two-samuel-shibu", "kind": "image", "from": "drive", "id": "1H79S2eTWlRg6JYCemz_j79vwZTElTD8T", "ext": ".jpg"},
   {"name": "result-2023-plus-two-thansa-hr", "kind": "image", "from": "drive", "id": "1ipvCvnwaPtRDlTI-BiXN14mZ1huCN-b6", "ext": ".jpg"},
   {"name": "result-2023-plus-two-maksoodha", "kind": "image", "from": "drive", "id": "1A9_X-9q8gXthwADh5J3Rqw0zxO2MugnJ", "ext": ".jpg"},
-  {"name": "result-2023-plus-two-abdul-jezeem", "kind": "image", "from": "drive", "id": "1_iZGTw-4vWD_P6ysA6RFPG00sY4tx8uD", "ext": ".jpg"}
+  {"name": "result-2023-plus-two-abdul-jezeem", "kind": "image", "from": "drive", "id": "1_iZGTw-4vWD_P6ysA6RFPG00sY4tx8uD", "ext": ".jpg"},
+  {"name": "alumni-mufeedha", "kind": "image", "from": "local", "path": "../Alumini/Mufeedha - MBBS , GMC CALICUT ( Final yr ) YEAR-2020-2021.jpeg"},
+  {"name": "alumni-rusfidha", "kind": "image", "from": "local", "path": "../Alumini/Rusfidha - BDS , Annoor Dental college  ( Final year ) YEAR-2020.jpeg"},
+  {"name": "alumni-dylan", "kind": "image", "from": "local", "path": "../Alumini/Dylan - Marine Engineer Year -2020-2021.jpeg"},
+  {"name": "alumni-ameen", "kind": "image", "from": "local", "path": "../Alumini/Ameen  Lecturer ,Holygrace Polytechnic college YEAR-2020-2021.jpeg"},
+  {"name": "alumni-zamreen", "kind": "image", "from": "local", "path": "../Alumini/Zamreen  Freelance Safety consultant YEAR-2018-2019.jpeg"}
 ]

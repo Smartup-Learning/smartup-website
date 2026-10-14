@@ -1851,5 +1851,42 @@
       "question": "What are Coffee With Chairman, Talent Eve and Shoot the Drugs?",
       "answer": "Coffee With Chairman (CWC) is a mentoring programme led by our Chairman, Mohamed Rayees. Talent Eve is our award ceremony and arts festival. Shoot the Drugs is a sports tournament that spreads awareness against drug abuse."
     }
+  ],
+  "alumni": [
+    {
+      "name": "Mufeedha",
+      "batch": "Batch of 2020–21",
+      "nowRole": "MBBS, final year, GMC Calicut",
+      "photo": "/seed/img/alumni-mufeedha",
+      "photoAlt": "Mufeedha in a white coat at her medical college"
+    },
+    {
+      "name": "Rusfidha",
+      "batch": "Batch of 2020",
+      "nowRole": "BDS, final year, Annoor Dental College",
+      "photo": "/seed/img/alumni-rusfidha",
+      "photoAlt": "Rusfidha standing on a college veranda"
+    },
+    {
+      "name": "Dylan",
+      "batch": "Batch of 2020–21",
+      "nowRole": "Marine engineer",
+      "photo": "/seed/img/alumni-dylan",
+      "photoAlt": "Dylan in his white marine officer uniform at the harbour"
+    },
+    {
+      "name": "Ameen",
+      "batch": "Batch of 2020–21",
+      "nowRole": "Lecturer, Holy Grace Polytechnic College",
+      "photo": "/seed/img/alumni-ameen",
+      "photoAlt": "Ameen seated at his desk in an office"
+    },
+    {
+      "name": "Zamreen",
+      "batch": "Batch of 2018–19",
+      "nowRole": "Freelance safety consultant",
+      "photo": "/seed/img/alumni-zamreen",
+      "photoAlt": "Zamreen standing in a garden courtyard"
+    }
   ]
 }

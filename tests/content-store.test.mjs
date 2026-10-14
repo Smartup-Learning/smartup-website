@@ -170,6 +170,7 @@ test('an older database gains the Phase 3 columns with safe defaults', () => {
 
 test('alumni stories come in order and unpublished ones stay hidden', () => {
   const store = seeded();
+  store.db.exec('DELETE FROM alumni');
   store.db.exec("INSERT INTO alumni(name, batch, now_role, story, sort) VALUES('Second', 'SSLC 2019', 'Engineer', 'Story two', 2), ('First', 'Plus Two 2018', 'Doctor', 'Story one', 1), ('Hidden', '', '', '', 0)");
   store.db.exec("UPDATE alumni SET published = 0 WHERE name = 'Hidden'");
   assert.deepEqual(store.alumni().map(a => a.name), ['First', 'Second']);
@@ -189,4 +190,16 @@ test('testimonials report a screenshot image and the sample flag', () => {
   const [first] = store.testimonials('feedback');
   assert.equal(first.image, '/media/u-shot');
   assert.equal(first.isSample, true);
+});
+
+test('the client\'s alumni are seeded in order with their photos', () => {
+  const alumni = seeded().alumni();
+  assert.deepEqual(alumni.map(a => a.name), ['Mufeedha', 'Rusfidha', 'Dylan', 'Ameen', 'Zamreen']);
+  for (const a of alumni) {
+    assert.match(a.photo, /^\/seed\/img\/alumni-/);
+    assert.ok(a.photoAlt.length > 10, a.name);
+    assert.match(a.batch, /^Batch of 20\d\d/);
+    assert.ok(a.nowRole.length > 0, a.name);
+    assert.equal(a.isSample, false);
+  }
 });

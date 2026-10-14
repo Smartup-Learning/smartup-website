@@ -16,7 +16,8 @@ const meta = [story.batch, story.nowRole].filter(Boolean).join(' · ');
 <style>
   .alumni-card { display: grid; gap: 0.6rem; align-content: start; padding: 1.25rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); color: var(--ink); }
   .photo { border-radius: var(--radius-sm); overflow: hidden; background: var(--purple-tint); }
-  .photo :global(img) { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+  /* Alumni photos are portraits; a portrait frame keeps faces and full-length shots whole. */
+  .photo :global(img) { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; object-position: center 30%; }
   h3 { font-size: var(--step-2); }
   .meta { font-weight: 600; color: var(--purple); font-size: var(--step--1); }
   .story { white-space: pre-line; }

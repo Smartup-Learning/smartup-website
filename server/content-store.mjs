@@ -103,6 +103,10 @@ const SECTIONS = {
     const put = db.prepare('INSERT INTO faqs(category, question, answer, sort) VALUES(?, ?, ?, ?)');
     rows.forEach((r, i) => put.run(r.category, r.question, r.answer, i));
   },
+  alumni(db, rows) {
+    const put = db.prepare('INSERT INTO alumni(name, batch, now_role, story, achievements, photo, photo_alt, is_sample, sort) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    rows.forEach((r, i) => put.run(r.name, r.batch ?? '', r.nowRole ?? '', r.story ?? '', r.achievements ?? '', r.photo ?? '', r.photoAlt ?? '', flag(r.isSample), i));
+  },
 };
 
 // Columns added after the first release; the constructor adds any that an existing database lacks.
