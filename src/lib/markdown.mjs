@@ -1,3 +1,5 @@
+import { keepTogether } from './text.mjs';
+
 const escapeHtml = text => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 // http(s) and mailto only; one level of balanced brackets is allowed inside the address.
@@ -11,6 +13,7 @@ function inline(text) {
     .replace(LINK, (_, label, href) => `\u0000${links.push(`<a href="${href}">${label}</a>`) - 1}\u0000`)
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
     .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+    .replace(/[^\u0000]+/g, part => keepTogether(part))
     .replace(/\u0000(\d+)\u0000/g, (_, i) => links[Number(i)]);
 }
 

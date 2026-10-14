@@ -31,3 +31,9 @@ test('stars and brackets inside a link address stay part of the link', () => {
   assert.equal(renderMarkdown('[guide](https://example.com/a*b*c)'), '<p><a href="https://example.com/a*b*c">guide</a></p>');
   assert.equal(renderMarkdown('[Kerala](https://en.wikipedia.org/wiki/Kerala_(state))'), '<p><a href="https://en.wikipedia.org/wiki/Kerala_(state)">Kerala</a></p>');
 });
+
+test('ranges in posts stay on one line, and link addresses are left untouched', () => {
+  const html = renderMarkdown('Days 1–30, then [see](https://example.com/a–b)');
+  assert.ok(html.includes('1–⁠30'));
+  assert.ok(html.includes('href="https://example.com/a–b"'));
+});

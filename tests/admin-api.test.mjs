@@ -86,7 +86,7 @@ test('settings load, save, and change the site; bad values are explained', async
   assert.doesNotMatch(await site.page('/demo'), /wa\.me/);
   assert.equal((await site.call('/api/admin/settings', { method: 'PUT', json: { ...settings, whatsapp: '98950 85731', hours: '4–9 pm' } })).status, 200);
   assert.match(await site.page('/demo'), /wa\.me\/919895085731/);
-  assert.match(await site.page('/contact'), /4–9 pm/);
+  assert.match(await site.page("/contact"), /4–\u20609\u00a0pm/);
   const bad = await site.call('/api/admin/settings', { method: 'PUT', json: { ...settings, email: 'nope' } });
   assert.equal(bad.status, 400);
   assert.ok(bad.data.fields.email);

@@ -1,4 +1,5 @@
 ---
+import { keepTogether } from '../lib/text.mjs';
 interface Props { id: string; title: string; format?: 'landscape' | 'portrait' }
 const { id, title, format = 'landscape' } = Astro.props;
 ---
@@ -6,9 +7,9 @@ const { id, title, format = 'landscape' } = Astro.props;
   <a class="yt-frame" href={`https://www.youtube.com/watch?v=${id}`} target="_blank" rel="noopener" data-yt-title={title}>
     <img src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`} alt="" loading="lazy" decoding="async" />
     <span class="yt-play" aria-hidden="true"></span>
-    <span class="sr-only">Play “{title}” (YouTube)</span>
+    <span class="sr-only">Play “{keepTogether(title)}” (YouTube)</span>
   </a>
-  <figcaption>{title}</figcaption>
+  <figcaption>{keepTogether(title)}</figcaption>
 </figure>
 <style>
   .yt { display: grid; gap: 0.6rem; }

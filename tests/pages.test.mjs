@@ -198,7 +198,7 @@ test('the blog lists posts newest first and each post renders its body', async t
   const slugs = [...list.matchAll(/href="\/blog\/([a-z0-9-]+)"/g)].map(m => m[1]);
   assert.deepEqual([...new Set(slugs)], ['board-exam-90-day-plan', 'how-parents-can-help-in-exam-season', 'daily-practice-beats-cramming']);
   const post = await site.html('/blog/board-exam-90-day-plan');
-  assert.match(post, /<h2>Days 1–30: finish the first round<\/h2>/);
+  assert.match(post, /<h2>Days 1–\u206030: finish the first round<\/h2>/);
   assert.match(post, /<article/);
 });
 
@@ -406,8 +406,8 @@ test('the Alumni page shows each former student with their batch and where they 
   const site = await start();
   t.after(site.close);
   const page = await site.html('/alumni');
-  assert.match(page, /Batch of 2020–21 · Marine engineer/);
-  assert.match(page, /Batch of 2018–19 · Freelance safety consultant/);
+  assert.match(page, /Batch of 2020–\u206021 · Marine engineer/);
+  assert.match(page, /Batch of 2018–\u206019 · Freelance safety consultant/);
   assert.match(page, /alt="Mufeedha in a white coat at her medical college"/);
 });
 
@@ -418,5 +418,20 @@ test('responsive images carry their width and height so the page does not jump w
     const images = [...(await site.html(path)).matchAll(/<img\b[^>]*\ssrcset="[^"]*"[^>]*>/g)].map(m => m[0]);
     assert.ok(images.length > 0, path);
     for (const img of images) assert.match(img, /\swidth="\d+"[^>]*\sheight="\d+"|\sheight="\d+"[^>]*\swidth="\d+"/, `${path}: ${img.slice(0, 120)}`);
+  }
+});
+
+test('time and class ranges are glued so a line never breaks inside them', async t => {
+  const site = await start();
+  t.after(site.close);
+  const glued = '5–⁠9 pm';
+  assert.ok((await site.html('/')).includes(`open ${glued}`), 'home courses line');
+  assert.ok((await site.html('/contact')).includes(glued), 'contact');
+  assert.ok((await site.html('/courses')).includes(glued), 'courses');
+  assert.ok((await site.html('/story')).includes('K–⁠12'), 'story vision');
+  const visibleText = html => html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, '').replace(/<[^>]+>/g, ' ');
+  for (const path of ['/', '/story', '/founders', '/faculty', '/results', '/life', '/videos', '/testimonials', '/alumni', '/courses', '/blog', '/blog/board-exam-90-day-plan', '/ask', '/app', '/community', '/contact', '/careers', '/demo', '/privacy']) {
+    const loose = visibleText(await site.html(path)).match(/.{0,30}\w–\w.{0,20}/);
+    assert.equal(loose, null, `${path} has an unglued range: ${loose?.[0]}`);
   }
 });

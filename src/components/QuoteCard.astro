@@ -1,6 +1,7 @@
 ---
 import Picture from './Picture.astro';
 import SampleBadge from './SampleBadge.astro';
+import { keepTogether } from '../lib/text.mjs';
 interface Props { item: { title: string; person: string; quote: string; image?: string; isSample?: boolean } }
 const { item } = Astro.props;
 ---
@@ -11,7 +12,7 @@ const { item } = Astro.props;
       <Picture base={item.image} alt={`Screenshot of feedback: ${item.title}`} sizes="(min-width: 900px) 22rem, 80vw" />
     </a>
   )}
-  {item.quote && <blockquote>{item.quote}</blockquote>}
+  {item.quote && <blockquote>{keepTogether(item.quote)}</blockquote>}
   <figcaption><strong>{item.title}</strong>{item.person && <span>{item.person}</span>}</figcaption>
 </figure>
 <style>

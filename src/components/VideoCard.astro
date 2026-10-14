@@ -1,5 +1,6 @@
 ---
 import SampleBadge from './SampleBadge.astro';
+import { keepTogether } from '../lib/text.mjs';
 interface Props { item: { title: string; video: string; poster: string; isSample?: boolean } }
 const { item } = Astro.props;
 ---
@@ -7,7 +8,7 @@ const { item } = Astro.props;
   <video controls playsinline preload="none" poster={item.poster} data-exclusive>
     <source src={item.video} type="video/mp4" />
   </video>
-  <figcaption>{item.isSample && <SampleBadge />} {item.title}</figcaption>
+  <figcaption>{item.isSample && <SampleBadge />} {keepTogether(item.title)}</figcaption>
 </figure>
 <style>
   .video-card { display: grid; gap: 0.75rem; }

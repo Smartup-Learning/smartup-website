@@ -2,6 +2,7 @@
 import { navGroups } from '../lib/nav';
 import { formatPhone } from '../../server/content-store.mjs';
 import SocialIcon from './SocialIcon.astro';
+import { keepTogether } from '../lib/text.mjs';
 interface Props { settings: any; centres: { name: string; phone: string; mapUrl: string; hours: string }[] }
 const { settings, centres } = Astro.props;
 const year = new Date().getFullYear();
@@ -31,7 +32,7 @@ const year = new Date().getFullYear();
           <li><a href={c.mapUrl} target="_blank" rel="noopener">{c.name}</a><a class="tel" href={`tel:${c.phone}`}>{formatPhone(c.phone)}</a></li>
         ))}
       </ul>
-      <p class="hours">All centres open {settings.hours}</p>
+      <p class="hours">All centres open {keepTogether(settings.hours)}</p>
     </section>
   </div>
   <div class="container base">

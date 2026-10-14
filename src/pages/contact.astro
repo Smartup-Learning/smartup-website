@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import { keepTogether } from '../lib/text.mjs';
 import PageHero from '../components/PageHero.astro';
 import { formatPhone } from '../../server/content-store.mjs';
 import { getStore } from '../lib/store';
@@ -8,7 +9,7 @@ const settings = store.settings();
 const centres = store.centres();
 ---
 <Base title="Centres & contact" description="Smartup centres in Kochi, phone numbers, email and our registered office." page="contact">
-  <PageHero eyebrow="Centres & contact" title="Visit us, call us," highlight="ask us anything" intro={centres.length ? `${centres.length} centres across Kochi, all open ${settings.hours}.` : 'Call or email us, and our team will help.'} />
+  <PageHero eyebrow="Centres & contact" title="Visit us, call us," highlight="ask us anything" intro={centres.length ? `${centres.length} centres across Kochi, all open ${keepTogether(settings.hours)}.` : 'Call or email us, and our team will help.'} />
   {centres.length > 0 && (
   <section class="section" aria-labelledby="centres-title">
     <div class="container">
@@ -17,7 +18,7 @@ const centres = store.centres();
         {centres.map(c => (
           <li class="centre" data-reveal-item>
             <h3>{c.name}</h3>
-            <p class="hours">Open {c.hours}</p>
+            <p class="hours">Open {keepTogether(c.hours)}</p>
             <div class="actions"><a class="btn btn--primary" href={`tel:${c.phone}`}>{formatPhone(c.phone)}</a><a class="link-arrow" href={c.mapUrl} target="_blank" rel="noopener">Directions</a></div>
           </li>
         ))}

@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import { keepTogether } from '../lib/text.mjs';
 import PageHero from '../components/PageHero.astro';
 import SectionHead from '../components/SectionHead.astro';
 import { courseBoards, classDurations, sessionPlan, mentorRatios, parentUpdates, stateProgramme, formatMinutes } from '../data/courses';
@@ -69,7 +70,7 @@ const state = courseBoards.find(b => b.id === 'state')!;
 
   <section class="section" aria-labelledby="where-title">
     <div class="container" data-reveal>
-      <SectionHead eyebrow="Online or offline" title={centres.length ? `Learn from home, or at ${centres.length} centres` : 'Learn from home'} intro={centres.length ? `Every centre is open ${settings.hours}.` : undefined} id="where-title" link={{ href: '/contact', label: 'Find your nearest centre' }} />
+      <SectionHead eyebrow="Online or offline" title={centres.length ? `Learn from home, or at ${centres.length} centres` : 'Learn from home'} intro={centres.length ? `Every centre is open ${keepTogether(settings.hours)}.` : undefined} id="where-title" link={{ href: '/contact', label: 'Find your nearest centre' }} />
       <a class="btn btn--primary" href="/demo">Book a free demo class</a>
     </div>
   </section>

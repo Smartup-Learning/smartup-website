@@ -1,5 +1,6 @@
 ---
 import Picture from './Picture.astro';
+import { keepTogether } from '../lib/text.mjs';
 interface Props { result: { year: string; exam: string; headline: string; detail: string; poster: string; posterAlt: string; kind?: string }; level?: 3 | 4; tags?: string; group?: string }
 const { result, level = 3, tags, group = 'results' } = Astro.props;
 const Heading = level === 4 ? 'h4' : 'h3';
@@ -11,9 +12,9 @@ const summary = result.kind === 'summary';
       <Picture base={result.poster} alt={result.posterAlt} sizes="(min-width: 900px) 18rem, 78vw" />
     </a>
   )}
-  <p class="meta">{result.exam} · {result.year}</p>
-  <Heading class="headline">{result.headline}</Heading>
-  {result.detail && <p class="detail">{result.detail}</p>}
+  <p class="meta">{result.exam} · {keepTogether(result.year)}</p>
+  <Heading class="headline">{keepTogether(result.headline)}</Heading>
+  {result.detail && <p class="detail">{keepTogether(result.detail)}</p>}
 </article>
 <style>
   .result { display: grid; gap: 0.35rem; align-content: start; padding: 0.75rem 0.75rem 1.25rem; border-radius: var(--radius); background: var(--white); }

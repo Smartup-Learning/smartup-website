@@ -1,5 +1,6 @@
 ---
 import { courseBoards } from '../data/courses';
+import { keepTogether } from '../lib/text.mjs';
 interface Props { centreCount: number; hours: string }
 const { centreCount, hours } = Astro.props;
 ---
@@ -23,7 +24,7 @@ const { centreCount, hours } = Astro.props;
       </div>
     </div>
   ))}
-  <p class="offline"><strong>Online or offline.</strong> Learn from home, or at one of our {centreCount} centres in Kochi, open {hours}.</p>
+  <p class="offline"><strong>Online or offline.</strong> Learn from home, or at one of our {centreCount} centres in Kochi, open {keepTogether(hours)}.</p>
 </div>
 <style>
   .tablist[hidden] { display: none; }

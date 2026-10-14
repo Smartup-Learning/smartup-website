@@ -1,17 +1,18 @@
 ---
 import Picture from './Picture.astro';
+import { keepTogether } from '../lib/text.mjs';
 import SampleBadge from './SampleBadge.astro';
 interface Props { story: { name: string; batch: string; nowRole: string; story: string; achievements: string; photo: string; photoAlt: string; isSample: boolean } }
 const { story } = Astro.props;
-const meta = [story.batch, story.nowRole].filter(Boolean).join(' · ');
+const meta = keepTogether([story.batch, story.nowRole].filter(Boolean).join(' · '));
 ---
 <article class="alumni-card" data-reveal-item>
   {story.photo && <div class="photo"><Picture base={story.photo} alt={story.photoAlt} sizes="(min-width: 900px) 22rem, 80vw" /></div>}
   {story.isSample && <SampleBadge />}
   <h3>{story.name}</h3>
   {meta && <p class="meta">{meta}</p>}
-  {story.story && <p class="story">{story.story}</p>}
-  {story.achievements && <p class="achievements"><strong>Achievements:</strong> {story.achievements}</p>}
+  {story.story && <p class="story">{keepTogether(story.story)}</p>}
+  {story.achievements && <p class="achievements"><strong>Achievements:</strong> {keepTogether(story.achievements)}</p>}
 </article>
 <style>
   .alumni-card { display: grid; gap: 0.6rem; align-content: start; padding: 1.25rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); color: var(--ink); }

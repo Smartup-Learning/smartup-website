@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import { keepTogether } from '../lib/text.mjs';
 import PageHero from '../components/PageHero.astro';
 import SmartForm from '../components/SmartForm.astro';
 import FormField from '../components/FormField.astro';
@@ -10,7 +11,7 @@ const store = getStore(Astro.locals);
 const settings = store.settings();
 const centres = store.centres();
 const error = Astro.url.searchParams.get('error');
-const steps = [`Send the form, or call us (${settings.hours})`, 'We call you back to fix a time that suits you', 'Join a free demo class, online or at a centre'];
+const steps = [`Send the form, or call us (${keepTogether(settings.hours)})`, 'We call you back to fix a time that suits you', 'Join a free demo class, online or at a centre'];
 ---
 <Base title="Book a free demo class" description="Book a free Smartup demo class online or at one of our centres in Kochi." page="demo">
   <PageHero eyebrow="Free demo class" title="Book a free" highlight="demo class" intro="See how Smartup teaches before you decide. Fill in the form and we will call you back." tone="purple">

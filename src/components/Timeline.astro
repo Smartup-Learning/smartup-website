@@ -1,6 +1,7 @@
 ---
 import MediaFrame from './MediaFrame.astro';
 import Owl from './Owl.astro';
+import { keepTogether } from '../lib/text.mjs';
 type Chapter = { id: number; yearLabel: string; title: string; story: string; statValue: string; statLabel: string; media: { src: string; alt: string }[]; sourceUrl: string };
 interface Props { chapters: Chapter[]; variant: 'full' | 'teaser' }
 const { chapters, variant } = Astro.props;
@@ -16,8 +17,8 @@ const full = variant === 'full';
     {chapters.map(chapter => (
       <li class="chapter" data-year={chapter.yearLabel} data-reveal={full ? '' : undefined} data-reveal-item={full ? undefined : ''}>
         <p class="chapter-year">{chapter.yearLabel}</p>
-        <h3 class="chapter-title">{chapter.title}</h3>
-        {full && chapter.story && <p class="chapter-story">{chapter.story}</p>}
+        <h3 class="chapter-title">{keepTogether(chapter.title)}</h3>
+        {full && chapter.story && <p class="chapter-story">{keepTogether(chapter.story)}</p>}
         {full && chapter.statValue && <p class="chapter-stat"><strong>{chapter.statValue}</strong> {chapter.statLabel}</p>}
         {chapter.media.length > 0 && (
           <div class="chapter-media">
