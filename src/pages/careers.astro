@@ -26,7 +26,7 @@ const error = Astro.url.searchParams.get('error');
             {jobs.filter(j => j.type === type).map(job => (
               <li class="job" data-reveal-item>
                 <div><h3>{job.title}</h3>{job.location && <p class="location">{job.location}</p>}{job.description && <p class="description">{job.description}</p>}</div>
-                <a class="btn btn--primary" href={`/careers?role=${encodeURIComponent(job.title)}#apply`}>Apply</a>
+                <a class="link-arrow" href={`/careers?role=${encodeURIComponent(job.title)}#apply`} aria-label={`Apply for ${job.title}`}>Apply</a>
               </li>
             ))}
           </ul>
@@ -34,8 +34,9 @@ const error = Astro.url.searchParams.get('error');
       ))}
     </div>
   </section>
-  <section class="section section--cream" id="apply" aria-labelledby="apply-title">
-    <div class="container">
+  <section class="section apply" id="apply" aria-labelledby="apply-title">
+    <div class="container apply-layout">
+      <div class="apply-form">
       <h2 id="apply-title" class="apply-title">Apply for a role</h2>
       <SmartForm kind="careers" submit="Send my application" done="Our team will review your application and contact you if there is a match." waText="Hi Smartup, I'm {name}. I just applied for {role}." whatsapp={settings.whatsapp} phone={settings.phone} error={error}>
         <FormField name="name" label="Your name" required maxlength={80} autocomplete="name" requiredMessage="Enter your name." />
@@ -46,26 +47,35 @@ const error = Astro.url.searchParams.get('error');
         <FormField name="cv_url" label="Link to your CV" type="url" maxlength={300} hint="Share a Google Drive or LinkedIn link. We can't accept file uploads." />
         <FormField name="message" label="Message" as="textarea" maxlength={1500} />
       </SmartForm>
-    </div>
-  </section>
-  <section class="section section--cream">
-    <div class="container how" data-reveal>
-      <h2>Prefer email?</h2>
-      <p>Email your CV to <a href={`mailto:${settings.email}`}>{settings.email}</a> with the role in the subject line{settings.phone && <>, or call <a href={`tel:${settings.phone}`}>{formatPhone(settings.phone)}</a></>}.</p>
+      </div>
+      <aside class="how" aria-labelledby="how-title">
+        <h3 id="how-title">Prefer email?</h3>
+        <p>Email your CV to <a href={`mailto:${settings.email}`}>{settings.email}</a> with the role in the subject line{settings.phone && <>, or call <a href={`tel:${settings.phone}`}>{formatPhone(settings.phone)}</a></>}.</p>
+      </aside>
     </div>
   </section>
 </Base>
 <style>
   .group { display: grid; gap: 1rem; margin-bottom: 2.5rem; }
-  .type { font-size: var(--step-3); font-weight: 700; color: var(--purple); }
+  .type { font-size: var(--step-3); font-weight: 600; color: var(--purple); }
   .jobs { list-style: none; padding: 0; display: grid; gap: 0.75rem; }
-  .job { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; padding: 1.25rem 1.5rem; border: 1px solid var(--line); border-radius: var(--radius); }
-  h3 { font-size: var(--step-1); }
+  /* Title on the left and "Apply" on the right on every row, whatever the title's length. */
+  .job { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 1rem; padding: 1rem 1.25rem; border: 1px solid var(--line); border-radius: var(--radius); }
+  .job:hover { border-color: var(--purple-300); }
+  h3 { font-size: var(--step-1); font-weight: 600; }
   .description { margin-top: 0.35rem; color: var(--ink-soft); font-size: var(--step--1); white-space: pre-line; }
   .location { color: var(--ink-soft); font-size: var(--step--1); }
   .empty { font-size: var(--step-1); margin-bottom: 2rem; }
-  .apply-title { font-size: var(--step-3); font-weight: 700; margin-bottom: 1.5rem; }
-  .how { display: grid; gap: 0.75rem; max-width: 44rem; }
-  .how h2 { font-size: var(--step-3); font-weight: 700; }
+  .apply { border-top: 1px solid var(--line); }
+  .apply-layout { display: grid; gap: 2.5rem; }
+  .apply-form { min-width: 0; }
+  .apply-title { font-size: var(--step-3); font-weight: 600; margin-bottom: 1.5rem; }
+  .how { display: grid; gap: 0.75rem; align-content: start; padding: 1.5rem; border-radius: var(--radius); background: var(--cream); }
+  .how h3 { font-size: var(--step-1); }
   .how a { color: var(--purple); font-weight: 600; }
+  @media (min-width: 900px) {
+    .jobs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .apply-layout { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 4rem; align-items: start; }
+    .how { margin-top: 4.5rem; }
+  }
 </style>

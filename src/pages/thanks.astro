@@ -2,10 +2,11 @@
 import Base from '../layouts/Base.astro';
 import { formatPhone } from '../../server/content-store.mjs';
 import { getStore } from '../lib/store';
+import Owl from '../components/Owl.astro';
 const copy = {
-  demo: { title: 'Your demo class request is in', text: 'Our team will call you within a day to fix a time for the free demo class.', wa: 'Hi Smartup, I just booked a free demo class on your website.', back: { href: '/courses', label: 'Explore our courses' } },
-  careers: { title: 'Thank you for applying', text: 'Our team will review your application and contact you if there is a match.', wa: 'Hi Smartup, I just applied for a job on your website.', back: { href: '/story', label: 'Read our story' } },
-  ask: { title: 'Your question is with our team', text: 'We will reply by phone or email, usually within a day.', wa: 'Hi Smartup, I just sent a question on your website.', back: { href: '/ask', label: 'Back to the questions' } },
+  demo: { eyebrow: 'Booked', title: 'Your demo class request is in', text: 'Here is what happens next.', steps: ['We call you within a day.', 'Together we pick a time that suits you.', 'Your child joins the free class, online or at a centre.'], wa: 'Hi Smartup, I just booked a free demo class on your website.', back: { href: '/courses', label: 'Explore our courses' } },
+  careers: { eyebrow: 'Sent', title: 'Thank you for applying', text: 'Here is what happens next.', steps: ['Our team reads every application.', 'If there is a match, we call you to talk about the role.'], wa: 'Hi Smartup, I just applied for a job on your website.', back: { href: '/story', label: 'Read our story' } },
+  ask: { eyebrow: 'Sent', title: 'Your question is with our team', text: 'Here is what happens next.', steps: ['A counsellor reads your question.', 'We reply by phone or email, usually within a day.'], wa: 'Hi Smartup, I just sent a question on your website.', back: { href: '/ask', label: 'Back to the questions' } },
 };
 const kind = Astro.url.searchParams.get('form') ?? '';
 if (!Object.hasOwn(copy, kind)) return Astro.rewrite('/404');
@@ -16,20 +17,29 @@ const wa = settings.whatsapp ? `https://wa.me/${settings.whatsapp.replace(/\D/g,
 <Base title="Thank you" description="Your message has reached the Smartup team." page="thanks" noindex>
   <section class="section">
     <div class="container done">
-      <p class="eyebrow">Sent</p>
-      <h1>{page.title}</h1>
-      <p class="text">{page.text}</p>
-      <div class="actions">
-        {wa ? <a class="btn btn--primary" href={wa} target="_blank" rel="noopener">Continue on WhatsApp</a>
-          : settings.phone && <a class="btn btn--primary" href={`tel:${settings.phone}`}>Call {formatPhone(settings.phone)}</a>}
-        <a class="link-arrow" href={page.back.href}>{page.back.label}</a>
+      <Owl class="thanks-owl" size="clamp(5.5rem, 4rem + 4vw, 8rem)" badge happy label="Smartup owl smiling" />
+      <div class="copy">
+        <p class="eyebrow">{page.eyebrow}</p>
+        <h1>{page.title}</h1>
+        <p class="text">{page.text}</p>
+        <ol class="steps">{page.steps.map(step => <li>{step}</li>)}</ol>
+        <div class="actions">
+          <a class="btn btn--primary" href={page.back.href}>{page.back.label}</a>
+          {wa ? <a class="link-arrow" href={wa} target="_blank" rel="noopener">Continue on WhatsApp</a>
+            : settings.phone && <a class="link-arrow" href={`tel:${settings.phone}`}>Or call {formatPhone(settings.phone)}</a>}
+        </div>
       </div>
     </div>
   </section>
 </Base>
 <style>
-  .done { display: grid; gap: 1rem; justify-items: start; max-width: 40rem; }
-  h1 { font-size: var(--step-4); font-weight: 700; }
+  .done { display: grid; gap: 2rem; align-items: start; }
+  .copy { display: grid; gap: 1rem; justify-items: start; max-width: 40rem; }
+  :global(.thanks-owl) { --peek-bg: var(--cream); }
+  h1 { font-size: var(--step-4); font-weight: 600; }
   .text { font-size: var(--step-1); color: var(--ink-soft); }
-  .actions { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+  .steps { margin: 0; padding-left: 1.4rem; display: grid; gap: 0.5rem; font-size: var(--step-1); }
+  .steps li::marker { color: var(--purple); font-weight: 700; }
+  .actions { display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem; align-items: center; margin-top: 0.5rem; }
+  @media (min-width: 700px) { .done { grid-template-columns: auto minmax(0, 1fr); gap: 3rem; } }
 </style>

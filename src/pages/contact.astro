@@ -18,22 +18,24 @@ const centres = store.centres();
         {centres.map(c => (
           <li class="centre" data-reveal-item>
             <h3>{c.name}</h3>
-            <p class="hours">Open {keepTogether(c.hours)}</p>
-            <div class="actions"><a class="btn btn--primary" href={`tel:${c.phone}`}>{formatPhone(c.phone)}</a><a class="link-arrow" href={c.mapUrl} target="_blank" rel="noopener">Directions</a></div>
+            {c.hours !== settings.hours && <p class="hours">Open {keepTogether(c.hours)}</p>}
+            <a class="phone" href={`tel:${c.phone}`}>{formatPhone(c.phone)}</a>
+            <a class="link-arrow" href={c.mapUrl} target="_blank" rel="noopener">Directions</a>
           </li>
         ))}
       </ul>
     </div>
   </section>
   )}
-  <section class="section section--cream" aria-labelledby="reach-title">
+  <section class="section section--purple" aria-labelledby="reach-title">
     <div class="container reach" data-reveal>
       <div>
         <h2 id="reach-title" class="title">Talk to our team</h2>
         <ul class="lines">
-          {settings.phones.map((p: string) => <li><a href={`tel:${p}`}>{formatPhone(p)}</a></li>)}
-          <li><a href={`mailto:${settings.email}`}>{settings.email}</a></li>
-          {settings.whatsapp && <li><a href={`https://wa.me/${settings.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener">WhatsApp us</a></li>}
+          {settings.phone && <li><span class="line-label">Main line</span><a href={`tel:${settings.phone}`}>{formatPhone(settings.phone)}</a></li>}
+          {settings.phones.filter((p: string) => p !== settings.phone).map((p: string) => <li><span class="line-label">Office</span><a href={`tel:${p}`}>{formatPhone(p)}</a></li>)}
+          <li><span class="line-label">Email</span><a href={`mailto:${settings.email}`}>{settings.email}</a></li>
+          {settings.whatsapp && <li><span class="line-label">WhatsApp</span><a href={`https://wa.me/${settings.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener">Message us</a></li>}
         </ul>
       </div>
       {settings.registeredOffice && (
@@ -47,15 +49,21 @@ const centres = store.centres();
   </section>
 </Base>
 <style>
-  .title { font-size: var(--step-4); font-weight: 700; margin-bottom: 2rem; }
-  .centres { list-style: none; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); }
-  .centre { display: grid; gap: 0.6rem; padding: 1.5rem; border: 1px solid var(--line); border-radius: var(--radius); }
-  h3 { font-size: var(--step-2); }
+  .title { font-size: var(--step-4); font-weight: 600; margin-bottom: 2rem; }
+  .section--purple .title { color: var(--white); }
+  .centres { list-style: none; padding: 0; display: grid; gap: 1rem; grid-template-columns: minmax(0, 1fr); }
+  .centre { display: grid; gap: 0.25rem; justify-items: start; padding: 1.25rem 1.5rem; border: 1px solid var(--line); border-radius: var(--radius); }
+  h3 { font-size: var(--step-2); font-weight: 600; margin-bottom: 0.25rem; }
   .hours { color: var(--ink-soft); }
-  .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+  .phone { display: inline-flex; align-items: center; min-height: 44px; font-size: var(--step-1); font-weight: 600; color: var(--purple); text-decoration: none; font-variant-numeric: tabular-nums; }
   .reach { display: grid; gap: 2rem; }
-  .lines { list-style: none; padding: 0; display: grid; gap: 0.5rem; font-size: var(--step-1); font-weight: 600; }
-  .lines a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; }
-  address { font-style: normal; line-height: 1.7; }
-  @media (min-width: 900px) { .reach { grid-template-columns: 1fr 1fr; } }
+  .lines { list-style: none; padding: 0; display: grid; gap: 0.25rem; font-size: var(--step-1); font-weight: 600; }
+  .lines li { display: grid; grid-template-columns: 7rem minmax(0, 1fr); align-items: center; gap: 1rem; }
+  .line-label { font-size: var(--step--1); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--on-purple-soft); }
+  .lines a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; color: var(--white); overflow-wrap: anywhere; }
+  .lines a:hover { text-decoration: underline; }
+  address { font-style: normal; line-height: 1.7; color: var(--on-purple-soft); }
+  address strong { color: var(--white); }
+  @media (min-width: 600px) { .centres { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 900px) { .centres { grid-template-columns: repeat(3, minmax(0, 1fr)); } .reach { grid-template-columns: 1fr 1fr; } }
 </style>

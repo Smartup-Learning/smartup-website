@@ -6,18 +6,32 @@ const settings = getStore(Astro.locals).settings();
 ---
 <Base title="Privacy" description="How the Smartup website handles the details you share: enquiry forms, Smartup Quest, cookies and video." page="privacy">
   <section class="section">
-    <div class="container privacy">
-      <p class="eyebrow">Website information</p>
+    <div class="container layout">
+      <nav class="toc" aria-label="On this page">
+        <p class="toc-title">On this page</p>
+        <ol>
+          <li><a href="#who">Who we are</a></li>
+          <li><a href="#forms">When you fill in a form</a></li>
+          <li><a href="#quest">Smartup Quest</a></li>
+          <li><a href="#cookies">Cookies</a></li>
+          <li><a href="#services">Videos and other services</a></li>
+          <li><a href="#choices">Your choices</a></li>
+        </ol>
+      </nav>
+      <div class="privacy">
       <h1>Privacy</h1>
-      <p class="updated">Last updated 13 October 2026</p>
+      <p class="updated">Last updated 14 October 2026</p>
+
+      <h2 id="who">Who we are</h2>
+      <p>This website is run by {settings.legalName ?? 'Smartup'}{settings.registeredOffice?.address && <>, registered office: {settings.registeredOffice.address}</>}. For any question or complaint about how we handle your details, write to <a href={`mailto:${settings.email}`}>{settings.email}</a>{settings.phone && <> or call <a href={`tel:${settings.phone}`}>{formatPhone(settings.phone)}</a></>}, and we will reply.</p>
 
       <h2>What this website does</h2>
       <p>This website tells you about Smartup programmes, results and centres. It does not create student accounts or take payments.</p>
 
-      <h2>When you fill in a form</h2>
+      <h2 id="forms">When you fill in a form</h2>
       <p>The forms on this website save what you type so our team can reply:</p>
       <ul>
-        <li><strong>Free demo class:</strong> the student's name, a mobile number, class, board, online or centre, preferred centre and preferred time.</li>
+        <li><strong>Free demo class:</strong> the student's name, a mobile number, class, board, the programme if you choose one, online or centre, preferred centre and preferred time.</li>
         <li><strong>Job application:</strong> your name, mobile number, email, the role, your experience, your message and any CV link you share.</li>
         <li><strong>Ask Smartup:</strong> your name, mobile number, email (if you give one) and your question.</li>
       </ul>
@@ -26,27 +40,39 @@ const settings = getStore(Astro.locals).settings();
       <p>After you send a form you can choose <strong>Continue on WhatsApp</strong>. This opens WhatsApp with a message you can edit before sending; WhatsApp's own privacy policy then applies.</p>
       <p>If our answer to your question could help others, we may add the question and answer to our public FAQ, without your name or contact details.</p>
 
-      <h2>Smartup Quest</h2>
+      <h2 id="quest">Smartup Quest</h2>
       <p>When a student begins a Smartup Quest challenge, we save the student's name, phone number, class, chosen subject, answers, progress and result. The team can use these records to discuss learning support. Students should involve a parent or guardian before sharing details. Challenge results are indicative and do not replace a teacher's assessment.</p>
       <p>An essential cookie in this browser lets you reopen saved results and continue unfinished challenges for up to one year. There is one attempt per phone number for each subject.</p>
 
-      <h2>Cookies</h2>
+      <h2 id="cookies">Cookies</h2>
       <p>This website does not use advertising or analytics cookies. It uses only essential cookies: one for Smartup Quest progress, and one that keeps Smartup staff signed in to the admin area.</p>
 
-      <h2>Videos and other services</h2>
+      <h2 id="services">Videos and other services</h2>
       <p>When a page shows a YouTube video, its preview picture loads from YouTube's image server (i.ytimg.com). The YouTube player itself loads from youtube-nocookie.com only when you tap play, and Google's privacy policy then applies.</p>
       <p>Map, social media and app store links open those services, which have their own privacy policies. Fonts and photos are hosted with this website. Our hosting provider may process technical request details to serve and protect the website.</p>
 
-      <h2>Your choices</h2>
+      <h2 id="choices">Your choices</h2>
       <p>To see, correct or delete the details you have shared with us, contact Smartup at <a href={`mailto:${settings.email}`}>{settings.email}</a>{settings.phone && <> or <a href={`tel:${settings.phone}`}>{formatPhone(settings.phone)}</a></>}.</p>
+      </div>
     </div>
   </section>
 </Base>
 <style>
-  .privacy { display: grid; gap: 1rem; max-width: 44rem; }
-  h1 { font-size: var(--step-4); font-weight: 700; }
-  h2 { font-size: var(--step-2); font-weight: 700; margin-top: 1.5rem; }
+  .layout { display: grid; gap: 2rem; }
+  .privacy { display: grid; gap: 1rem; max-width: 44rem; min-width: 0; }
+  h1 { font-size: var(--step-4); font-weight: 600; }
+  h2 { font-size: var(--step-2); font-weight: 600; margin-top: 1.5rem; scroll-margin-top: calc(var(--header-h) + 1.5rem); }
   .updated { color: var(--ink-soft); font-size: var(--step--1); }
   ul { padding-left: 1.25rem; display: grid; gap: 0.5rem; }
   a { color: var(--purple); font-weight: 600; }
+  .toc { align-self: start; padding: 1.25rem 1.5rem; border-radius: var(--radius); background: var(--cream); }
+  .toc-title { font-size: var(--step--1); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); }
+  .toc ol { margin: 0.5rem 0 0; padding-left: 1.25rem; display: grid; gap: 0.1rem; }
+  .toc a { display: inline-flex; align-items: center; min-height: 40px; text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  @media (min-width: 900px) {
+    .layout { grid-template-columns: minmax(0, 44rem) minmax(0, 16rem); justify-content: space-between; gap: 4rem; }
+    .toc { grid-column: 2; grid-row: 1; position: sticky; top: calc(var(--header-h) + 1.5rem); }
+    .privacy { grid-column: 1; grid-row: 1; }
+  }
 </style>
