@@ -44,6 +44,7 @@ test('a swipe moves to the next picture on a phone', async ({ page }, info) => {
   const posters = page.locator('main a[data-lightbox]');
   const first = await posters.nth(0).getAttribute('href');
   await posters.nth(0).click();
+  await expect.poll(() => viewer(page).locator('img').evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
   const box = (await viewer(page).locator('img').boundingBox())!;
   const y = box.y + box.height / 2;
   await page.mouse.move(box.x + box.width * 0.8, y);

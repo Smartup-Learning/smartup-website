@@ -14,11 +14,11 @@ const written = items.filter(i => i.kind === 'written');
 const parentClips = store.videos('parents');
 ---
 <Base title="Testimonials" description="Students and parents on learning at Smartup, in their own words." page="testimonials">
-  <PageHero eyebrow="Testimonials" title="In their" highlight="own words" intro="Students and parents share what changed after joining Smartup." />
+  <PageHero eyebrow="Testimonials" title="Hear it from" highlight="students and parents" intro="What changed after joining Smartup, told by the people it changed for." />
   {videos.length > 0 && (
     <section class="section" aria-labelledby="student-videos">
-      <div class="container">
-        <SectionHead title="Student stories" id="student-videos" />
+      <div class="container media-split">
+        <SectionHead title="Student stories" intro="Students talk about their classes, their teachers and their results." id="student-videos" stack />
         <div class="rail tall" data-reveal="group">{videos.map(item => <VideoCard item={item} />)}</div>
       </div>
     </section>

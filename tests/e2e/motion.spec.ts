@@ -51,8 +51,9 @@ for (const path of ['/faculty', '/results']) {
     await page.goto(`http://127.0.0.1:4173${path}`);
     const groups = page.locator('[data-reveal="group"]');
     const sizes = await groups.evaluateAll(els => els.map(e => e.querySelectorAll('[data-reveal-item]').length));
-    const items = groups.nth(sizes.indexOf(Math.max(...sizes))).locator('[data-reveal-item]');
-    const middle = items.nth(Math.floor(Math.max(...sizes) / 2));
+    // Cards folded away behind "Show all" are not drawn, so the middle of the visible cards is checked.
+    const items = groups.nth(sizes.indexOf(Math.max(...sizes))).locator('[data-reveal-item]:visible');
+    const middle = items.nth(Math.floor((await items.count()) / 2));
     await middle.scrollIntoViewIfNeeded();
     await expect.poll(() => middle.evaluate(e => getComputedStyle(e).opacity), { timeout: 4000 }).toBe('1');
     await context.close();

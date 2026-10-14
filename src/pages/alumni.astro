@@ -6,6 +6,7 @@ import SectionHead from '../components/SectionHead.astro';
 import VideoCard from '../components/VideoCard.astro';
 import QuoteCard from '../components/QuoteCard.astro';
 import AlumniCard from '../components/AlumniCard.astro';
+import PeekingOwl from '../components/brand/PeekingOwl.astro';
 import { getStore } from '../lib/store';
 const store = getStore(Astro.locals);
 const settings = store.settings();
@@ -14,7 +15,7 @@ const videos = store.testimonials('alumni');
 const mail = `mailto:${settings.email}?subject=${encodeURIComponent('My Smartup alumni story')}`;
 ---
 <Base title="Alumni" description="Smartup alumni share where their journey has taken them." page="alumni">
-  <PageHero eyebrow="Alumni" title="Where Smartup" highlight="students go" intro="Our students carry Smartup with them into higher education and careers." tone="purple" />
+  <PageHero eyebrow="Alumni" title="Where Smartup" highlight="students go" intro="Our students carry Smartup with them into higher education and careers." tone="purple" image={stories[0]?.photo ? { base: stories[0].photo, alt: stories[0].photoAlt, focus: '50% 25%' } : undefined} />
   {stories.length > 0 && (
     <section class="section" aria-labelledby="alumni-stories-title">
       <div class="container">
@@ -25,8 +26,8 @@ const mail = `mailto:${settings.email}?subject=${encodeURIComponent('My Smartup 
   )}
   {videos.length > 0 && (
     <section class="section" aria-labelledby="alumni-videos-title">
-      <div class="container">
-        <SectionHead title="Alumni on video" id="alumni-videos-title" />
+      <div class="container media-split">
+        <SectionHead title="Alumni on video" intro="Former students back on the Talent Eve stage." id="alumni-videos-title" stack />
         <div class="rail tall" data-reveal="group">{videos.map(item => item.kind === 'video' ? <VideoCard item={item} /> : <QuoteCard item={item} />)}</div>
       </div>
     </section>
@@ -34,19 +35,31 @@ const mail = `mailto:${settings.email}?subject=${encodeURIComponent('My Smartup 
   {stories.length === 0 && videos.length === 0 && (
     <section class="section"><div class="container"><p class="empty">Alumni stories will appear here soon.</p></div></section>
   )}
-  <section class="section section--cream">
-    <div class="container cta" data-reveal>
-      <p class="eyebrow">Vision 2030</p>
-      <h2>500+ Smartup-mentored professionals on one stage</h2>
-      <p>{keepTogether(settings.vision?.vision2030)}</p>
-      <a class="btn btn--primary" href={mail}>Share your alumni story</a>
+  <section class="section section--cream vision-band">
+    <PeekingOwl class="vision-owl" />
+    <div class="container">
+      <div class="cta" data-reveal>
+        <p class="eyebrow">Vision 2030</p>
+        <h2>500+ Smartup-mentored professionals on one stage</h2>
+        <p>{keepTogether(settings.vision?.vision2030)}</p>
+        <a class="btn btn--primary" href={mail}>Share your alumni story</a>
+      </div>
     </div>
   </section>
 </Base>
 <style>
   .tall { grid-auto-columns: min(60%, 15rem); }
-  .stories { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); }
+  /* Cards keep one size and a short last row is centred, so no empty slot is left whatever the number of stories. */
+  .stories { --cols: 1; display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; }
+  .stories > :global(*) { flex: 0 1 calc((100% - (var(--cols) - 1) * 1.5rem) / var(--cols)); min-width: 0; }
+  @media (min-width: 600px) { .stories { --cols: 2; } }
+  @media (min-width: 900px) { .stories { --cols: 3; } }
+  @media (min-width: 1100px) { .stories { --cols: 5; } }
   .empty { font-size: var(--step-1); }
   .cta { display: grid; gap: 1rem; justify-items: start; max-width: 46rem; }
-  .cta h2 { font-size: var(--step-3); font-weight: 700; }
+  .cta h2 { font-size: var(--step-3); font-weight: 600; }
+  .vision-band { position: relative; overflow: hidden; --peek-bg: var(--white); }
+  .cta { position: relative; z-index: 1; }
+  :global(.vision-owl) { display: none; }
+  @media (min-width: 900px) { :global(.vision-owl) { display: grid; --peek-size: clamp(15rem, 8rem + 14vw, 24rem); } }
 </style>

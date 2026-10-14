@@ -68,6 +68,13 @@ a { color: inherit; }
   .rail-btn svg { width: 1.4rem; height: 1.4rem; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 }
 
+/* A heading beside a short row of videos, instead of above a half-empty row. */
+@media (min-width: 1100px) {
+  .media-split { display: grid; grid-template-columns: minmax(0, 19rem) minmax(0, 1fr); gap: 4rem; align-items: center; }
+  .media-split > .section-head { margin-bottom: 0; }
+  .media-split .rail { margin-inline: 0; padding-inline: 0; scroll-padding-inline: 0; grid-auto-columns: calc((100% - 2rem) / 3); }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .js [data-reveal]:not([data-reveal='group']):not(.is-revealed),
   .js [data-reveal='group'] [data-reveal-item]:not(.is-revealed) { opacity: 0; }

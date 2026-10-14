@@ -19,8 +19,14 @@ export function initLightbox() {
   const show = (i: number) => {
     index = (i + items.length) % items.length;
     const link = items[index];
+    const thumb = link.querySelector('img');
+    // The thumbnail's size reserves the picture's space before the large version arrives.
+    for (const side of ['width', 'height'] as const) {
+      const value = thumb?.getAttribute(side);
+      if (value) img.setAttribute(side, value); else img.removeAttribute(side);
+    }
     img.src = link.getAttribute('href')!;
-    img.alt = link.querySelector('img')?.alt ?? '';
+    img.alt = thumb?.alt ?? '';
     caption.textContent = link.dataset.caption ?? img.alt;
     const several = items.length > 1;
     prev.hidden = next.hidden = !several;

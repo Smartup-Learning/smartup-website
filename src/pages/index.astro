@@ -123,10 +123,5 @@ const description = `Smartup tuitions in Kochi and online for CBSE and State Boa
     .founders { grid-auto-flow: row; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: visible; gap: 1.75rem; }
     .alumni-stories { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; gap: 1.5rem; }
   }
-  /* Feedback: the heading sits beside the videos instead of above a half-empty row. */
-  @media (min-width: 1100px) {
-    .media-split { display: grid; grid-template-columns: minmax(0, 19rem) minmax(0, 1fr); gap: 4rem; align-items: center; }
-    .media-split :global(.section-head) { margin-bottom: 0; }
-    .media-split .rail { margin-inline: 0; padding-inline: 0; scroll-padding-inline: 0; grid-auto-columns: calc((100% - 2rem) / 3); }
-  }
+
 </style>
