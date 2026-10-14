@@ -39,8 +39,8 @@ for (const s of sources) {
     const posterJpg = path.join('content-source', `${s.name}-poster.jpg`);
     const poster = path.join(videoDir, `${s.name}-poster.webp`);
     if (force || !(await exists(out))) {
-      // Portrait clips: 480px wide, H.264 for every browser, faststart so playback begins before the download ends.
-      execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', input, '-vf', 'scale=480:-2', '-c:v', 'libx264', '-crf', '29', '-preset', 'slow', '-profile:v', 'high', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '96k', '-movflags', '+faststart', out]);
+      // Portrait clips: 720px wide so they stay sharp in full screen, H.264 for every browser, faststart so playback begins before the download ends.
+      execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', input, '-vf', 'scale=720:-2', '-c:v', 'libx264', '-crf', '30', '-preset', 'slow', '-profile:v', 'high', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '96k', '-movflags', '+faststart', out]);
     }
     if (force || !(await exists(poster))) {
       execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-ss', '2', '-i', input, '-frames:v', '1', '-vf', 'scale=360:-2', posterJpg]);

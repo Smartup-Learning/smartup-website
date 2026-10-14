@@ -90,3 +90,11 @@ test('every Short on the site has a sharp portrait cover built from YouTube', ()
   const covers = new Set(sources.filter(s => s.from === 'youtube').map(s => s.id));
   for (const v of content.videos.filter(v => v.format === 'portrait')) assert.ok(covers.has(v.youtubeId), `${v.title} has no cover`);
 });
+
+test('testimonial videos are at least 720 pixels wide, so they stay sharp in full screen', async () => {
+  const { execFileSync } = await import('node:child_process');
+  for (const s of sources.filter(s => s.kind === 'video')) {
+    const width = parseInt(execFileSync('ffprobe', ['-v', 'error', '-select_streams', 'v:0', '-show_entries', 'stream=width', '-of', 'csv=p=0', `public/seed/video/${s.name}.mp4`]).toString(), 10);
+    assert.ok(width >= 720, `${s.name} is ${width}px wide`);
+  }
+});
