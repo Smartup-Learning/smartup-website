@@ -39,6 +39,14 @@ export function loadSeed(file = path.resolve('data-seed/content.json')) {
 let cachedSeedSettings;
 /** The seed's settings: defaults for any key missing from the database. */
 export const seedSettings = () => (cachedSeedSettings ??= loadSeed().settings ?? {});
+let cachedYoutubeCovers;
+// Portrait covers built from YouTube thumbnails (media-sources entries with from: "youtube"), by video ID.
+const youtubeCovers = () => (cachedYoutubeCovers ??= (() => {
+  try {
+    const sources = JSON.parse(readFileSync(path.resolve('data-seed/media-sources.json'), 'utf8'));
+    return new Map(sources.filter(s => s.from === 'youtube').map(s => [s.id, `/seed/img/${s.name}`]));
+  } catch { return new Map(); }
+})());
 let cachedSeedSizes;
 // Sizes of the built seed images and video posters, written by scripts/media-sizes.mjs.
 const seedSizes = () => (cachedSeedSizes ??= (() => {
@@ -158,6 +166,12 @@ export class ContentStore {
         throw error;
       }
     }
+  }
+
+  /** The built cover for a YouTube video, when one was made from its own thumbnail; staff covers take priority. */
+  youtubeCover(id) {
+    const cover = youtubeCovers().get(id);
+    return cover && this.mediaSize(cover) ? cover : '';
   }
 
   /** Real width and height of a seed image, video poster or staff upload, or null when unknown. */

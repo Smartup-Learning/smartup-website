@@ -512,3 +512,15 @@ test('"Ask about" links on the home page also open the demo form with that progr
   t.after(site.close);
   assert.match(await site.html('/'), /href="\/demo\?programme=Smartup%20Pro"/);
 });
+
+test('Shorts show their sharp portrait cover, and a staff cover still wins', async t => {
+  const site = await start();
+  t.after(site.close);
+  const videos = await site.html('/videos');
+  const short = videos.split('data-yt="Aypb_y7umfo"')[1].split('</figure>')[0];
+  assert.match(short, /srcset="\/seed\/img\/yt-cover-[a-z0-9-]+-480\.webp 480w/);
+  assert.doesNotMatch(short, /hqdefault/);
+  const custom = await start(content => content.db.prepare("UPDATE videos SET cover = '/seed/img/alumni-dylan' WHERE youtube_id = 'Aypb_y7umfo'").run());
+  t.after(custom.close);
+  assert.match((await custom.html('/videos')).split('data-yt="Aypb_y7umfo"')[1].split('</figure>')[0], /alumni-dylan-480\.webp/);
+});

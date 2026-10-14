@@ -6,6 +6,9 @@ export const srcset = base => WIDTHS.map(w => `${base}-${w}.webp ${w}w`).join(',
 
 export const driveUrl = id => `https://drive.google.com/uc?export=download&id=${encodeURIComponent(id)}`;
 
+// YouTube's full-size thumbnail in the video's own shape; for Shorts it is portrait.
+export const youtubeThumbUrl = id => `https://i.ytimg.com/vi/${encodeURIComponent(id)}/oardefault.jpg`;
+
 export function cropBox(width, height, crop) {
   return { left: Math.round(crop.x * width), top: Math.round(crop.y * height), width: Math.round(crop.w * width), height: Math.round(crop.h * height) };
 }
@@ -19,7 +22,8 @@ export function validateSources(list) {
     if (!['image', 'video'].includes(s.kind)) throw new Error(`${s.name}: kind must be image or video`);
     if (s.from === 'drive' && !s.id) throw new Error(`${s.name}: drive source needs an id`);
     if (s.from === 'local' && !s.path) throw new Error(`${s.name}: local source needs a path`);
-    if (!['drive', 'local'].includes(s.from)) throw new Error(`${s.name}: from must be drive or local`);
+    if (s.from === 'youtube' && !/^[\w-]{11}$/.test(s.id ?? '')) throw new Error(`${s.name}: a YouTube source needs an 11-character video ID`);
+    if (!['drive', 'local', 'youtube'].includes(s.from)) throw new Error(`${s.name}: from must be drive, local or youtube`);
     // For photos whose pixels are stored sideways without an orientation tag.
     if (s.rotate !== undefined && ![90, 180, 270].includes(s.rotate)) throw new Error(`${s.name}: rotate must be 90, 180 or 270`);
     if (s.crop) {

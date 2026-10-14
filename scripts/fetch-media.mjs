@@ -2,7 +2,7 @@ import { mkdir, copyFile, writeFile, access } from 'node:fs/promises';
 import { readFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import path from 'node:path';
-import { driveUrl, validateSources } from '../src/lib/media.mjs';
+import { driveUrl, youtubeThumbUrl, validateSources } from '../src/lib/media.mjs';
 
 const sources = JSON.parse(readFileSync('data-seed/media-sources.json', 'utf8'));
 validateSources(sources);
@@ -11,12 +11,16 @@ await mkdir(outDir, { recursive: true });
 const exists = file => access(file).then(() => true, () => false);
 
 for (const s of sources) {
-  const ext = s.from === 'local' ? path.extname(s.path).toLowerCase() : s.ext;
+  const ext = s.from === 'local' ? path.extname(s.path).toLowerCase() : s.from === 'youtube' ? '.jpg' : s.ext;
   const target = path.join(outDir, s.name + ext);
   if (!(await exists(target))) {
     if (s.from === 'local') {
       if (!(await exists(s.path))) throw new Error(`${s.name}: missing local file ${s.path}. v1 kept client originals in tmp/research-content; restore it before building media.`);
       await copyFile(s.path, target);
+    } else if (s.from === 'youtube') {
+      const res = await fetch(youtubeThumbUrl(s.id));
+      if (!res.ok) throw new Error(`${s.name}: YouTube has no portrait thumbnail (${res.status}).`);
+      await writeFile(target, Buffer.from(await res.arrayBuffer()));
     } else {
       const res = await fetch(driveUrl(s.id));
       const type = res.headers.get('content-type') ?? '';

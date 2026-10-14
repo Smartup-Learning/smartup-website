@@ -80,3 +80,13 @@ test('no unused font weight is shipped', async () => {
   assert.equal(exists('public/fonts/rubik-800.woff2'), false);
   assert.doesNotMatch(readFileSync('src/styles/global.css', 'utf8'), /rubik-800/);
 });
+
+test('a source can be a YouTube video\'s portrait thumbnail, named by its video ID', () => {
+  assert.doesNotThrow(() => validateSources([{ name: 'yt-cover-a', kind: 'image', from: 'youtube', id: 'Aypb_y7umfo' }]));
+  assert.throws(() => validateSources([{ name: 'yt-cover-a', kind: 'image', from: 'youtube', id: 'not an id' }]), /YouTube/);
+});
+
+test('every Short on the site has a sharp portrait cover built from YouTube', () => {
+  const covers = new Set(sources.filter(s => s.from === 'youtube').map(s => s.id));
+  for (const v of content.videos.filter(v => v.format === 'portrait')) assert.ok(covers.has(v.youtubeId), `${v.title} has no cover`);
+});

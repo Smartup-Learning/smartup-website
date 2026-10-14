@@ -16,7 +16,7 @@ await mkdir(videoDir, { recursive: true });
 let bytes = 0;
 
 const inputFor = s => {
-  const ext = s.from === 'local' ? path.extname(s.path).toLowerCase() : s.ext;
+  const ext = s.from === 'local' ? path.extname(s.path).toLowerCase() : s.from === 'youtube' ? '.jpg' : s.ext;
   return path.join('content-source', s.name + (ext === '.heic' ? '.jpg' : ext));
 };
 

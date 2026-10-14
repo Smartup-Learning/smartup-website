@@ -1,9 +1,12 @@
 ---
 import Picture from './Picture.astro';
 import { keepTogether } from '../lib/text.mjs';
+import { getStore } from '../lib/store';
 // `caption` replaces the visible caption only; the player and screen readers keep the full title.
 interface Props { id: string; title: string; format?: 'landscape' | 'portrait'; cover?: string; caption?: string }
-const { id, title, format = 'landscape', cover, caption } = Astro.props;
+const { id, title, format = 'landscape', caption } = Astro.props;
+// A staff cover first, then a sharp cover built from YouTube's own portrait thumbnail, then YouTube's small picture.
+const cover = Astro.props.cover || getStore(Astro.locals).youtubeCover(id);
 const ratio = format === 'portrait' ? 9 / 16 : 16 / 9;
 ---
 <figure class:list={['yt', `yt--${format}`]} data-yt={id} data-format={format} data-reveal-item style={`--ratio: ${ratio.toFixed(4)}`}>

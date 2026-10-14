@@ -143,5 +143,14 @@
   {"name": "alumni-rusfidha", "kind": "image", "from": "local", "path": "../Alumini/Rusfidha - BDS , Annoor Dental college  ( Final year ) YEAR-2020.jpeg"},
   {"name": "alumni-dylan", "kind": "image", "from": "local", "path": "../Alumini/Dylan - Marine Engineer Year -2020-2021.jpeg"},
   {"name": "alumni-ameen", "kind": "image", "from": "local", "path": "../Alumini/Ameen  Lecturer ,Holygrace Polytechnic college YEAR-2020-2021.jpeg"},
-  {"name": "alumni-zamreen", "kind": "image", "from": "local", "path": "../Alumini/Zamreen  Freelance Safety consultant YEAR-2018-2019.jpeg"}
+  {"name": "alumni-zamreen", "kind": "image", "from": "local", "path": "../Alumini/Zamreen  Freelance Safety consultant YEAR-2018-2019.jpeg"},
+  {"name": "yt-cover-1", "kind": "image", "from": "youtube", "id": "Aypb_y7umfo"},
+  {"name": "yt-cover-2", "kind": "image", "from": "youtube", "id": "c4ktcuFK8Ik"},
+  {"name": "yt-cover-3", "kind": "image", "from": "youtube", "id": "IN6jKzWjz-0"},
+  {"name": "yt-cover-4", "kind": "image", "from": "youtube", "id": "aJ8xJ3GdIVw"},
+  {"name": "yt-cover-5", "kind": "image", "from": "youtube", "id": "qY8-oiF6U8g"},
+  {"name": "yt-cover-6", "kind": "image", "from": "youtube", "id": "xwVKwCIg6ek"},
+  {"name": "yt-cover-7", "kind": "image", "from": "youtube", "id": "HNCb1u9fAbQ"},
+  {"name": "yt-cover-8", "kind": "image", "from": "youtube", "id": "cUi0yBbeOmg"},
+  {"name": "yt-cover-9", "kind": "image", "from": "youtube", "id": "fhqdKP_9anA"}
 ]
