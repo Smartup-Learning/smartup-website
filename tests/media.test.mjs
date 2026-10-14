@@ -55,3 +55,16 @@ test('crop boxes are whole pixels inside the image', async () => {
   assert.deepEqual(cropBox(329, 424, { x: 0, y: 0, w: 1, h: 0.86 }), { left: 0, top: 0, width: 329, height: 365 });
   assert.throws(() => validateSources([{ name: 'a', kind: 'image', from: 'drive', id: 'x', crop: { x: 0.5, y: 0, w: 0.7, h: 1 } }]), /crop/);
 });
+
+test('every seed image and video poster has its real size recorded', async () => {
+  const sharp = (await import('sharp')).default;
+  const sizes = JSON.parse(readFileSync('data-seed/media-sizes.json', 'utf8'));
+  for (const s of sources) {
+    const key = s.kind === 'image' ? `/seed/img/${s.name}` : `/seed/video/${s.name}-poster`;
+    const file = s.kind === 'image' ? `public/seed/img/${s.name}-1600.webp` : `public/seed/video/${s.name}-poster.webp`;
+    const size = sizes[key];
+    assert.ok(Array.isArray(size) && size.every(n => Number.isInteger(n) && n > 0), `${key} has no size`);
+    const meta = await sharp(file).metadata();
+    assert.ok(Math.abs(size[0] / size[1] - meta.width / meta.height) < 0.01, `${key} size does not match the built file`);
+  }
+});

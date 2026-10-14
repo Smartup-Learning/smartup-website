@@ -410,3 +410,13 @@ test('the Alumni page shows each former student with their batch and where they 
   assert.match(page, /Batch of 2018–19 · Freelance safety consultant/);
   assert.match(page, /alt="Mufeedha in a white coat at her medical college"/);
 });
+
+test('responsive images carry their width and height so the page does not jump while loading', async t => {
+  const site = await start();
+  t.after(site.close);
+  for (const path of ['/', '/results', '/story', '/life', '/alumni', '/founders', '/faculty']) {
+    const images = [...(await site.html(path)).matchAll(/<img\b[^>]*\ssrcset="[^"]*"[^>]*>/g)].map(m => m[0]);
+    assert.ok(images.length > 0, path);
+    for (const img of images) assert.match(img, /\swidth="\d+"[^>]*\sheight="\d+"|\sheight="\d+"[^>]*\swidth="\d+"/, `${path}: ${img.slice(0, 120)}`);
+  }
+});

@@ -4,6 +4,7 @@ import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import sharp from 'sharp';
 import { variantFiles, validateSources, cropBox } from '../src/lib/media.mjs';
+import { measureSeedMedia } from './media-sizes.mjs';
 
 const sources = JSON.parse(readFileSync('data-seed/media-sources.json', 'utf8'));
 validateSources(sources);
@@ -50,3 +51,4 @@ for (const s of sources) {
   console.log('built', s.name);
 }
 console.log(`public/seed holds ${(bytes / 1048576).toFixed(1)} MB`);
+await measureSeedMedia();

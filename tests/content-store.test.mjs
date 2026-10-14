@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
+import { readFileSync } from 'node:fs';
 import { ContentStore, normalizePhone, formatPhone } from '../server/content-store.mjs';
 
 const seeded = () => { const s = new ContentStore(new DatabaseSync(':memory:')); s.applySeed(); return s; };
@@ -202,4 +203,20 @@ test('the client\'s alumni are seeded in order with their photos', () => {
     assert.ok(a.nowRole.length > 0, a.name);
     assert.equal(a.isSample, false);
   }
+});
+
+test('media sizes come from the seed list and from staff uploads', () => {
+  const store = new ContentStore(new DatabaseSync(':memory:'));
+  const sizes = JSON.parse(readFileSync('data-seed/media-sizes.json', 'utf8'));
+  const [width, height] = sizes['/seed/img/alumni-mufeedha'];
+  assert.deepEqual(store.mediaSize('/seed/img/alumni-mufeedha'), { width, height });
+  assert.deepEqual(store.mediaSize('/seed/img/alumni-mufeedha-960.webp'), { width, height });
+  const poster = Object.keys(sizes).find(key => key.startsWith('/seed/video/'));
+  assert.deepEqual(store.mediaSize(`${poster}.webp`), { width: sizes[poster][0], height: sizes[poster][1] });
+  assert.equal(store.mediaSize('/media/u-missing'), null);
+  store.db.exec('CREATE TABLE IF NOT EXISTS media(id INTEGER PRIMARY KEY, name TEXT NOT NULL UNIQUE, alt TEXT NOT NULL, width INTEGER NOT NULL, height INTEGER NOT NULL, created_at TEXT NOT NULL)');
+  store.db.prepare("INSERT INTO media(name, alt, width, height, created_at) VALUES('u-abc', 'x', 1200, 800, 'now')").run();
+  assert.deepEqual(store.mediaSize('/media/u-abc'), { width: 1200, height: 800 });
+  assert.equal(store.mediaSize('/seed/img/not-a-real-image'), null);
+  assert.equal(store.mediaSize(''), null);
 });

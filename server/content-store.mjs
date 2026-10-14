@@ -39,6 +39,11 @@ export function loadSeed(file = path.resolve('data-seed/content.json')) {
 let cachedSeedSettings;
 /** The seed's settings: defaults for any key missing from the database. */
 export const seedSettings = () => (cachedSeedSettings ??= loadSeed().settings ?? {});
+let cachedSeedSizes;
+// Sizes of the built seed images and video posters, written by scripts/media-sizes.mjs.
+const seedSizes = () => (cachedSeedSizes ??= (() => {
+  try { return JSON.parse(readFileSync(path.resolve('data-seed/media-sizes.json'), 'utf8')); } catch { return {}; }
+})());
 
 function phoneOrNull(raw) {
   if (typeof raw !== 'string') return null;
@@ -152,6 +157,22 @@ export class ContentStore {
         throw error;
       }
     }
+  }
+
+  /** Real width and height of a seed image, video poster or staff upload, or null when unknown. */
+  mediaSize(src) {
+    const base = String(src ?? '').replace(/(-(480|960|1600))?\.webp$/, '');
+    if (base.startsWith('/seed/')) {
+      const size = seedSizes()[base];
+      return size ? { width: size[0], height: size[1] } : null;
+    }
+    const upload = /^\/media\/([\w-]+)$/.exec(base);
+    if (!upload) return null;
+    // The media table belongs to the media library, which may not have created it yet.
+    try {
+      const row = this.db.prepare('SELECT width, height FROM media WHERE name = ?').get(upload[1]);
+      return row ? { width: row.width, height: row.height } : null;
+    } catch { return null; }
   }
 
   settings() {
