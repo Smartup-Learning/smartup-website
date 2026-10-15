@@ -73,6 +73,60 @@ test.describe('signed in', () => {
     await deleteOpenItem();
   });
 
+  test('a fee saved on a programme shows on Courses, then is cleared again', async () => {
+    await page.goto('/admin#/content/programmes');
+    await openRow('Smartup Pro');
+    const fee = page.getByLabel(/^Fee/);
+    await fee.fill('From ₹3,000 a month (E2E)');
+    await page.getByRole('button', { name: 'Save', exact: true }).click();
+    await expect(page.locator('#admin-toast')).toContainText('Saved');
+    const courses = await page.context().newPage();
+    await courses.goto('/courses');
+    await expect(courses.getByText('From ₹3,000 a month (E2E)').first()).toBeVisible();
+    await courses.close();
+    await openRow('Smartup Pro');
+    await page.getByLabel(/^Fee/).fill('');
+    await page.getByRole('button', { name: 'Save', exact: true }).click();
+    // The list returns once the save is done.
+    await expect(page.locator('#admin-main h1')).toHaveText('Programmes and fees');
+  });
+
+  test('moving to another screen while a save is still running keeps the new screen', async () => {
+    await page.goto('/admin#/content/faqs');
+    await page.locator('.row-main').first().click();
+    let release = () => {};
+    const held = new Promise<void>(resolve => { release = resolve; });
+    await page.route('**/api/admin/content/faqs/*', async route => { await held; await route.continue(); });
+    await page.getByRole('button', { name: 'Save', exact: true }).click();
+    await page.goto('/admin#/settings');
+    await expect(page.locator('#admin-main h1')).toHaveText('Settings');
+    // After the save, the admin reloads the FAQ list; once that answer is in, the screen must still be Settings.
+    const reloaded = page.waitForResponse(r => r.request().method() === 'GET' && r.url().endsWith('/api/admin/content/faqs'));
+    release();
+    await reloaded;
+    await page.waitForTimeout(300);
+    await expect(page.locator('#admin-main h1')).toHaveText('Settings');
+    await page.unroute('**/api/admin/content/faqs/*');
+  });
+
+  test('changing the classes taught in Settings changes the demo form, then it is restored', async () => {
+    await page.goto('/admin#/settings');
+    const to = page.getByLabel('To class', { exact: true });
+    const saveSettings = async () => {
+      const saved = page.waitForResponse(r => r.request().method() === 'PUT' && r.url().endsWith('/api/admin/settings'));
+      await page.getByRole('button', { name: 'Save settings' }).click();
+      expect((await saved).status()).toBe(200);
+    };
+    await to.fill('10');
+    await saveSettings();
+    const demo = await page.context().newPage();
+    await demo.goto('/demo');
+    await expect(demo.getByLabel('Class', { exact: true }).locator('option', { hasText: 'Plus One' })).toHaveCount(0);
+    await demo.close();
+    await to.fill('12');
+    await saveSettings();
+  });
+
   test('the admin fits a 360px phone without sideways scrolling', async () => {
     const original = page.viewportSize();
     await page.setViewportSize({ width: 360, height: 740 });

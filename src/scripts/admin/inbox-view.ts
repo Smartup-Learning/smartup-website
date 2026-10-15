@@ -1,5 +1,5 @@
 import { api, ApiError } from './api';
-import { h, toast, formatPhone } from './dom';
+import { h, toast, formatPhone, isShowing } from './dom';
 import type { Schema } from './fields';
 
 type Entry = { id: number; created_at: string; status: string; notes: string; faq_id?: number | null; [field: string]: unknown };
@@ -93,6 +93,7 @@ export async function inboxView(main: HTMLElement, kind: string, schema: Schema,
   };
 
   const draw = () => {
+    if (!isShowing('inbox', kind)) return;
     const shown = entries.filter(entry => filter === 'all' || entry.status === filter);
     const count = (value: string) => (value === 'all' ? entries.length : entries.filter(e => e.status === value).length);
     main.replaceChildren(

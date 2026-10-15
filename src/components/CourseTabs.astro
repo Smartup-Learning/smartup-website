@@ -1,24 +1,28 @@
 ---
-import { courseBoards } from '../data/courses';
 import { keepTogether } from '../lib/text.mjs';
-interface Props { centreCount: number; hours: string }
-const { centreCount, hours } = Astro.props;
+import { BOARDS, askLabel, demoLink, isRatio, type Programme } from '../lib/courses';
+interface Props { programmes: Programme[]; centreCount: number; hours: string }
+const { programmes, centreCount, hours } = Astro.props;
+const boards = BOARDS.map(b => ({ ...b, programmes: programmes.filter(p => p.board === b.id) })).filter(b => b.programmes.length > 0);
 ---
 <div class="courses" data-tabs>
-  <div class="tablist" role="tablist" aria-label="Board" hidden>
-    {courseBoards.map(board => <button type="button" role="tab" id={`tab-${board.id}`} aria-controls={`panel-${board.id}`} aria-selected="false" tabindex="-1">{board.label}</button>)}
-  </div>
-  {courseBoards.map(board => (
-    <div class="panel" id={`panel-${board.id}`} role="tabpanel" aria-labelledby={`tab-${board.id}`}>
+  {boards.length > 1 && (
+    <div class="tablist" role="tablist" aria-label="Board" hidden>
+      {boards.map(board => <button type="button" role="tab" id={`tab-${board.id}`} aria-controls={`panel-${board.id}`} aria-selected="false" tabindex="-1">{board.label}</button>)}
+    </div>
+  )}
+  {boards.map(board => (
+    <div class="panel" id={`panel-${board.id}`} role={boards.length > 1 ? 'tabpanel' : undefined} aria-labelledby={boards.length > 1 ? `tab-${board.id}` : undefined}>
       <h3 class="board-heading">{board.heading}</h3>
       <div class="programmes rail">
         {board.programmes.map(p => (
           <article class="programme">
-            <p class="eyebrow">{p.eyebrow}</p>
-            <p class:list={['ratio', { 'ratio--word': !/^\d+:\d+$/.test(p.ratio) }]}>{p.ratio}</p>
+            {p.tagline && <p class="eyebrow">{p.tagline}</p>}
+            <p class:list={['ratio', { 'ratio--word': !isRatio(p.groupSize) }]}>{p.groupSize}</p>
             <h4>{p.name}</h4>
-            <ul>{p.points.map(point => <li>{point}</li>)}</ul>
-            <a class="link-arrow" href={`/demo?programme=${encodeURIComponent(p.name)}`}>{p.ask}</a>
+            {p.fee && <p class="fee">{keepTogether(p.fee)}</p>}
+            <ul>{p.keyPoints.map(point => <li>{point}</li>)}</ul>
+            <a class="link-arrow" href={demoLink(p.name)}>{askLabel(p.name)}</a>
           </article>
         ))}
       </div>
@@ -43,7 +47,10 @@ const { centreCount, hours } = Astro.props;
   ul { padding-left: 1.1rem; display: grid; gap: 0.3rem; color: var(--ink-soft); }
   .ratio--word { font-size: var(--step-3); padding-block: 0.3rem; }
   .where { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 2rem; margin-top: 2rem; padding: 1rem 1.5rem; border-radius: var(--radius); background: var(--white); }
-  /* Links sit at the foot of every card, level across the row. */
-  .programme { grid-template-rows: auto auto auto 1fr auto; }
+  /* Links sit at the foot of every card, level across the row, whichever optional lines a card has. */
+  .programme { display: flex; flex-direction: column; }
+  .programme .link-arrow { margin-top: auto; }
+  .programme ul { margin-bottom: 0.5rem; }
+  .fee { font-weight: 600; color: var(--purple); }
   @media (min-width: 900px) { .programmes { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; } }
 </style>

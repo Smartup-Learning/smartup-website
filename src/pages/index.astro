@@ -13,6 +13,7 @@ import DemoBand from '../components/DemoBand.astro';
 import { getStore } from '../lib/store';
 import { organisationJsonLd } from '../lib/structured-data';
 import { siteOrigin } from '../lib/site';
+import { classesText } from '../../server/forms.mjs';
 const store = getStore(Astro.locals);
 const settings = store.settings();
 const stats = store.stats();
@@ -24,7 +25,7 @@ const alumni = store.testimonials('alumni');
 const alumniStories = store.alumni().slice(0, 3);
 const jobs = store.jobs();
 const centres = store.centres();
-const description = `Smartup tuitions in Kochi and online for CBSE and State Board students, classes 8 to +2. ${stats.map(s => `${s.value} ${s.label.toLowerCase()}`).join(', ')}.`;
+const description = `Smartup tuitions in Kochi and online for CBSE and State Board students, ${classesText(settings.classRange)}. ${stats.map(s => `${s.value} ${s.label.toLowerCase()}`).join(', ')}.`;
 ---
 <Base description={description} page="home" structuredData={organisationJsonLd(settings, centres, siteOrigin(Astro.locals, Astro.url))}>
   <Hero headline={settings.heroHeadline} highlight={settings.heroHighlight} description={settings.heroDescription} image={settings.heroImage || undefined} imageAlt={settings.heroImageAlt} stats={stats} />
@@ -96,7 +97,7 @@ const description = `Smartup tuitions in Kochi and online for CBSE and State Boa
   <section id="courses" class="section section--cream" aria-labelledby="courses-title">
     <div class="container">
       <SectionHead title="Programmes for CBSE and State Board" id="courses-title" link={{ href: '/courses', label: 'All course details' }} />
-      <CourseTabs centreCount={centres.length} hours={settings.hours} />
+      <CourseTabs programmes={store.programmes()} centreCount={centres.length} hours={settings.hours} />
     </div>
   </section>
 

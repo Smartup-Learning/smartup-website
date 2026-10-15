@@ -142,10 +142,10 @@ test('posts come newest first and unpublished posts are hidden', () => {
   assert.deepEqual(store.posts(), []);
 });
 
-test('company settings and extra phones are available', () => {
+test('company settings and labelled office phones are available', () => {
   const s = seeded().settings();
   assert.equal(s.legalName, 'Smartup Eduventures Private Limited');
-  assert.deepEqual(s.phones, ['+918891910919', '+917356072079', '+917994436060']);
+  assert.deepEqual(s.contactPhones.map(p => p.phone), ['+917356072079', '+917994436060']);
   assert.ok(s.social.some(x => x.network === 'linkedin'));
   assert.equal(s.googleReviewsUrl, null);
 });
@@ -244,4 +244,34 @@ test('a database seeded with EDX before JWALA is put newest first once, and a la
   store.db.prepare("UPDATE events SET sort = -1 WHERE title LIKE 'EDX%'").run();
   store.applySeed();
   assert.deepEqual(order(), ['EDX:', 'JWAL']);
+});
+
+test('programmes are seeded in order with their board, key points, features and details', () => {
+  const programmes = seeded().programmes();
+  assert.deepEqual(programmes.map(p => p.name), ['Smartup Pro', 'Smartup Trio', 'Smartup Power', 'State Board programme']);
+  const [pro] = programmes;
+  assert.equal(pro.board, 'cbse');
+  assert.equal(pro.groupSize, '1:1');
+  assert.ok(pro.keyPoints.length >= 2 && pro.features.includes('Competency-based learning'));
+  assert.equal(pro.mentorRatio, '1 mentor : 10 students');
+  assert.equal(pro.parentMeetings, 'Monthly');
+  assert.equal(pro.fee, '');
+});
+
+test('centres have an address, empty until staff add one', () => {
+  assert.ok(seeded().centres().every(c => c.address === ''));
+});
+
+test('office phone numbers carry labels, and an older database keeps the numbers it had', () => {
+  assert.deepEqual(seeded().settings().contactPhones, [{ label: 'Office', phone: '+917356072079' }, { label: 'Office', phone: '+917994436060' }]);
+  const older = new ContentStore(new DatabaseSync(':memory:'));
+  older.db.exec("CREATE TABLE IF NOT EXISTS settings(key TEXT PRIMARY KEY, value TEXT NOT NULL)");
+  older.db.prepare('INSERT INTO settings(key, value) VALUES(?, ?)').run('phone', JSON.stringify('+918891910919'));
+  older.db.prepare('INSERT INTO settings(key, value) VALUES(?, ?)').run('phones', JSON.stringify(['+918891910919', '+919895085731']));
+  older.applySeed();
+  assert.deepEqual(older.settings().contactPhones, [{ label: 'Office', phone: '+919895085731' }]);
+});
+
+test('the classes Smartup teaches default to Class 8 to Plus Two', () => {
+  assert.deepEqual(seeded().settings().classRange, { from: 8, to: 12 });
 });

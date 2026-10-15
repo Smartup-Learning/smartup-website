@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS events(id INTEGER PRIMARY KEY, category TEXT NOT NULL
 CREATE TABLE IF NOT EXISTS videos(id INTEGER PRIMARY KEY, youtube_id TEXT NOT NULL, title TEXT NOT NULL, category TEXT NOT NULL, format TEXT NOT NULL DEFAULT 'landscape' CHECK(format IN ('landscape','portrait')), sort INTEGER NOT NULL DEFAULT 0, published INTEGER NOT NULL DEFAULT 1);
 CREATE TABLE IF NOT EXISTS posts(id INTEGER PRIMARY KEY, slug TEXT NOT NULL UNIQUE, title TEXT NOT NULL, category TEXT NOT NULL, excerpt TEXT NOT NULL DEFAULT '', body TEXT NOT NULL, author TEXT NOT NULL DEFAULT 'Smartup Academic Team', published_at TEXT NOT NULL, published INTEGER NOT NULL DEFAULT 1);
 CREATE TABLE IF NOT EXISTS faqs(id INTEGER PRIMARY KEY, category TEXT NOT NULL, question TEXT NOT NULL, answer TEXT NOT NULL, sort INTEGER NOT NULL DEFAULT 0, published INTEGER NOT NULL DEFAULT 1);
+CREATE TABLE IF NOT EXISTS programmes(id INTEGER PRIMARY KEY, board TEXT NOT NULL, name TEXT NOT NULL, tagline TEXT NOT NULL DEFAULT '', group_size TEXT NOT NULL DEFAULT '', key_points TEXT NOT NULL DEFAULT '[]', features TEXT NOT NULL DEFAULT '[]', fee TEXT NOT NULL DEFAULT '', mentor_ratio TEXT NOT NULL DEFAULT '', parent_meetings TEXT NOT NULL DEFAULT '', sort INTEGER NOT NULL DEFAULT 0, published INTEGER NOT NULL DEFAULT 1);
 CREATE TABLE IF NOT EXISTS alumni(id INTEGER PRIMARY KEY, name TEXT NOT NULL, batch TEXT NOT NULL DEFAULT '', now_role TEXT NOT NULL DEFAULT '', story TEXT NOT NULL DEFAULT '', achievements TEXT NOT NULL DEFAULT '', photo TEXT NOT NULL DEFAULT '', photo_alt TEXT NOT NULL DEFAULT '', is_sample INTEGER NOT NULL DEFAULT 0, sort INTEGER NOT NULL DEFAULT 0, published INTEGER NOT NULL DEFAULT 1);`;
 
 export function normalizePhone(raw) {
@@ -93,8 +94,12 @@ const SECTIONS = {
     rows.forEach((r, i) => put.run(r.title, r.type, r.location ?? '', i));
   },
   centres(db, rows) {
-    const put = db.prepare('INSERT INTO centres(name, phone, map_url, hours, sort) VALUES(?, ?, ?, ?, ?)');
-    rows.forEach((r, i) => put.run(r.name, normalizePhone(r.phone), r.mapUrl, r.hours, i));
+    const put = db.prepare('INSERT INTO centres(name, phone, map_url, hours, address, sort) VALUES(?, ?, ?, ?, ?, ?)');
+    rows.forEach((r, i) => put.run(r.name, normalizePhone(r.phone), r.mapUrl, r.hours, r.address ?? '', i));
+  },
+  programmes(db, rows) {
+    const put = db.prepare('INSERT INTO programmes(board, name, tagline, group_size, key_points, features, fee, mentor_ratio, parent_meetings, sort) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    rows.forEach((r, i) => put.run(r.board, r.name, r.tagline ?? '', r.groupSize ?? '', JSON.stringify(r.keyPoints ?? []), JSON.stringify(r.features ?? []), r.fee ?? '', r.mentorRatio ?? '', r.parentMeetings ?? '', i));
   },
   faculty(db, rows) {
     const put = db.prepare('INSERT INTO faculty(name, role, team, qualification, note, photo, sort) VALUES(?, ?, ?, ?, ?, ?, ?)');
@@ -148,6 +153,7 @@ const ADDED_COLUMNS = [
   ['testimonials', 'is_sample', 'INTEGER NOT NULL DEFAULT 0'],
   ['testimonials', 'image', "TEXT NOT NULL DEFAULT ''"],
   ['videos', 'cover', "TEXT NOT NULL DEFAULT ''"],
+  ['centres', 'address', "TEXT NOT NULL DEFAULT ''"],
 ];
 
 export class ContentStore {
@@ -161,6 +167,14 @@ export class ContentStore {
   }
 
   applySeed(data = loadSeed()) {
+    // Office numbers used to be an unlabelled list ("phones"); a database that has one keeps its numbers, labelled "Office".
+    const storedSetting = key => { const row = this.db.prepare('SELECT value FROM settings WHERE key = ?').get(key); return row ? JSON.parse(row.value) : undefined; };
+    const oldPhones = storedSetting('phones');
+    if (Array.isArray(oldPhones) && storedSetting('contactPhones') === undefined) {
+      const main = phoneOrNull(storedSetting('phone'));
+      const contactPhones = oldPhones.map(phoneOrNull).filter(p => p && p !== main).map(phone => ({ label: 'Office', phone }));
+      this.db.prepare('INSERT INTO settings(key, value) VALUES(?, ?)').run('contactPhones', JSON.stringify(contactPhones));
+    }
     // Settings are added key by key on every start, so keys introduced later reach existing databases; edited values are kept.
     if (data.settings) {
       const put = this.db.prepare('INSERT OR IGNORE INTO settings(key, value) VALUES(?, ?)');
@@ -223,7 +237,9 @@ export class ContentStore {
     const stored = Object.fromEntries(this.db.prepare('SELECT key, value FROM settings').all().map(r => [r.key, JSON.parse(r.value)]));
     // Seed values stand in for any key missing at runtime, so one deleted setting cannot break every page.
     const settings = { ...seedSettings(), ...stored };
-    return { ...settings, phone: phoneOrNull(settings.phone), whatsapp: phoneOrNull(settings.whatsapp), phones: (settings.phones ?? []).map(phoneOrNull).filter(Boolean) };
+    const contactPhones = (Array.isArray(settings.contactPhones) ? settings.contactPhones : [])
+      .map(p => ({ label: String(p?.label ?? '').trim() || 'Office', phone: phoneOrNull(p?.phone) })).filter(p => p.phone);
+    return { ...settings, phone: phoneOrNull(settings.phone), whatsapp: phoneOrNull(settings.whatsapp), contactPhones };
   }
 
   stats() {
@@ -292,7 +308,14 @@ export class ContentStore {
   }
 
   centres() {
-    return this.db.prepare('SELECT name, phone, map_url AS mapUrl, hours FROM centres WHERE published = 1 ORDER BY sort, id').all();
+    return this.db.prepare('SELECT name, phone, map_url AS mapUrl, hours, address FROM centres WHERE published = 1 ORDER BY sort, id').all();
+  }
+
+  /** Published programmes in staff order; key points and features are lists. */
+  programmes() {
+    const list = text => { try { const v = JSON.parse(text); return Array.isArray(v) ? v.map(String) : []; } catch { return []; } };
+    return this.db.prepare('SELECT id, board, name, tagline, group_size AS groupSize, key_points AS keyPoints, features, fee, mentor_ratio AS mentorRatio, parent_meetings AS parentMeetings FROM programmes WHERE published = 1 ORDER BY sort, id').all()
+      .map(p => ({ ...p, keyPoints: list(p.keyPoints), features: list(p.features) }));
   }
 }
 

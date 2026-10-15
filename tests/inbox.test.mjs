@@ -3,20 +3,22 @@ import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
 import { ContentStore } from '../server/content-store.mjs';
 import { InboxStore, csvCell } from '../server/inbox.mjs';
-import { validateDemo, validateCareers, validateAsk, isBot } from '../server/forms.mjs';
+import { validateDemo, validateCareers, validateAsk, isBot, gradeOptions } from '../server/forms.mjs';
 
 const centres = ['Kadavanthra', 'Vennala'];
+const grades = gradeOptions({ from: 5, to: 12 });
+const programmes = ['Smartup Pro', 'Smartup Trio'];
 const demo = { name: '  Asha   K ', phone: '98950 85731', grade: '9', board: 'CBSE', mode: 'At a centre', centre: 'Vennala', preferred_time: '6 pm' };
 
 test('a demo booking is cleaned: name trimmed, phone in +91 form', () => {
-  const { values, errors } = validateDemo(demo, { centres });
+  const { values, errors } = validateDemo(demo, { centres, grades, programmes });
   assert.deepEqual(errors, {});
   assert.deepEqual(values, { name: 'Asha K', phone: '+919895085731', grade: '9', board: 'CBSE', programme: '', mode: 'At a centre', centre: 'Vennala', preferred_time: '6 pm' });
 });
 
 test('a demo booking may name a programme, but only one Smartup offers', () => {
-  assert.equal(validateDemo({ ...demo, programme: 'Smartup Trio' }, { centres }).values.programme, 'Smartup Trio');
-  assert.ok(validateDemo({ ...demo, programme: 'Smartup Gold' }, { centres }).errors.programme);
+  assert.equal(validateDemo({ ...demo, programme: 'Smartup Trio' }, { centres, grades, programmes }).values.programme, 'Smartup Trio');
+  assert.ok(validateDemo({ ...demo, programme: 'Smartup Gold' }, { centres, grades, programmes }).errors.programme);
 });
 
 test('an older inbox gains the programme column, and bookings keep it', () => {
@@ -28,12 +30,12 @@ test('an older inbox gains the programme column, and bookings keep it', () => {
 });
 
 test('an online booking drops any centre, and a centre booking needs a real centre', () => {
-  assert.equal(validateDemo({ ...demo, mode: 'Online' }, { centres }).values.centre, '');
-  assert.ok(validateDemo({ ...demo, centre: 'Mars' }, { centres }).errors.centre);
+  assert.equal(validateDemo({ ...demo, mode: 'Online' }, { centres, grades, programmes }).values.centre, '');
+  assert.ok(validateDemo({ ...demo, centre: 'Mars' }, { centres, grades, programmes }).errors.centre);
 });
 
 test('demo bookings reject a bad phone, a class outside 5 to 12 and unknown boards', () => {
-  const { errors } = validateDemo({ ...demo, phone: '12345', grade: '4', board: 'IB' }, { centres });
+  const { errors } = validateDemo({ ...demo, phone: '12345', grade: '4', board: 'IB' }, { centres, grades, programmes });
   assert.deepEqual(Object.keys(errors).sort(), ['board', 'grade', 'phone']);
 });
 
@@ -77,8 +79,8 @@ const setup = () => {
 
 test('inbox entries list newest first, change status and can be deleted', () => {
   const { inbox } = setup();
-  const first = inbox.add('demo', validateDemo(demo, { centres }).values);
-  const second = inbox.add('demo', validateDemo({ ...demo, name: 'Second' }, { centres }).values);
+  const first = inbox.add('demo', validateDemo(demo, { centres, grades, programmes }).values);
+  const second = inbox.add('demo', validateDemo({ ...demo, name: "Second" }, { centres, grades, programmes }).values);
   assert.deepEqual(inbox.list('demo').map(r => r.id), [second, first]);
   assert.deepEqual(inbox.counts(), { demo: 2, careers: 0, ask: 0 });
   assert.equal(inbox.update('demo', first, { status: 'contacted', notes: 'Called\r\nat 6' }), true);
@@ -93,7 +95,7 @@ test('inbox entries list newest first, change status and can be deleted', () => 
 
 test('the CSV export shows Indian time, plain phone numbers and safe cells', () => {
   const { inbox } = setup();
-  const id = inbox.add('demo', validateDemo({ ...demo, name: '=HYPERLINK("http://x")' }, { centres }).values);
+  const id = inbox.add('demo', validateDemo({ ...demo, name: "=HYPERLINK(\"http://x\")" }, { centres, grades, programmes }).values);
   inbox.db.prepare('UPDATE demo_bookings SET created_at = ? WHERE id = ?').run('2026-10-13T08:54:00.000Z', id);
   const csv = inbox.csv('demo');
   assert.ok(csv.startsWith('\ufeffReceived (IST),Student,Phone,Class,Board,Programme,Online or centre,Centre,Preferred time,Status,Notes\r\n'));
@@ -112,4 +114,11 @@ test('an answered question is published to the FAQ and closed', () => {
   assert.equal(row.status, 'closed');
   assert.equal(row.faq_id, faqId);
   assert.equal(inbox.publishAnswer(9999, { category: 'Programmes', question: 'Question?', answer: 'Answer.' }), null);
+});
+
+test('the class list follows the classes Smartup teaches, named the way parents say them', () => {
+  assert.deepEqual(gradeOptions({ from: 8, to: 12 }).map(g => g.label), ['Class 8', 'Class 9', 'Class 10', 'Plus One (Class 11)', 'Plus Two (Class 12)']);
+  assert.deepEqual(gradeOptions({ from: 12, to: 3 }).map(g => g.value), ['8', '9', '10', '11', '12']);
+  const { errors } = validateDemo({ ...demo, grade: '6' }, { centres, grades: gradeOptions({ from: 8, to: 12 }), programmes });
+  assert.equal(errors.grade, 'Choose a class from 8 to 12.');
 });

@@ -3,6 +3,7 @@ import { navGroups, isCurrent } from '../lib/nav';
 import { formatPhone } from '../../server/content-store.mjs';
 import SocialIcon from './SocialIcon.astro';
 import { keepTogether } from '../lib/text.mjs';
+import { classesText } from '../../server/forms.mjs';
 interface Props { settings: any; centres: { name: string; phone: string; mapUrl: string; hours: string }[]; path: string }
 const { settings, centres, path } = Astro.props;
 const year = new Date().getFullYear();
@@ -14,7 +15,7 @@ const networkName = { facebook: 'Facebook', instagram: 'Instagram', youtube: 'Yo
   <div class="container footer-top">
     <div class="brand">
       <img src="/brand/logo.svg" alt="Smartup" width="150" height="33" />
-      <p>Tuitions for classes 8 to +2 in Kochi and online.</p>
+      <p>Tuitions for {classesText(settings.classRange)} in Kochi and online.</p>
       <p class="contact">{settings.phone && <a href={`tel:${settings.phone}`}>{formatPhone(settings.phone)}</a>}<a href={`mailto:${settings.email}`}>{settings.email}</a></p>
       <ul class="social" aria-label="Smartup on social media">
         {social.map((s: any) => <li><a href={s.url} target="_blank" rel="noopener" aria-label={`Smartup on ${networkName[s.network] ?? s.network}`}><SocialIcon network={s.network} /></a></li>)}

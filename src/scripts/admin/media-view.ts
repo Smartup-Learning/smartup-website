@@ -1,11 +1,12 @@
 import { api, ApiError } from './api';
-import { h, toast } from './dom';
+import { h, toast, isShowing } from './dom';
 import { uploadMedia, type MediaItem } from './media';
 
 /** Every uploaded photo: upload new ones, delete unused ones. */
 export async function mediaView(main: HTMLElement) {
   let items = (await api<{ items: MediaItem[] }>('media')).items;
   const draw = () => {
+    if (!isShowing('media')) return;
     const file = h('input', { type: 'file', id: 'media-file', accept: 'image/jpeg,image/png,image/webp' });
     const alt = h('input', { type: 'text', id: 'media-alt', maxlength: 200 });
     const error = h('p', { class: 'error', role: 'alert' });

@@ -5,14 +5,15 @@ import PageHero from '../components/PageHero.astro';
 import SmartForm from '../components/SmartForm.astro';
 import FormField from '../components/FormField.astro';
 import { formatPhone } from '../../server/content-store.mjs';
-import { GRADES, BOARDS, MODES, PROGRAMMES } from '../../server/forms.mjs';
+import { BOARDS, BOARD_NAMES, MODES, gradeOptions } from '../../server/forms.mjs';
 import { getStore } from '../lib/store';
 const store = getStore(Astro.locals);
 const settings = store.settings();
 const centres = store.centres();
 const error = Astro.url.searchParams.get('error');
 // "Ask about Pro" on Courses links here with the programme, which also tells us the board.
-const asked = PROGRAMMES.find(p => p.name === Astro.url.searchParams.get('programme'));
+const programmes = store.programmes();
+const asked = programmes.find(p => p.name === Astro.url.searchParams.get('programme'));
 const steps = [
   { title: 'Send the form', text: `Or call us, ${keepTogether(settings.hours)}.` },
   { title: 'We call you back', text: 'Within a day, to fix a time that suits you.' },
@@ -46,9 +47,9 @@ const steps = [
         <SmartForm kind="demo" submit="Book my free demo" done="Our team will call you within a day to fix a time for the demo class." waText="Hi Smartup, I'm {name}. I just booked a free demo class for Class {grade} ({board})." whatsapp={settings.whatsapp} phone={settings.phone} error={error}>
           <FormField name="name" label="Student's name" required maxlength={80} autocomplete="name" minlength={2} invalidMessage="Enter a name (2 to 80 characters)." requiredMessage="Enter the student's name." />
           <FormField name="phone" label="Mobile number" type="tel" required maxlength={16} autocomplete="tel" inputmode="tel" hint="We call this number to fix the demo." requiredMessage="Enter a 10-digit Indian mobile number." />
-          <FormField name="grade" label="Class" as="select" required options={GRADES} requiredMessage="Choose a class." />
-          <FormField name="board" label="Board" as="select" required options={BOARDS} value={asked?.board} requiredMessage="Choose a board." />
-          <FormField name="programme" label="Programme" as="select" options={PROGRAMMES.map(p => p.name)} value={asked?.name} placeholder="Not sure yet" />
+          <FormField name="grade" label="Class" as="select" required options={gradeOptions(settings.classRange)} requiredMessage="Choose a class." />
+          <FormField name="board" label="Board" as="select" required options={BOARDS} value={asked ? BOARD_NAMES[asked.board as keyof typeof BOARD_NAMES] : undefined} requiredMessage="Choose a board." />
+          {programmes.length > 0 && <FormField name="programme" label="Programme" as="select" options={programmes.map(p => p.name)} value={asked?.name} placeholder="Not sure yet" />}
           <FormField name="mode" label="Online or at a centre?" as="select" required options={MODES} requiredMessage="Choose online or at a centre." />
           <FormField name="centre" label="Preferred centre" as="select" options={centres.map(c => c.name)} placeholder="Choose if learning at a centre" requiredIf="mode=At a centre" requiredMessage="Choose a centre." />
           <FormField name="preferred_time" label="Preferred time" maxlength={60} placeholder="e.g. 6 pm on weekdays" />

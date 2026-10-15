@@ -183,6 +183,22 @@ export const SECTIONS = {
       { name: 'phone', label: 'Phone', type: 'phone', required: true },
       { name: 'map_url', label: 'Google Maps link', type: 'url', required: true },
       { name: 'hours', label: 'Hours', type: 'text', required: true, max: 40 },
+      { name: 'address', label: 'Address', type: 'textarea', max: 200, hint: 'A short address or landmark, shown on the Contact page' },
+      published,
+    ],
+  },
+  programmes: {
+    label: 'Programmes and fees', table: 'programmes', order: 'sort, rowid', sortable: true, title: 'name', subtitle: 'group_size',
+    fields: [
+      { name: 'board', label: 'Board', type: 'select', required: true, options: options(['cbse', 'CBSE'], ['state', 'State Board']) },
+      { name: 'name', label: 'Programme name', type: 'text', required: true, max: 60, hint: 'e.g. Smartup Pro' },
+      { name: 'tagline', label: 'Short tagline', type: 'text', max: 40, hint: 'e.g. Personal attention' },
+      { name: 'group_size', label: 'Group size (shown large)', type: 'text', required: true, max: 20, hint: 'e.g. 1:1, 1:3 or Micro batch' },
+      { name: 'key_points', label: 'Key points for the homepage (one per line)', type: 'lines', max: 4, itemMax: 80 },
+      { name: 'features', label: 'Everything included (one per line)', type: 'lines', max: 20, itemMax: 120, hint: 'CBSE programmes are compared line by line, so use the same wording for the same feature.' },
+      { name: 'fee', label: 'Fee', type: 'text', max: 80, hint: 'e.g. From ₹2,500 a month. Leave empty to show "Ask us".' },
+      { name: 'mentor_ratio', label: 'Mentor ratio', type: 'text', max: 40, hint: 'e.g. 1 mentor : 10 students' },
+      { name: 'parent_meetings', label: 'Parent meetings', type: 'text', max: 40, hint: 'e.g. Monthly' },
       published,
     ],
   },
@@ -198,7 +214,14 @@ export const SETTINGS = [
   { name: 'aboutTitle', label: 'About section title', type: 'text', required: true, max: 80 },
   { name: 'aboutText', label: 'About section text', type: 'textarea', required: true, max: 800 },
   { name: 'phone', label: 'Main phone number', type: 'phone', required: true },
-  { name: 'phones', label: 'Other phone numbers (one per line)', type: 'lines', of: 'phone', max: 5 },
+  { name: 'contactPhones', label: 'Other office numbers (Contact page)', type: 'list', max: 5, item: [
+    { name: 'label', label: 'What this number is for', type: 'text', required: true, max: 40, hint: 'e.g. Admissions' },
+    { name: 'phone', label: 'Number', type: 'phone', required: true },
+  ] },
+  { name: 'classRange', label: 'Classes Smartup teaches', type: 'group', fields: [
+    { name: 'from', label: 'From class', type: 'int', required: true, min: 1, max: 12 },
+    { name: 'to', label: 'To class', type: 'int', required: true, min: 1, max: 12, hint: '11 is Plus One and 12 is Plus Two. Used by the demo form and the footer.' },
+  ] },
   { name: 'whatsapp', label: 'WhatsApp number', type: 'phone', nullable: true, hint: 'Leave empty to hide every WhatsApp button and show the phone number instead.' },
   { name: 'email', label: 'Email', type: 'email', required: true, max: 120 },
   { name: 'hours', label: 'Centre hours', type: 'text', required: true, max: 40 },
@@ -228,6 +251,28 @@ export const SETTINGS = [
       { name: 'text', label: 'Text', type: 'textarea', required: true, max: 400 },
     ] },
     { name: 'vision2030', label: 'Vision 2030', type: 'textarea', max: 600 },
+  ] },
+  { name: 'courseDetails', label: 'Courses page details', type: 'group', fields: [
+    { name: 'classLengths', label: 'Class length by level', type: 'list', max: 8, item: [
+      { name: 'level', label: 'Level', type: 'text', required: true, max: 40 },
+      { name: 'minutes', label: 'Minutes', type: 'int', required: true, min: 1, max: 600 },
+    ] },
+    { name: 'classSteps', label: 'What happens in a CBSE class', type: 'list', max: 10, item: [
+      { name: 'step', label: 'Step', type: 'text', required: true, max: 80 },
+      { name: 'minutes', label: 'Minutes', type: 'int', required: true, min: 1, max: 600 },
+    ] },
+    { name: 'parentUpdates', label: 'Updates for parents', type: 'list', max: 6, item: [
+      { name: 'name', label: 'Name', type: 'text', required: true, max: 60 },
+      { name: 'who', label: 'For', type: 'text', required: true, max: 80 },
+      { name: 'covers', label: 'What it covers (one per line)', type: 'lines', max: 12, itemMax: 80 },
+    ] },
+    { name: 'stateMethod', label: 'State Board: teaching method (one per line)', type: 'lines', max: 10, itemMax: 160 },
+    { name: 'stateSession', label: 'State Board: each class', type: 'list', max: 10, item: [
+      { name: 'step', label: 'Step', type: 'text', required: true, max: 80 },
+      { name: 'minutes', label: 'Minutes', type: 'int', required: true, min: 1, max: 600 },
+    ] },
+    { name: 'statePractice', label: 'State Board: daily practice (one per line)', type: 'lines', max: 10, itemMax: 200 },
+    { name: 'stateExamPrep', label: 'State Board: before the exams (one per line)', type: 'lines', max: 10, itemMax: 160 },
   ] },
   { name: 'legalName', label: 'Registered company name', type: 'text', max: 120 },
   { name: 'registeredOffice', label: 'Registered office', type: 'group', fields: [
@@ -357,6 +402,7 @@ export function validateSettings(input) {
     try { values[field.name] = field.nullable && empty(input[field.name]) ? null : cleanValue(field, input[field.name]); } catch (error) { errors[field.name] = error.message; }
   }
   if (values.heroImage && !values.heroImageAlt && !errors.heroImageAlt) errors.heroImageAlt = 'Describe the photo for people who cannot see it.';
+  if (values.classRange && !errors.classRange && values.classRange.from > values.classRange.to) errors.classRange = 'The first class must come before the last one.';
   return { values, errors };
 }
 

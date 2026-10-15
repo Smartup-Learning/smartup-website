@@ -1,5 +1,5 @@
 import { api, ApiError } from './api';
-import { h, toast } from './dom';
+import { h, toast, isShowing } from './dom';
 import { renderField, type Control, type Field, type Schema } from './fields';
 
 type Row = Record<string, unknown> & { id: number };
@@ -9,6 +9,7 @@ export async function contentView(main: HTMLElement, key: string, schema: Schema
   const section = schema.sections[key];
   let items = (await api<{ items: Row[] }>(`content/${key}`)).items;
   const titleOf = (item: Row) => String(item[section.title] ?? '') || '(untitled)';
+  const showing = () => isShowing('content', key);
 
   const list = () => {
     const rows = items.map((item, index) => h('li', { class: 'row-item' },
@@ -30,6 +31,7 @@ export async function contentView(main: HTMLElement, key: string, schema: Schema
     [next[index], next[index + delta]] = [next[index + delta], next[index]];
     await api(`content/${key}/order`, { method: 'PUT', body: { ids: next.map(item => item.id) } });
     items = next;
+    if (!showing()) return;
     list();
     main.querySelectorAll<HTMLButtonElement>('.row-main')[index + delta]?.focus();
     toast('Order saved.');
@@ -47,7 +49,7 @@ export async function contentView(main: HTMLElement, key: string, schema: Schema
         if (item) await api(`content/${key}/${item.id}`, { method: 'PUT', body });
         else await api(`content/${key}`, { method: 'POST', body });
         items = (await api<{ items: Row[] }>(`content/${key}`)).items;
-        list();
+        if (showing()) list();
         toast('Saved. The website shows the change now.');
       } catch (failure) {
         if (!(failure instanceof ApiError)) throw failure;
@@ -61,7 +63,7 @@ export async function contentView(main: HTMLElement, key: string, schema: Schema
       if (!item || !confirm('Delete this item? This cannot be undone.')) return;
       await api(`content/${key}/${item.id}`, { method: 'DELETE' });
       items = items.filter(other => other.id !== item.id);
-      list();
+      if (showing()) list();
       toast('Deleted.');
     };
     main.replaceChildren(h('form', { class: 'editor', novalidate: true, onsubmit: save },

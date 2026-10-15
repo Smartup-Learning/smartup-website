@@ -524,3 +524,61 @@ test('Shorts show their sharp portrait cover, and a staff cover still wins', asy
   t.after(custom.close);
   assert.match((await custom.html('/videos')).split('data-yt="Aypb_y7umfo"')[1].split('</figure>')[0], /alumni-dylan-480\.webp/);
 });
+
+test('programmes, features and fees on Courses and the home page come from the admin', async t => {
+  const site = await start(content => {
+    content.db.prepare("UPDATE programmes SET fee = 'From ₹3,000 a month' WHERE name = 'Smartup Pro'").run();
+    const trio = content.db.prepare("SELECT features FROM programmes WHERE name = 'Smartup Trio'").get();
+    content.db.prepare("UPDATE programmes SET features = ? WHERE name = 'Smartup Trio'").run(JSON.stringify([...JSON.parse(trio.features), 'Weekend doubt sessions']));
+  });
+  t.after(site.close);
+  const courses = await site.html('/courses');
+  assert.match(courses, /From ₹3,000 a month/);
+  assert.match(courses, /Weekend doubt sessions/);
+  assert.match(await site.html('/'), /From ₹3,000 a month/);
+});
+
+test('a hidden programme leaves Courses, the home tabs and the demo form', async t => {
+  const site = await start(content => content.db.prepare("UPDATE programmes SET published = 0 WHERE name = 'Smartup Power'").run());
+  t.after(site.close);
+  for (const path of ['/courses', '/', '/demo']) assert.doesNotMatch(await site.html(path), /Smartup Power/, path);
+});
+
+test('class timings, parent updates and State Board details come from Settings', async t => {
+  const site = await start(content => {
+    const details = JSON.parse(content.db.prepare("SELECT value FROM settings WHERE key = 'courseDetails'").get().value);
+    details.classLengths[0].level = 'Class 8 (edited)';
+    details.stateExamPrep = ['Edited revision plan'];
+    content.db.prepare("UPDATE settings SET value = ? WHERE key = 'courseDetails'").run(JSON.stringify(details));
+  });
+  t.after(site.close);
+  const page = await site.html('/courses');
+  assert.match(page, /Class 8 \(edited\)/);
+  assert.match(page, /Edited revision plan/);
+});
+
+test('Contact shows centre addresses and what each office number is for', async t => {
+  const site = await start(content => {
+    content.db.prepare("UPDATE centres SET address = 'Near St. Mary''s Church, Chullickal' WHERE name = 'Chullickal'").run();
+    content.db.prepare("UPDATE settings SET value = ? WHERE key = 'contactPhones'").run(JSON.stringify([{ label: 'Admissions', phone: '+917356072079' }]));
+  });
+  t.after(site.close);
+  const page = await site.html('/contact');
+  assert.match(page, /Near St\. Mary(&#39;|')s Church, Chullickal/);
+  assert.match(page, /Admissions/);
+});
+
+test('the class range drives the demo form choices and the footer line', async t => {
+  const site = await start();
+  t.after(site.close);
+  const demo = await site.html('/demo');
+  assert.doesNotMatch(demo, />Class 5</);
+  assert.match(demo, />Plus Two \(Class 12\)</);
+  assert.match(demo, /Tuitions for classes 8 to \+2/);
+  const younger = await start(content => content.db.prepare("UPDATE settings SET value = ? WHERE key = 'classRange'").run(JSON.stringify({ from: 5, to: 10 })));
+  t.after(younger.close);
+  const page = await younger.html('/demo');
+  assert.match(page, />Class 5</);
+  assert.doesNotMatch(page, /Plus One/);
+  assert.match(page, /Tuitions for classes 5 to 10/);
+});

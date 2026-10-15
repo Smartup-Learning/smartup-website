@@ -18,6 +18,12 @@ Open **/admin** on the website and sign in with the admin password. (Ask your de
 - **Sample — to be replaced** puts a visible label on the item. Use it for anything that is not yet real or approved.
 - Changes show on the website as soon as you save.
 
+## Programmes and fees
+- Each programme (Smartup Pro, Trio, Power and the State Board programme) has its own entry: board, name, a short tagline, the group size shown large (1:1, 1:3, Micro batch), key points for the homepage, everything included, the fee, mentor ratio and parent meetings.
+- The Courses page compares the CBSE programmes line by line from **Everything included**. Use exactly the same wording for the same feature in each programme, or it shows as two separate lines.
+- **Fee**: write it as parents should read it, for example `From ₹2,500 a month`. Leave it empty to show "Ask us".
+- Untick **Show on the website** to hide a programme from Courses, the homepage and the demo form.
+
 ## Photos
 - In a photo field, choose a file, describe what the photo shows, and press **Upload**, or pick one you uploaded before.
 - Photos can be JPEG, PNG or WebP, up to 10 MB. The website makes smaller copies for phones automatically.
@@ -25,8 +31,14 @@ Open **/admin** on the website and sign in with the admin password. (Ask your de
 - The website shows every photo at its own shape. Posters and press cuttings are never cut off; photos fill their frames.
 - **YouTube videos** can have a **Cover image**. Use it for Shorts: YouTube's own picture for a Short is small and blurry, so upload a tall (portrait) cover instead.
 
+## Centres
+- Each centre has a name, phone, map link, hours and an optional **Address** (a short address or landmark), shown on the Contact page.
+
 ## Settings
 - Phone numbers, email, centre hours, social media links, app links and the homepage headline.
+- **Other office numbers**: each number has a label saying what it is for (for example Admissions); the Contact page shows both.
+- **Classes Smartup teaches**: sets the classes parents can pick on the demo form and the "Tuitions for classes 8 to +2" line in the footer. 11 is Plus One and 12 is Plus Two.
+- **Courses page details**: class lengths, the steps of a class, the updates parents get, and the State Board teaching method, daily practice and exam preparation.
 - **Homepage photo**: shown in a circle beside the headline. Choose a close photo of one or two people, and describe it. Leave it empty to show the owl instead.
 - **WhatsApp number**: leave it empty to hide every WhatsApp button; the website shows the phone number instead.
 

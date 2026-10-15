@@ -63,10 +63,10 @@ test('settings clean every field; an empty WhatsApp number means "not set"', () 
   const store = new ContentStore(new DatabaseSync(':memory:'));
   store.applySeed();
   const current = Object.fromEntries(store.db.prepare('SELECT key, value FROM settings').all().map(r => [r.key, JSON.parse(r.value)]));
-  const { values, errors } = validateSettings({ ...current, whatsapp: '', phones: '88919 10919\n73560 72079' });
+  const { values, errors } = validateSettings({ ...current, whatsapp: '', contactPhones: [{ label: 'Admissions', phone: '73560 72079' }] });
   assert.deepEqual(errors, {});
   assert.equal(values.whatsapp, null);
-  assert.deepEqual(values.phones, ['+918891910919', '+917356072079']);
+  assert.deepEqual(values.contactPhones, [{ label: 'Admissions', phone: '+917356072079' }]);
   assert.equal(validateSettings({ ...current, whatsapp: '98950 85731' }).values.whatsapp, '+919895085731');
   assert.ok(validateSettings({ ...current, social: [{ network: 'facebook', label: 'Facebook', url: 'javascript:x' }] }).errors.social);
 });
@@ -109,4 +109,37 @@ test('a homepage photo needs a description', () => {
   const settings = store.settings();
   assert.ok(validateSettings({ ...settings, heroImage: '/media/u-hero1', heroImageAlt: '' }).errors.heroImageAlt);
   assert.equal(validateSettings({ ...settings, heroImage: '', heroImageAlt: '' }).errors.heroImageAlt, undefined);
+});
+
+const seededSettings = () => {
+  const store = new ContentStore(new DatabaseSync(':memory:'));
+  store.applySeed();
+  return Object.fromEntries(store.db.prepare('SELECT key, value FROM settings').all().map(r => [r.key, JSON.parse(r.value)]));
+};
+
+test('staff can edit programmes, with features, a fee and the board they belong to', () => {
+  const names = SECTIONS.programmes.fields.map(f => f.name);
+  for (const name of ['board', 'name', 'group_size', 'key_points', 'features', 'fee', 'mentor_ratio', 'parent_meetings', 'published']) assert.ok(names.includes(name), name);
+  assert.equal(SECTIONS.programmes.fields.find(f => f.name === 'features').type, 'lines');
+});
+
+test('centres have an address field', () => {
+  assert.ok(SECTIONS.centres.fields.some(f => f.name === 'address'));
+});
+
+test('office phone numbers need a label and a real number', () => {
+  const { errors } = validateSettings({ ...seededSettings(), contactPhones: [{ label: '', phone: '12345' }] });
+  assert.ok(errors.contactPhones);
+});
+
+test('the class range must run from a lower class to a higher one, between 1 and 12', () => {
+  assert.ok(validateSettings({ ...seededSettings(), classRange: { from: 10, to: 8 } }).errors.classRange);
+  assert.ok(validateSettings({ ...seededSettings(), classRange: { from: 0, to: 12 } }).errors.classRange);
+  assert.equal(validateSettings({ ...seededSettings(), classRange: { from: 5, to: 12 } }).errors.classRange, undefined);
+});
+
+test('course page details can be edited in Settings', () => {
+  const details = SETTINGS.find(f => f.name === 'courseDetails');
+  assert.deepEqual(details.fields.map(f => f.name), ['classLengths', 'classSteps', 'parentUpdates', 'stateMethod', 'stateSession', 'statePractice', 'stateExamPrep']);
+  assert.deepEqual(validateSettings(seededSettings()).errors, {});
 });

@@ -3,101 +3,120 @@ import Base from '../layouts/Base.astro';
 import { keepTogether } from '../lib/text.mjs';
 import PageHero from '../components/PageHero.astro';
 import SectionHead from '../components/SectionHead.astro';
-import { courseBoards, classDurations, sessionPlan, mentorRatios, parentUpdates, stateProgramme, formatMinutes, cbseComparison } from '../data/courses';
+import { BOARDS, formatMinutes, comparisonRows, askLabel, demoLink, isRatio } from '../lib/courses';
+import { classesText } from '../../server/forms.mjs';
 import IconBand from '../components/brand/IconBand.astro';
 import { getStore } from '../lib/store';
 const store = getStore(Astro.locals);
 const settings = store.settings();
 const centres = store.centres();
-const cbse = courseBoards.find(b => b.id === 'cbse')!;
-const state = courseBoards.find(b => b.id === 'state')!;
-const [pro, trio, power] = cbse.programmes;
-const columns = [{ key: 'pro', programme: pro }, { key: 'trio', programme: trio }, { key: 'power', programme: power }] as const;
-const askLink = (name: string) => `/demo?programme=${encodeURIComponent(name)}`;
-const planMinutes = sessionPlan.reduce((sum, s) => sum + s.minutes, 0);
+const programmes = store.programmes();
+const cbse = programmes.filter(p => p.board === 'cbse');
+const state = programmes.find(p => p.board === 'state');
+const rows = comparisonRows(cbse);
+const details = settings.courseDetails ?? {};
+const list = (value: unknown) => (Array.isArray(value) ? value : []);
+const classLengths = list(details.classLengths) as { level: string; minutes: number }[];
+const classSteps = list(details.classSteps) as { step: string; minutes: number }[];
+const parentUpdates = list(details.parentUpdates) as { name: string; who: string; covers: string[] }[];
+const stateSession = list(details.stateSession) as { step: string; minutes: number }[];
+const minutesOf = (steps: { minutes: number }[]) => steps.reduce((sum, s) => sum + (Number(s.minutes) || 0), 0);
+const mentors = programmes.filter(p => p.mentorRatio);
+const stateCards = [
+  { title: 'Teaching method', items: list(details.stateMethod) as string[] },
+  { title: stateSession.length ? `Each class, about ${formatMinutes(minutesOf(stateSession))}` : 'Each class', items: stateSession.map(s => `${s.step}: ${formatMinutes(s.minutes)}`) },
+  { title: 'Daily practice', items: list(details.statePractice) as string[] },
+  { title: 'Before the exams', items: list(details.stateExamPrep) as string[] },
+].filter(c => c.items.length > 0);
+const names = programmes.map(p => p.name.replace(/^Smartup\s+/, '')).join(', ');
 const heroPhoto = store.timeline()[0]?.media[0];
 ---
-<Base title="Courses" description={`Smartup programmes for CBSE and Kerala State Board: Pro, Trio, Power and the State Board programme, online${centres.length ? ` and at ${centres.length} centres in Kochi` : ''}.`} page="courses">
-  <PageHero eyebrow="Courses" title="Programmes built around" highlight="every student" intro="CBSE and Kerala State Board, classes 8 to 12 — online, or at one of our centres in Kochi." image={heroPhoto ? { base: heroPhoto.src, alt: heroPhoto.alt, focus: '55% 50%' } : undefined} />
+<Base title="Courses" description={`Smartup programmes for CBSE and Kerala State Board: ${names}, online${centres.length ? ` and at ${centres.length} centres in Kochi` : ''}.`} page="courses">
+  <PageHero eyebrow="Courses" title="Programmes built around" highlight="every student" intro={`CBSE and Kerala State Board, ${classesText(settings.classRange)} — online, or at one of our centres in Kochi.`} image={heroPhoto ? { base: heroPhoto.src, alt: heroPhoto.alt, focus: '55% 50%' } : undefined} />
 
-  <section class="section" aria-labelledby="cbse-title">
-    <div class="container">
-      <SectionHead title={cbse.heading} intro="Three ways to learn, compared line by line." id="cbse-title" />
-      <div class="compare-wrap" data-reveal>
-        <table class="compare">
-          <caption class="sr-only">CBSE programmes compared</caption>
-          <thead>
-            <tr>
-              <td></td>
-              {columns.map(({ programme }) => (
-                <th scope="col">
-                  <span class="col-eyebrow">{programme.eyebrow}</span>
-                  <span class="col-name">{programme.name}</span>
-                  <span class="col-ratio">{programme.ratio}</span>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {cbseComparison.map(row => (
+  {cbse.length > 0 && (
+    <section class="section" aria-labelledby="cbse-title">
+      <div class="container">
+        <SectionHead title={BOARDS[0].heading} intro={cbse.length > 1 ? `${['', 'One way', 'Two ways', 'Three ways', 'Four ways', 'Five ways'][cbse.length] ?? `${cbse.length} ways`} to learn, compared line by line.` : undefined} id="cbse-title" />
+        <div class="compare-wrap" data-reveal>
+          <table class="compare" style={`--cols: ${cbse.length}`}>
+            <caption class="sr-only">CBSE programmes compared</caption>
+            <thead>
               <tr>
-                <th scope="row">{row.feature}</th>
-                {columns.map(({ key }) => {
-                  const cell = row[key];
-                  return <td>{cell === true ? <span class="tick" aria-label="Included">✓</span> : cell === false ? <span class="none" aria-label="Not included">–</span> : cell}</td>;
-                })}
+                <td></td>
+                {cbse.map(programme => (
+                  <th scope="col">
+                    {programme.tagline && <span class="col-eyebrow">{programme.tagline}</span>}
+                    <span class="col-name">{programme.name}</span>
+                    <span class:list={['col-ratio', { 'col-ratio--word': !isRatio(programme.groupSize) }]}>{programme.groupSize}</span>
+                  </th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-          <tfoot>
-            <tr><td></td>{columns.map(({ programme }) => <td><a class="link-arrow" href={askLink(programme.name)}>{programme.ask}</a></td>)}</tr>
-          </tfoot>
-        </table>
+            </thead>
+            <tbody>
+              {rows.map(row => (
+                <tr>
+                  <th scope="row">{row.feature}</th>
+                  {row.cells.map(cell => <td>{cell === true ? <span class="tick" aria-label="Included">✓</span> : cell === false ? <span class="none" aria-label="Not included">–</span> : keepTogether(cell)}</td>)}
+                </tr>
+              ))}
+            </tbody>
+            <tfoot>
+              <tr><td></td>{cbse.map(programme => <td><a class="link-arrow" href={demoLink(programme.name)}>{askLabel(programme.name)}</a></td>)}</tr>
+            </tfoot>
+          </table>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+  )}
 
-  <section class="section section--cream" aria-labelledby="class-title">
-    <div class="container two">
-      <div data-reveal>
-        <SectionHead title="How long each class is" id="class-title" />
-        <table>
-          <caption class="sr-only">Class length by level</caption>
-          <tbody>{classDurations.map(d => <tr><th scope="row">{d.level}</th><td>{formatMinutes(d.minutes)}</td></tr>)}</tbody>
-        </table>
+  {(classLengths.length > 0 || classSteps.length > 0) && (
+    <section class="section section--cream" aria-labelledby="class-title">
+      <div class="container two">
+        <div data-reveal>
+          <SectionHead title="How long each class is" id="class-title" />
+          <table>
+            <caption class="sr-only">Class length by level</caption>
+            <tbody>{classLengths.map(d => <tr><th scope="row">{d.level}</th><td>{formatMinutes(d.minutes)}</td></tr>)}</tbody>
+          </table>
+        </div>
+        {classSteps.length > 0 && (
+          <div data-reveal>
+            <h3 class="plan-title">A {formatMinutes(minutesOf(classSteps))} class, step by step</h3>
+            <ol class="steps">
+              {classSteps.map(s => <li><strong>{s.step}</strong><span>{formatMinutes(s.minutes)}</span></li>)}
+            </ol>
+          </div>
+        )}
       </div>
-      <div data-reveal>
-        <h3 class="plan-title">A {formatMinutes(planMinutes)} class, step by step</h3>
-        <ol class="steps">
-          {sessionPlan.map(s => <li><strong>{s.step}</strong><span>{formatMinutes(s.minutes)}</span></li>)}
-        </ol>
-      </div>
-    </div>
-  </section>
+    </section>
+  )}
 
-  <section class="section" aria-labelledby="parents-title">
-    <div class="container">
-      <SectionHead eyebrow="For parents" title="You always know how your child is doing" id="parents-title" />
-      <div class="updates" data-reveal="group">
-        {parentUpdates.map(u => <article class="update" data-reveal-item><h3>{u.name}</h3><p class="who">{u.who}</p><ul>{u.covers.map(c => <li>{c}</li>)}</ul></article>)}
-        <article class="update" data-reveal-item><h3>Mentors</h3><p class="who">Follow-up, attendance, homework, motivation and parent communication</p><ul>{mentorRatios.map(m => <li>{m.programme}: {m.ratio}</li>)}</ul></article>
+  {(parentUpdates.length > 0 || mentors.length > 0) && (
+    <section class="section" aria-labelledby="parents-title">
+      <div class="container">
+        <SectionHead eyebrow="For parents" title="You always know how your child is doing" id="parents-title" />
+        <div class="updates" data-reveal="group">
+          {parentUpdates.map(u => <article class="update" data-reveal-item><h3>{u.name}</h3><p class="who">{u.who}</p><ul>{list(u.covers).map(c => <li>{c}</li>)}</ul></article>)}
+          {mentors.length > 0 && <article class="update" data-reveal-item><h3>Mentors</h3><p class="who">Follow-up, attendance, homework, motivation and parent communication</p><ul>{mentors.map(m => <li>{m.name}: {m.mentorRatio}</li>)}</ul></article>}
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+  )}
 
-  <section class="section section--deep" aria-labelledby="state-title">
-    <div class="container">
-      <SectionHead title={state.heading} intro={state.programmes[0].features[0]} id="state-title" />
-      <div class="state" data-reveal="group">
-        <article data-reveal-item><h3>Teaching method</h3><ul>{stateProgramme.method.map(m => <li>{m}</li>)}</ul></article>
-        <article data-reveal-item><h3>Each class, about 2 hours</h3><ul>{stateProgramme.session.map(s => <li>{s.step}: {formatMinutes(s.minutes)}</li>)}</ul></article>
-        <article data-reveal-item><h3>Daily practice</h3><ul>{stateProgramme.practice.map(m => <li>{m}</li>)}</ul></article>
-        <article data-reveal-item><h3>Before the exams</h3><ul>{stateProgramme.examPrep.map(m => <li>{m}</li>)}</ul></article>
+  {state && (
+    <section class="section section--deep" aria-labelledby="state-title">
+      <div class="container">
+        <SectionHead title={BOARDS[1].heading} intro={state.features[0]} id="state-title" />
+        {state.fee && <p class="state-fee">{keepTogether(state.fee)}</p>}
+        <div class="state" data-reveal="group">
+          {stateCards.map(card => <article data-reveal-item><h3>{card.title}</h3><ul>{card.items.map(item => <li>{item}</li>)}</ul></article>)}
+        </div>
+        <a class="btn btn--yellow state-ask" href={demoLink(state.name)}>{askLabel(state.name)}</a>
       </div>
-      <a class="btn btn--yellow state-ask" href={askLink(state.programmes[0].name)}>{state.programmes[0].ask}</a>
-    </div>
-    <IconBand class="courses-band" />
-  </section>
+      <IconBand class="courses-band" />
+    </section>
+  )}
 
   <section class="section" aria-labelledby="where-title">
     <div class="container where" data-reveal>
@@ -119,6 +138,8 @@ const heroPhoto = store.timeline()[0]?.media[0];
   .col-eyebrow { display: block; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); }
   .col-name { display: block; font-size: var(--step-2); font-weight: 600; }
   .col-ratio { display: block; font-size: var(--step-1); font-weight: 700; color: var(--purple); }
+  .col-ratio--word { font-size: var(--step-0); }
+  .state-fee { margin: -1rem 0 1.5rem; font-size: var(--step-1); font-weight: 600; color: var(--yellow); }
   .tick { font-size: var(--step-1); font-weight: 700; color: var(--purple); }
   .none { color: #b9aec7; }
   /* Phones: each feature on its own line with the three values in a row beneath, so nothing scrolls sideways. */
@@ -126,7 +147,7 @@ const heroPhoto = store.timeline()[0]?.media[0];
     .compare-wrap { overflow: visible; margin-inline: 0; padding-inline: 0; }
     .compare { min-width: 0; }
     .compare thead, .compare tbody, .compare tfoot { display: block; }
-    .compare tr { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-bottom: 1px solid var(--line); }
+    .compare tr { display: grid; grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr)); border-bottom: 1px solid var(--line); }
     .compare th, .compare td { border-bottom: 0; padding: 0.55rem 0.35rem; }
     .compare thead tr { border-bottom: 2px solid var(--purple); }
     .compare thead td:first-child, .compare tfoot td:first-child { display: none; }

@@ -2,18 +2,27 @@ import { normalizePhone } from './content-store.mjs';
 import { line, block, isWebUrl, isEmail } from './validators.mjs';
 import { readBuffer } from './read-body.mjs';
 
-export const GRADES = [
-  { value: '5', label: 'Class 5' }, { value: '6', label: 'Class 6' }, { value: '7', label: 'Class 7' },
-  { value: '8', label: 'Class 8' }, { value: '9', label: 'Class 9' }, { value: '10', label: 'Class 10' },
-  { value: '11', label: 'Plus One (Class 11)' }, { value: '12', label: 'Plus Two (Class 12)' },
-];
 export const BOARDS = ['CBSE', 'State Board', 'Other'];
-// The programmes on the Courses page, with the board each one belongs to.
-export const PROGRAMMES = [
-  { name: 'Smartup Pro', board: 'CBSE' }, { name: 'Smartup Trio', board: 'CBSE' }, { name: 'Smartup Power', board: 'CBSE' },
-  { name: 'State Board programme', board: 'State Board' },
-];
+// Programme boards as stored by the admin, and as parents choose them on the demo form.
+export const BOARD_NAMES = { cbse: 'CBSE', state: 'State Board' };
 export const MODES = ['Online', 'At a centre'];
+
+const DEFAULT_RANGE = { from: 8, to: 12 };
+const validRange = range => (Number.isInteger(range?.from) && Number.isInteger(range?.to) && range.from >= 1 && range.to <= 12 && range.from <= range.to ? range : DEFAULT_RANGE);
+const classLabel = n => (n === 11 ? 'Plus One (Class 11)' : n === 12 ? 'Plus Two (Class 12)' : `Class ${n}`);
+
+/** The demo form's class choices for the classes Smartup teaches (Settings). */
+export function gradeOptions(range) {
+  const { from, to } = validRange(range);
+  return Array.from({ length: to - from + 1 }, (_, i) => ({ value: String(from + i), label: classLabel(from + i) }));
+}
+
+/** "8 to +2", the way the site describes the classes it teaches. */
+export function classesText(range) {
+  const { from, to } = validRange(range);
+  const last = to === 12 ? '+2' : to === 11 ? '+1' : String(to);
+  return from === to ? `class ${last}` : `classes ${from} to ${last}`;
+}
 
 function check(errors, key, ok, message) {
   if (!ok && !errors[key]) errors[key] = message;
@@ -27,7 +36,7 @@ function person(input, errors) {
   return { name, phone };
 }
 
-export function validateDemo(input, { centres }) {
+export function validateDemo(input, { centres, grades, programmes }) {
   const errors = {};
   const { name, phone } = person(input, errors);
   const grade = line(input.grade);
@@ -36,9 +45,9 @@ export function validateDemo(input, { centres }) {
   const mode = line(input.mode);
   const preferred_time = line(input.preferred_time);
   let centre = line(input.centre);
-  check(errors, 'grade', GRADES.some(g => g.value === grade), 'Choose a class from 5 to 12.');
+  check(errors, 'grade', grades.some(g => g.value === grade), `Choose a class from ${grades[0]?.value} to ${grades.at(-1)?.value}.`);
   check(errors, 'board', BOARDS.includes(board), 'Choose a board.');
-  check(errors, 'programme', !programme || PROGRAMMES.some(p => p.name === programme), 'Choose a programme from the list, or leave it empty.');
+  check(errors, 'programme', !programme || programmes.includes(programme), 'Choose a programme from the list, or leave it empty.');
   check(errors, 'mode', MODES.includes(mode), 'Choose online or at a centre.');
   if (mode === 'At a centre') check(errors, 'centre', centres.includes(centre), 'Choose a centre.');
   else centre = '';
@@ -78,7 +87,7 @@ export const isBot = input => line(input.website) !== '';
 export const FORM_LIMIT = 20 * 1024;
 
 const FORMS = {
-  demo: { page: '/demo', anchor: 'book', validate: (input, content) => validateDemo(input, { centres: content.centres().map(c => c.name) }) },
+  demo: { page: '/demo', anchor: 'book', validate: (input, content) => validateDemo(input, { centres: content.centres().map(c => c.name), grades: gradeOptions(content.settings().classRange), programmes: content.programmes().map(p => p.name) }) },
   careers: { page: '/careers', anchor: 'apply', validate: (input, content) => validateCareers(input, { roles: content.jobs().map(j => j.title) }) },
   ask: { page: '/ask', anchor: 'ask-form', validate: input => validateAsk(input) },
 };
