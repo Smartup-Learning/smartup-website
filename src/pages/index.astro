@@ -10,6 +10,8 @@ import QuoteCard from '../components/QuoteCard.astro';
 import AlumniCard from '../components/AlumniCard.astro';
 import CourseTabs from '../components/CourseTabs.astro';
 import DemoBand from '../components/DemoBand.astro';
+import StoreBadges from '../components/StoreBadges.astro';
+import PhoneShot from '../components/PhoneShot.astro';
 import { getStore } from '../lib/store';
 import { organisationJsonLd } from '../lib/structured-data';
 import { siteOrigin } from '../lib/site';
@@ -101,6 +103,24 @@ const description = `Smartup tuitions in Kochi and online for CBSE and State Boa
     </div>
   </section>
 
+  <section id="app" class="section app-section" aria-labelledby="app-title">
+    <div class="container">
+      <div class="app-panel">
+        <div class="app-copy" data-reveal>
+          <p class="eyebrow">Smartup App</p>
+          <h2 id="app-title">Keep learning after class</h2>
+          <p>Smartup Learning puts live classes, recorded lessons, practice questions and progress tracking on your phone.</p>
+          <StoreBadges links={settings.appLinks} />
+          <a class="link-arrow" href="/app">See inside the app</a>
+        </div>
+        <div class="app-phones" aria-hidden="true">
+          <PhoneShot class="app-phone app-phone--back" file="analysis" alt="" />
+          <PhoneShot class="app-phone app-phone--front" file="home" alt="" />
+        </div>
+      </div>
+    </div>
+  </section>
+
   {jobs.length > 0 && (
     <section id="careers" class="careers-band" aria-labelledby="careers-title">
       <div class="container careers-inner">
@@ -126,6 +146,25 @@ const description = `Smartup tuitions in Kochi and online for CBSE and State Boa
   .careers-inner { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.5rem 1.5rem; }
   .careers-inner h2 { font-size: var(--step-2); font-weight: 600; }
   .careers-inner p { color: var(--ink-soft); flex: 1 1 20rem; }
+  .app-panel { position: relative; overflow: hidden; display: grid; gap: 2rem; padding: clamp(2rem, 1.5rem + 3vw, 4rem) clamp(1.5rem, 1rem + 3vw, 4rem) 0; border-radius: calc(var(--radius) * 1.5); background: radial-gradient(circle at 85% 20%, var(--purple-300), var(--purple) 45%, var(--purple-900)); color: var(--white); }
+  .app-copy { display: grid; gap: 1rem; justify-items: start; align-content: center; padding-bottom: 0.5rem; }
+  .app-copy .eyebrow { color: var(--yellow); }
+  .app-copy h2 { font-size: var(--step-4); font-weight: 600; line-height: 1.05; }
+  .app-copy > p:not(.eyebrow) { font-size: var(--step-1); color: var(--on-purple-soft); max-width: 32rem; }
+  .app-copy .link-arrow { color: var(--white); }
+  /* Two phones rise from the bottom edge of the panel; the back one is tilted. */
+  .app-phones { position: relative; height: clamp(14rem, 10rem + 16vw, 20rem); }
+  .app-phones :global(.app-phone) { position: absolute; top: 0; width: clamp(10rem, 7rem + 12vw, 15rem); }
+  .app-phones :global(.app-phone--front) { left: 8%; z-index: 1; }
+  .app-phones :global(.app-phone--back) { right: 6%; top: 2rem; transform: rotate(8deg); opacity: 0.92; }
+  @media (min-width: 900px) {
+    .app-panel { grid-template-columns: 1.1fr 1fr; padding-bottom: 0; }
+    .app-copy { padding-bottom: clamp(2rem, 1.5rem + 3vw, 4rem); }
+    .app-phones { height: auto; min-height: 26rem; }
+    .app-phones :global(.app-phone) { width: 17rem; top: auto; bottom: -8.5rem; }
+    .app-phones :global(.app-phone--front) { left: 4%; }
+    .app-phones :global(.app-phone--back) { right: 2%; top: auto; bottom: -11rem; }
+  }
   @media (min-width: 900px) {
     .founders { grid-auto-flow: row; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: visible; gap: 1.75rem; }
     .alumni-stories { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; gap: 1.5rem; }

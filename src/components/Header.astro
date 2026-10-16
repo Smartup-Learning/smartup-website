@@ -60,7 +60,8 @@ const onDemo = path === '/demo';
   .menu-grid ul { list-style: none; padding: 0; margin-top: 0.5rem; display: grid; }
   .menu-grid a { display: flex; align-items: center; min-height: 44px; font-size: var(--step-1); font-weight: 600; text-decoration: none; }
   .menu-grid a:hover, .menu-grid a[aria-current='page'] { color: var(--purple); }
-  .menu-grid a[aria-current='page']::before { content: ''; width: 0.4rem; height: 0.4rem; margin-right: 0.5rem; border-radius: 50%; background: var(--purple); }
+  /* The current page is underlined in purple, like the quick links, without pushing the text sideways. */
+  .menu-grid a[aria-current='page'] { text-decoration: underline 3px; text-underline-offset: 0.3em; }
   @media (min-width: 600px) { .menu-grid { grid-template-columns: repeat(2, 1fr); } }
   @media (min-width: 900px) {
     .quick, .header-cta { display: block; }

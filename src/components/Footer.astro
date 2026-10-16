@@ -2,6 +2,7 @@
 import { navGroups, isCurrent } from '../lib/nav';
 import { formatPhone } from '../../server/content-store.mjs';
 import SocialIcon from './SocialIcon.astro';
+import StoreBadges from './StoreBadges.astro';
 import { keepTogether } from '../lib/text.mjs';
 import { classesText } from '../../server/forms.mjs';
 interface Props { settings: any; centres: { name: string; phone: string; mapUrl: string; hours: string }[]; path: string }
@@ -21,6 +22,12 @@ const networkName = { facebook: 'Facebook', instagram: 'Instagram', youtube: 'Yo
         {social.map((s: any) => <li><a href={s.url} target="_blank" rel="noopener" aria-label={`Smartup on ${networkName[s.network] ?? s.network}`}><SocialIcon network={s.network} /></a></li>)}
         <li class="more"><a href="/community">All channels</a></li>
       </ul>
+      {(settings.appLinks?.android || settings.appLinks?.ios) && (
+        <div class="app">
+          <h2 class="eyebrow">Get the Smartup app</h2>
+          <StoreBadges links={settings.appLinks} />
+        </div>
+      )}
     </div>
     <nav id="footer-nav" class="footer-nav" aria-label="Site">
       {navGroups.map(group => (
@@ -58,6 +65,7 @@ const networkName = { facebook: 'Facebook', instagram: 'Instagram', youtube: 'Yo
   .social { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; list-style: none; padding: 0; }
   .social a { justify-content: center; width: 44px; height: 44px; border-radius: 50%; background: var(--white); color: var(--purple); }
   .social .more a { width: auto; height: auto; padding-inline: 0.25rem; border-radius: 0; background: none; font-size: var(--step--1); font-weight: 600; color: var(--purple); }
+  .app { display: grid; gap: 0.6rem; margin-top: 0.75rem; }
   .footer-nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; }
   .footer-nav ul, .centres ul { list-style: none; padding: 0; margin-top: 0.4rem; display: grid; }
   .footer-nav a:hover, .centres a:hover, .footer-nav a[aria-current='page'] { color: var(--purple); }

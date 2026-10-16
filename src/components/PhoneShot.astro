@@ -1,0 +1,12 @@
+---
+// A Smartup Learning app screenshot (public/app/<file>.webp) inside a dark phone frame.
+interface Props { file: string; alt: string; eager?: boolean; class?: string }
+const { file, alt, eager = false, class: className } = Astro.props;
+---
+<div class:list={['phone', className]}>
+  <img src={`/app/${file}.webp`} width="480" height="1019" alt={alt} loading={eager ? undefined : 'lazy'} fetchpriority={eager ? 'high' : undefined} />
+</div>
+<style>
+  .phone { padding: 0.5rem; border-radius: 1.9rem; background: #17101f; box-shadow: 0 24px 48px -24px rgb(23 16 31 / 0.6), inset 0 0 0 2px rgb(255 255 255 / 0.12); }
+  img { width: 100%; height: auto; border-radius: 1.45rem; background: var(--white); }
+</style>

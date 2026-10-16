@@ -44,7 +44,7 @@ test('homepage sections follow the client order', async t => {
   t.after(site.close);
   const page = await site.html('/');
   const ids = [...page.matchAll(/<section[^>]*\sid="([^"]+)"/g)].map(m => m[1]);
-  assert.deepEqual(ids, ['about', 'founders', 'results', 'feedback', 'alumni', 'courses', 'careers']);
+  assert.deepEqual(ids, ['about', 'founders', 'results', 'feedback', 'alumni', 'courses', 'app', 'careers']);
 });
 
 test('sections with no published content are left out, heading and all', async t => {

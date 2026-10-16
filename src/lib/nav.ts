@@ -20,7 +20,8 @@ export const navGroups: NavGroup[] = [
 
 export const quickLinks: NavLink[] = [
   { label: 'Our Story', href: '/story' }, { label: 'Results', href: '/results' },
-  { label: 'Courses', href: '/courses' }, { label: 'Contact', href: '/contact' },
+  { label: 'Courses', href: '/courses' }, { label: 'Smartup App', href: '/app' },
+  { label: 'Contact', href: '/contact' },
 ];
 
 /** True when `href` is the page being shown, or a section it belongs to (a blog post under /blog). */
