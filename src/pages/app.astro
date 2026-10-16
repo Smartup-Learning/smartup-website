@@ -1,7 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
-import Owl from '../components/Owl.astro';
 import PeekingOwl from '../components/brand/PeekingOwl.astro';
 import { ICONS } from '../lib/icons';
 import { getStore } from '../lib/store';
@@ -11,6 +10,13 @@ const features = [
   { icon: ICONS.clock, title: 'Recorded classes', text: 'Catch up on recorded classes within the week, at your own pace.' },
   { icon: ICONS.bulb, title: 'Late Night Express', text: 'Quick revision sessions on the app before board exams.' },
   { icon: ICONS.chart, title: 'AI-integrated learning and LMS', text: 'Tracks practice and progress alongside live classes and daily quizzes.' },
+];
+const screens = [
+  { file: 'home', title: 'Home', text: 'Pick up the last lesson and see how practice is going.' },
+  { file: 'courses', title: 'Courses', text: 'CBSE and Kerala State courses for every class.' },
+  { file: 'lessons', title: 'Lessons', text: 'Every chapter laid out, with videos and live classes.' },
+  { file: 'practice', title: 'Practice', text: 'Short question sets for each topic, plus review and history.' },
+  { file: 'analysis', title: 'Analysis', text: 'Effort across videos, live classes and practice, and where you stand.' },
 ];
 ---
 <Base title="Smartup App" description="The Smartup Learning app: class notes, recorded classes and revision in one place. On Google Play and the App Store." page="app">
@@ -29,11 +35,8 @@ const features = [
         </a>
       )}
     </div>
-    <div class="phone" slot="visual" aria-hidden="true">
-      <div class="screen">
-        <Owl size="42%" />
-        <p>Smartup Learning</p>
-      </div>
+    <div class="phone" slot="visual">
+      <img class="screen" src="/app/home.webp" width="480" height="1019" alt="The Smartup Learning app home screen" fetchpriority="high" />
     </div>
   </PageHero>
   <section class="section" aria-labelledby="features-title">
@@ -41,6 +44,20 @@ const features = [
       <h2 id="features-title" class="title">What students use it for</h2>
       <ul class="features" data-reveal="group">
         {features.map(f => <li data-reveal-item><svg viewBox="0 0 24 24" aria-hidden="true" set:html={f.icon} /><h3>{f.title}</h3><p>{f.text}</p></li>)}
+      </ul>
+    </div>
+  </section>
+  <section class="section section--cream" aria-labelledby="inside-title">
+    <div class="container">
+      <h2 id="inside-title" class="title">Inside the app</h2>
+      <ul class="rail shots" data-reveal="group" tabindex="0" aria-label="App screens">
+        {screens.map(s => (
+          <li data-reveal-item>
+            <div class="phone phone--flat"><img class="screen" src={`/app/${s.file}.webp`} width="480" height="1019" alt={`The ${s.title} screen of the Smartup Learning app`} loading="lazy" /></div>
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+          </li>
+        ))}
       </ul>
     </div>
   </section>
@@ -65,9 +82,15 @@ const features = [
   .store span { display: grid; }
   .store small { font-size: 0.68rem; font-weight: 500; letter-spacing: 0.02em; text-transform: uppercase; opacity: 0.85; }
   .phone { width: 15rem; aspect-ratio: 9 / 19; padding: 0.7rem; border-radius: 2.4rem; background: #17101f; box-shadow: 0 30px 60px -25px rgb(0 0 0 / 0.6), inset 0 0 0 2px rgb(255 255 255 / 0.12); transform: rotate(-6deg); }
-  .screen { display: grid; place-content: center; justify-items: center; gap: 1rem; height: 100%; border-radius: 1.8rem; background: radial-gradient(circle at 50% 35%, var(--purple-300), var(--purple) 55%, var(--purple-900)); color: var(--white); text-align: center; }
-  .screen :global(.owl-wrap) { padding: 12%; border-radius: 50%; background: var(--cream); width: 46% !important; }
-  .screen p { font-weight: 600; letter-spacing: 0.02em; }
+  .screen { width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 1.8rem; background: var(--white); }
+  .phone--flat { width: 100%; padding: 0.5rem; border-radius: 1.9rem; transform: none; box-shadow: 0 20px 40px -24px rgb(23 16 31 / 0.55); }
+  .phone--flat .screen { border-radius: 1.45rem; }
+  .shots { list-style: none; padding-top: 0.5rem; grid-auto-columns: min(62%, 15rem); }
+  .shots li { display: grid; gap: 0.4rem; align-content: start; }
+  .shots h3 { margin-top: 0.75rem; font-size: var(--step-1); }
+  .shots p { color: var(--ink-soft); }
+  /* Wide screens: all five phones side by side, no scrolling. */
+  @media (min-width: 900px) { .shots { grid-auto-flow: row; grid-template-columns: repeat(5, 1fr); overflow: visible; margin-inline: 0; padding-inline: 0; } }
   .title { font-size: var(--step-4); font-weight: 600; margin-bottom: 2rem; }
   .features { list-style: none; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
   .features li { padding: 1.5rem; border: 1px solid var(--line); border-radius: var(--radius); display: grid; gap: 0.5rem; align-content: start; }
