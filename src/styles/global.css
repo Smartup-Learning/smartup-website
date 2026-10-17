@@ -54,9 +54,12 @@ a { color: inherit; }
 .rail > * { scroll-snap-align: start; }
 /* Phones: rows scroll out to the screen edge, so cut-off cards end at the edge rather than 16px short of it. */
 @media (max-width: 899px) { .rail { margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); scroll-padding-inline: var(--gutter); } }
-/* Rows of mixed shapes: every card is the same height and its width follows its own shape. */
+/* Rows of mixed shapes: every card is the same height and its width follows its own shape. No width cap: on a phone a
+   landscape card may be wider than the screen and is swiped like the rest, rather than shrinking below the row. */
 .rail--shapes { grid-auto-columns: max-content; --row-h: clamp(15rem, 11rem + 10vw, 24rem); }
-.rail--shapes > * { width: min(calc(var(--row-h) * var(--ratio, 1)), 78vw); }
+.rail--shapes > * { width: calc(var(--row-h) * var(--ratio, 1)); }
+/* A caption under a card wider than the screen still wraps within the screen, so it is never cut off at the edge. */
+.rail--shapes figcaption { max-width: calc(100vw - 2 * var(--gutter)); }
 .rail-wrap { position: relative; min-width: 0; }
 .rail-btn { display: none; }
 @media (min-width: 900px) {

@@ -22,8 +22,7 @@ test('on a phone a long exam group shows two rows, then everything after Show al
   expect(await visible()).toBe(9);
 });
 
-test('the home results row shows whole posters at one height', async ({ page }, info) => {
-  test.skip(info.project.name !== 'desktop', 'checked on a wide screen');
+test('the home results row shows whole posters at one height', async ({ page }) => {
   await page.goto('/');
   const heights = await page.locator('#results .result img').evaluateAll(images => images.map(img => Math.round(img.getBoundingClientRect().height)));
   expect(heights.length).toBeGreaterThan(2);
