@@ -78,6 +78,21 @@ test('unknown sections, ids and inherited names are not found', async t => {
   assert.equal((await site.call('/api/admin/content/faqs/99999', { method: 'PUT', json: { category: 'A', question: 'Question here?', answer: 'Answer here.' } })).status, 404);
 });
 
+test('a settings screen can save only its own fields; the others keep their values', async t => {
+  const site = await startSite(t);
+  await site.signIn();
+  const before = (await site.call('/api/admin/settings')).data.settings;
+  const saved = await site.call('/api/admin/settings', { method: 'PUT', json: { heroHeadline: 'Learn with', heroHighlight: 'confidence', heroDescription: 'Classes 8 to +2', heroImage: '', heroImageAlt: '' } });
+  assert.equal(saved.status, 200);
+  const after = (await site.call('/api/admin/settings')).data.settings;
+  assert.equal(after.heroHighlight, 'confidence');
+  assert.deepEqual({ ...after, heroHeadline: before.heroHeadline, heroHighlight: before.heroHighlight, heroDescription: before.heroDescription, heroImage: before.heroImage, heroImageAlt: before.heroImageAlt }, before);
+  assert.match(await site.page('/'), /confidence/);
+  const bad = await site.call('/api/admin/settings', { method: 'PUT', json: { heroHeadline: '' } });
+  assert.equal(bad.status, 400);
+  assert.ok(bad.data.fields.heroHeadline);
+});
+
 test('settings load, save, and change the site; bad values are explained', async t => {
   const site = await startSite(t);
   await site.signIn();

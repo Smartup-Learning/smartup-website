@@ -82,6 +82,7 @@ dialog::backdrop { background: rgb(0 0 0 / 0.4); }
 .entry dd { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 @media (min-width: 900px) {
   .workspace { grid-template-columns: 16rem minmax(0, 1fr); align-items: start; padding: 1.5rem; }
-  #admin-nav { position: sticky; top: 1rem; }
+  /* The menu scrolls on its own when it is taller than the window, independent of the page. */
+  #admin-nav { position: sticky; top: 1rem; max-height: calc(100vh - 2rem); max-height: calc(100dvh - 2rem); overflow-y: auto; overscroll-behavior: contain; padding: 0.25rem; }
   #admin-main { padding: 1.5rem; }
 }

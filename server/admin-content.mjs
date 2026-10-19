@@ -94,12 +94,14 @@ export class AdminContent {
   }
 
   saveSettings(input) {
-    const { values, errors } = validateSettings(input);
+    // Each admin screen sends only its own fields; the others are checked as saved and left untouched.
+    const isObject = input && typeof input === 'object' && !Array.isArray(input);
+    const { values, errors } = validateSettings(isObject ? { ...this.settings(), ...input } : input);
     if (Object.keys(errors).length) throw httpError(400, 'Check the highlighted fields.', errors);
     const put = this.db.prepare('INSERT INTO settings(key, value) VALUES(?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value');
     this.db.exec('BEGIN IMMEDIATE');
     try {
-      for (const [key, value] of Object.entries(values)) put.run(key, JSON.stringify(value));
+      for (const [key, value] of Object.entries(values)) if (Object.hasOwn(input, key)) put.run(key, JSON.stringify(value));
       this.db.exec('COMMIT');
     } catch (error) {
       this.db.exec('ROLLBACK');

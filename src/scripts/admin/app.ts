@@ -38,7 +38,7 @@ async function renderNav() {
   const current = location.hash || DEFAULT;
   const groups = [
     { title: 'Inbox', links: Object.entries(schema.inboxes).map(([key, inbox]) => ({ href: `#/inbox/${key}`, label: inbox.label, count: counts[key] ?? 0 })) },
-    { title: 'Website content', links: Object.entries(schema.sections).map(([key, section]) => ({ href: `#/content/${key}`, label: section.label, count: 0 })) },
+    { title: 'Website content', links: [{ href: '#/hero', label: 'Homepage hero', count: 0 }, ...Object.entries(schema.sections).map(([key, section]) => ({ href: `#/content/${key}`, label: section.label, count: 0 }))] },
     { title: 'Site', links: [{ href: '#/settings', label: 'Settings', count: 0 }, { href: '#/media', label: 'Media library', count: 0 }] },
   ];
   nav.replaceChildren(h('details', { class: 'nav-menu', open: window.matchMedia('(min-width: 900px)').matches },
@@ -55,6 +55,7 @@ async function route() {
     if (area === 'inbox' && Object.hasOwn(schema.inboxes, key)) await inboxView(main, key, schema, () => { void renderNav(); });
     else if (area === 'content' && Object.hasOwn(schema.sections, key)) await contentView(main, key, schema);
     else if (area === 'settings') await settingsView(main, schema);
+    else if (area === 'hero') await settingsView(main, schema, 'hero');
     else if (area === 'media') await mediaView(main);
     else { location.replace(DEFAULT); return; }
   } catch (error) {

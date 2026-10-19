@@ -127,6 +127,50 @@ test.describe('signed in', () => {
     await saveSettings();
   });
 
+  test('the homepage hero has its own screen, and Settings no longer shows it', async () => {
+    await page.goto('/admin#/settings');
+    await expect(page.locator('#admin-main h1')).toHaveText('Settings');
+    await expect(page.getByLabel('Homepage headline')).toHaveCount(0);
+    await page.goto('/admin#/hero');
+    await expect(page.locator('#admin-main h1')).toHaveText('Homepage hero');
+    await expect(page.getByLabel('Main phone number')).toHaveCount(0);
+    const highlight = page.getByLabel('Highlighted word (underlined in yellow)');
+    const original = await highlight.inputValue();
+    const saveHero = async () => {
+      const saved = page.waitForResponse(r => r.request().method() === 'PUT' && r.url().endsWith('/api/admin/settings'));
+      await page.getByRole('button', { name: 'Save hero' }).click();
+      expect((await saved).status()).toBe(200);
+    };
+    await highlight.fill('E2Eword');
+    await saveHero();
+    const home = await page.context().newPage();
+    await home.goto('/');
+    await expect(home.locator('#hero-title .marker')).toHaveText('E2Eword');
+    await home.close();
+    await highlight.fill(original);
+    await saveHero();
+  });
+
+  test('on a short desktop window the menu scrolls on its own, without scrolling the page', async () => {
+    test.skip(test.info().project.name !== 'desktop', 'the menu is a collapsible list on phones');
+    const original = page.viewportSize();
+    await page.setViewportSize({ width: 1280, height: 500 });
+    try {
+      await page.goto('/admin#/content/faqs');
+      await expect(page.locator('#admin-main h1')).toHaveText('FAQ');
+      const nav = page.locator('#admin-nav');
+      const sizes = await nav.evaluate(el => ({ scroll: el.scrollHeight, client: el.clientHeight }));
+      expect(sizes.scroll).toBeGreaterThan(sizes.client);
+      await nav.hover();
+      const pageBefore = await page.evaluate(() => window.scrollY);
+      await page.mouse.wheel(0, 200);
+      await expect.poll(() => nav.evaluate(el => el.scrollTop)).toBeGreaterThan(0);
+      expect(await page.evaluate(() => window.scrollY)).toBe(pageBefore);
+    } finally {
+      if (original) await page.setViewportSize(original);
+    }
+  });
+
   test('the admin fits a 360px phone without sideways scrolling', async () => {
     const original = page.viewportSize();
     await page.setViewportSize({ width: 360, height: 740 });

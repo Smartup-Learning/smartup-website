@@ -5,7 +5,7 @@ import { uploadMedia, pickMedia } from './media';
 export type Option = { value: string; label: string };
 export type Field = {
   name: string; label: string; type: string; required?: boolean; max?: number; min?: number; options?: Option[];
-  hint?: string; default?: unknown; fields?: Field[]; item?: Field[]; of?: string; prefix?: string; nullable?: boolean;
+  hint?: string; default?: unknown; fields?: Field[]; item?: Field[]; of?: string; prefix?: string; nullable?: boolean; page?: string;
 };
 export type Section = { label: string; title: string; subtitle: string; sortable: boolean; fields: Field[] };
 export type Schema = { sections: Record<string, Section>; settings: Field[]; inboxes: Record<string, { label: string; fields: { name: string; label: string }[] }> };
