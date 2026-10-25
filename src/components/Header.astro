@@ -11,17 +11,21 @@ const onDemo = path === '/demo';
 <header class="site-header">
   <div class="container bar">
     <a href="/" class="logo"><img src="/brand/logo.svg" alt="Smartup" width="150" height="33" /></a>
+    <a href="/" class="home-link" aria-current={current('/')}>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5M5.5 8.6V20a1 1 0 0 0 1 1H10v-6h4v6h3.5a1 1 0 0 0 1-1V8.6"/></svg>
+      <span>Home</span>
+    </a>
     <nav class="quick" aria-label="Quick links">
       <ul>{quickLinks.map(link => <li><a href={link.href} aria-current={current(link.href)}>{link.label}</a></li>)}</ul>
     </nav>
-    {!onDemo && <a class="btn btn--primary header-cta" href="/demo">Book free demo</a>}
+    {!onDemo && <a class="btn btn--primary header-cta" href="/demo">Find your program</a>}
     <a class="menu-toggle" href="#footer-nav" data-menu-toggle>
       <span class="menu-icon" aria-hidden="true"></span><span data-menu-label>Menu</span>
     </a>
   </div>
   <div id="site-menu" class="menu-panel" hidden>
     <div class="container menu-actions">
-      {!onDemo && <a class="btn btn--primary" href="/demo">Book a free demo</a>}
+      {!onDemo && <a class="btn btn--primary" href="/demo">Find your program</a>}
       {phone && <a class="btn btn--ghost menu-call" href={`tel:${phone}`}>Call {formatPhone(phone)}</a>}
     </div>
     <nav class="container menu-grid" aria-label="Main">
@@ -39,6 +43,11 @@ const onDemo = path === '/demo';
   .site-header { position: sticky; top: 0; z-index: 50; background: var(--white); border-bottom: 1px solid var(--line); }
   .bar { display: flex; align-items: center; gap: 1.25rem; height: var(--header-h); }
   .logo { margin-right: auto; display: block; }
+  /* Home is its own link, so nobody has to know that the logo goes home. Phones show the house with its label. */
+  .home-link { display: inline-flex; align-items: center; gap: 0.35rem; min-height: 44px; padding-inline: 0.25rem; font-weight: 600; text-decoration: none; }
+  .home-link svg { width: 1.35rem; height: 1.35rem; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .home-link:hover, .home-link[aria-current='page'] { color: var(--purple); }
+  @media (max-width: 380px) { .home-link span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; } .bar { gap: 0.75rem; } }
   .logo img { width: clamp(118px, 30vw, 150px); height: auto; }
   .quick, .header-cta { display: none; }
   .quick ul { display: flex; gap: 1.5rem; list-style: none; padding: 0; }

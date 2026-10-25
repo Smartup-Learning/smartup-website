@@ -1,0 +1,31 @@
+---
+import Owl from './Owl.astro';
+// The faculty opportunity, given a full band of its own so teachers notice it (Smartup team, 24 Oct 2026).
+interface Props { openings: number }
+const { openings } = Astro.props;
+---
+<section class="teach section--cream" aria-labelledby="teach-title">
+  <div class="container teach-inner" data-reveal>
+    <Owl class="teach-owl" size="clamp(4rem, 3rem + 3vw, 6rem)" badge />
+    <div class="teach-copy">
+      <p class="eyebrow">Careers</p>
+      <h2 id="teach-title">Teach with Smartup</h2>
+      <p>{openings > 0 ? `${openings} ${openings === 1 ? 'opening' : 'openings'} for teachers, teaching assistants and mentors across our centres and online.` : 'We are always glad to hear from teachers and mentors who want to help students grow.'}</p>
+    </div>
+    <div class="teach-actions">
+      <a class="btn btn--primary" href="/careers">{openings > 0 ? `See ${openings === 1 ? 'the opening' : `all ${openings} openings`}` : 'Careers at Smartup'}</a>
+      <a class="link-arrow" href="/careers#apply">Apply now</a>
+    </div>
+  </div>
+</section>
+<style>
+  .teach { padding-block: clamp(3rem, 2.5rem + 3vw, 5rem); }
+  .teach-inner { display: grid; gap: 1.5rem; align-items: center; }
+  .teach-copy { display: grid; gap: 0.6rem; max-width: 40rem; }
+  h2 { font-size: var(--step-4); font-weight: 600; }
+  .teach-copy > p:last-child { font-size: var(--step-1); color: var(--ink-soft); }
+  .teach-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.5rem; }
+  /* The owl's badge is cream; on this cream band it sits on white. */
+  .teach :global(.owl-badge) { background: var(--white); }
+  @media (min-width: 900px) { .teach-inner { grid-template-columns: auto minmax(0, 1fr) auto; gap: 2.5rem; } }
+</style>

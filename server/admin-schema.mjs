@@ -197,7 +197,7 @@ export const SECTIONS = {
       { name: 'key_points', label: 'Key points for the homepage (one per line)', type: 'lines', max: 4, itemMax: 80 },
       { name: 'features', label: 'Everything included (one per line)', type: 'lines', max: 20, itemMax: 120, hint: 'CBSE programmes are compared line by line, so use the same wording for the same feature.' },
       { name: 'fee', label: 'Fee', type: 'text', max: 80, hint: 'e.g. From ₹2,500 a month. Leave empty to show "Ask us".' },
-      { name: 'mentor_ratio', label: 'Mentor ratio', type: 'text', max: 40, hint: 'e.g. 1 mentor : 10 students' },
+      { name: 'mentor_ratio', label: 'Mentorship ratio', type: 'text', max: 40, hint: 'e.g. 1:1 Mentorship. Leave empty to show a tick when the programme lists mentorship.' },
       { name: 'parent_meetings', label: 'Parent meetings', type: 'text', max: 40, hint: 'e.g. Monthly' },
       published,
     ],
@@ -212,8 +212,6 @@ export const SETTINGS = [
   { name: 'heroDescription', page: 'hero', label: 'Line under the headline', type: 'text', required: true, max: 120 },
   { name: 'heroImage', page: 'hero', label: 'Homepage photo', type: 'image', hint: 'Shown in a circle beside the headline. One or two people, close up, works best.' },
   { name: 'heroImageAlt', page: 'hero', label: 'Describe the homepage photo', type: 'text', max: 200 },
-  { name: 'aboutTitle', label: 'About section title', type: 'text', required: true, max: 80 },
-  { name: 'aboutText', label: 'About section text', type: 'textarea', required: true, max: 800 },
   { name: 'phone', label: 'Main phone number', type: 'phone', required: true },
   { name: 'contactPhones', label: 'Other office numbers (Contact page)', type: 'list', max: 5, item: [
     { name: 'label', label: 'What this number is for', type: 'text', required: true, max: 40, hint: 'e.g. Admissions' },
@@ -246,10 +244,8 @@ export const SETTINGS = [
   { name: 'vision', label: 'Vision for the future (Our Story)', type: 'group', fields: [
     { name: 'title', label: 'Title', type: 'text', required: true, max: 80 },
     { name: 'tagline', label: 'Tagline', type: 'text', required: true, max: 120 },
-    { name: 'text', label: 'Paragraphs (one per line)', type: 'lines', of: 'text', itemMax: 800, max: 6 },
-    { name: 'priorities', label: 'Priorities', type: 'list', max: 8, item: [
-      { name: 'title', label: 'Title', type: 'text', required: true, max: 80 },
-      { name: 'text', label: 'Text', type: 'textarea', required: true, max: 400 },
+    { name: 'priorities', label: 'Priorities, as short headlines', type: 'list', max: 8, item: [
+      { name: 'title', label: 'Headline', type: 'text', required: true, max: 60, hint: 'A few words, e.g. A global education network' },
     ] },
     { name: 'vision2030', label: 'Vision 2030', type: 'textarea', max: 600 },
   ] },

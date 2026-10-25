@@ -92,10 +92,19 @@
       "mapUrl": "https://maps.app.goo.gl/J94zDDBt6BUJRHPbA"
     },
     "contactPhones": [
-      {"label": "Office", "phone": "7356072079"},
-      {"label": "Office", "phone": "7994436060"}
+      {
+        "label": "Office",
+        "phone": "7356072079"
+      },
+      {
+        "label": "Office",
+        "phone": "7994436060"
+      }
     ],
-    "classRange": {"from": 8, "to": 12},
+    "classRange": {
+      "from": 8,
+      "to": 12
+    },
     "courseDetails": {
       "classLengths": [
         {
@@ -1237,7 +1246,7 @@
         "Mentorship and support",
         "WhatsApp learning groups and resources"
       ],
-      "mentorRatio": "1 mentor : 10 students",
+      "mentorRatio": "1:1 Mentorship",
       "parentMeetings": "Monthly"
     },
     {
@@ -1259,7 +1268,7 @@
         "Mentorship and support",
         "WhatsApp learning groups and resources"
       ],
-      "mentorRatio": "1 mentor : 20 students",
+      "mentorRatio": "1:3 Mentorship",
       "parentMeetings": "Every two months"
     },
     {
@@ -1277,7 +1286,8 @@
         "Experienced teaching panel",
         "AI-integrated learning app and LMS",
         "Daily, weekly and monthly evaluations",
-        "WhatsApp learning groups and resources"
+        "WhatsApp learning groups and resources",
+        "Mentorship and support"
       ],
       "parentMeetings": "Quarterly"
     },
@@ -1301,57 +1311,57 @@
   ],
   "centres": [
     {
-      "name": "Chullickal",
-      "phone": "79071 26725",
-      "mapUrl": "https://maps.app.goo.gl/fPcDGwooDWMdMyQj8",
-      "hours": "5–9 pm"
-    },
-    {
-      "name": "Kadavanthra",
-      "phone": "92070 76473",
-      "mapUrl": "https://maps.app.goo.gl/dHgturY8vL8KXyhM9",
-      "hours": "5–9 pm"
-    },
-    {
       "name": "Eraveli",
-      "phone": "87144 46244",
+      "phone": "73560 72139",
       "mapUrl": "https://maps.app.goo.gl/T7BtN9yKTBg9dGS47",
       "hours": "5–9 pm"
     },
     {
-      "name": "Thoppumpady",
-      "phone": "98950 85731",
-      "mapUrl": "https://maps.app.goo.gl/avuWtnrD2aYmXLnb6",
-      "hours": "5–9 pm"
-    },
-    {
-      "name": "Palluruthy",
-      "phone": "81291 79749",
-      "mapUrl": "https://maps.app.goo.gl/nqiTJA4cjZeExYHe9",
-      "hours": "5–9 pm"
-    },
-    {
-      "name": "Moolamkuzhi",
-      "phone": "77364 23463",
-      "mapUrl": "https://maps.app.goo.gl/GhSUr39w1vyMvzLi7",
-      "hours": "5–9 pm"
-    },
-    {
       "name": "Fort Kochi",
-      "phone": "81295 08689",
+      "phone": "73560 72139",
       "mapUrl": "https://maps.app.goo.gl/Jc21d9sY4MX177As9",
       "hours": "5–9 pm"
     },
     {
-      "name": "Vennala",
-      "phone": "6282-179991",
-      "mapUrl": "https://maps.app.goo.gl/7MRpY4dZUXRkj8gB8",
+      "name": "Kadavanthra",
+      "phone": "73560 72139",
+      "mapUrl": "https://maps.app.goo.gl/dHgturY8vL8KXyhM9",
+      "hours": "5–9 pm"
+    },
+    {
+      "name": "Chullickal",
+      "phone": "73560 72108",
+      "mapUrl": "https://maps.app.goo.gl/fPcDGwooDWMdMyQj8",
+      "hours": "5–9 pm"
+    },
+    {
+      "name": "Moolamkuzhi",
+      "phone": "73560 72108",
+      "mapUrl": "https://maps.app.goo.gl/GhSUr39w1vyMvzLi7",
       "hours": "5–9 pm"
     },
     {
       "name": "Edappally",
-      "phone": "8137-859426",
+      "phone": "73560 72108",
       "mapUrl": "https://maps.app.goo.gl/Gp159hZFmEDV3xkb9",
+      "hours": "5–9 pm"
+    },
+    {
+      "name": "Palluruthy",
+      "phone": "73560 72098",
+      "mapUrl": "https://maps.app.goo.gl/nqiTJA4cjZeExYHe9",
+      "hours": "5–9 pm"
+    },
+    {
+      "name": "Thoppumpady",
+      "phone": "73560 72098",
+      "mapUrl": "https://maps.app.goo.gl/avuWtnrD2aYmXLnb6",
+      "hours": "5–9 pm"
+    },
+    {
+      "name": "Vennala",
+      "phone": "73560 72098",
+      "mapUrl": "https://maps.app.goo.gl/7MRpY4dZUXRkj8gB8",
       "hours": "5–9 pm"
     }
   ],
@@ -1954,7 +1964,7 @@
       "category": "Parent guidance",
       "publishedAt": "2026-10-06",
       "excerpt": "Your child does the studying, but home sets the pace. Small, steady habits from parents make a real difference before board exams.",
-      "body": "## 1. Keep a steady routine\n\nRegular meals, sleep and study hours matter more than long nights. A predictable day lowers stress for everyone.\n\n## 2. Ask about plans, not marks\n\nInstead of asking for scores, ask what your child will revise today. It keeps the focus on effort they control.\n\n## 3. Make space to study\n\nA quiet corner, good light and a phone parked in another room help more than any new book.\n\n## 4. Stay in touch with teachers\n\nRead the weekly and monthly updates, and come to parent meetings. Teachers can tell you exactly which chapters need attention.\n\n## 5. Celebrate small wins\n\nA finished chapter or a better test score deserves notice. Confidence grows from many small successes.\n\nAt Smartup, parents receive regular progress updates and meet teachers through the year. [Talk to our team](https://smartupedu.in/contact) to learn how it works.",
+      "body": "## 1. Keep a steady routine\n\nRegular meals, sleep and study hours matter more than long nights. A predictable day lowers stress for everyone.\n\n## 2. Ask about plans, not marks\n\nInstead of asking for scores, ask what your child will revise today. It keeps the focus on effort they control.\n\n## 3. Make space to study\n\nA quiet corner, good light and a phone parked in another room help more than any new book.\n\n## 4. Stay in touch with teachers\n\nRead the weekly and monthly updates, and come to parent meetings. Teachers can tell you exactly which chapters need attention.\n\n## 5. Celebrate small wins\n\nA finished chapter or a better test score deserves notice. Confidence grows from many small successes.\n\nAt Smartup, parents receive regular progress updates and meet teachers through the year. [Talk to our team](/contact) to learn how it works.",
       "isSample": true
     },
     {

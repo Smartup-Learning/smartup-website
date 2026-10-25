@@ -2,58 +2,67 @@
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import SectionHead from '../components/SectionHead.astro';
-import Timeline from '../components/Timeline.astro';
-import FounderCard from '../components/FounderCard.astro';
 import ResultCard from '../components/ResultCard.astro';
 import VideoCard from '../components/VideoCard.astro';
 import QuoteCard from '../components/QuoteCard.astro';
-import AlumniCard from '../components/AlumniCard.astro';
 import CourseTabs from '../components/CourseTabs.astro';
-import DemoBand from '../components/DemoBand.astro';
-import StoreBadges from '../components/StoreBadges.astro';
-import PhoneShot from '../components/PhoneShot.astro';
+import PeekingOwl from '../components/brand/PeekingOwl.astro';
 import { getStore } from '../lib/store';
+import { groupByPhone } from '../lib/centres';
 import { organisationJsonLd } from '../lib/structured-data';
 import { siteOrigin } from '../lib/site';
+import { keepTogether } from '../lib/text.mjs';
+import { formatPhone } from '../../server/content-store.mjs';
 import { classesText } from '../../server/forms.mjs';
 const store = getStore(Astro.locals);
 const settings = store.settings();
 const stats = store.stats();
-const chapters = store.timeline({ featured: true });
-const leaders = store.leaders();
 const results = store.results({ featured: true });
 const feedback = store.testimonials('feedback');
 const alumni = store.testimonials('alumni');
-const alumniStories = store.alumni().slice(0, 3);
 const jobs = store.jobs();
 const centres = store.centres();
+const groups = groupByPhone(centres);
 const description = `Smartup tuitions in Kochi and online for CBSE and State Board students, ${classesText(settings.classRange)}. ${stats.map(s => `${s.value} ${s.label.toLowerCase()}`).join(', ')}.`;
+const ways = [
+  settings.phone && { title: 'Call us', text: formatPhone(settings.phone), href: `tel:${settings.phone}` },
+  settings.whatsapp
+    ? { title: 'WhatsApp', text: 'Message our team', href: `https://wa.me/${settings.whatsapp.replace(/\D/g, '')}`, external: true }
+    : { title: 'Email', text: settings.email, href: `mailto:${settings.email}` },
+  centres.length > 0 && { title: 'Visit a centre', text: `${centres.length} Offline Centres in Kochi`, href: '/contact' },
+  jobs.length > 0 && { title: 'Teach with Smartup', text: `${jobs.length} ${jobs.length === 1 ? 'opening' : 'openings'} for teachers and mentors`, href: '/careers', feature: true },
+].filter(Boolean) as { title: string; text: string; href: string; external?: boolean; feature?: boolean }[];
 ---
 <Base description={description} page="home" structuredData={organisationJsonLd(settings, centres, siteOrigin(Astro.locals, Astro.url))}>
   <Hero headline={settings.heroHeadline} highlight={settings.heroHighlight} description={settings.heroDescription} image={settings.heroImage || undefined} imageAlt={settings.heroImageAlt} stats={stats} />
 
-  <section id="about" class="section section--cream" aria-labelledby="about-title">
+  <section id="courses" class="section section--deep" aria-labelledby="courses-title">
     <div class="container">
-      <SectionHead eyebrow="About Smartup" title={settings.aboutTitle} intro={settings.aboutText} id="about-title" />
-      {chapters.length > 0 && <Timeline chapters={chapters} variant="teaser" />}
-      <p class="more"><a class="link-arrow" href="/story">Read our story</a></p>
+      <SectionHead eyebrow="Find your program" title="Programs for CBSE and State Board" intro="Live online classes with mentorship, regular tests and updates for parents." id="courses-title" link={{ href: '/courses', label: 'All course details' }} />
+      <CourseTabs programmes={store.programmes()} />
     </div>
   </section>
 
-  {leaders.length > 0 && (
-    <section id="founders" class="section" aria-labelledby="founders-title">
+  {centres.length > 0 && (
+    <section id="offline" class="section section--purple offline" aria-labelledby="offline-title">
       <div class="container">
-        <SectionHead title="The people behind Smartup" id="founders-title" link={{ href: '/founders', label: 'Meet the founders' }} />
-        <div class="founders rail" data-reveal="group">
-          {leaders.map(leader => <FounderCard leader={leader} />)}
-        </div>
+        <SectionHead eyebrow="In a classroom" title="Offline Centres" intro={`Learn in person with Smartup teachers at ${centres.length} centres across Kochi, every centre open ${keepTogether(settings.hours)}.`} id="offline-title" link={{ href: '/contact', label: 'Directions to every centre' }} />
+        <ul class="centre-groups" data-reveal="group">
+          {groups.map(g => (
+            <li class="centre-group" data-reveal-item>
+              <ul class="centre-names">{g.centres.map(c => <li>{c.name}</li>)}</ul>
+              <a class="btn btn--light" href={`tel:${g.phone}`}>Call {formatPhone(g.phone)}</a>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   )}
+
   {results.length > 0 && (
-    <section id="results" class="section section--cream" aria-labelledby="results-title">
+    <section id="results" class="section section--deep" aria-labelledby="results-title">
       <div class="container">
-        <SectionHead title="Results our students earned" intro="Every figure names its exam and year." id="results-title" link={{ href: '/results', label: 'See all results' }} />
+        <SectionHead eyebrow="Results" title="Results our students earned" intro="Every figure names its exam and year." id="results-title" link={{ href: '/results', label: 'See all results' }} />
         <div class="rail rail--shapes results-row" data-reveal="group" tabindex="0" role="region" aria-label="Result highlights">
           {results.map(result => <ResultCard result={result} group="home-results" showExam sizes="(min-width: 900px) 18rem, 60vw" />)}
         </div>
@@ -62,112 +71,71 @@ const description = `Smartup tuitions in Kochi and online for CBSE and State Boa
   )}
 
   {feedback.length > 0 && (
-    <section id="feedback" class="section" aria-labelledby="feedback-title">
+    <section id="feedback" class="section section--purple" aria-labelledby="feedback-title">
       <div class="container media-split">
-        <SectionHead eyebrow="Student & parent feedback" title="In their own words" intro="Students and parents on what changed after joining Smartup." id="feedback-title" link={{ href: '/testimonials', label: 'More testimonials' }} stack />
-        <div class="rail videos" data-reveal="group" tabindex="0" role="region" aria-label="Student and parent feedback">
+        <SectionHead eyebrow="Student & parent testimonials" title="In their own words" intro="Students and parents on what changed after joining Smartup." id="feedback-title" link={{ href: '/testimonials', label: 'More testimonials' }} stack />
+        <div class="rail videos" data-reveal="group" tabindex="0" role="region" aria-label="Student and parent testimonials">
           {feedback.map(item => item.kind === 'video' ? <VideoCard item={item} /> : <QuoteCard item={item} />)}
         </div>
       </div>
     </section>
   )}
 
-  {(alumni.length > 0 || alumniStories.length > 0) && (
+  {alumni.length > 0 && (
     <section id="alumni" class="section section--deep" aria-labelledby="alumni-title">
-      <div class="container">
-        <SectionHead eyebrow="Alumni" title="Where Smartup students go" id="alumni-title" link={{ href: '/alumni', label: 'All alumni journeys' }} />
-        {alumniStories.length > 0 && (
-          <div class="rail alumni-stories" data-reveal="group" tabindex="0" role="region" aria-label="Alumni stories">
-            {alumniStories.map(story => <AlumniCard story={story} />)}
-          </div>
-        )}
-        {alumni.length > 0 && (
-          <div class="media-split alumni-videos">
-            <div class="row-head">
-              <h3 class="row-title">Alumni on video</h3>
-              <p>Former students back on the Talent Eve stage.</p>
-            </div>
-            <div class="rail videos" data-reveal="group" tabindex="0" role="region" aria-label="Alumni videos">
-              {alumni.map(item => item.kind === 'video' ? <VideoCard item={item} /> : <QuoteCard item={item} />)}
-            </div>
-          </div>
-        )}
+      <div class="container media-split">
+        <SectionHead eyebrow="Alumni" title="Alumni videos" intro="Former Smartup students back on the Talent Eve stage." id="alumni-title" link={{ href: '/alumni', label: 'All alumni journeys' }} stack />
+        <div class="rail videos" data-reveal="group" tabindex="0" role="region" aria-label="Alumni videos">
+          {alumni.map(item => item.kind === 'video' ? <VideoCard item={item} /> : <QuoteCard item={item} />)}
+        </div>
       </div>
     </section>
   )}
 
-  <section id="courses" class="section section--cream" aria-labelledby="courses-title">
-    <div class="container">
-      <SectionHead title="Programmes for CBSE and State Board" id="courses-title" link={{ href: '/courses', label: 'All course details' }} />
-      <CourseTabs programmes={store.programmes()} centreCount={centres.length} hours={settings.hours} />
+  <section id="connect" class="section section--purple connect" aria-labelledby="connect-title">
+    <div class="container connect-inner">
+      <SectionHead eyebrow="Connect with us" title="Talk to the Smartup team" intro={`Questions about classes, fees or centres? We are here ${keepTogether(settings.hours)}.`} id="connect-title" />
+      <ul class="ways" data-reveal="group">
+        {ways.map(way => (
+          <li data-reveal-item>
+            <a class:list={['way', { 'way--feature': way.feature }]} href={way.href} target={way.external ? '_blank' : undefined} rel={way.external ? 'noopener' : undefined}>
+              <span class="way-title">{way.title}</span>
+              <span class="way-text">{way.text}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <div class="connect-actions"><a class="btn btn--yellow" href="/demo">Find your program</a></div>
     </div>
+    <PeekingOwl class="connect-owl" wide />
   </section>
-
-  <section id="app" class="section app-section" aria-labelledby="app-title">
-    <div class="container">
-      <div class="app-panel">
-        <div class="app-copy" data-reveal>
-          <p class="eyebrow">Smartup App</p>
-          <h2 id="app-title">Keep learning after class</h2>
-          <p>Smartup Learning puts live classes, recorded lessons, practice questions and progress tracking on your phone.</p>
-          <StoreBadges links={settings.appLinks} />
-          <a class="link-arrow" href="/app">See inside the app</a>
-        </div>
-        <div class="app-phones" aria-hidden="true">
-          <PhoneShot class="app-phone app-phone--back" file="analysis" alt="" />
-          <PhoneShot class="app-phone app-phone--front" file="home" alt="" />
-        </div>
-      </div>
-    </div>
-  </section>
-
-  {jobs.length > 0 && (
-    <section id="careers" class="careers-band" aria-labelledby="careers-title">
-      <div class="container careers-inner">
-        <h2 id="careers-title">Teach with Smartup</h2>
-        <p>{jobs.length} {jobs.length === 1 ? 'opening' : 'openings'} for teachers, teaching assistants and mentors across our centres.</p>
-        <a class="link-arrow" href="/careers">See all {jobs.length} {jobs.length === 1 ? 'opening' : 'openings'}</a>
-      </div>
-    </section>
-  )}
-
-  <DemoBand />
 </Base>
 <style>
-  .more { margin-top: 1.5rem; }
   .videos { grid-auto-columns: min(62%, 15rem); }
-  .alumni-stories { grid-auto-columns: min(80%, 20rem); }
   .results-row { gap: 1.5rem; padding-bottom: 1.5rem; }
-  .alumni-videos { margin-top: 3.5rem; }
-  .row-head { display: grid; gap: 0.5rem; margin-bottom: 1.25rem; }
-  .row-head p { color: var(--on-purple-soft); }
-  .row-title { font-size: var(--step-2); font-weight: 600; color: var(--white); }
-  .careers-band { padding-block: clamp(2.5rem, 2rem + 2vw, 3.5rem); border-top: 1px solid var(--line); }
-  .careers-inner { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.5rem 1.5rem; }
-  .careers-inner h2 { font-size: var(--step-2); font-weight: 600; }
-  .careers-inner p { color: var(--ink-soft); flex: 1 1 20rem; }
-  .app-panel { position: relative; overflow: hidden; display: grid; gap: 2rem; padding: clamp(2rem, 1.5rem + 3vw, 4rem) clamp(1.5rem, 1rem + 3vw, 4rem) 0; border-radius: calc(var(--radius) * 1.5); background: radial-gradient(circle at 85% 20%, var(--purple-300), var(--purple) 45%, var(--purple-900)); color: var(--white); }
-  .app-copy { display: grid; gap: 1rem; justify-items: start; align-content: center; padding-bottom: 0.5rem; }
-  .app-copy .eyebrow { color: var(--yellow); }
-  .app-copy h2 { font-size: var(--step-4); font-weight: 600; line-height: 1.05; }
-  .app-copy > p:not(.eyebrow) { font-size: var(--step-1); color: var(--on-purple-soft); max-width: 32rem; }
-  .app-copy .link-arrow { color: var(--white); }
-  /* Two phones rise from the bottom edge of the panel; the back one is tilted. */
-  .app-phones { position: relative; height: clamp(14rem, 10rem + 16vw, 20rem); }
-  .app-phones :global(.app-phone) { position: absolute; top: 0; width: clamp(10rem, 7rem + 12vw, 15rem); }
-  .app-phones :global(.app-phone--front) { left: 8%; z-index: 1; }
-  .app-phones :global(.app-phone--back) { right: 6%; top: 2rem; transform: rotate(8deg); opacity: 0.92; }
+  /* Offline Centres: one card per shared number, centre names large so the offline side reads as strongly as the online programmes. */
+  .centre-groups { list-style: none; padding: 0; display: grid; gap: 1rem; grid-template-columns: minmax(0, 1fr); }
+  .centre-group { display: grid; gap: 1.5rem; align-content: space-between; padding: clamp(1.5rem, 1rem + 1.5vw, 2.25rem); border-radius: var(--radius); background: var(--purple-600); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.12); }
+  .centre-names { list-style: none; padding: 0; display: grid; gap: 0.35rem; }
+  .centre-names li { display: flex; align-items: center; gap: 0.6rem; font-size: var(--step-2); font-weight: 600; color: var(--white); line-height: 1.2; }
+  .centre-names li::before { content: ''; flex: none; width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--yellow); }
+  .centre-group .btn { justify-self: start; font-variant-numeric: tabular-nums; }
+  /* Connect with us: each way to reach Smartup is a large tile; Teach with Smartup is picked out in white. */
+  .connect { position: relative; overflow: hidden; --peek-bg: var(--cream); }
+  .connect-inner { position: relative; z-index: 1; }
+  .ways { list-style: none; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14.5rem), 1fr)); }
+  .way { display: grid; gap: 0.35rem; height: 100%; padding: 1.5rem; border-radius: var(--radius); background: var(--purple-600); color: var(--white); text-decoration: none; box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.12); transition: background-color 0.2s; }
+  .way:hover { background: var(--purple-900); }
+  .way-title { font-size: var(--step--1); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--on-purple-soft); }
+  .way-text { font-size: var(--step-0); font-weight: 600; overflow-wrap: anywhere; }
+  .way-text::after { content: ' →'; }
+  .way--feature { background: var(--white); color: var(--purple-900); box-shadow: none; }
+  .way--feature:hover { background: var(--cream); }
+  .way--feature .way-title { color: var(--purple); }
+  .connect-actions { margin-top: 2rem; }
+  :global(.connect-owl) { --peek-size: clamp(14rem, 8rem + 10vw, 20rem); }
   @media (min-width: 900px) {
-    .app-panel { grid-template-columns: 1.1fr 1fr; padding-bottom: 0; }
-    .app-copy { padding-bottom: clamp(2rem, 1.5rem + 3vw, 4rem); }
-    .app-phones { height: auto; min-height: 26rem; }
-    .app-phones :global(.app-phone) { width: 17rem; top: auto; bottom: -8.5rem; }
-    .app-phones :global(.app-phone--front) { left: 4%; }
-    .app-phones :global(.app-phone--back) { right: 2%; top: auto; bottom: -11rem; }
+    .centre-groups { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .connect-inner { padding-right: clamp(4rem, 9vw, 11rem); }
   }
-  @media (min-width: 900px) {
-    .founders { grid-auto-flow: row; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: visible; gap: 1.75rem; }
-    .alumni-stories { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; gap: 1.5rem; }
-  }
-
 </style>

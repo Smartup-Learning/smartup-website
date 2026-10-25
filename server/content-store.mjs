@@ -127,6 +127,13 @@ const SECTIONS = {
   },
 };
 
+// Lower-case letters only, with the spellings the team has used for each centre.
+const CENTRE_GROUPS = [
+  { phone: '+917356072139', names: [['eraveli', 'eeraveli'], ['fortkochi'], ['kadavanthra']] },
+  { phone: '+917356072108', names: [['chullickal', 'chullikkal', 'chullikal'], ['moolamkuzhi'], ['edappally']] },
+  { phone: '+917356072098', names: [['palluruthy'], ['thoppumpady'], ['vennala']] },
+];
+
 // Columns added after the first release; the constructor adds any that an existing database lacks.
 // One-time corrections to content seeded by an earlier version, each applied once per database and recorded in
 // seed_log as "fix:<name>", so anything staff change afterwards is never undone.
@@ -141,7 +148,33 @@ const CORRECTIONS = {
     put.run(edx.sort, jwala.id);
     if (edx.sort === jwala.sort) put.run(edx.sort - 1, jwala.id);
   },
+  // Centres share three numbers, one per group (Smartup team, 24 Oct 2026); each group is listed together.
+  'centres-shared-numbers'(db) {
+    const key = name => name.toLowerCase().replace(/[^a-z]/g, '');
+    const centres = db.prepare('SELECT id, name FROM centres').all();
+    const put = db.prepare('UPDATE centres SET phone = ?, sort = ? WHERE id = ?');
+    CENTRE_GROUPS.flatMap(g => g.names.map(names => ({ phone: g.phone, names }))).forEach(({ phone, names }, sort) => {
+      const centre = centres.find(c => names.includes(key(c.name)));
+      if (centre) put.run(phone, sort, centre.id);
+    });
+  },
+  // Micro batch (Smartup Power) includes mentorship; Pro and Trio show their mentorship ratios.
+  'programmes-mentorship'(db) {
+    const find = db.prepare('SELECT id, features FROM programmes WHERE name = ?');
+    const power = find.get('Smartup Power');
+    if (power) {
+      const features = parseList(power.features);
+      if (!features.some(f => /mentor/i.test(f))) db.prepare('UPDATE programmes SET features = ? WHERE id = ?').run(JSON.stringify([...features, 'Mentorship and support']), power.id);
+    }
+    db.prepare("UPDATE programmes SET mentor_ratio = '1:1 Mentorship' WHERE name = 'Smartup Pro'").run();
+    db.prepare("UPDATE programmes SET mentor_ratio = '1:3 Mentorship' WHERE name = 'Smartup Trio'").run();
+  },
+  // A seeded blog post sent "Talk to our team" to the old website's contact page.
+  'posts-own-contact-link'(db) {
+    db.prepare("UPDATE posts SET body = replace(body, '](https://smartupedu.in/contact)', '](/contact)')").run();
+  },
 };
+
 
 const ADDED_COLUMNS = [
   ['results', 'kind', "TEXT NOT NULL DEFAULT 'student'"],

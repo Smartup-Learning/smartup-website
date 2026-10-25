@@ -4,8 +4,10 @@ import PageHero from '../components/PageHero.astro';
 import FilterChips from '../components/FilterChips.astro';
 import RingPhoto from '../components/brand/RingPhoto.astro';
 import DemoBand from '../components/DemoBand.astro';
+import TeachBand from '../components/TeachBand.astro';
 import { getStore } from '../lib/store';
-const team = getStore(Astro.locals).faculty();
+const store = getStore(Astro.locals);
+const team = store.faculty();
 const groups = [
   { value: 'mathematics', label: 'Mathematics' }, { value: 'physics', label: 'Physics' },
   { value: 'chemistry', label: 'Chemistry' }, { value: 'biology', label: 'Biology' },
@@ -49,6 +51,7 @@ const sections = [...groups.filter(g => g.value === 'team'), ...groups.filter(g 
       )}
     </div>
   </section>
+  <TeachBand openings={store.jobs().length} />
   <DemoBand />
 </Base>
 <style>

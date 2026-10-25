@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import { keepTogether } from '../lib/text.mjs';
 import PageHero from '../components/PageHero.astro';
 import SectionHead from '../components/SectionHead.astro';
-import { BOARDS, formatMinutes, comparisonRows, askLabel, demoLink, isRatio } from '../lib/courses';
+import { BOARDS, formatMinutes, comparisonRows, askLabel, demoLink, isRatio, mentorship } from '../lib/courses';
 import { classesText } from '../../server/forms.mjs';
 import IconBand from '../components/brand/IconBand.astro';
 import { getStore } from '../lib/store';
@@ -21,7 +21,7 @@ const classSteps = list(details.classSteps) as { step: string; minutes: number }
 const parentUpdates = list(details.parentUpdates) as { name: string; who: string; covers: string[] }[];
 const stateSession = list(details.stateSession) as { step: string; minutes: number }[];
 const minutesOf = (steps: { minutes: number }[]) => steps.reduce((sum, s) => sum + (Number(s.minutes) || 0), 0);
-const mentors = programmes.filter(p => p.mentorRatio);
+const mentors = programmes.filter(p => mentorship(p));
 const stateCards = [
   { title: 'Teaching method', items: list(details.stateMethod) as string[] },
   { title: stateSession.length ? `Each class, about ${formatMinutes(minutesOf(stateSession))}` : 'Each class', items: stateSession.map(s => `${s.step}: ${formatMinutes(s.minutes)}`) },
@@ -29,10 +29,11 @@ const stateCards = [
   { title: 'Before the exams', items: list(details.stateExamPrep) as string[] },
 ].filter(c => c.items.length > 0);
 const names = programmes.map(p => p.name.replace(/^Smartup\s+/, '')).join(', ');
-const heroPhoto = store.timeline()[0]?.media[0];
+const chapters = store.timeline();
+const heroPhoto = chapters[0]?.media[0];
 ---
-<Base title="Courses" description={`Smartup programmes for CBSE and Kerala State Board: ${names}, online${centres.length ? ` and at ${centres.length} centres in Kochi` : ''}.`} page="courses">
-  <PageHero eyebrow="Courses" title="Programmes built around" highlight="every student" intro={`CBSE and Kerala State Board, ${classesText(settings.classRange)} — online, or at one of our centres in Kochi.`} image={heroPhoto ? { base: heroPhoto.src, alt: heroPhoto.alt, focus: '55% 50%' } : undefined} />
+<Base title="Courses" description={`Smartup programs for CBSE and Kerala State Board: ${names}, online${centres.length ? ` and at ${centres.length} centres in Kochi` : ''}.`} page="courses">
+  <PageHero eyebrow="Courses" title="Programs built around" highlight="every student" intro={`CBSE and Kerala State Board, ${classesText(settings.classRange)} — online, or at one of our centres in Kochi.`} image={heroPhoto ? { base: heroPhoto.src, alt: heroPhoto.alt, focus: '55% 50%', past: chapters.length > 1 } : undefined} />
 
   {cbse.length > 0 && (
     <section class="section" aria-labelledby="cbse-title">
@@ -40,7 +41,7 @@ const heroPhoto = store.timeline()[0]?.media[0];
         <SectionHead title={BOARDS[0].heading} intro={cbse.length > 1 ? `${['', 'One way', 'Two ways', 'Three ways', 'Four ways', 'Five ways'][cbse.length] ?? `${cbse.length} ways`} to learn, compared line by line.` : undefined} id="cbse-title" />
         <div class="compare-wrap" data-reveal>
           <table class="compare" style={`--cols: ${cbse.length}`}>
-            <caption class="sr-only">CBSE programmes compared</caption>
+            <caption class="sr-only">CBSE programs compared</caption>
             <thead>
               <tr>
                 <td></td>
@@ -57,7 +58,7 @@ const heroPhoto = store.timeline()[0]?.media[0];
               {rows.map(row => (
                 <tr>
                   <th scope="row">{row.feature}</th>
-                  {row.cells.map(cell => <td>{cell === true ? <span class="tick" aria-label="Included">✓</span> : cell === false ? <span class="none" aria-label="Not included">–</span> : keepTogether(cell)}</td>)}
+                  {row.cells.map(cell => <td>{cell === true ? <span class="tick" aria-label="Included">✓</span> : cell === false ? <span class="none" aria-label="Not included">–</span> : row.feature === 'Mentorship' ? <strong class="ratio-cell"><span class="tick" aria-hidden="true">✓</span> {cell}</strong> : keepTogether(cell)}</td>)}
                 </tr>
               ))}
             </tbody>
@@ -98,7 +99,7 @@ const heroPhoto = store.timeline()[0]?.media[0];
         <SectionHead eyebrow="For parents" title="You always know how your child is doing" id="parents-title" />
         <div class="updates" data-reveal="group">
           {parentUpdates.map(u => <article class="update" data-reveal-item><h3>{u.name}</h3><p class="who">{u.who}</p><ul>{list(u.covers).map(c => <li>{c}</li>)}</ul></article>)}
-          {mentors.length > 0 && <article class="update" data-reveal-item><h3>Mentors</h3><p class="who">Follow-up, attendance, homework, motivation and parent communication</p><ul>{mentors.map(m => <li>{m.name}: {m.mentorRatio}</li>)}</ul></article>}
+          {mentors.length > 0 && <article class="update" data-reveal-item><h3>Mentors</h3><p class="who">Follow-up, attendance, homework, motivation and parent communication</p><ul>{mentors.map(m => <li>{m.name}: {m.mentorRatio || 'mentorship included'}</li>)}</ul></article>}
         </div>
       </div>
     </section>
@@ -118,15 +119,14 @@ const heroPhoto = store.timeline()[0]?.media[0];
     </section>
   )}
 
-  <section class="section" aria-labelledby="where-title">
-    <div class="container where" data-reveal>
-      <div class="where-text">
-        <SectionHead title={centres.length ? `Learn from home, or at ${centres.length} centres` : 'Learn from home'} intro={centres.length ? `Every centre is open ${keepTogether(settings.hours)}.` : undefined} id="where-title" stack />
-        <div class="actions"><a class="btn btn--primary" href="/demo">Book a free demo class</a><a class="link-arrow" href="/contact">Find your nearest centre</a></div>
+  {centres.length > 0 && (
+    <section class="section section--purple" aria-labelledby="offline-title">
+      <div class="container where" data-reveal>
+        <SectionHead eyebrow="In a classroom" title="Offline Centres" intro={`Learn in person with Smartup teachers at ${centres.length} centres across Kochi. Every centre is open ${keepTogether(settings.hours)}.`} id="offline-title" stack />
+        <div class="actions"><a class="btn btn--yellow" href="/demo">Find your program</a><a class="btn btn--ghost" href="/contact">Find your nearest centre</a></div>
       </div>
-      {centres.length > 0 && <ul class="centre-chips" aria-label="Our centres">{centres.map(c => <li><a href={c.mapUrl} target="_blank" rel="noopener">{c.name}</a></li>)}</ul>}
-    </div>
-  </section>
+    </section>
+  )}
 </Base>
 <style>
   .compare-wrap { overflow-x: auto; margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); }
@@ -141,6 +141,7 @@ const heroPhoto = store.timeline()[0]?.media[0];
   .col-ratio--word { font-size: var(--step-0); }
   .state-fee { margin: -1rem 0 1.5rem; font-size: var(--step-1); font-weight: 600; color: var(--yellow); }
   .tick { font-size: var(--step-1); font-weight: 700; color: var(--purple); }
+  .ratio-cell { color: var(--purple); }
   .none { color: #b9aec7; }
   /* Phones: each feature on its own line with the three values in a row beneath, so nothing scrolls sideways. */
   @media (max-width: 599px) {
@@ -176,15 +177,12 @@ const heroPhoto = store.timeline()[0]?.media[0];
   .state-ask { margin-top: 2rem; }
   .section--deep { position: relative; overflow: hidden; padding-bottom: 0; --band-color: var(--purple-300); }
   :global(.courses-band) { margin-top: clamp(3rem, 2rem + 3vw, 4.5rem); padding-block: 1.25rem 1.75rem; opacity: 0.5; }
-  .where { display: grid; gap: 2rem; align-items: center; }
-  .where-text { display: grid; gap: 1.25rem; }
-  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.5rem; }
-  .centre-chips { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 9.5rem), 1fr)); gap: 0.5rem; }
-  .centre-chips a { width: 100%; justify-content: center; }
-  .centre-chips a { display: inline-flex; align-items: center; min-height: 44px; padding: 0.4rem 1rem; border: 1px solid var(--line); border-radius: 999px; text-decoration: none; font-weight: 500; }
-  .centre-chips a:hover { border-color: var(--purple); color: var(--purple); }
+  .where { display: grid; gap: 0.5rem 4rem; align-items: center; }
+  .where :global(.section-head) { margin-bottom: 0; }
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+  .section--purple .actions .btn--ghost { color: var(--white); }
   @media (min-width: 900px) {
     .two { grid-template-columns: 1fr 1fr; align-items: start; gap: 4rem; }
-    .where { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 4rem; }
+    .where { grid-template-columns: minmax(0, 1.4fr) auto; }
   }
 </style>

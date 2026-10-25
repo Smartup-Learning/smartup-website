@@ -28,9 +28,9 @@ test('the viewer steps through the group, and the back button closes it without 
   expect(page.url()).toMatch(/\/results$/);
 });
 
-test('story pictures on the home page open in the viewer', async ({ page }) => {
-  await page.goto('/');
-  const picture = page.locator('#about a[data-lightbox]').first();
+test('story pictures open in the viewer', async ({ page }) => {
+  await page.goto('/story');
+  const picture = page.locator('.timeline a[data-lightbox]').first();
   await picture.scrollIntoViewIfNeeded();
   await picture.click();
   await expect(viewer(page)).toBeVisible();
@@ -65,8 +65,8 @@ test('without JavaScript a poster link opens the full image in the same tab', as
 });
 
 test('a story picture shown whole on a blurred copy opens with its own description', async ({ page }) => {
-  await page.goto('/');
-  const frame = page.locator('#about a[data-lightbox][data-fit="whole"]').first();
+  await page.goto('/story');
+  const frame = page.locator('.timeline a[data-lightbox][data-fit="whole"]').first();
   await frame.scrollIntoViewIfNeeded();
   const alt = await frame.locator('img:not(.media-backdrop)').getAttribute('alt');
   await frame.click();

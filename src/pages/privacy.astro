@@ -26,12 +26,12 @@ const settings = getStore(Astro.locals).settings();
       <p>This website is run by {settings.legalName ?? 'Smartup'}{settings.registeredOffice?.address && <>, registered office: {settings.registeredOffice.address}</>}. For any question or complaint about how we handle your details, write to <a href={`mailto:${settings.email}`}>{settings.email}</a>{settings.phone && <> or call <a href={`tel:${settings.phone}`}>{formatPhone(settings.phone)}</a></>}, and we will reply.</p>
 
       <h2>What this website does</h2>
-      <p>This website tells you about Smartup programmes, results and centres. It does not create student accounts or take payments.</p>
+      <p>This website tells you about Smartup programs, results and centres. It does not create student accounts or take payments.</p>
 
       <h2 id="forms">When you fill in a form</h2>
       <p>The forms on this website save what you type so our team can reply:</p>
       <ul>
-        <li><strong>Free demo class:</strong> the student's name, a mobile number, class, board, the programme if you choose one, online or centre, preferred centre and preferred time.</li>
+        <li><strong>Free demo class:</strong> the student's name, a mobile number, class, board, the program if you choose one, online or centre, preferred centre and preferred time.</li>
         <li><strong>Job application:</strong> your name, mobile number, email, the role, your experience, your message and any CV link you share.</li>
         <li><strong>Ask Smartup:</strong> your name, mobile number, email (if you give one) and your question.</li>
       </ul>

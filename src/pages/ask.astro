@@ -16,7 +16,7 @@ const mail = `mailto:${settings.email}?subject=${encodeURIComponent('A question 
 const error = Astro.url.searchParams.get('error');
 const topic = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 ---
-<Base title="Ask Smartup" description="Answers to common questions about Smartup classes, programmes, centres and admissions." page="ask">
+<Base title="Ask Smartup" description="Answers to common questions about Smartup classes, programs, centres and admissions." page="ask">
   <PageHero eyebrow="Ask Smartup" title="Questions," highlight="answered" intro="Search the questions parents and students ask most. Can't find yours? Ask us directly." />
   <section class="section faq-section" aria-labelledby="faq-title">
     <div class="container"><div class="narrow">

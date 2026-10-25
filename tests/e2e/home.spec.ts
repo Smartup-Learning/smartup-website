@@ -1,24 +1,24 @@
 import { test, expect } from '@playwright/test';
 
-test('hero leads with the trust headline and the demo action', async ({ page }) => {
+test('hero leads with the trust headline and the program finder', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Make parents proud');
-  await expect(page.locator('.hero').getByRole('link', { name: 'Book free demo' })).toHaveAttribute('href', '/demo');
+  await expect(page.locator('.hero').getByRole('link', { name: 'Find your program' })).toHaveAttribute('href', '/demo');
   await expect(page.locator('.hero').getByRole('link', { name: 'Our story' })).toHaveAttribute('href', '/story');
 });
 
-test('about shows four featured chapters and links to the story', async ({ page }) => {
+test('the homepage opens with the programs, then Offline Centres', async ({ page }) => {
   await page.goto('/');
-  const about = page.locator('#about');
-  await expect(about.locator('li.chapter')).toHaveCount(4);
-  await expect(about.getByRole('link', { name: 'Read our story' })).toHaveAttribute('href', '/story');
+  await expect(page.locator('main > section').nth(1)).toHaveId('courses');
+  await expect(page.locator('#offline .centre-group')).toHaveCount(3);
+  await expect(page.locator('#offline a[href^="tel:"]')).toHaveCount(3);
 });
 
-test('founders appear in the client order with photos', async ({ page }) => {
-  await page.goto('/');
-  const names = page.locator('#founders .founder-name');
+test('founders appear on Our Story in the client order with photos', async ({ page }) => {
+  await page.goto('/story');
+  const names = page.locator('.founders .founder-name');
   await expect(names).toHaveText(['Mohamed Rayees', 'Dhanesh Narayanan Achari', 'Mohamed Shihas K. Y.', 'Shanu K. Y.']);
-  await expect(page.locator('#founders img')).toHaveCount(4);
+  await expect(page.locator('.founders img')).toHaveCount(4);
 });
 
 test('videos never download before a tap', async ({ page }) => {
@@ -59,10 +59,15 @@ test('without JavaScript both boards are readable', async ({ browser }) => {
   await context.close();
 });
 
-test('the careers band says how many openings there are and links to them', async ({ page }) => {
+test('Teach with Smartup says how many openings there are and links to them', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('#careers')).toContainText(/\d+ openings for teachers/);
-  await expect(page.locator('#careers').getByRole('link', { name: /See all \d+ openings/ })).toHaveAttribute('href', '/careers');
+  await expect(page.locator('#connect a[href="/careers"]')).toContainText(/\d+ openings for teachers/);
+  for (const path of ['/story', '/faculty']) {
+    await page.goto(path);
+    const band = page.locator('.teach');
+    await expect(band).toContainText('Teach with Smartup');
+    await expect(band.getByRole('link', { name: /See all \d+ openings/ })).toHaveAttribute('href', '/careers');
+  }
 });
 
 test('without JavaScript the course tab buttons are hidden', async ({ browser }) => {
@@ -88,12 +93,3 @@ test('the four proof numbers are spaced evenly on a wide screen', async ({ page 
   }
 });
 
-test('story pictures line up whatever the length of their titles', async ({ page }, info) => {
-  test.skip(info.project.name !== 'desktop', 'four in a row from 900px');
-  for (const width of [1024, 1440]) {
-    await page.setViewportSize({ width, height: 900 });
-    await page.goto('/');
-    const tops = await page.locator('.timeline--teaser .chapter .media-frame').evaluateAll(frames => frames.map(f => Math.round(f.getBoundingClientRect().top)));
-    expect(new Set(tops).size, `${width}px: ${tops}`).toBe(1);
-  }
-});

@@ -246,6 +246,31 @@ test('a database seeded with EDX before JWALA is put newest first once, and a la
   assert.deepEqual(order(), ['EDX:', 'JWAL']);
 });
 
+test('an older database gets the three shared centre numbers, mentorship and the local contact link, once', () => {
+  const store = seeded();
+  // As an earlier version seeded it: one number per centre, Power without mentorship, ratios as mentor counts.
+  store.db.exec(`UPDATE centres SET phone = '+91' || (9000000000 + id), sort = 9 - id;
+    UPDATE programmes SET mentor_ratio = '1 mentor : 10 students' WHERE name = 'Smartup Pro';
+    UPDATE programmes SET features = '["Competency-based learning"]' WHERE name = 'Smartup Power';
+    UPDATE posts SET body = replace(body, '](/contact)', '](https://smartupedu.in/contact)');
+    DELETE FROM seed_log WHERE section LIKE 'fix:%';`);
+  store.applySeed();
+  const groups = Object.groupBy(store.centres(), c => c.phone);
+  assert.deepEqual(Object.fromEntries(Object.entries(groups).map(([phone, list]) => [phone, list.map(c => c.name)])), {
+    '+917356072139': ['Eraveli', 'Fort Kochi', 'Kadavanthra'],
+    '+917356072108': ['Chullickal', 'Moolamkuzhi', 'Edappally'],
+    '+917356072098': ['Palluruthy', 'Thoppumpady', 'Vennala'],
+  });
+  const [pro, , power] = store.programmes();
+  assert.equal(pro.mentorRatio, '1:1 Mentorship');
+  assert.ok(power.features.includes('Mentorship and support'));
+  assert.equal(store.db.prepare("SELECT count(*) AS n FROM posts WHERE body LIKE '%smartupedu.in/contact%'").get().n, 0);
+  // A number staff change afterwards is kept on restart.
+  store.db.prepare("UPDATE centres SET phone = '+919999999999' WHERE name = 'Vennala'").run();
+  store.applySeed();
+  assert.equal(store.centres().find(c => c.name === 'Vennala').phone, '+919999999999');
+});
+
 test('programmes are seeded in order with their board, key points, features and details', () => {
   const programmes = seeded().programmes();
   assert.deepEqual(programmes.map(p => p.name), ['Smartup Pro', 'Smartup Trio', 'Smartup Power', 'State Board programme']);
@@ -253,7 +278,7 @@ test('programmes are seeded in order with their board, key points, features and 
   assert.equal(pro.board, 'cbse');
   assert.equal(pro.groupSize, '1:1');
   assert.ok(pro.keyPoints.length >= 2 && pro.features.includes('Competency-based learning'));
-  assert.equal(pro.mentorRatio, '1 mentor : 10 students');
+  assert.equal(pro.mentorRatio, '1:1 Mentorship');
   assert.equal(pro.parentMeetings, 'Monthly');
   assert.equal(pro.fee, '');
 });

@@ -33,13 +33,16 @@ Open **/admin** on the website and sign in with the admin password. (Ask your de
 
 ## Centres
 - Each centre has a name, phone, map link, hours and an optional **Address** (a short address or landmark), shown on the Contact page.
+- Centres with the **same phone number** are shown together, with the number once: on the homepage, the Contact page and the footer. To move a centre to another group, give it that group's number.
+- **Map link**: open the centre in Google Maps, tap **Share**, copy the link and paste it here. Directions on the website open this link.
 
 ## Homepage hero
 - **Website content → Homepage hero** edits the top of the homepage: the headline, the highlighted word (underlined in yellow), the line under it and the photo.
 - **Homepage photo**: shown in a circle beside the headline. Choose a close photo of one or two people, and describe it. Leave it empty to show the owl instead.
 
 ## Settings
-- Phone numbers, email, centre hours, social media links, app links and page text such as About, mission and vision.
+- Phone numbers, email, centre hours, social media links, app links and page text such as mission and vision.
+- **Vision for the future**: Our Story shows the title, the tagline and each priority as a short headline (a few words, such as "A global education network").
 - **Other office numbers**: each number has a label saying what it is for (for example Admissions); the Contact page shows both.
 - **Classes Smartup teaches**: sets the classes parents can pick on the demo form and the "Tuitions for classes 8 to +2" line in the footer. 11 is Plus One and 12 is Plus Two.
 - **Courses page details**: class lengths, the steps of a class, the updates parents get, and the State Board teaching method, daily practice and exam preparation.

@@ -24,7 +24,30 @@ test('Our Story lists every chapter in order, the growth data and the vision', a
   assert.deepEqual(years, ['2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025', '2026', 'Next']);
   assert.match(page, /30,000\+/);
   assert.match(page, /Shaping the future of learning/);
-  assert.match(page, /Vision 2030/);
+});
+
+test('Our Story keeps the vision to headlines, introduces the founders and invites teachers', async t => {
+  const site = await start();
+  t.after(site.close);
+  const page = await site.html('/story');
+  const vision = page.split('id="vision"')[1].split('</section>')[0];
+  assert.match(vision, /A global education network/);
+  assert.doesNotMatch(vision, /Expand across the GCC/, 'no long descriptions');
+  assert.doesNotMatch(vision, /discover each student/, 'no paragraphs');
+  assert.match(page, /The people behind Smartup[\s\S]*Mohamed Rayees/);
+  assert.match(page, /Teach with Smartup[\s\S]*href="\/careers"/);
+  assert.match(page, /href="\/contact"[^>]*>Connect with us</);
+});
+
+test('photos from past years on Our Story are black and white, and this year stays in colour', async t => {
+  const site = await start();
+  t.after(site.close);
+  const page = await site.html('/story');
+  const media = year => page.split(`data-year="${year}"`)[1].split('</li>')[0];
+  assert.match(media('2014'), /chapter-media--past/);
+  assert.match(media('2025'), /chapter-media--past/);
+  assert.doesNotMatch(media('2026'), /chapter-media--past/);
+  assert.match(page.split('class="hero-visual')[1].slice(0, 40), /hero-visual--past/);
 });
 
 test('a chapter edited by staff appears on the next request', async t => {
@@ -44,7 +67,37 @@ test('homepage sections follow the client order', async t => {
   t.after(site.close);
   const page = await site.html('/');
   const ids = [...page.matchAll(/<section[^>]*\sid="([^"]+)"/g)].map(m => m[1]);
-  assert.deepEqual(ids, ['about', 'founders', 'results', 'feedback', 'alumni', 'courses', 'app', 'careers']);
+  assert.deepEqual(ids, ['courses', 'offline', 'results', 'feedback', 'alumni', 'connect']);
+});
+
+test('the homepage gives Offline Centres their own section, one call button per shared number', async t => {
+  const site = await start();
+  t.after(site.close);
+  const offline = (await site.html('/')).split('id="offline"')[1].split('</section>')[0];
+  assert.match(offline, /Offline Centres/);
+  for (const name of ['Eraveli', 'Fort Kochi', 'Kadavanthra', 'Chullickal', 'Moolamkuzhi', 'Edappally', 'Palluruthy', 'Thoppumpady', 'Vennala']) assert.match(offline, new RegExp(name));
+  assert.deepEqual([...offline.matchAll(/href="tel:(\+\d+)"/g)].map(m => m[1]), ['+917356072139', '+917356072108', '+917356072098']);
+});
+
+test('Connect with us offers a call, a centre and the teaching openings', async t => {
+  const site = await start();
+  t.after(site.close);
+  const connect = (await site.html('/')).split('id="connect"')[1].split('</section>')[0];
+  assert.match(connect, /href="tel:\+918891910919"/);
+  assert.match(connect, /href="\/contact"/);
+  assert.match(connect, /Teach with Smartup[\s\S]*12 openings/);
+  assert.match(connect, /href="\/demo"[^>]*>Find your program</);
+});
+
+test('every programme card shows its mentorship with a tick, and Courses compares it in one row', async t => {
+  const site = await start();
+  t.after(site.close);
+  const home = await site.html('/');
+  for (const text of ['1:1 Mentorship', '1:3 Mentorship', 'Mentorship included']) assert.match(home, new RegExp(`class="mentorship"[^>]*>[\\s\\S]{0,120}${text}`), text);
+  const courses = await site.html('/courses');
+  const row = courses.split(/<th scope="row"[^>]*>Mentorship<\/th>/)[1].split('</tr>')[0];
+  assert.match(row, /1:1 Mentorship[\s\S]*1:3 Mentorship[\s\S]*aria-label="Included"/);
+  assert.doesNotMatch(courses, /<th scope="row"[^>]*>Mentorship and support</);
 });
 
 test('sections with no published content are left out, heading and all', async t => {
@@ -205,8 +258,19 @@ test('Courses explains every programme, class lengths and parent updates', async
   const site = await start();
   t.after(site.close);
   const page = await site.html('/courses');
-  for (const text of ['Smartup Pro', 'Smartup Trio', 'Smartup Power', 'State Board programme', '1 hr 45 min', 'Monthly report', '1 mentor : 10 students', 'Previous Year Questions']) assert.match(page, new RegExp(text));
+  for (const text of ['Smartup Pro', 'Smartup Trio', 'Smartup Power', 'State Board programme', '1 hr 45 min', 'Monthly report', '1:1 Mentorship', 'Previous Year Questions']) assert.match(page, new RegExp(text));
   assert.match(page, /9 centres/);
+});
+
+test('Courses calls the classroom option Offline Centres and leaves centre details to Contact', async t => {
+  const site = await start();
+  t.after(site.close);
+  const page = await site.html('/courses');
+  assert.doesNotMatch(page, /Learn from home/);
+  const offline = page.split('id="offline-title"')[1].split('</section>')[0];
+  assert.match(page, />Offline Centres</);
+  assert.doesNotMatch(offline, /tel:|maps\.app/);
+  assert.match(offline, /href="\/contact"/);
 });
 
 test('the blog lists posts newest first and each post renders its body', async t => {
@@ -282,8 +346,34 @@ test('the demo page explains how to book and lists centre phones', async t => {
   const site = await start();
   t.after(site.close);
   const page = await site.html('/demo');
-  assert.match(page, /<h1[^>]*>Book a free/);
-  assert.ok([...page.matchAll(/href="tel:\+91/g)].length >= 10);
+  assert.match(page, /<h1[^>]*>Find the right/);
+  for (const phone of ['+917356072139', '+917356072108', '+917356072098']) assert.match(page, new RegExp(`href="tel:\\${phone}"`), phone);
+});
+
+test('Contact lists each shared number once, above the centres that use it, each with directions', async t => {
+  const site = await start();
+  t.after(site.close);
+  const centres = (await site.html('/contact')).split('id="centres-title"')[1].split('</section>')[0];
+  const groups = centres.split('class="group"').slice(1);
+  assert.equal(groups.length, 3);
+  assert.match(groups[0], /tel:\+917356072139[\s\S]*Eraveli[\s\S]*Fort Kochi[\s\S]*Kadavanthra/);
+  assert.equal([...centres.matchAll(/href="tel:/g)].length, 3);
+  assert.equal([...centres.matchAll(/>Directions</g)].length, 9);
+});
+
+test('the blog sends "Talk to our team" to this website, not the old one', async t => {
+  const site = await start();
+  t.after(site.close);
+  const post = await site.html('/blog/how-parents-can-help-in-exam-season');
+  assert.match(post, /<a href="\/contact">Talk to our team<\/a>/);
+  assert.doesNotMatch(post, /smartupedu\.in\/contact/);
+});
+
+test('every page has a Home link apart from the logo, marked current on the homepage', async t => {
+  const site = await start();
+  t.after(site.close);
+  assert.match(await site.html('/'), /<a href="\/" class="home-link" aria-current="page"/);
+  assert.match(await site.html('/courses'), /<a href="\/" class="home-link"(?! aria-current)[^>]*>[\s\S]*?Home<\/span>/);
 });
 
 test('every menu link resolves to a page', async t => {
@@ -358,7 +448,8 @@ test('alumni stories from the admin appear on the Alumni page and the homepage',
   assert.match(alumni, /Anjali R/);
   assert.match(alumni, /SSLC 2016 · Software engineer, Bengaluru/);
   assert.match(alumni, /Sample — to be replaced/);
-  assert.match(await site.html('/'), /Anjali R/);
+  // The homepage shows alumni videos only (Smartup team, 24 Oct 2026).
+  assert.doesNotMatch(await site.html('/'), /Anjali R/);
 });
 
 test('faculty details and job descriptions show once staff add them', async t => {
@@ -446,7 +537,6 @@ test('time and class ranges are glued so a line never breaks inside them', async
   assert.ok((await site.html('/')).includes(`open ${glued}`), 'home courses line');
   assert.ok((await site.html('/contact')).includes(glued), 'contact');
   assert.ok((await site.html('/courses')).includes(glued), 'courses');
-  assert.ok((await site.html('/story')).includes('K–⁠12'), 'story vision');
   const visibleText = html => html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, '').replace(/<[^>]+>/g, ' ');
   for (const path of ['/', '/story', '/founders', '/faculty', '/results', '/life', '/videos', '/testimonials', '/alumni', '/courses', '/blog', '/blog/board-exam-90-day-plan', '/ask', '/app', '/community', '/contact', '/careers', '/demo', '/privacy']) {
     const loose = visibleText(await site.html(path)).match(/.{0,30}\w–\w.{0,20}/);

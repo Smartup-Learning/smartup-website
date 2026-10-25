@@ -7,7 +7,7 @@ const contact = whatsapp
   : phone ? { href: `tel:${phone}`, label: 'Call us', external: false } : null;
 ---
 <nav class:list={['mobile-bar', { single: bookingDone || !contact }]} aria-label="Quick actions">
-  {!bookingDone && <a class="btn btn--primary" href="/demo">Book free demo</a>}
+  {!bookingDone && <a class="btn btn--primary" href="/demo">Find your program</a>}
   {contact && <a class:list={['btn', bookingDone ? 'btn--primary' : 'btn--ghost']} href={contact.href} target={contact.external ? '_blank' : undefined} rel={contact.external ? 'noopener' : undefined}>{contact.label}</a>}
 </nav>
 <style>

@@ -23,11 +23,11 @@ test('menu opens, lists all four groups and closes with Escape', async ({ page }
   await expect(toggle).toBeFocused();
 });
 
-test('phone bar offers a demo and a call while WhatsApp is unset', async ({ page }, info) => {
+test('phone bar offers finding a program and a call while WhatsApp is unset', async ({ page }, info) => {
   test.skip(info.project.name !== 'mobile', 'phone only');
   await page.goto('/');
   const bar = page.locator('.mobile-bar');
-  await expect(bar.getByRole('link', { name: 'Book free demo' })).toBeVisible();
+  await expect(bar.getByRole('link', { name: 'Find your program' })).toBeVisible();
   await expect(bar.locator('a[href="tel:+918891910919"]')).toBeVisible();
   await expect(bar.getByText('WhatsApp')).toHaveCount(0);
 });
@@ -94,12 +94,12 @@ test('long text staff type keeps its line breaks on the website', async ({ page 
   }
 });
 
-test('on a phone the menu offers booking a demo and calling before the page links', async ({ page }, info) => {
+test('on a phone the menu offers finding a program and calling before the page links', async ({ page }, info) => {
   test.skip(info.project.name !== 'mobile', 'wide screens keep these in the header');
   await page.goto('/');
   await page.locator('[data-menu-toggle]').click();
   const menu = page.locator('#site-menu');
-  await expect(menu.getByRole('link', { name: 'Book a free demo' })).toBeVisible();
+  await expect(menu.locator('.menu-actions').getByRole('link', { name: 'Find your program' })).toBeVisible();
   await expect(menu.locator('a[href^="tel:"]')).toBeVisible();
 });
 
@@ -110,11 +110,11 @@ test('the current page is marked in the header and the menu', async ({ page }, i
   await expect(page.locator('#site-menu a[href="/results"]')).toHaveAttribute('aria-current', 'page');
 });
 
-test('on the demo page the phone bar offers a call, not another booking', async ({ page }, info) => {
+test('on the program finder the phone bar offers a call, not the same page again', async ({ page }, info) => {
   test.skip(info.project.name !== 'mobile', 'phone only');
   await page.goto('/demo');
   const bar = page.locator('.mobile-bar');
-  await expect(bar.getByRole('link', { name: 'Book free demo' })).toHaveCount(0);
+  await expect(bar.getByRole('link', { name: 'Find your program' })).toHaveCount(0);
   await expect(bar.locator('a[href^="tel:"]')).toBeVisible();
 });
 

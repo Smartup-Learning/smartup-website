@@ -1,8 +1,9 @@
 ---
 import RingPhoto from './brand/RingPhoto.astro';
 import PeekingOwl from './brand/PeekingOwl.astro';
-interface Props { eyebrow: string; title: string; highlight?: string; intro?: string; tone?: 'cream' | 'purple'; image?: { base: string; alt: string; focus?: string } }
-const { eyebrow, title, highlight, intro, tone = 'cream', image } = Astro.props;
+interface Props { eyebrow: string; title: string; highlight?: string; intro?: string; tone?: 'cream' | 'purple'; image?: { base: string; alt: string; focus?: string; past?: boolean } }
+// Violet leads every page (Smartup team, 24 Oct 2026); cream stays available for a page that needs it.
+const { eyebrow, title, highlight, intro, tone = 'purple', image } = Astro.props;
 // A page can pass its own picture in the "visual" slot instead of a photo.
 const visual = Astro.slots.has('visual');
 ---
@@ -16,7 +17,7 @@ const visual = Astro.slots.has('visual');
     </div>
     {visual && <div class="hero-visual custom"><slot name="visual" /></div>}
     {!visual && image && (
-      <div class="hero-visual">
+      <div class:list={['hero-visual', { 'hero-visual--past': image.past }]}>
         <span class="arc" aria-hidden="true"></span>
         <RingPhoto base={image.base} alt={image.alt} focus={image.focus} sizes="(min-width: 900px) 24rem, 1px" />
       </div>
@@ -33,6 +34,8 @@ const visual = Astro.slots.has('visual');
   .intro { font-size: var(--step-1); color: var(--ink-soft); max-width: 42rem; }
   .section--purple .intro { color: var(--on-purple-soft); }
   .hero-visual { display: none; }
+  /* An old photo from the Our Story archive stays black and white here too. */
+  .hero-visual--past :global(img) { filter: grayscale(1); }
   .hero-visual.custom { display: block; justify-self: center; }
   .section--purple { --peek-bg: var(--cream); }
   .section--cream { --peek-bg: var(--white); }

@@ -5,7 +5,7 @@ export const navGroups: NavGroup[] = [
   { title: 'About us', links: [
     { label: 'Our Story', href: '/story' }, { label: 'Founders', href: '/founders' },
     { label: 'Faculty', href: '/faculty' }, { label: 'Life @ Smartup', href: '/life' },
-    { label: 'Careers', href: '/careers' } ] },
+    { label: 'Teach with Smartup', href: '/careers' } ] },
   { title: 'Learn', links: [
     { label: 'Courses', href: '/courses' }, { label: 'YouTube classes', href: '/videos' },
     { label: 'Blog', href: '/blog' }, { label: 'Ask Smartup', href: '/ask' },
@@ -14,7 +14,7 @@ export const navGroups: NavGroup[] = [
     { label: 'Results', href: '/results' }, { label: 'Testimonials', href: '/testimonials' },
     { label: 'Alumni', href: '/alumni' } ] },
   { title: 'Get started', links: [
-    { label: 'Free demo class', href: '/demo' }, { label: 'Centres & contact', href: '/contact' },
+    { label: 'Find your program', href: '/demo' }, { label: 'Centres & contact', href: '/contact' },
     { label: 'Community', href: '/community' } ] },
 ];
 

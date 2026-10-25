@@ -41,5 +41,10 @@ const ratio = size ? size.width / size.height : 3 / 4;
   .score { font-weight: 700; color: var(--purple); font-variant-numeric: tabular-nums; }
   .extra { font-size: var(--step--1); color: var(--ink-soft); }
   .summary .name { font-weight: 700; }
+  /* On the violet bands the caption is light. */
+  :global(.section--purple) .meta, :global(.section--deep) .meta { color: var(--on-purple-soft); }
+  :global(.section--purple) .score, :global(.section--deep) .score { color: var(--yellow); }
+  :global(.section--purple) .extra, :global(.section--deep) .extra { color: var(--on-purple-soft); }
+  :global(.section--purple) .name, :global(.section--deep) .name { color: var(--white); }
   @media (prefers-reduced-motion: reduce) { .poster, .poster:hover { transition: none; transform: none; } }
 </style>

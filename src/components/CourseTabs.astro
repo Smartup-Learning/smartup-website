@@ -1,9 +1,11 @@
 ---
 import { keepTogether } from '../lib/text.mjs';
-import { BOARDS, askLabel, demoLink, isRatio, type Programme } from '../lib/courses';
-interface Props { programmes: Programme[]; centreCount: number; hours: string }
-const { programmes, centreCount, hours } = Astro.props;
+import { BOARDS, askLabel, demoLink, isRatio, mentorship, type Programme } from '../lib/courses';
+interface Props { programmes: Programme[] }
+const { programmes } = Astro.props;
 const boards = BOARDS.map(b => ({ ...b, programmes: programmes.filter(p => p.board === b.id) })).filter(b => b.programmes.length > 0);
+// What every programme of a board includes (mentorship is on each card already), shown under the cards.
+const shared = (list: Programme[]) => list[0].features.filter(f => !/mentor/i.test(f) && list.every(p => p.features.includes(f)));
 ---
 <div class="courses" data-tabs>
   {boards.length > 1 && (
@@ -22,16 +24,19 @@ const boards = BOARDS.map(b => ({ ...b, programmes: programmes.filter(p => p.boa
             <h4>{p.name}</h4>
             {p.fee && <p class="fee">{keepTogether(p.fee)}</p>}
             <ul>{p.keyPoints.map(point => <li>{point}</li>)}</ul>
+            {mentorship(p) && <p class="mentorship"><span class="tick" aria-hidden="true">✓</span> {mentorship(p) === 'Mentorship' ? 'Mentorship included' : mentorship(p)}</p>}
             <a class="link-arrow" href={demoLink(p.name)}>{askLabel(p.name)}</a>
           </article>
         ))}
       </div>
+      {shared(board.programmes).length > 0 && (
+        <div class="included">
+          <h4>{board.programmes.length > 1 ? `Every ${board.label} program includes` : 'The program includes'}</h4>
+          <ul>{shared(board.programmes).map(feature => <li>{feature}</li>)}</ul>
+        </div>
+      )}
     </div>
   ))}
-  <div class="where">
-    <p><strong>Online, or at one of our {centreCount} centres in Kochi.</strong> Every centre is open {keepTogether(hours)}.</p>
-    <a class="link-arrow" href="/contact">Find your nearest centre</a>
-  </div>
 </div>
 <style>
   .tablist[hidden] { display: none; }
@@ -41,16 +46,25 @@ const boards = BOARDS.map(b => ({ ...b, programmes: programmes.filter(p => p.boa
   .panel + .panel { margin-top: 2.5rem; }
   :global(.js) .panel + .panel { margin-top: 0; }
   .board-heading { margin-bottom: 1rem; font-size: var(--step-2); }
-  .programme { display: grid; gap: 0.5rem; align-content: start; padding: 1.5rem; border-radius: var(--radius); background: var(--white); }
+  .programme { display: grid; gap: 0.5rem; align-content: start; padding: 1.5rem; border-radius: var(--radius); background: var(--white); color: var(--ink); }
+  /* Cards are white on the violet band, so their eyebrow keeps the purple it has on white pages. */
+  .programme .eyebrow { color: var(--purple); }
   .ratio { font-size: var(--step-4); font-weight: 700; color: var(--purple); line-height: 1; }
   h4 { font-size: var(--step-1); }
   ul { padding-left: 1.1rem; display: grid; gap: 0.3rem; color: var(--ink-soft); }
   .ratio--word { font-size: var(--step-3); padding-block: 0.3rem; }
-  .where { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 2rem; margin-top: 2rem; padding: 1rem 1.5rem; border-radius: var(--radius); background: var(--white); }
   /* Links sit at the foot of every card, level across the row, whichever optional lines a card has. */
   .programme { display: flex; flex-direction: column; }
-  .programme .link-arrow { margin-top: auto; }
+  .programme .link-arrow { margin-top: auto; color: var(--purple); }
   .programme ul { margin-bottom: 0.5rem; }
   .fee { font-weight: 600; color: var(--purple); }
+  /* Mentorship is called out with a tick, so it reads at a glance on every card that has it. */
+  .mentorship { display: flex; align-items: center; gap: 0.5rem; align-self: start; margin-bottom: 0.75rem; padding: 0.35rem 0.85rem 0.35rem 0.4rem; border-radius: 999px; background: var(--purple-tint); font-weight: 600; color: var(--purple-900); }
+  .tick { display: grid; place-items: center; width: 1.6rem; height: 1.6rem; border-radius: 50%; background: var(--purple); color: var(--white); font-size: 0.9rem; }
+  .included { display: grid; gap: 0.75rem; margin-top: 1.75rem; }
+  .included h4 { font-size: var(--step-0); font-weight: 600; }
+  .included ul { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; color: inherit; }
+  .included li { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.4rem 0.9rem; border: 1px solid currentColor; border-radius: 999px; font-size: var(--step--1); }
+  .included li::before { content: '✓'; font-weight: 700; color: var(--yellow); }
   @media (min-width: 900px) { .programmes { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; } }
 </style>

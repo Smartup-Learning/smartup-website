@@ -5,6 +5,7 @@ import SocialIcon from './SocialIcon.astro';
 import StoreBadges from './StoreBadges.astro';
 import { keepTogether } from '../lib/text.mjs';
 import { classesText } from '../../server/forms.mjs';
+import { groupByPhone } from '../lib/centres';
 interface Props { settings: any; centres: { name: string; phone: string; mapUrl: string; hours: string }[]; path: string }
 const { settings, centres, path } = Astro.props;
 const year = new Date().getFullYear();
@@ -42,8 +43,11 @@ const networkName = { facebook: 'Facebook', instagram: 'Instagram', youtube: 'Yo
     <section class="container centres" aria-labelledby="footer-centres">
       <h2 class="eyebrow" id="footer-centres">Our centres <span>· all open {keepTogether(settings.hours)}</span></h2>
       <ul>
-        {centres.map(c => (
-          <li><a href={c.mapUrl} target="_blank" rel="noopener">{c.name}</a><a class="tel" href={`tel:${c.phone}`}>{formatPhone(c.phone)}</a></li>
+        {groupByPhone(centres).map(g => (
+          <li>
+            <a class="tel" href={`tel:${g.phone}`}>{formatPhone(g.phone)}</a>
+            <span class="names">{g.centres.map(c => <a href={c.mapUrl} target="_blank" rel="noopener">{c.name}</a>)}</span>
+          </li>
         ))}
       </ul>
     </section>
@@ -73,8 +77,11 @@ const networkName = { facebook: 'Facebook', instagram: 'Instagram', youtube: 'Yo
   .centres { margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid #ddd2c2; }
   .centres h2 span { text-transform: none; letter-spacing: 0; font-weight: 500; color: var(--ink-soft); }
   .centres ul { grid-template-columns: minmax(0, 1fr); column-gap: 3rem; }
-  .centres li { display: flex; justify-content: space-between; gap: 1rem; border-bottom: 1px solid #e9e0d2; }
-  .centres .tel { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .centres li { display: grid; align-content: start; padding-bottom: 0.75rem; border-bottom: 1px solid #e9e0d2; }
+  .centres .tel { font-weight: 600; color: var(--purple); font-variant-numeric: tabular-nums; }
+  /* The centres that share the number above, separated by dots. */
+  .names { display: flex; flex-wrap: wrap; column-gap: 0.9rem; }
+  .names a + a::before { content: '·'; margin-right: 0.9rem; color: var(--ink-soft); }
   .base { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; padding-top: 0.75rem; border-top: 1px solid #ddd2c2; font-size: var(--step--1); color: var(--ink-soft); }
   @media (min-width: 600px) { .centres ul { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (min-width: 900px) {
