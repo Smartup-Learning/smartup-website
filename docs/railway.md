@@ -87,12 +87,12 @@ A separate service in the same project runs the v2 website for client review. Th
 | Item | Value |
 | --- | --- |
 | Address | [smartup-v2-preview-production.up.railway.app](https://smartup-v2-preview-production.up.railway.app) (admin at `/admin`) |
-| Deployed | 13 October 2026; updated 14–25 October 2026 (audit fixes, admin sections, app screenshots, app promotion, one-height rows, admin menu scroll and Homepage hero screen, Smartup team revisions and tuition blog post) |
+| Deployed | 13 October 2026; updated 14–25 October 2026 (audit fixes, admin sections, app screenshots, app promotion, one-height rows, admin menu scroll and Homepage hero screen, Smartup team revisions and tuition blog post, loading flicker fix) |
 | Service | `smartup-v2-preview` — `59675c15-342b-4e37-a977-fbcfd5460dc9` |
 | Environment | `production` — `189f0696-d13d-4d82-a448-468c54de72d4` |
 | Volume | `smartup-v2-preview-volume` — `f1b80719-549d-491c-b7b0-d48fd5dbbf79`, mounted at `/data` (database and `uploads/`) |
-| Deployments | `23bcfd2a-61df-4659-9b56-2eabf49d2273` (first), `e56dd0f4-f6eb-4e35-848e-c465e8035613` (redeploy that proved the volume keeps data), `680abf01-d815-43b6-bfcd-814403843540`, `f67ce07a-34a1-4a5f-9576-f0b9d0ee5a94`, `f966fe7f-c581-4781-b0ad-d2c21247fb68`, `2f3e3de2-c50e-47a3-94fa-222696577640`, `6aab1465-724c-4334-a8e8-5a8538fd6f73`, `44b100aa-d3ba-4968-9109-446255e69d82`, `1ebb975e-938d-4cbd-80c9-da69e1729164`, `7015a678-bd77-43cc-beca-6d115547696a`, `557c2f6a-a4c1-43b9-99b8-5848911327ac`, `4f48bdd5-1220-40ca-9dbe-e80609be15db` (current) |
-| Source commit | `07617ee` (branch `v2-website`) |
+| Deployments | `23bcfd2a-61df-4659-9b56-2eabf49d2273` (first), `e56dd0f4-f6eb-4e35-848e-c465e8035613` (redeploy that proved the volume keeps data), `680abf01-d815-43b6-bfcd-814403843540`, `f67ce07a-34a1-4a5f-9576-f0b9d0ee5a94`, `f966fe7f-c581-4781-b0ad-d2c21247fb68`, `2f3e3de2-c50e-47a3-94fa-222696577640`, `6aab1465-724c-4334-a8e8-5a8538fd6f73`, `44b100aa-d3ba-4968-9109-446255e69d82`, `1ebb975e-938d-4cbd-80c9-da69e1729164`, `7015a678-bd77-43cc-beca-6d115547696a`, `557c2f6a-a4c1-43b9-99b8-5848911327ac`, `4f48bdd5-1220-40ca-9dbe-e80609be15db`, `ee0a427d-cfb8-4f6d-bfe8-bd5d1838f8f6` (current) |
+| Source commit | `08ebdcc` (branch `v2-website`) |
 | Variables | `NODE_ENV`, `DATA_DIR`, `PORT`, `TRUST_PROXY_HOPS`, `NOINDEX`, `SITE_URL`, `ADMIN_PASSWORD` |
 
 The admin password is in the git-ignored `.env.railway-preview` and in Railway; share it privately. `NOINDEX=1` keeps the preview out of search engines; remove it only when v2 becomes the main site. `SITE_URL` makes canonical links and the sitemap use the https address.
