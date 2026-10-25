@@ -28,6 +28,52 @@ test('without JavaScript numbers and content are visible', async ({ browser }) =
   await context.close();
 });
 
+// Opacity of an element on each frame after it is scrolled into view.
+const opacitiesAfterScroll = (page: import('@playwright/test').Page, selector: string) => page.evaluate(sel => new Promise<number[]>(resolve => {
+  const element = document.querySelector(sel)!;
+  const seen: number[] = [];
+  const tick = () => { seen.push(Number(getComputedStyle(element).opacity)); if (seen.length < 50) requestAnimationFrame(tick); else resolve(seen); };
+  element.scrollIntoView({ block: 'center', behavior: 'instant' });
+  tick();
+}), selector);
+// A fade only ever gets brighter: a drop means the element was shown and then hidden again (a flicker).
+const drops = (seen: number[]) => seen.filter((value, i) => i > 0 && value < seen[i - 1] - 0.01);
+
+test('a card fading into view never flashes at full strength first', async ({ page }) => {
+  await page.goto('/');
+  await page.waitForFunction(() => (window as unknown as { __siteReady?: boolean }).__siteReady);
+  for (const selector of ['#results .section-head', '#results [data-reveal-item]', '#feedback [data-reveal-item]']) {
+    const seen = await opacitiesAfterScroll(page, selector);
+    expect(drops(seen), `${selector}: ${seen.map(v => v.toFixed(2)).join(' ')}`).toEqual([]);
+    expect(seen.at(-1)).toBeGreaterThan(0.5);
+  }
+});
+
+test('on a connection too slow for the scripts, content the page already showed is not faded again', async ({ page }) => {
+  // The scripts arrive after the 2.5 s backup timer has shown everything.
+  await page.route('**/_astro/*.js', async route => { await new Promise(r => setTimeout(r, 3500)); await route.continue(); });
+  await page.goto('/');
+  await page.waitForFunction(() => (window as unknown as { __siteReady?: boolean }).__siteReady, undefined, { timeout: 15000 });
+  for (const selector of ['#results .section-head', '#results [data-reveal-item]']) {
+    const seen = await opacitiesAfterScroll(page, selector);
+    expect(seen.every(v => v === 1), `${selector}: ${seen.map(v => v.toFixed(2)).join(' ')}`).toBe(true);
+  }
+});
+
+test('on the violet bands a poster waits on a soft violet placeholder, not a pale box that flashes', async ({ page }) => {
+  await page.goto('/');
+  const shades = await page.locator('#results .poster').first().evaluate(poster => {
+    const rgba = (color: string) => color.match(/[\d.]+/g)!.map(Number);
+    const [r, g, b, a = 1] = rgba(getComputedStyle(poster).backgroundColor);
+    const [sr, sg, sb] = rgba(getComputedStyle(poster.closest('section')!).backgroundColor);
+    const mix = [r * a + sr * (1 - a), g * a + sg * (1 - a), b * a + sb * (1 - a)];
+    const luminance = (c: number[]) => c.reduce((sum, v, i) => sum + [0.2126, 0.7152, 0.0722][i] * ((v / 255) <= 0.03928 ? v / 255 / 12.92 : ((v / 255 + 0.055) / 1.055) ** 2.4), 0);
+    return { placeholder: luminance(mix), section: luminance([sr, sg, sb]) };
+  });
+  // Close to the band's own shade: the contrast between them stays under 1.5:1.
+  expect((shades.placeholder + 0.05) / (shades.section + 0.05)).toBeLessThan(1.5);
+});
+
 test('the owl renders with two animatable eyes', async ({ page }) => {
   await page.goto('/');
   const owl = page.locator('.hero svg.owl').first();

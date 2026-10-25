@@ -22,16 +22,23 @@ export function smile(svg: Element) {
 }
 
 function initReveals() {
+  // On a slow connection the page's backup timer has already shown everything (Base.astro removes the
+  // "js" class); fading it in again would hide content the reader is looking at.
+  if (!document.documentElement.classList.contains('js')) return;
   // Group items are watched one by one: a long grid can be many screens tall, so 15% of the
   // whole group may never fit on a phone. Items entering together still animate in sequence.
   let batch: HTMLElement[] = [];
   const reveal = (element: Element) => {
-    element.classList.add('is-revealed');
     batch.push(element as HTMLElement);
     if (batch.length > 1) return;
     requestAnimationFrame(() => {
-      animate(batch, { opacity: [0, 1], y: [24, 0] }, { duration: 0.6, delay: stagger(0.07), ease: EASE });
+      const items = batch;
       batch = [];
+      // The CSS keeps each item hidden until the fade has taken over; marking it revealed any earlier shows it
+      // at full strength for a frame or two before the fade starts from zero, a visible flicker. Motion keeps
+      // the final opacity on each item as it finishes, and the class then keeps it shown.
+      animate(items, { opacity: [0, 1], y: [24, 0] }, { duration: 0.6, delay: stagger(0.07), ease: EASE })
+        .then(() => items.forEach(item => item.classList.add('is-revealed')));
     });
   };
   inView('[data-reveal]:not([data-reveal="group"]), [data-reveal="group"] [data-reveal-item]', reveal, { amount: 0.15 });

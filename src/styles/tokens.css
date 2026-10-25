@@ -11,6 +11,8 @@
   --line: #e4dbef;
   --purple-tint: #efe7fa;
   --on-purple-soft: #e4d8f5;
+  /* What a photo or poster sits on while it loads; violet bands override it (global.css). */
+  --placeholder: var(--purple-tint);
 
   --font: 'Rubik', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --step--1: clamp(0.875rem, 0.85rem + 0.1vw, 0.9375rem);

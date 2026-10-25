@@ -32,7 +32,7 @@ const ratio = size ? size.width / size.height : 3 / 4;
   .result { display: grid; gap: 0.65rem; align-content: start; margin: 0; min-width: 0; }
   .result[hidden], .result:global(.is-collapsed) { display: none; }
   /* The poster is the card: its own shape, a small radius and a soft shadow, no frame around it. */
-  .poster { display: block; overflow: hidden; border-radius: 0.5rem; background: var(--purple-tint); box-shadow: 0 1px 2px rgb(30 30 30 / 0.1), 0 12px 26px -14px rgb(57 32 100 / 0.5); transition: transform 0.3s var(--ease-out), box-shadow 0.3s; }
+  .poster { display: block; overflow: hidden; border-radius: 0.5rem; background: var(--placeholder); box-shadow: 0 1px 2px rgb(30 30 30 / 0.1), 0 12px 26px -14px rgb(57 32 100 / 0.5); transition: transform 0.3s var(--ease-out), box-shadow 0.3s; }
   .poster:hover { transform: translateY(-3px); box-shadow: 0 1px 2px rgb(30 30 30 / 0.1), 0 18px 32px -14px rgb(57 32 100 / 0.55); }
   .poster :global(img) { width: 100%; height: auto; }
   figcaption { display: grid; gap: 0.1rem; line-height: 1.3; }

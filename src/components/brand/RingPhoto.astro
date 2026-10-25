@@ -10,7 +10,7 @@ const { base, alt, sizes, focus = '50% 35%', zoom = 1, priority = false, class: 
 </figure>
 <style>
   .ring-photo { position: relative; margin: 0; aspect-ratio: 1; width: 100%; }
-  .clip { display: block; width: 100%; height: 100%; overflow: hidden; border-radius: 50%; background: var(--purple-tint); }
+  .clip { display: block; width: 100%; height: 100%; overflow: hidden; border-radius: 50%; background: var(--placeholder); }
   .clip :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: var(--focus); transform: scale(var(--zoom)); transform-origin: var(--focus); }
   .ring-photo::after { content: ''; position: absolute; inset: -5% -2% -2% -5%; border: 2px solid currentColor; border-radius: 50%; opacity: 0.55; pointer-events: none; }
 </style>

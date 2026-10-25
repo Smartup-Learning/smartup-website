@@ -26,6 +26,8 @@ a { color: inherit; }
 .section--cream { background: var(--cream); }
 .section--purple { background: var(--purple); color: var(--cream); }
 .section--deep { background: var(--purple-900); color: var(--cream); }
+/* On violet a pale loading box would flash before each picture arrives, so it is a soft violet instead. */
+.section--purple, .section--deep { --placeholder: rgb(255 255 255 / 0.08); }
 
 .eyebrow { font-size: var(--step--1); font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--purple); }
 .section--purple .eyebrow, .section--deep .eyebrow { color: var(--on-purple-soft); }
