@@ -278,7 +278,7 @@ test('the blog lists posts newest first and each post renders its body', async t
   t.after(site.close);
   const list = await site.html('/blog');
   const slugs = [...list.matchAll(/href="\/blog\/([a-z0-9-]+)"/g)].map(m => m[1]);
-  assert.deepEqual([...new Set(slugs)], ['board-exam-90-day-plan', 'how-parents-can-help-in-exam-season', 'daily-practice-beats-cramming']);
+  assert.deepEqual([...new Set(slugs)], ['home-tuition-or-online-tuition', 'board-exam-90-day-plan', 'how-parents-can-help-in-exam-season', 'daily-practice-beats-cramming']);
   const post = await site.html('/blog/board-exam-90-day-plan');
   assert.match(post, /<h2>Days 1–\u206030: finish the first round<\/h2>/);
   assert.match(post, /<article/);
@@ -384,6 +384,17 @@ test('every menu link resolves to a page', async t => {
   for (const href of links) await site.html(href);
 });
 
+test('the tuition guide reads as headings, lists and bold labels, with no sample label', async t => {
+  const site = await start();
+  t.after(site.close);
+  const post = await site.html('/blog/home-tuition-or-online-tuition');
+  assert.match(post, /<h1[^>]*>Choosing what&#39;s right: how to choose between home tuition and online tuition<\/h1>/);
+  assert.match(post, /<h2>Which to choose: a 4-step guide to narrow it down<\/h2>/);
+  assert.match(post, /<h3>Step 4: Consider going hybrid<\/h3>/);
+  assert.match(post, /<li><strong>Screen-free learning:<\/strong>/);
+  assert.doesNotMatch(post, /Sample — to be replaced|\*\*/);
+});
+
 test('a post shows its reading time, share links and the other posts', async t => {
   const site = await start();
   t.after(site.close);
@@ -392,8 +403,8 @@ test('a post shows its reading time, share links and the other posts', async t =
   assert.match(post, /href="https:\/\/wa\.me\/\?text=[^"]*%2Fblog%2Fboard-exam-90-day-plan"/);
   assert.match(post, /href="https:\/\/www\.facebook\.com\/sharer\/sharer\.php\?u=[^"]*%2Fblog%2Fboard-exam-90-day-plan"/);
   const related = post.slice(post.indexOf('Keep reading'));
+  assert.match(related, /href="\/blog\/home-tuition-or-online-tuition"/);
   assert.match(related, /href="\/blog\/how-parents-can-help-in-exam-season"/);
-  assert.match(related, /href="\/blog\/daily-practice-beats-cramming"/);
   assert.doesNotMatch(related, /href="\/blog\/board-exam-90-day-plan"/);
 });
 

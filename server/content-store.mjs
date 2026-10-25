@@ -173,6 +173,11 @@ const CORRECTIONS = {
   'posts-own-contact-link'(db) {
     db.prepare("UPDATE posts SET body = replace(body, '](https://smartupedu.in/contact)', '](/contact)')").run();
   },
+  // The Smartup team's first own post (25 Oct 2026) reaches databases whose blog was seeded before it.
+  'posts-add-tuition-guide'(db, data) {
+    const post = data.posts?.find(p => p.slug === 'home-tuition-or-online-tuition');
+    if (post && !db.prepare('SELECT 1 FROM posts WHERE slug = ?').get(post.slug)) SECTIONS.posts(db, [post]);
+  },
 };
 
 
@@ -233,7 +238,7 @@ export class ContentStore {
       this.db.exec('BEGIN IMMEDIATE');
       try {
         if (!this.db.prepare('SELECT 1 FROM seed_log WHERE section = ?').get(key)) {
-          fix(this.db);
+          fix(this.db, data);
           this.db.prepare('INSERT INTO seed_log(section, applied_at) VALUES(?, ?)').run(key, new Date().toISOString());
         }
         this.db.exec('COMMIT');

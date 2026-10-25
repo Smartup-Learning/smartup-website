@@ -121,7 +121,7 @@ test('Phase 2 content is seeded', () => {
   assert.equal(store.faculty().length, 35);
   assert.ok(store.events().length >= 10);
   assert.ok(store.videos('toppers').length === 4);
-  assert.equal(store.posts().length, 3);
+  assert.equal(store.posts().length, 4);
   assert.ok(store.faqs().length >= 12);
   assert.ok(store.results().filter(r => r.kind === 'summary').length >= 6);
   assert.ok(store.results().length >= 60);
@@ -179,10 +179,23 @@ test('alumni stories come in order and unpublished ones stay hidden', () => {
   assert.equal(store.alumni()[0].isSample, false);
 });
 
-test('the starter blog posts are marked as samples until the client approves them', () => {
+test("the starter blog posts are marked as samples until the client approves them; the team's own post is not", () => {
   const store = seeded();
-  assert.ok(store.posts().length > 0 && store.posts().every(p => p.isSample === true));
-  assert.equal(store.post(store.posts()[0].slug).isSample, true);
+  const [own, ...starters] = store.posts();
+  assert.equal(own.slug, 'home-tuition-or-online-tuition');
+  assert.equal(store.post(own.slug).isSample, false);
+  assert.ok(starters.length === 3 && starters.every(p => p.isSample === true));
+  assert.equal(store.post(starters[0].slug).isSample, true);
+});
+
+test("a blog seeded before the team's tuition guide gets it once, and a deletion by staff is kept", () => {
+  const store = seeded();
+  store.db.exec("DELETE FROM posts WHERE slug = 'home-tuition-or-online-tuition'; DELETE FROM seed_log WHERE section = 'fix:posts-add-tuition-guide';");
+  store.applySeed();
+  assert.equal(store.post('home-tuition-or-online-tuition').category, 'Parent guidance');
+  store.db.exec("DELETE FROM posts WHERE slug = 'home-tuition-or-online-tuition'");
+  store.applySeed();
+  assert.equal(store.post('home-tuition-or-online-tuition'), null);
 });
 
 test('testimonials report a screenshot image and the sample flag', () => {
