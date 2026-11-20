@@ -18,3 +18,4 @@ content-source/
 test-results/
 playwright-report/
 __pycache__/
+.wrangler/ 
