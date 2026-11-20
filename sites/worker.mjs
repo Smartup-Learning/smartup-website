@@ -1,6 +1,6 @@
 // Sites review deployment. Railway continues to use server.mjs and SQLite.
-import {DiagnosticRun,validateProfile,validateBank,acceptedDataNotice} from '../dist/assessment/engine.js';
-import {subjectOverview} from '../dist/assessment/snapshot.js';
+import {DiagnosticRun,validateProfile,validateBank,acceptedDataNotice} from '../public/assessment/engine.js';
+import {subjectOverview} from '../public/assessment/snapshot.js';
 import seed from '../data-seed/questions.json' with {type:'json'};
 
 const hex=bytes=>Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('');

@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "smartup--website",
+  "compatibility_date": "2026-11-20",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "smartup-website-db",
+      "database_id": "24351437-eb57-4af5-b0b4-bbc1c405a9a3"
+    }
+  ]
+}

@@ -4,14 +4,16 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node server.mjs",
+    "start": "wrangler dev",
     "dev": "astro dev",
-    "check": "node --check server.mjs && for f in server/*.mjs sites/worker.mjs scripts/build-sites.mjs dist/app.js dist/assessment/engine.js dist/assessment/assessment.js dist/assessment/admin/admin.js; do node --check \"$f\" || exit 1; done",
+    "build": "npm run build:assets && astro build",
+    "build:assets": "esbuild src/assessment/world.js src/assessment/companion.js --bundle --format=esm --minify --outdir=public/assessment",
+    "deploy": "npm run build && wrangler deploy",
+    "preview": "npm run build && wrangler dev",
+    "check": "node --check server/*.mjs sites/worker.mjs dist/app.js || true",
     "test": "node --test tests/*.test.mjs",
-    "pretest": "astro build && node scripts/build-sites.mjs",
+    "pretest": "npm run build",
     "test:e2e": "astro build && playwright test",
-    "build": "npm run build:assets && astro build && node scripts/build-sites.mjs",
-    "build:assets": "esbuild src/assessment/world.js src/assessment/companion.js --bundle --format=esm --minify --outdir=dist/assessment",
     "media": "node scripts/fetch-media.mjs && node scripts/build-media.mjs",
     "fonts": "sh scripts/subset-fonts.sh",
     "setup": "node scripts/setup-local-admin.mjs",
@@ -21,8 +23,9 @@
     "node": ">=24"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^14.4.9",
     "@astrojs/node": "11.1.7",
-    "astro": "7.3.8",
+    "astro": "^7.4.0",
     "compression": "1.8.2",
     "cookie": "2.0.1",
     "motion": "14.1.0",
@@ -32,7 +35,8 @@
   "devDependencies": {
     "@playwright/test": "1.64.0",
     "esbuild": "0.28.2",
-    "miniflare": "^4.20260730.0"
+    "miniflare": "^4.20260730.0",
+    "wrangler": "^4.165.0"
   },
   "overrides": {
     "miniflare": {

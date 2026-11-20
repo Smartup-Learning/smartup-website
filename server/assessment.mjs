@@ -3,8 +3,8 @@ import {readFileSync,mkdirSync} from 'node:fs';
 import {randomBytes,createHash,timingSafeEqual,scryptSync} from 'node:crypto';
 import path from 'node:path';
 import {isIP} from 'node:net';
-import {DiagnosticRun,validateProfile,validateBank,acceptedDataNotice} from '../dist/assessment/engine.js';
-import {subjectOverview} from '../dist/assessment/snapshot.js';
+import {DiagnosticRun,validateProfile,validateBank,acceptedDataNotice} from '../public/assessment/engine.js';
+import {subjectOverview} from '../public/assessment/snapshot.js';
 const hash=value=>createHash('sha256').update(value).digest('hex');
 const token=()=>randomBytes(32).toString('base64url');
 export class AssessmentStore {
